@@ -418,3 +418,4 @@ FodyWeavers.xsd
 *.msp
 ExamplePrj
 bin-x64
+res
