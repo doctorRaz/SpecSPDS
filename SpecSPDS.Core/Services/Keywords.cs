@@ -1,6 +1,7 @@
 ﻿using System;
+using dRz.SpecSPDS.Core.Keywords;
 
-namespace dRz.SpecSPDS.Core.Keywords
+namespace dRz.SpecSPDS.Core.Services
 {
     public class Keywords
     {
