@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<UseWindowsForms>true</UseWindowsForms>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<RootNamespace>dRz.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ini-parser-netstandard" Version="2.5.3" />
+		<PackageReference Include="MultiCAD.NET" Version="23.1.6324.4405" />
+		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="CadCommands\Common\" />
+	  <Folder Include="Enums\" />
+	</ItemGroup>
+
+</Project>
