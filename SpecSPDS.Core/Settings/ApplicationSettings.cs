@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace dRz.SpecSPDS.Core.Settings
+{
+    public class ApplicationSettings
+    {
+        public string ApplicationName { get; set; } = "SpecSPDS";
+
+        /// <summary> Имя маркера, можно только часть имени, регистр неважен </summary>
+        public string MarkerName { get; set; } = "Спецификация";
+        public FieldNameSettings FieldName{ get; set; }=new FieldNameSettings();
+    }
+}

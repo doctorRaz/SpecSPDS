@@ -1,0 +1,25 @@
+﻿<Project>
+	<PropertyGroup>
+	<!-- не фурычит	 -->
+	<!-- <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath> -->
+		<!--<Version />-->
+		<Deterministic>false</Deterministic>
+		<AssemblyVersion>0.1.*</AssemblyVersion>
+		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+		<!--<Version />-->
+		<!--<Name space />-->
+	<!--	<RootUser>drz</RootUser>-->
+		<!--<RootNamespace>$(RootUser).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>-->
+		<!--<Name space />-->	
+		<!-- Description -->
+		<Product>docProp</Product>
+		<Company>Kpblc and dRz</Company>
+		<Authors>Кулик Алексей, Разыграев Андрей</Authors>
+		<Description>Чтение и запись свойств dwg в nanoCAD 23 и новее</Description>
+		<Copyright>Кулик Алексей, Разыграев Андрей</Copyright>
+		<Trademark>©kpblc2000, ©doctorRAZ 2014-2025</Trademark>
+		<!-- Description -->
+		<!--<BaseOutputPath>..\bin.NET\</BaseOutputPath>-->
+	</PropertyGroup>
+</Project>
