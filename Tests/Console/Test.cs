@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SpecSpdsConsole
+namespace dRz.SpecSpdsConsole
 {
     internal class Test
     {
@@ -25,12 +20,27 @@ namespace SpecSpdsConsole
 
         }
 
-      
+
 
     }
 
     public static class Ext
     {
+        public static double Cd(this string s)
+        {
+            double result = -0.12345;
+
+            try
+            {
+                return double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return result;
+            }
+        }
+
+
         
     }
 }
