@@ -5,6 +5,7 @@ using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using Multicad.Symbols.Tables;
+using System.Security.Cryptography.X509Certificates;
 
 namespace dRz.SpecSPDS
 {
@@ -15,111 +16,120 @@ namespace dRz.SpecSPDS
     /// со всего документа
     /// с нескольких документов (когданить потом)
     /// </summary>
-    public partial class McUMarkerProps
+    public partial class McUmarkerProps
 
     {
 
-        public McUMarkerProps(Space spase)
+        public McUmarkerProps(Space space, bool isSpec = false)
         {
-            if (spase == Space.All)
+            _space = space;
+
+            _isSpec = isSpec;
+
+            //todo вынести в метод?
+            if (_space == Space.All)
             {
-                All();
+                _idSelecteds = ObjectFilter.Create(false).AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects();//get McUMarker all space curent doc
             }
-            else if (spase == Space.Layout)
+            else if (_space == Space.Layout)
             {
-
+                //_idSelecteds = ObjectFilter.Create(true).AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects().ToArray();//get McUMarker current space
+                _idSelecteds = ObjectFilter.Create(true).AddType(McUMarker.TypeID).GetObjects();//get McUMarker current space
             }
-            else if (spase == Space.Select)
+            else if (_space == Space.Select)
             {
-
+                //select McUmarkers
+                _idSelecteds = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
             }
 
-            _spase = spase;
 
-        }
+            if (_idSelecteds == null || _idSelecteds.Count == 0)//not found
+            {
+                ResultString = $"Не найден ни один маркер!";
+                return;
+            }
 
-        void All()
-        {
             AppSettings appSettings = new AppSettings();
 
-            FieldNameSettings fieldName = appSettings.Settings.FieldName;
+            _fieldName = appSettings.Settings.FieldNames;
 
-            string McUmarkerName = appSettings.Settings.MarkerName;
+            _mcUmarkerName = appSettings.Settings.MarkerName;
 
-            //McTableResult mcTableResult = new McTableResult();
+            MarkerProps = new List<DefinitionMarkerProps>();
 
-            //McObjectId[] idSelecteds = ObjectFilter.Create(false).AddDoc(McDocument.ActiveDocument). AddType(McTable.TypeID).GetObjects().ToArray();//get mcTable all doc
-            McObjectId[] idSelecteds = ObjectFilter.Create(false).AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects().ToArray();//get mcTable all doc
 
-            int countTbl = 0;
-
-            if (idSelecteds == null || idSelecteds.Length == 0)//not found
+            foreach (McObjectId idSelected in _idSelecteds)
             {
-                //mcTableResult.ResultString = $"There are no tables with this name: \"{McUmarkerName}\"";
-                //return mcTableResult;
-            }
-            else
-            {
-                for (int i = 0; i < idSelecteds.Length; i++)
+
+                DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
+                McUMarker? tempTbl = McObjectManager.GetObject(idSelected) as McUMarker;
+
+                string tempTitle = tempTbl?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
+
+
+                if (string.IsNullOrWhiteSpace(tempTitle) || tempTitle.IndexOf(_mcUmarkerName, StringComparison.InvariantCultureIgnoreCase) < 0)
                 {
-                    DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
-                    McUMarker? tempTbl = McObjectManager.GetObject(idSelecteds[i]) as McUMarker;
+                    continue;
+                }
 
-                    //nc23 not Implement property "Title"
-                    //nc25 string title=tempTbl.Title
-                    //Title or Name одно и то же?
-                    string tempTitle = tempTbl?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
-                    //string tempName = tempTbl?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
+                McProperties? allProp = tempTbl?.DbEntity.ObjectProperties;
 
+                MarkerProp.FlagSpecRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
-
-                    if (tempTitle.IndexOf(McUmarkerName, StringComparison.InvariantCultureIgnoreCase) >= 0)
+                //todo проверку на флаг вкл в спец
+                if (_isSpec)
+                {
+                    if (!MarkerProp.FlagSpec)
                     {
-                        MarkerProp.FlagSpecsRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(fieldName.FlagSpec,"0").ToString();
-                        
-                        var amount = tempTbl?.DbEntity.ObjectProperties.GetValueEx(fieldName.Amount, -1);
-
-
-                        MarkerProp.AmountRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(fieldName.Amount, "").ToString();
-                       
-                        //countTbl++;
-
-                        //mcTableResult.McTable = tempTbl;
+                        continue;
                     }
+                }
 
-                }
-                if (countTbl > 1)
-                {
-                    //mcTableResult.ResultString = $"Several tables with this name: \"{McUmarkerName}\"";
-                    //return mcTableResult;
-                }
-                else if (countTbl == 1)
-                {
-                    //mcTableResult.ResultString = $"A table with the name was found: \"{mcTableResult.McTable?.DbEntity.ObjectProperties.GetValueEx("Title", "").ToString()}\"";
-                    //mcTableResult.IsOk = true;
-                    //return mcTableResult;
-                }
-                else
-                {
-                    //mcTableResult.ResultString = $"There are no tables with this name: \"{McUmarkerName}\"";
-                    //return mcTableResult;
-                }
+
+                MarkerProp.Section = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
+                MarkerProp.PositionNumber = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
+                MarkerProp.DeviceName = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
+                MarkerProp.TypeModel = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
+                MarkerProp.ArticleNumber = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
+                MarkerProp.Vendor = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
+                MarkerProp.Unit = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
+                MarkerProp.AmountRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
+                MarkerProp.UnitMass = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
+                MarkerProp.Comment = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
+
+
+                MarkerProps.Add(MarkerProp);
             }
+            if (MarkerProps != null && MarkerProps.Count > 0)
+            {
 
+                IsOk = true;
+
+                ResultString = $"Найдено {MarkerProps.Count} маркеров";
+            }
         }
 
-        void Layout()
-        {
 
-        }
+        public string ResultString { get; set; }
+        public bool IsOk { get; set; }
 
-        void Select()
-        {
+        public List<DefinitionMarkerProps> MarkerProps { get; set; }
 
-        }
-        public List<DefinitionMarkerProps> MarkerProps { get; set; } = null;
+        FieldNameSettings _fieldName { get; set; }
+        string _mcUmarkerName { get; set; }
+
+        /// <summary>
+        /// ОБрабатывать маркеры с флагом включения в спеку
+        /// </summary>
+        /// <value>
+        ///   <c>true</c>обрабатывать маркеры только с флагом включения в спеку; otherwise, <c>false</c>.
+        /// </value>
+        bool _isSpec { get; set; }
+        List<McObjectId> _idSelecteds { get; set; }
+
+        //DefinitionMarkerProps MarkerProp { get; set; }
 
         //тип пространства откуда брать
-        Space _spase;
+        Space _space;
     }
 }
