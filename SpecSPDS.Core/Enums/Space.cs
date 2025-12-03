@@ -7,13 +7,13 @@ namespace dRz.SpecSPDS.Enums
     /// </summary>
     public enum Space
     {
-        /// <summary> Обрабатывать все блоки в текущем файле </summary>
+        /// <summary> Обрабатывать все маркеры в текущем файле </summary>
         [Description("Все")]
         All,
-        /// <summary>Обрабатывать все блоки в активном пространстве </summary>
-        [Description("Пространство")]
+        /// <summary>Обрабатывать все маркеры в активном пространстве </summary>
+        [Description("Текущее")]
         Layout,
-        /// <summary> Обрабатывать выбранные блоки в текущем файле </summary>
+        /// <summary> Обрабатывать выбранные маркеры в текущем файле </summary>
         [Description("вЫбрать")]
         Select,
 

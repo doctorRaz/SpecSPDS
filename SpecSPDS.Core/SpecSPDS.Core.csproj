@@ -13,8 +13,5 @@
 	  <PackageReference Include="ini-parser-netstandard" Version="2.5.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Keywords\" />
-	</ItemGroup>
 
 </Project>

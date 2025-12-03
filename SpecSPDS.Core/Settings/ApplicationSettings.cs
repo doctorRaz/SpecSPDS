@@ -12,6 +12,13 @@ namespace dRz.SpecSPDS.Core.Settings
 
         /// <summary> Имя маркера, можно только часть имени, регистр неважен </summary>
         public string MarkerName { get; set; } = "Спецификация";
-        public FieldNameSettings FieldName{ get; set; }=new FieldNameSettings();
+
+        /// <summary>
+        /// Названия полей маркера
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
+        public FieldNameSettings FieldNames{ get; set; }=new FieldNameSettings();
     }
 }
