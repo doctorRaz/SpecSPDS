@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace dRz.SpecSPDS.Core.Extensions
 {
@@ -15,14 +12,35 @@ namespace dRz.SpecSPDS.Core.Extensions
         /// </summary>
         /// <param name="val">The value.</param>
         /// <returns></returns>
-        public static bool ConvertToBool(this string val)
+        public static bool ToBool(this string val)
         {
             //https://stackoverflow.com/questions/9742724/how-to-convert-a-string-to-a-bool
 
             return val == "1";
         }
 
-        public static double ConvertToDouble(this string s)
+        /// <summary>
+        /// Converts to boolean. Более универсальный я тд
+        /// </summary>
+        /// <param name="s">The s.</param>
+        /// <returns></returns>
+        public static bool ToBoolean(this string s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return false;
+
+            s = s.Trim();
+            string[] trueStrings = { "1", "y", "yes", "true", "д", "да" };//все что не в наборе false
+
+
+            if (trueStrings.Contains(s, StringComparer.InvariantCultureIgnoreCase /*OrdinalIgnoreCase*/))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static double ToDouble(this string s)
         {
             //https://stackoverflow.com/questions/11399439/converting-string-to-double-in-c-sharp
 
