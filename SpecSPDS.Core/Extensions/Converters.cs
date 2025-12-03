@@ -28,7 +28,7 @@ namespace dRz.SpecSPDS.Core.Extensions
 
             char systemSeparator = Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator[0];
 
-            double result = -0.1234;
+            double result = -0.12345;
 
             try
             {
