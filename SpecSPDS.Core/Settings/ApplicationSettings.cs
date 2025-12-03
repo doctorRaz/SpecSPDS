@@ -15,7 +15,7 @@ namespace dRz.SpecSPDS.Core.Settings
         public string MarkerName { get; set; } = "Спецификация";
 
         /// <summary>
-        /// Признак собирать все маркеры или только те которые с флагом спецификации
+        /// Собирать маркеры с флагом спецификации
         /// </summary>
         /// <value>
         ///   <c>true</c> Собирать только с флагом true (1); otherwise (0), <c>false</c>.
