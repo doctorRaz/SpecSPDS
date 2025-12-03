@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace dRz.SpecSPDS.Core.Settings
@@ -11,7 +7,7 @@ namespace dRz.SpecSPDS.Core.Settings
     public class AppSettings
     {
         /*static*/
-       public AppSettings()
+        public AppSettings()
         {
             LoadSettings();
 
@@ -24,7 +20,7 @@ namespace dRz.SpecSPDS.Core.Settings
             set => _settings = value ?? new ApplicationSettings();
         }
 
-        public  ApplicationSettings DefaultSettings
+        public ApplicationSettings DefaultSettings
         {
             get => new ApplicationSettings();
         }
@@ -59,6 +55,7 @@ namespace dRz.SpecSPDS.Core.Settings
                 else
                 {
                     _settings = new ApplicationSettings();
+                    SaveSettings();
                 }
             }
             catch
@@ -69,7 +66,7 @@ namespace dRz.SpecSPDS.Core.Settings
 
         public string ConfigPath => _configPath;
 
-        private static ApplicationSettings _settings;
+        private /*static*/ ApplicationSettings _settings;
 
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(ApplicationSettings));
 

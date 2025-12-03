@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
 
-namespace dRz.SpecSPDS.Enums
+namespace dRz.SpecSPDS.Core.Enums
 {
     /// <summary>
     /// пространство
     /// </summary>
     public enum Space
-    {
+    {       
+
         /// <summary> Обрабатывать все маркеры в текущем файле </summary>
         [Description("Все")]
         All,

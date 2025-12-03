@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
-
-namespace dRz.SpecSPDS.Core.Settings
+﻿namespace dRz.SpecSPDS.Core.Settings
 {
     public class ApplicationSettings
     {
@@ -20,7 +13,7 @@ namespace dRz.SpecSPDS.Core.Settings
         /// <value>
         ///   <c>true</c> Собирать только с флагом true (1); otherwise (0), <c>false</c>.
         /// </value>
-        public bool IsSpec{ get; set; }=true;
+        public bool IsSpec { get; set; } = true;
 
         /// <summary>
         /// Названия полей маркера
@@ -28,6 +21,6 @@ namespace dRz.SpecSPDS.Core.Settings
         /// <value>
         /// The name of the field.
         /// </value>
-        public FieldNameSettings FieldNames{ get; set; }=new FieldNameSettings();
+        public FieldNameSettings FieldNames { get; set; } = new FieldNameSettings();
     }
 }

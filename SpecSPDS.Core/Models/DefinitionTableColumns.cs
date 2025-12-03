@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace dRz.SpecSPDS.Core.Models
+﻿namespace dRz.SpecSPDS.Core.Models
 {
     public class DefinitionTableColumns
     {
@@ -17,7 +11,7 @@ namespace dRz.SpecSPDS.Core.Models
 
         }
 
-      
+
 
         public double ColumnWidth { get; set; }
 
@@ -26,5 +20,5 @@ namespace dRz.SpecSPDS.Core.Models
         public string ColumnName { get; set; }
     }
 
- 
+
 }

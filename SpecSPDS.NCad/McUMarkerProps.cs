@@ -1,11 +1,9 @@
-﻿using dRz.SpecSPDS.Core.Models;
+﻿using dRz.SpecSPDS.Core.Enums;
+using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Settings;
-using dRz.SpecSPDS.Enums;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
-using Multicad.Symbols.Tables;
-using System.Security.Cryptography.X509Certificates;
 
 namespace dRz.SpecSPDS
 {

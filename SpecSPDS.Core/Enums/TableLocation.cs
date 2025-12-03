@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace KpblcDrzBlockFix.Core.Enums
+namespace dRz.SpecSPDS.Core.Enums
 {
     public enum TableLocation
     {

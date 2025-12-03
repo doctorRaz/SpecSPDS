@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace dRz.SpecSPDS.Core.Settings
+﻿namespace dRz.SpecSPDS.Core.Settings
 {
     /// <summary>
     /// имена полей свойств маркера
@@ -14,8 +8,8 @@ namespace dRz.SpecSPDS.Core.Settings
         public FieldNameSettings()
         {
         }
-               
-      
+
+
 
         /// <summary>
         /// Раздел спецификации
