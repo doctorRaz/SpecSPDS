@@ -24,8 +24,6 @@ namespace dRz.SpecSPDS
         {
             _space = space;
 
-
-
             //todo вынести в метод?
             if (_space == Space.All)
             {
@@ -49,55 +47,66 @@ namespace dRz.SpecSPDS
                 return;
             }
 
-            AppSettings appSettings = new AppSettings();
+            AppSettings appSettings = new AppSettings();//настройки
 
-            _fieldName = appSettings.Settings.FieldNames;
+            _fieldName = appSettings.Settings.FieldNames;//имена полей
 
-            _mcUmarkerName = appSettings.Settings.MarkerName;
+            _mcUmarkerName = appSettings.Settings.MarkerName;//имя-название маркера
 
-            _isSpec = appSettings.Settings.IsSpec;
+            _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
 
-            //MarkerProps = new List<DefinitionMarkerProps>();
+            int counMinus = 0;//маркеры с отрицательной суммой
+            int counNotFlag = 0;//маркеров без признака включения в спеку
+            int counFalseName = 0;//маркеров с не тем именем
 
-
-            foreach (McObjectId idSelected in _idSelecteds)
+            foreach (McObjectId idSelected in _idSelecteds)//по собранным ID маркеров
             {
 
                 DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
-                McUMarker? tempTbl = McObjectManager.GetObject(idSelected) as McUMarker;
+                McUMarker? tempUmark = McObjectManager.GetObject(idSelected) as McUMarker;
 
-                string tempTitle = tempTbl?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
+                MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
 
 
-                if (string.IsNullOrWhiteSpace(tempTitle) || tempTitle.IndexOf(_mcUmarkerName, StringComparison.InvariantCultureIgnoreCase) < 0)
+                if (string.IsNullOrWhiteSpace(MarkerProp.MarkerName)
+                    || MarkerProp.MarkerName.IndexOf(_mcUmarkerName,
+                                                     StringComparison.InvariantCultureIgnoreCase) < 0)
                 {
+                    counFalseName++;
                     continue;
                 }
 
-                McProperties? allProp = tempTbl?.DbEntity.ObjectProperties;
+                McProperties? allProp = tempUmark?.DbEntity.ObjectProperties;
 
-                MarkerProp.FlagSpecRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
+                MarkerProp.FlagSpecRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
-                if (_isSpec)
+                if (_isSpec)//учитывать признак спецификации
                 {
-                    if (!MarkerProp.FlagSpec)
+                    if (!MarkerProp.FlagSpec)//признака спец нет
                     {
+                        counNotFlag++;
                         continue;
                     }
                 }
-                //todo проверку на некорректное значение количества, если минус, то не включать в набор
 
+                MarkerProp.AmountRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
 
-                MarkerProp.Section = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
-                MarkerProp.PositionNumber = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
-                MarkerProp.DeviceName = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
-                MarkerProp.TypeModel = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
-                MarkerProp.ArticleNumber = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
-                MarkerProp.Vendor = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
-                MarkerProp.Unit = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
-                MarkerProp.AmountRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
-                MarkerProp.UnitMass = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
-                MarkerProp.Comment = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
+                //проверка на некорректное значение количества, если минус, то не включать в набор
+                if (MarkerProp.Amount < 0)//маркеры с количеством меньше нуля не включаем в набор
+                {
+                    counMinus++;
+                    continue;
+                }
+
+                MarkerProp.Section = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
+                MarkerProp.PositionNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
+                MarkerProp.DeviceName = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
+                MarkerProp.TypeModel = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
+                MarkerProp.ArticleNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
+                MarkerProp.Vendor = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
+                MarkerProp.Unit = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
+                MarkerProp.UnitMass = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
+                MarkerProp.Comment = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
 
 
                 MarkerProps.Add(MarkerProp);
@@ -107,7 +116,24 @@ namespace dRz.SpecSPDS
                 IsOk = true;
             }
 
-            ResultString = $"Найдено {MarkerProps.Count} маркеров";
+            ResultString = $"\nМаркеры";
+            ResultString += $"\nВыбрано всего: {_idSelecteds.Count}";
+            ResultString += $"\nВключено в набор: {MarkerProps.Count} маркеров";
+
+            if (counFalseName > 0)
+            {
+                ResultString += $"\nС неподходящим именем: {counFalseName}";
+            }
+
+            if (counNotFlag > 0)
+            {
+                ResultString += $"\nБез признака включения в спецификацию: {counNotFlag}";
+            }
+
+            if (counMinus > 0)
+            {
+                ResultString += $"\nС некорректной суммой (столбец \"Количество\"): {counMinus}";
+            }
 
         }
 

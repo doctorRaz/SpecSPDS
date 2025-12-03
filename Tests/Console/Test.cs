@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace SpecSpdsConsole
+{
+    internal class Test
+    {
+        internal bool IsFlag(bool isCheck, bool flag = false)
+
+        {
+            if (flag)
+            {
+                if (!isCheck)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+      
+
+    }
+
+    public static class Ext
+    {
+        
+    }
+}

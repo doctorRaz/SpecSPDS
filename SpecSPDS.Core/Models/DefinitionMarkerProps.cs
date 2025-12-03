@@ -57,7 +57,7 @@ namespace dRz.SpecSPDS.Core.Models
         /// <summary>
         /// Количество
         /// </summary>
-        public double Amount { get; set; }
+        public double Amount =>AmountRaw.ConvertToDouble(); 
 
         /// <summary>
         /// Количество строкой
@@ -77,7 +77,7 @@ namespace dRz.SpecSPDS.Core.Models
         /// <summary>
         /// Флаг включения в спецификацию 
         /// </summary>         
-        public bool FlagSpec => FlagSpecRaw.StrBool();
+        public bool FlagSpec => FlagSpecRaw.ConvertToBool();
 
         /// <summary>
         /// Флаг включения в спецификацию строкой

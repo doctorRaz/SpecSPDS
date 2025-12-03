@@ -18,9 +18,9 @@ namespace dRz.SpecSPDS.Core.Settings
         /// Признак собирать все маркеры или только те которые с флагом спецификации
         /// </summary>
         /// <value>
-        ///   <c>true</c> Собирать только с флагом true (1); otherwise, <c>false</c>.
+        ///   <c>true</c> Собирать только с флагом true (1); otherwise (0), <c>false</c>.
         /// </value>
-        public bool IsSpec{ get; set; }=false;
+        public bool IsSpec{ get; set; }=true;
 
         /// <summary>
         /// Названия полей маркера
