@@ -25,7 +25,7 @@ namespace dRz.SpecSPDS.CadCommands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            Document doc =App. Application.DocumentManager.MdiActiveDocument;
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -45,14 +45,16 @@ namespace dRz.SpecSPDS.CadCommands
 
             Enum propMod = KeywordAnswer(doc, keywordsList, "Выбрать маркер");
 
-             if (propMod == null) return;//смысла продолжать нет
+            if (propMod == null) return;//смысла продолжать нет
 
             McUmarkerProps mcUmarkerProps = new McUmarkerProps((Space)propMod);
 
-            List<Core.Models.DefinitionMarkerProps> umProps =mcUmarkerProps.MarkerProps;
+            List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 
-                #endregion
-          ed.WriteMessage($"найдено {umProps.Count.ToString()}");
+            #endregion
+
+            ed.WriteMessage($"{mcUmarkerProps.ResultString}");
+
 
         }
 

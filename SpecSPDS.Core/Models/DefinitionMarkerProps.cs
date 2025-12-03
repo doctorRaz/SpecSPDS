@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dRz.SpecSPDS.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,12 +72,12 @@ namespace dRz.SpecSPDS.Core.Models
         /// <summary>
         /// Примечание
         /// </summary>
-        public string Comment { get; set; }  
+        public string Comment { get; set; }
 
         /// <summary>
         /// Флаг включения в спецификацию 
         /// </summary>         
-        public bool FlagSpec { get; set; }
+        public bool FlagSpec => FlagSpecRaw.StrBool();
 
         /// <summary>
         /// Флаг включения в спецификацию строкой

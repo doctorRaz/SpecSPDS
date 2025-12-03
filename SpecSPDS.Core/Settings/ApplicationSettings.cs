@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace dRz.SpecSPDS.Core.Settings
 {
@@ -12,6 +13,14 @@ namespace dRz.SpecSPDS.Core.Settings
 
         /// <summary> Имя маркера, можно только часть имени, регистр неважен </summary>
         public string MarkerName { get; set; } = "Спецификация";
+
+        /// <summary>
+        /// Признак собирать все маркеры или только те которые с флагом спецификации
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> Собирать только с флагом true (1); otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSpec{ get; set; }=false;
 
         /// <summary>
         /// Названия полей маркера

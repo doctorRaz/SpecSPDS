@@ -20,11 +20,11 @@ namespace dRz.SpecSPDS
 
     {
 
-        public McUmarkerProps(Space space, bool isSpec = false)
+        public McUmarkerProps(Space space)
         {
             _space = space;
 
-            _isSpec = isSpec;
+
 
             //todo вынести в метод?
             if (_space == Space.All)
@@ -55,7 +55,9 @@ namespace dRz.SpecSPDS
 
             _mcUmarkerName = appSettings.Settings.MarkerName;
 
-            MarkerProps = new List<DefinitionMarkerProps>();
+            _isSpec = appSettings.Settings.IsSpec;
+
+            //MarkerProps = new List<DefinitionMarkerProps>();
 
 
             foreach (McObjectId idSelected in _idSelecteds)
@@ -76,7 +78,6 @@ namespace dRz.SpecSPDS
 
                 MarkerProp.FlagSpecRaw = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
-                //todo проверку на флаг вкл в спец
                 if (_isSpec)
                 {
                     if (!MarkerProp.FlagSpec)
@@ -84,6 +85,7 @@ namespace dRz.SpecSPDS
                         continue;
                     }
                 }
+                //todo проверку на некорректное значение количества, если минус, то не включать в набор
 
 
                 MarkerProp.Section = tempTbl?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
@@ -100,21 +102,40 @@ namespace dRz.SpecSPDS
 
                 MarkerProps.Add(MarkerProp);
             }
-            if (MarkerProps != null && MarkerProps.Count > 0)
+            if (MarkerProps.Count > 0)
             {
-
                 IsOk = true;
-
-                ResultString = $"Найдено {MarkerProps.Count} маркеров";
             }
+
+            ResultString = $"Найдено {MarkerProps.Count} маркеров";
+
         }
 
 
+        /// <summary>
+        /// Gets or sets the result string.
+        /// </summary>
+        /// <value>
+        /// The result string.
+        /// </value>
         public string ResultString { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is ok.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is ok; otherwise, <c>false</c>.
+        /// </value>
         public bool IsOk { get; set; }
 
-        public List<DefinitionMarkerProps> MarkerProps { get; set; }
+        public List<DefinitionMarkerProps> MarkerProps { get; set; } = new List<DefinitionMarkerProps>();
 
+        /// <summary>
+        /// Gets or sets the name of the field.
+        /// </summary>
+        /// <value>
+        /// The name of the field.
+        /// </value>
         FieldNameSettings _fieldName { get; set; }
         string _mcUmarkerName { get; set; }
 
@@ -129,7 +150,9 @@ namespace dRz.SpecSPDS
 
         //DefinitionMarkerProps MarkerProp { get; set; }
 
-        //тип пространства откуда брать
-        Space _space;
+        /// <summary>
+        /// тип пространства откуда брать
+        /// </summary>
+        Space _space { get; set; }
     }
 }
