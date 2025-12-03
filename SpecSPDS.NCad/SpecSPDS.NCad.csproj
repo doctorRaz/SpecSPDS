@@ -20,9 +20,6 @@
 	  <ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="CadCommands\Common\" />
-	  <Folder Include="Enums\" />
-	</ItemGroup>
+
 
 </Project>

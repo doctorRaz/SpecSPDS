@@ -33,7 +33,7 @@ namespace dRz.SpecSPDS.CadCommands
 
             Editor ed = doc.Editor;
 
-            #region выбор умаркеров
+            #region выбор маркеров
 
             List<Keywords> keywordsList = new List<Keywords>
             {
@@ -47,12 +47,12 @@ namespace dRz.SpecSPDS.CadCommands
 
              if (propMod == null) return;//смысла продолжать нет
 
-            McUMarkerProps getMcUMarker = new McUMarkerProps((Space)propMod);
+            McUmarkerProps mcUmarkerProps = new McUmarkerProps((Space)propMod);
 
-            List<Core.Models.DefinitionMarkerProps> umarcersProps =getMcUMarker.MarkerProps;
+            List<Core.Models.DefinitionMarkerProps> umProps =mcUmarkerProps.MarkerProps;
 
                 #endregion
-          
+          ed.WriteMessage($"найдено {umProps.Count.ToString()}");
 
         }
 
