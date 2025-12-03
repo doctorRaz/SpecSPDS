@@ -1,5 +1,5 @@
-﻿using dRz.SpecSPDS.Core.Services;
-using dRz.SpecSPDS.Enums;
+﻿using dRz.SpecSPDS.Core.Enums;
+using dRz.SpecSPDS.Core.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
@@ -19,8 +19,11 @@ namespace dRz.SpecSPDS.CadCommands
     {
 
         /// <summary>
-        /// Imports the document props from file command.
+        /// спека с маркеров
         /// </summary>
+#if DEBUG
+        [CommandMethod("тсс")]
+#endif
         [CommandMethod("drz_SpecSpds")]
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
@@ -54,6 +57,13 @@ namespace dRz.SpecSPDS.CadCommands
             #endregion
 
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
+
+            PropXml propXml = new PropXml();
+            propXml.Props=umProps;
+            //props.MarkerName = "xxz";
+            //props.FlagSpecRaw = "1";
+
+            propXml.SaveProps();
 
 
         }
