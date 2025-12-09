@@ -42,6 +42,8 @@ namespace dRz.SpecSPDS.CadCommands
 
             AppSettings appSettings = new AppSettings();//настройки
 
+            ApplicationSettings settings = appSettings.Settings;
+
             Editor ed = doc.Editor;
 
             #region выбор маркеров
@@ -59,7 +61,7 @@ namespace dRz.SpecSPDS.CadCommands
 
             if (propMod == null) return;//смысла продолжать нет
 
-            MultiCadProps mcUmarkerProps = new MultiCadProps((Space)propMod, appSettings);
+            MultiCadProps mcUmarkerProps = new MultiCadProps((Space)propMod, settings);
 
             List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 

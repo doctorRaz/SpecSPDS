@@ -22,15 +22,15 @@ namespace dRz.SpecSPDS
 
         List<McObjectId> IdUmarkers => _idUmarkers;
 
-        public MultiCadProps(Space space, AppSettings appSettings)
+        public MultiCadProps(Space space, ApplicationSettings settings)
         {
             _space = space;
 
-            _fieldName = appSettings.Settings.FieldNames;//имена полей
+            _fieldName = settings.FieldNames;//имена полей
 
-            _mcUmarkerName = appSettings.Settings.MarkerName;//имя-название маркера
+            _mcUmarkerName = settings.MarkerName;//имя-название маркера
 
-            _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
+            _isSpec = settings.IsSpec;//флаг что собирать false- собирать все
 
             _idUmarkers = new List<McObjectId>();//на всякий
 
@@ -71,8 +71,6 @@ namespace dRz.SpecSPDS
 
         public void tt()
         {
-            //AppSettings appSettings = new AppSettings();//настройки
-
 
             int countIncorrectData = 0;//маркеры с отрицательной суммой
             int counNotFlag = 0;//маркеров без признака включения в спеку
