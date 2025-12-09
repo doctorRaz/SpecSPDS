@@ -45,7 +45,7 @@ namespace dRz.SpecSPDS.CadCommands
             Editor ed = doc.Editor;
 
             #region выбор маркеров
-
+            //получаю маркеры
             List<Core.Services.Keyword> keywordsList = new List<Core.Services.Keyword>
             {
                 new Core.Services.Keyword(nameof(Space.All),Space.All),
@@ -65,6 +65,11 @@ namespace dRz.SpecSPDS.CadCommands
 
             #endregion
 
+            //дальше пуляю в сортировку обработку
+
+
+            //результат пишу в таблицу
+
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
             PropXml propXml = new PropXml();
@@ -72,7 +77,7 @@ namespace dRz.SpecSPDS.CadCommands
             //props.MarkerName = "xxz";
             //props.FlagSpecRaw = "1";
 
-            propXml.SaveProps();
+            propXml.SaveProps();//для отладки
 
 
         }
