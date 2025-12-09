@@ -59,7 +59,7 @@ namespace dRz.SpecSPDS.CadCommands
 
             if (propMod == null) return;//смысла продолжать нет
 
-            MulticadProps mcUmarkerProps = new MulticadProps((Space)propMod, appSettings);
+            MultiCadProps mcUmarkerProps = new MultiCadProps((Space)propMod, appSettings);
 
             List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 

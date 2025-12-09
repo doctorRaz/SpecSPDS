@@ -15,14 +15,14 @@ namespace dRz.SpecSPDS
     /// со всего документа
     /// с нескольких документов (когданить потом)
     /// </summary>
-    public partial class MulticadProps
+    public partial class MultiCadProps
 
     {
         List<McObjectId> _idUmarkers;
 
         List<McObjectId> IdUmarkers => _idUmarkers;
 
-        public MulticadProps(Space space, AppSettings appSettings)
+        public MultiCadProps(Space space, AppSettings appSettings)
         {
             _space = space;
 
