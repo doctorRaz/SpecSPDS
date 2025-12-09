@@ -12,11 +12,13 @@ namespace dRz.SpecSPDS.Core.Extensions
         /// </summary>
         /// <param name="val">The value.</param>
         /// <returns></returns>
-        public static bool ToBool(this string val)
+        public static bool ToBool(this string s)
         {
             //https://stackoverflow.com/questions/9742724/how-to-convert-a-string-to-a-bool
 
-            return val == "1";
+            if (string.IsNullOrWhiteSpace(s)) return false;
+            s = s.Trim();
+            return s == "1";
         }
 
         /// <summary>
