@@ -4,6 +4,7 @@ using dRz.SpecSPDS.Core.Settings;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
+using System.Text.Json.Serialization;
 
 namespace dRz.SpecSPDS
 {
@@ -32,17 +33,6 @@ namespace dRz.SpecSPDS
             _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
 
 
-            //var ids=Multicad.DatabaseServices.McDocument.GetDocument
-
-            var of = new ObjectFilter();
-
-            Guid gui = McUMarker.TypeID;
-
-            string sg ="00000001-0014-aaaa-aaaa-050b00000000";// gui.ToString();
-
-            Guid gUmarker = new Guid(sg);
-
-            bool dg = gui == gUmarker;
 
             //с открытых документов
             if (_space == Space.All)
@@ -50,13 +40,12 @@ namespace dRz.SpecSPDS
                 List<McDocument> docs = McDocumentsManager.GetDocuments();
 
                 _idUmarkers = ObjectFilter.Create().AddDocs(docs).AddType(McUMarker.TypeID).GetObjects();
-
-                List<McObjectId> _GidUmarkers = ObjectFilter.Create().AddDocs(docs).AddType(gUmarker).GetObjects();
+                          
             }
             //с активного документа
             else if (_space == Space.Document)
             {
-                _idUmarkers = ObjectFilter.Create().AddDoc(McDocument.WorkingDocument).AddType(gUmarker/*McUMarker.TypeID*/).GetObjects(); 
+                _idUmarkers = ObjectFilter.Create().AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects(); 
             }
             //с активного пространства
             else if (_space == Space.Layout)
@@ -98,7 +87,7 @@ namespace dRz.SpecSPDS
                 {
                     continue;
                 }
-                var g1 = tempUmark.ClassID ;//todo получить гуид
+          
 
 
                 MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
