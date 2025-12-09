@@ -5,6 +5,8 @@ using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Multicad;
 using Multicad.DatabaseServices;
+using Multicad.Symbols;
+using Multicad.Symbols.Tables;
 using System.ComponentModel;
 using Teigha.DatabaseServices;
 using Teigha.Runtime;
@@ -75,15 +77,70 @@ namespace dRz.SpecSPDS.CadCommands
 
         }
 
-        [CommandMethod("PaintFile" )]
+        #region DEBUG
+#if DEBUG
+
+        [CommandMethod("ффт")]
+        static public void FFindTblF()
+        {
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            if (doc == null)
+            {
+                return;
+            }
+
+            Editor ed = doc.Editor;
+
+            List<McObjectId> idIds = ObjectFilter.Create().AddType(McTable.TypeID).GetObjects();
+
+            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
+
+        }
+
+
+        [CommandMethod("дфт")]
+        static public void DocFindTblF()
+        {
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            if (doc == null)
+            {
+                return;
+            }
+
+            Editor ed = doc.Editor;
+
+            List<McObjectId> idIds = ObjectFilter.Create(true).AddType(McTable.TypeID).AddDoc(McDocument.ActiveDocument).GetObjects();
+
+            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
+
+        }
+
+        [CommandMethod("фт")]
+        static public void FindTblF()
+        {
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            if (doc == null)
+            {
+                return;
+            }
+
+            Editor ed = doc.Editor;
+
+            List<McObjectId> idIds = ObjectFilter.Create(false).AddType(McTable.TypeID).GetObjects();
+
+            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
+
+        }
+
+        [CommandMethod("PaintFile")]
         static public void PaintFile()
         {
             string filName = @"d:\@Developers\Programmers\!NET\!SpecSPDS\res\test.dwg";
             McDocument pDoc = McDocumentsManager.OpenDocument(filName, false, true);
 
-            using ( Database db0 = new Database(false, false))
+            using (Database db0 = new Database(false, false))
             {
-                  db0. ReadDwgFile(filName, FileOpenMode.OpenForReadAndAllShare, false, "", false);
+                db0.ReadDwgFile(filName, FileOpenMode.OpenForReadAndAllShare, false, "", false);
 
             }
             McDocument pOldWD = McDocument.WorkingDocument;
@@ -107,4 +164,10 @@ namespace dRz.SpecSPDS.CadCommands
 
     }
 
+
+
+
+#endif
+
+    #endregion
 }
