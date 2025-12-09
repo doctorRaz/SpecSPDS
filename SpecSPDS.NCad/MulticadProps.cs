@@ -32,37 +32,38 @@ namespace dRz.SpecSPDS
 
             _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
 
+            _idUmarkers = new List<McObjectId>();//на всякий
 
+
+            ObjectFilter of = new ObjectFilter(true);
+
+            of.AddType(McUMarker.TypeID);
 
             //с открытых документов
             if (_space == Space.All)
             {
                 List<McDocument> docs = McDocumentsManager.GetDocuments();
 
-                _idUmarkers = ObjectFilter.Create().AddDocs(docs).AddType(McUMarker.TypeID).GetObjects();
-                          
+                of.AddDocs(McDocumentsManager.GetDocuments());//открытые документы
+
+                _idUmarkers = of.GetObjects();
             }
             //с активного документа
             else if (_space == Space.Document)
             {
-                _idUmarkers = ObjectFilter.Create().AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects(); 
+                of.AddDoc(McDocument.WorkingDocument);
+
+                _idUmarkers = of.GetObjects();
             }
             //с активного пространства
             else if (_space == Space.Layout)
-            {            
-                _idUmarkers = ObjectFilter.Create(true).AddType(McUMarker.TypeID).GetObjects();//get McUMarker current space
+            {
+                _idUmarkers = of.GetObjects();
             }
             // выбором
             else if (_space == Space.Select)
             {
-                //select McUmarkers
                 _idUmarkers = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
-            }
-            //сюда попасть не должны, но на всякий
-            else
-            {
-                _idUmarkers = new List<McObjectId>();
-
             }
 
             tt();
@@ -87,8 +88,17 @@ namespace dRz.SpecSPDS
                 {
                     continue;
                 }
-          
 
+                McPropertySource dd = McPropertySource.GetPropertySource(tempUmark);
+                var allProps = dd.ObjectProperties;
+                //var sours = allProps. Source;
+
+                var ss = allProps.GetValueEx("Name", "");
+                foreach (McProperty prop in allProps)
+                {
+                    var s = prop.GetValue();
+
+                }
 
                 MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
 
@@ -102,6 +112,8 @@ namespace dRz.SpecSPDS
                 }
 
                 McProperties? allProp = tempUmark?.DbEntity.ObjectProperties;//todo пробничек получения имен всех свойств с описаниями
+
+                //var sours=tempUmark.Cast<>.
 
                 MarkerProp.FlagSpecRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
@@ -170,7 +182,7 @@ namespace dRz.SpecSPDS
         /// <value>
         /// The result string.
         /// </value>
-        public string ResultString { get; set; }
+        public string ResultString { get; set; } = "";
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is ok.
