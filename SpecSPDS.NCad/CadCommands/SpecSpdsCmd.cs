@@ -1,8 +1,12 @@
 ﻿using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Services;
+using dRz.SpecSPDS.Core.Settings;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using Multicad;
+using Multicad.DatabaseServices;
 using System.ComponentModel;
+using Teigha.DatabaseServices;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
@@ -34,6 +38,8 @@ namespace dRz.SpecSPDS.CadCommands
                 return;
             }
 
+            AppSettings appSettings = new AppSettings();//настройки
+
             Editor ed = doc.Editor;
 
             #region выбор маркеров
@@ -41,6 +47,7 @@ namespace dRz.SpecSPDS.CadCommands
             List<Keywords> keywordsList = new List<Keywords>
             {
                 new Keywords(nameof(Space.All),Space.All),
+                new Keywords(nameof(Space.Document),Space.Document),
                 new Keywords(nameof(Space.Layout),Space.Layout,true),
                 new Keywords(nameof(Space.Select),Space.Select),
 
@@ -50,7 +57,7 @@ namespace dRz.SpecSPDS.CadCommands
 
             if (propMod == null) return;//смысла продолжать нет
 
-            McUmarkerProps mcUmarkerProps = new McUmarkerProps((Space)propMod);
+            MulticadProps mcUmarkerProps = new MulticadProps((Space)propMod, appSettings);
 
             List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 
@@ -59,13 +66,43 @@ namespace dRz.SpecSPDS.CadCommands
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
             PropXml propXml = new PropXml();
-            propXml.Props=umProps;
+            propXml.Props = umProps;
             //props.MarkerName = "xxz";
             //props.FlagSpecRaw = "1";
 
             propXml.SaveProps();
 
 
+        }
+
+        [CommandMethod("PaintFile" )]
+        static public void PaintFile()
+        {
+            string filName = @"d:\@Developers\Programmers\!NET\!SpecSPDS\res\test.dwg";
+            McDocument pDoc = McDocumentsManager.OpenDocument(filName, false, true);
+
+            using ( Database db0 = new Database(false, false))
+            {
+                  db0. ReadDwgFile(filName, FileOpenMode.OpenForReadAndAllShare, false, "", false);
+
+            }
+            McDocument pOldWD = McDocument.WorkingDocument;
+
+            McDocument.WorkingDocument = pDoc;
+            ObjectFilter of = ObjectFilter.Create(false).AddDoc(pDoc);
+            of.AllObjects = true;
+            List<McObjectId> ids = of.GetObjects();
+            foreach (McObjectId id in ids)
+            {
+                McDbEntity pEnt = id.GetObject().Cast<McDbEntity>();
+                if (pEnt == null)
+                    continue;
+                pEnt.Color = Color.Red;
+            }
+            McObjectManager.UpdateAll();
+            pDoc.SaveAs(filName);
+            pDoc.Close();
+            McDocument.WorkingDocument = pOldWD;
         }
 
     }

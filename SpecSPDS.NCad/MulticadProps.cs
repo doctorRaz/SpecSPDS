@@ -14,37 +14,16 @@ namespace dRz.SpecSPDS
     /// со всего документа
     /// с нескольких документов (когданить потом)
     /// </summary>
-    public partial class McUmarkerProps
+    public partial class MulticadProps
 
     {
-        public McUmarkerProps(Space space)
+        List<McObjectId> _idUmarkers;
+
+        List<McObjectId> IdUmarkers => _idUmarkers;
+
+        public MulticadProps(Space space, AppSettings appSettings)
         {
             _space = space;
-
-            //todo вынести в метод?
-            if (_space == Space.All)
-            {
-                _idSelecteds = ObjectFilter.Create(false).AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects();//get McUMarker all space curent doc
-            }
-            else if (_space == Space.Layout)
-            {
-                //_idSelecteds = ObjectFilter.Create(true).AddDoc(McDocument.WorkingDocument).AddType(McUMarker.TypeID).GetObjects().ToArray();//get McUMarker current space
-                _idSelecteds = ObjectFilter.Create(true).AddType(McUMarker.TypeID).GetObjects();//get McUMarker current space
-            }
-            else if (_space == Space.Select)
-            {
-                //select McUmarkers
-                _idSelecteds = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
-            }
-
-
-            if (_idSelecteds == null || _idSelecteds.Count == 0)//not found
-            {
-                ResultString = $"Не найден ни один маркер!";
-                return;
-            }
-
-            AppSettings appSettings = new AppSettings();//настройки
 
             _fieldName = appSettings.Settings.FieldNames;//имена полей
 
@@ -52,11 +31,64 @@ namespace dRz.SpecSPDS
 
             _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
 
+
+            //var ids=Multicad.DatabaseServices.McDocument.GetDocument
+
+            var of = new ObjectFilter();
+
+            Guid gui = McUMarker.TypeID;
+
+            string sg ="00000001-0014-aaaa-aaaa-050b00000000";// gui.ToString();
+
+            Guid gUmarker = new Guid(sg);
+
+            bool dg = gui == gUmarker;
+
+            //с открытых документов
+            if (_space == Space.All)
+            {
+                List<McDocument> docs = McDocumentsManager.GetDocuments();
+
+                _idUmarkers = ObjectFilter.Create().AddDocs(docs).AddType(McUMarker.TypeID).GetObjects();
+
+                List<McObjectId> _GidUmarkers = ObjectFilter.Create().AddDocs(docs).AddType(gUmarker).GetObjects();
+            }
+            //с активного документа
+            else if (_space == Space.Document)
+            {
+                _idUmarkers = ObjectFilter.Create().AddDoc(McDocument.WorkingDocument).AddType(gUmarker/*McUMarker.TypeID*/).GetObjects(); 
+            }
+            //с активного пространства
+            else if (_space == Space.Layout)
+            {            
+                _idUmarkers = ObjectFilter.Create(true).AddType(McUMarker.TypeID).GetObjects();//get McUMarker current space
+            }
+            // выбором
+            else if (_space == Space.Select)
+            {
+                //select McUmarkers
+                _idUmarkers = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
+            }
+            //сюда попасть не должны, но на всякий
+            else
+            {
+                _idUmarkers = new List<McObjectId>();
+
+            }
+
+            tt();
+        }
+
+        public void tt()
+        {
+            //AppSettings appSettings = new AppSettings();//настройки
+
+
             int countIncorrectData = 0;//маркеры с отрицательной суммой
             int counNotFlag = 0;//маркеров без признака включения в спеку
             int counFalseName = 0;//маркеров с не тем именем
 
-            foreach (McObjectId idSelected in _idSelecteds)//по собранным ID маркеров
+            foreach (McObjectId idSelected in _idUmarkers)//по собранным ID маркеров
             {
 
                 DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
@@ -66,6 +98,8 @@ namespace dRz.SpecSPDS
                 {
                     continue;
                 }
+                var g1 = tempUmark.ClassID ;//todo получить гуид
+
 
                 MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
 
@@ -120,7 +154,7 @@ namespace dRz.SpecSPDS
             }
 
             ResultString = $"\nМаркеры";
-            ResultString += $"\nВыбрано всего: {_idSelecteds.Count}";
+            ResultString += $"\nВыбрано всего: {_idUmarkers.Count}";
             ResultString += $"\nВключено в набор: {MarkerProps.Count} маркеров";
 
             if (counFalseName > 0)
@@ -175,7 +209,7 @@ namespace dRz.SpecSPDS
         ///   <c>true</c> обрабатывать маркеры только с флагом включения в спеку; otherwise, <c>false</c>.
         /// </value>
         bool _isSpec { get; set; }
-        List<McObjectId> _idSelecteds { get; set; }
+
 
         //DefinitionMarkerProps MarkerProp { get; set; }
 
