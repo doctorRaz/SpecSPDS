@@ -6,17 +6,17 @@ namespace dRz.SpecSPDS.CadCommands
 {
     public partial class SpecSpdsCmd
     { /// <summary>
-      /// Keywords the answer.
+      /// Keyword the answer.
       /// </summary>
       /// <param name="doc">The document.</param>
       /// <param name="keywordsList">The keywords list.</param>
       /// <param name="message">The message.</param>
       /// <returns></returns>
-        public static Enum KeywordAnswer(Document doc, List<Keywords> keywordsList, string message)
+        public static Enum KeywordAnswer(Document doc, List<Core.Services.Keyword> keywordsList, string message)
         {
             PromptKeywordOptions options = new PromptKeywordOptions(message);
 
-            foreach (Keywords keyword in keywordsList)
+            foreach (Core.Services.Keyword keyword in keywordsList)
             {
                 options.Keywords.Add(keyword.GlobalName,
                                      keyword.LocalName,
@@ -37,7 +37,7 @@ namespace dRz.SpecSPDS.CadCommands
                 return null;
             }
 
-            Keywords? keyItem = keywordsList.Find(p => p.GlobalName == res.StringResult);
+            Core.Services.Keyword? keyItem = keywordsList.Find(p => p.GlobalName == res.StringResult);
 
             if (keyItem == null)//невозможно , но хз его знает)))
             {

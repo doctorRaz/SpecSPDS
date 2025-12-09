@@ -44,12 +44,12 @@ namespace dRz.SpecSPDS.CadCommands
 
             #region выбор маркеров
 
-            List<Keywords> keywordsList = new List<Keywords>
+            List<Core.Services.Keyword> keywordsList = new List<Core.Services.Keyword>
             {
-                new Keywords(nameof(Space.All),Space.All),
-                new Keywords(nameof(Space.Document),Space.Document),
-                new Keywords(nameof(Space.Layout),Space.Layout,true),
-                new Keywords(nameof(Space.Select),Space.Select),
+                new Core.Services.Keyword(nameof(Space.All),Space.All),
+                new Core.Services.Keyword(nameof(Space.Document),Space.Document),
+                new Core.Services.Keyword(nameof(Space.Layout),Space.Layout,true),
+                new Core.Services.Keyword(nameof(Space.Select),Space.Select),
 
             };
 

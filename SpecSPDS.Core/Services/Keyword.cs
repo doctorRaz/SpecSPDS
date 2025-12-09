@@ -3,11 +3,11 @@ using System;
 
 namespace dRz.SpecSPDS.Core.Services
 {
-    public class Keywords
+    public class Keyword
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="Keyword"/> class.
         /// </summary>
         /// <param name="globalName">Name of the global.</param>
         /// <param name="localName">Name of the local.</param>
@@ -15,7 +15,7 @@ namespace dRz.SpecSPDS.Core.Services
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(string globalName,
+        public Keyword(string globalName,
                         string localName,
                         Enum answer,
                         bool isDefault = false,
@@ -35,14 +35,14 @@ namespace dRz.SpecSPDS.Core.Services
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="Keyword"/> class.
         /// </summary>
         /// <param name="globalName">Name of the global.</param>
         /// <param name="answer">The answer.</param>
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(string globalName,
+        public Keyword(string globalName,
                         Enum answer,
                         bool isDefault = false,
                         bool isVisible = true,
@@ -61,13 +61,13 @@ namespace dRz.SpecSPDS.Core.Services
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="Keyword"/> class.
         /// </summary>
         /// <param name="answer">The answer.</param>
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(Enum answer,
+        public Keyword(Enum answer,
                         bool isDefault = false,
                         bool isVisible = true,
                         bool isEnabled = true)
