@@ -87,18 +87,19 @@ namespace dRz.SpecSPDS
                     continue;
                 }
 
-                McPropertySource dd = McPropertySource.GetPropertySource(tempUmark);
-                var allProps = dd.ObjectProperties;
-                //var sours = allProps. Source;
+                //McPropertySource dd = McPropertySource.GetPropertySource(tempUmark);
+                //McProperties allProps = dd.ObjectProperties;
+                //var props = allProps. GetProps();
 
-                var ss = allProps.GetValueEx("Name", "");
-                foreach (McProperty prop in allProps)
-                {
-                    var s = prop.GetValue();
+                
+                //foreach (McProperty prop in allProps)
+                //{
+                //    var s = prop.GetValue();
 
-                }
+                //}
 
                 MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
+                //string ss = allProps.GetValueEx("Name", "").ToString();
 
                 //имени нет или не то
                 if (string.IsNullOrWhiteSpace(MarkerProp.MarkerName)
