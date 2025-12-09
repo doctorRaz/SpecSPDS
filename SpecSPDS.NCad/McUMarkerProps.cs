@@ -17,7 +17,6 @@ namespace dRz.SpecSPDS
     public partial class McUmarkerProps
 
     {
-
         public McUmarkerProps(Space space)
         {
             _space = space;
@@ -53,7 +52,7 @@ namespace dRz.SpecSPDS
 
             _isSpec = appSettings.Settings.IsSpec;//флаг что собирать false- собирать все
 
-            int counMinus = 0;//маркеры с отрицательной суммой
+            int countIncorrectData = 0;//маркеры с отрицательной суммой
             int counNotFlag = 0;//маркеров без признака включения в спеку
             int counFalseName = 0;//маркеров с не тем именем
 
@@ -63,9 +62,14 @@ namespace dRz.SpecSPDS
                 DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
                 McUMarker? tempUmark = McObjectManager.GetObject(idSelected) as McUMarker;
 
+                if (tempUmark == null)//не маркер
+                {
+                    continue;
+                }
+
                 MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
 
-
+                //имени нет или не то
                 if (string.IsNullOrWhiteSpace(MarkerProp.MarkerName)
                     || MarkerProp.MarkerName.IndexOf(_mcUmarkerName,
                                                      StringComparison.InvariantCultureIgnoreCase) < 0)
@@ -74,7 +78,7 @@ namespace dRz.SpecSPDS
                     continue;
                 }
 
-                McProperties? allProp = tempUmark?.DbEntity.ObjectProperties;
+                McProperties? allProp = tempUmark?.DbEntity.ObjectProperties;//todo пробничек получения имен всех свойств с описаниями
 
                 MarkerProp.FlagSpecRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
@@ -89,16 +93,17 @@ namespace dRz.SpecSPDS
 
                 MarkerProp.AmountRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
 
-                //проверка на некорректное значение количества, если минус, то не включать в набор
-                if (MarkerProp.Amount < 0)//маркеры с количеством меньше нуля не включаем в набор
+                MarkerProp.DeviceName = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
+
+                //проверка на некорректные данные, если количество минус или наименование пустое, то не включать в набор
+                if (MarkerProp.Amount < 0 || string.IsNullOrWhiteSpace(MarkerProp.DeviceName))
                 {
-                    counMinus++;
+                    countIncorrectData++;
                     continue;
                 }
 
                 MarkerProp.Section = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
                 MarkerProp.PositionNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
-                MarkerProp.DeviceName = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
                 MarkerProp.TypeModel = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
                 MarkerProp.ArticleNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
                 MarkerProp.Vendor = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
@@ -106,9 +111,9 @@ namespace dRz.SpecSPDS
                 MarkerProp.UnitMass = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
                 MarkerProp.Comment = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
 
-
                 MarkerProps.Add(MarkerProp);
             }
+
             if (MarkerProps.Count > 0)
             {
                 IsOk = true;
@@ -128,9 +133,9 @@ namespace dRz.SpecSPDS
                 ResultString += $"\nБез признака включения в спецификацию: {counNotFlag}";
             }
 
-            if (counMinus > 0)
+            if (countIncorrectData > 0)
             {
-                ResultString += $"\nС некорректной суммой (столбец \"Количество\"): {counMinus}";
+                ResultString += $"\nС некорректными данными: {countIncorrectData}";
             }
 
         }
@@ -167,7 +172,7 @@ namespace dRz.SpecSPDS
         /// ОБрабатывать маркеры с флагом включения в спеку
         /// </summary>
         /// <value>
-        ///   <c>true</c>обрабатывать маркеры только с флагом включения в спеку; otherwise, <c>false</c>.
+        ///   <c>true</c> обрабатывать маркеры только с флагом включения в спеку; otherwise, <c>false</c>.
         /// </value>
         bool _isSpec { get; set; }
         List<McObjectId> _idSelecteds { get; set; }
