@@ -1,4 +1,5 @@
-﻿using System;
+﻿using dRz.SpecSPDS.Core.Extensions;
+using System;
 using System.Linq;
 
 namespace dRz.SpecSpdsConsole
@@ -21,6 +22,57 @@ namespace dRz.SpecSpdsConsole
         }
 
 
+        internal static void convert()
+        {
+        lb:
+            Test test = new Test();
+            string[] str =
+                {
+        "",
+        "y",
+        "Y",
+        "t",
+        "tr",
+        " true",
+        "TRUE ",
+        "TRuE",
+        "д",
+        "Д",
+        "Да",
+        "ДА",
+        "дА",
+        "1",
+        "-1",
+        "-1.12",
+        "-1,12",
+        "100.10.10",
+        "00000.55",
+        "00000,55",
+        "1.000.007E-08",
+        "1.000.007E-08",
+        "1.000.007E-05",
+        "1000000.000001",
+        };
+
+            foreach (string s in str)
+            {
+                Console.WriteLine($"{s} \t{s.ToBoolean()}");
+            }
+
+            Console.WriteLine("-----------------------");
+            foreach (string s in str)
+            {
+                Console.WriteLine($"{s} \t{s.ToDouble()}");
+            }
+
+            Console.WriteLine("-----------------------");
+
+
+
+            goto lb;
+
+        }
+
 
     }
 
@@ -41,6 +93,6 @@ namespace dRz.SpecSpdsConsole
         }
 
 
-        
+
     }
 }

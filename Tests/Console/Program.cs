@@ -1,7 +1,29 @@
-﻿using dRz.SpecSPDS.Core.Extensions;
+﻿/*
+
+У меня не срабатывал, насколько я помню, механизм нескольких определений CommandMethod. Может, потому, что было под АКАД ))
+
+AppSettings я б засунул именно в то, что работает под кадом.
+
+Т.е., если надо, в методы/классы подсовывать не AppSettings.Settings, а именно ApplicationSettings. По крайней мере подменить можно будет при необходимости тестирования
+
+получаю список  свойств маркеров
+Ну ты же не напрямую McObject бросаешь, я правильно понимаю? А собственный класс, который маскирует все это дело? А то и абстрактный класс.
+ пульну на сборку в таблицу
+Отличный вариант написать отдельный тест под это дело ))) Юзер выбрал - вызываем реализацию интефейса типа IConvertMarker, который возвращает коллекцию экземпляров твоего класса.
+Эту коллекцию - в метод типа PrepareDataForTable (который может вернуть чуть ли не полный вариант форматирования таблицы, но без привязки к каду).
+Результат метода - в чисто кадовский метод CreateMCadTable по твоим же правилам.
+
+Я бы сегодня, наверное, делал так. Сорян, в код не полезу - помимо резюме еще и работы понакидали (((
+
+Насколько это лучше - пока не представляю. Но я в любом случае по максимуму бы отделял то, что без када жить не может, от чисто данных. По крайней мере в сегодняшних реалиях
+
+*/
+
+using dRz.SpecSPDS.Core.Extensions;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
 using System;
+using System.Linq;
 
 namespace dRz.SpecSpdsConsole
 {
@@ -12,106 +34,29 @@ namespace dRz.SpecSpdsConsole
         [STAThread]
         static void Main(string[] args)
         {
+            Test.convert();
 
-            AppSettings appSettings = new AppSettings();
+            string[] soft = { "Microsoft", "Google", "Apple" };
+            string[] hard = { "Apple", "IBM", "Samsung" };
 
-            Console.WriteLine(appSettings.ConfigPath);
-            //appSettings.Settings.ApplicationName = "SomeTestApplication";
-            //appSettings.Settings.MarkerName = "Спецификация_V2.4";
-            appSettings.Settings.IsSpec = true;
-            appSettings.SaveSettings();
+            // разность последовательностей
+            var result = soft.Except(hard);
 
-
-            PropXml propXml = new PropXml();
-            var props = propXml.Props;
-            //props.MarkerName = "xxz";
-            //props.FlagSpecRaw = "1";
-
-            //propXml.SaveProps();
-        lb:
-            Test test = new Test();
-            string[] str =
-                {
-                "",
-                "y",
-                "Y",
-                "t",
-                "tr",
-                " true",
-                "TRUE ",
-                "TRuE",
-                "д",
-                "Д",
-                "Да",
-                "ДА",
-                "дА",
-                "1",
-                "-1",
-                "-1.12",
-                "-1,12",
-                "100.10.10",
-                "00000.55",
-                "00000,55",
-                "1.000.007E-08",
-                "1.000.007E-08",
-                "1.000.007E-05",
-                "1000000.000001",
-                };
-
-            foreach (string s in str)
-            {
-                Console.WriteLine($"{s} \t{s.ToBoolean()}");
-            }
+            foreach (string s in result)
+                Console.WriteLine(s);
 
             Console.WriteLine("-----------------------");
-            //foreach (string s in str)
-            //{
-            //    Console.WriteLine($"{s} \t{s.ToDouble()}");
-            //}
 
-            //Console.WriteLine("-----------------------");
+            result = soft.Intersect(hard);
 
+            foreach (string s in result)
+                Console.WriteLine(s);
 
-            { }            //  var field = new FieldNameSettings();
-            goto lb;
-            //var  _standardDocProperties = new Dictionary<PropName, string>();
-            //  foreach (PropName docProp in Enum.GetValues(typeof(PropName)))
-            //  {
-            //      _standardDocProperties.Add(docProp, "");
-            //  }
-            //  { }
-            //EnumDescription enumConverter = new EnumDescription();
-            //enumConverter.StartTest();
-
-            //return;
-
-            //AddKeywordTest addKeywordTest = new AddKeywordTest();
-            //addKeywordTest.StartTest();
-
-            //return;
-            //AppSettings appSettings = new AppSettings();
-
-            //Console.WriteLine(appSettings.ConfigPath);
-            ////appSettings.Settings.ApplicationName = "SomeTestApplication";
-            ////appSettings.Settings.MarkerName = "Спецификация_V2.4";
-            //appSettings.Settings.IsSpec = true;
-            //appSettings.SaveSettings();
-
-            //DoNotChangeUITest doNotChangeUITest = new DoNotChangeUITest();
-            //doNotChangeUITest.StartTest();
+      
+ 
+    
 
 
-            //BlockNormalizeUITest blockNormalizeUiTest = new BlockNormalizeUITest();
-            //blockNormalizeUiTest.StartTest();
-
-            //WindowOwnerUITest windowOwnerUITest = new WindowOwnerUITest();
-            //windowOwnerUITest.StartTest();
-
-            //проверим что там теперь с настройками
-            //SettingsUITest settingsTest = new SettingsUITest();
-            //settingsTest.StartTest();
-
-            //Console.WriteLine("Hello, World!");
             Console.ReadKey();
         }
     }
