@@ -55,8 +55,9 @@ namespace dRz.SpecSPDS.Core.Settings
                 else
                 {
                     _settings = new ApplicationSettings();
-                    SaveSettings();
                 }
+
+                SaveSettings();//если добавилось свойство
             }
             catch
             {

@@ -9,7 +9,12 @@
         {
         }
 
+        //todo добавиь комментарии к свойствам
 
+        /// <summary>
+        /// Имя маркера
+        /// </summary>
+        public string Name { get; set; } = "Name";
 
         /// <summary>
         /// Раздел спецификации
