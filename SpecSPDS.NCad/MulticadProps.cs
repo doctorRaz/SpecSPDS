@@ -34,10 +34,12 @@ namespace dRz.SpecSPDS
 
             _idUmarkers = new List<McObjectId>();//на всякий
 
+            _stw.Start();
 
             ObjectFilter of = new ObjectFilter(true);
 
-            of.AddType(McUMarker.TypeID);
+            of.AddType(new Guid(settings.Guid));
+
 
             //с открытых документов
             if (_space == Space.All)

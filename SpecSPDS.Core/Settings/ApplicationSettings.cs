@@ -4,6 +4,14 @@
     {
         public string ApplicationName { get; set; } = "SpecSPDS";
 
+        /// <summary>
+        /// Gets or sets the unique identifier. McUmarker
+        /// </summary>
+        /// <value>
+        /// The unique identifier.
+        /// </value>
+        public string Guid { get; set; } = "00000001-0014-aaaa-aaaa-050b00000000";//McUmarker
+
         /// <summary> Имя маркера, можно только часть имени, регистр неважен </summary>
         public string MarkerName { get; set; } = "Спецификация";
 
