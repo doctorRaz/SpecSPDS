@@ -18,6 +18,28 @@ namespace dRz.SpecSPDS
     public partial class MultiCadProps
 
     {
+        Stopwatch _stw { get; set; }
+
+        string _tmrID;
+
+        /// <summary>
+        /// Gets the TMR identifier.
+        /// </summary>
+        /// <value>
+        /// The TMR identifier.
+        /// </value>
+        public string TmrID => _tmrID;
+        string _tmrProp;
+
+        /// <summary>
+        /// Gets the TMR property.
+        /// </summary>
+        /// <value>
+        /// The TMR property.
+        /// </value>
+        public string TmrProp => _tmrProp;
+
+
         List<McObjectId> _idUmarkers;
 
         List<McObjectId> IdUmarkers => _idUmarkers;
@@ -68,10 +90,16 @@ namespace dRz.SpecSPDS
                 _idUmarkers = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
             }
 
-            tt();
+            _stw.Stop();
+            _tmrID = _stw.Elapsed.ToString();
+            _stw.Restart();
+
+            ExtractProperties();
+
+
         }
 
-        public void tt()
+        public void ExtractProperties()
         {
 
             int countIncorrectData = 0;//маркеры с отрицательной суммой
@@ -155,9 +183,12 @@ namespace dRz.SpecSPDS
                 IsOk = true;
             }
 
-            ResultString = $"\nМаркеры";
-            ResultString += $"\nВыбрано всего: {_idUmarkers.Count}";
-            ResultString += $"\nВключено в набор: {MarkerProps.Count} маркеров";
+            _stw.Stop();
+            _tmrProp = _stw.Elapsed.ToString();
+
+            ResultString = $"\nМаркеры:";
+            ResultString += $"\nНайдено всего: {_idUmarkers.Count} за {TmrID}";
+            ResultString += $"\nВключено в набор: {MarkerProps.Count} маркеров за {TmrProp}";
 
             if (counFalseName > 0)
             {
