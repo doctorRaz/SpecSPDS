@@ -4,6 +4,7 @@ using dRz.SpecSPDS.Core.Settings;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace dRz.SpecSPDS
@@ -46,6 +47,7 @@ namespace dRz.SpecSPDS
 
         public MultiCadProps(Space space, ApplicationSettings settings)
         {
+            _stw = new Stopwatch();
             _space = space;
 
             _fieldName = settings.FieldNames;//имена полей
@@ -117,19 +119,11 @@ namespace dRz.SpecSPDS
                     continue;
                 }
 
-                //McPropertySource dd = McPropertySource.GetPropertySource(tempUmark);
-                //McProperties allProps = dd.ObjectProperties;
-                //var props = allProps. GetProps();
+                //список свойств
+                McProperties properties = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
 
-                
-                //foreach (McProperty prop in allProps)
-                //{
-                //    var s = prop.GetValue();
-
-                //}
-
-                MarkerProp.MarkerName = tempUmark?.DbEntity.ObjectProperties.GetValueEx("Name", "").ToString();
-                //string ss = allProps.GetValueEx("Name", "").ToString();
+                //имя маркера
+                MarkerProp.MarkerName = properties.GetValueEx(_fieldName.Name, "").ToString()?.Trim();
 
                 //имени нет или не то
                 if (string.IsNullOrWhiteSpace(MarkerProp.MarkerName)
@@ -140,13 +134,11 @@ namespace dRz.SpecSPDS
                     continue;
                 }
 
-                McProperties? allProp = tempUmark?.DbEntity.ObjectProperties;//todo пробничек получения имен всех свойств с описаниями
+                //флаг спецификации
+                MarkerProp.FlagSpecRaw = properties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
-                //var sours=tempUmark.Cast<>.
-
-                MarkerProp.FlagSpecRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
-
-                if (_isSpec)//учитывать признак спецификации
+                //учитывать признак спецификации
+                if (_isSpec)
                 {
                     if (!MarkerProp.FlagSpec)//признака спец нет
                     {
@@ -155,9 +147,11 @@ namespace dRz.SpecSPDS
                     }
                 }
 
-                MarkerProp.AmountRaw = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
+                //количество строка
+                MarkerProp.AmountRaw = properties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
 
-                MarkerProp.DeviceName = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
+                //наименование
+                MarkerProp.DeviceName = properties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
 
                 //проверка на некорректные данные, если количество минус или наименование пустое, то не включать в набор
                 if (MarkerProp.Amount < 0 || string.IsNullOrWhiteSpace(MarkerProp.DeviceName))
@@ -166,14 +160,14 @@ namespace dRz.SpecSPDS
                     continue;
                 }
 
-                MarkerProp.Section = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
-                MarkerProp.PositionNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
-                MarkerProp.TypeModel = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
-                MarkerProp.ArticleNumber = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
-                MarkerProp.Vendor = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
-                MarkerProp.Unit = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
-                MarkerProp.UnitMass = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
-                MarkerProp.Comment = tempUmark?.DbEntity.ObjectProperties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
+                MarkerProp.Section = properties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
+                MarkerProp.PositionNumber = properties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
+                MarkerProp.TypeModel = properties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
+                MarkerProp.ArticleNumber = properties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
+                MarkerProp.Vendor = properties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
+                MarkerProp.Unit = properties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
+                MarkerProp.UnitMass = properties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
+                MarkerProp.Comment = properties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
 
                 MarkerProps.Add(MarkerProp);
             }
