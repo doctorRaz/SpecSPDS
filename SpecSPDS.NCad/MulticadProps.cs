@@ -104,7 +104,7 @@ namespace dRz.SpecSPDS
         public void ExtractProperties()
         {
 
-            int countIncorrectData = 0;//маркеры с отрицательной суммой
+            int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
             int counNotFlag = 0;//маркеров без признака включения в спеку
             int counFalseName = 0;//маркеров с не тем именем
 
