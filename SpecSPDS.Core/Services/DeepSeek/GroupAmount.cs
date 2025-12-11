@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dRz.SpecSPDS.Core.Services
+namespace dRz.SpecSPDS.Core.Services.DeepSeek
 {
     /// <summary>
     /// сортировка группировка суммирование свойств
@@ -17,42 +17,46 @@ namespace dRz.SpecSPDS.Core.Services
         {
             _props = props;
 
-            var markers = props;
+            List<DefinitionMarkerProps> markers = props;
+
+
+
+
 
             var compactResult = markers
-    .GroupBy(m => new { m.Section, m.DeviceName })
-    .OrderBy(g => g.Key.Section)
-    .ThenBy(g => g.Key.DeviceName)
-    .Select(g => new
-    {
-        g.Key.Section,
-        g.Key.DeviceName,
-        TotalAmount = g.Sum(m => m.Amount),
-        PositionNumbers = g
-            .Select(m => m.PositionNumber)
-            .Distinct()
-            .OrderBy(p => p)
-            .ToList(),
+                                .GroupBy(m => new { m.Section, m.DeviceName })
+                                .OrderBy(g => g.Key.Section)
+                                .ThenBy(g => g.Key.DeviceName)
+                                .Select(g => new
+                                {
+                                    g.Key.Section,
+                                    g.Key.DeviceName,
+                                    TotalAmount = g.Sum(m => m.Amount),
+                                    PositionNumbers = g
+                                        .Select(m => m.PositionNumber)
+                                        .Distinct()
+                                        .OrderBy(p => p)
+                                        .ToList(),
 
-        // Берем первое непустое значение каждого свойства
-        TypeModel = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.TypeModel))?.TypeModel,
-        ArticleNumber = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.ArticleNumber))?.ArticleNumber,
-        Vendor = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Vendor))?.Vendor,
-        Unit = g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Unit))?.Unit,
+                                    // Берем первое непустое значение каждого свойства
+                                    g.FirstOrDefault(m => !string.IsNullOrEmpty(m.TypeModel))?.TypeModel,
+                                    g.FirstOrDefault(m => !string.IsNullOrEmpty(m.ArticleNumber))?.ArticleNumber,
+                                    g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Vendor))?.Vendor,
+                                    g.FirstOrDefault(m => !string.IsNullOrEmpty(m.Unit))?.Unit,
 
-        // Или все значения
-        AllTypeModels = g.Select(m => m.TypeModel).Distinct().ToList(),
-        AllArticleNumbers = g.Select(m => m.ArticleNumber).Distinct().ToList(),
-        AllVendors = g.Select(m => m.Vendor).Distinct().ToList(),
-        AllUnits = g.Select(m => m.Unit).Distinct().ToList()
-    })
-    .GroupBy(x => x.Section)
-    .Select(g => new
-    {
-        Section = g.Key,
-        Devices = g.ToList()
-    })
-    .ToList();
+                                    // Или все значения
+                                    AllTypeModels = g.Select(m => m.TypeModel).Distinct().ToList(),
+                                    AllArticleNumbers = g.Select(m => m.ArticleNumber).Distinct().ToList(),
+                                    AllVendors = g.Select(m => m.Vendor).Distinct().ToList(),
+                                    AllUnits = g.Select(m => m.Unit).Distinct().ToList()
+                                })
+                                .GroupBy(x => x.Section)
+                                .Select(g => new
+                                {
+                                    Section = g.Key,
+                                    Devices = g.ToList()
+                                })
+                                .ToList();
 
             var result =
                         from marker in markers
