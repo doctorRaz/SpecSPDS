@@ -1,18 +1,14 @@
 ﻿using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
+using dRz.SpecSPDS.NCad.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using Multicad;
-using Multicad.DatabaseServices;
-using Multicad.Symbols;
-using Multicad.Symbols.Tables;
 using System.ComponentModel;
-using Teigha.DatabaseServices;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.CadCommands
+namespace dRz.SpecSPDS.NCad.CadCommands
 {
     /// <summary>
     /// получение маркеров.. выбором с пространства с документа с нескольких документов 
@@ -84,97 +80,11 @@ namespace dRz.SpecSPDS.CadCommands
 
         }
 
-        #region DEBUG
-#if DEBUG
-
-        [CommandMethod("ффт")]
-        static public void FFindTblF()
-        {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                return;
-            }
-
-            Editor ed = doc.Editor;
-
-            List<McObjectId> idIds = ObjectFilter.Create().AddType(McTable.TypeID).GetObjects();
-
-            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
-
-        }
-
-
-        [CommandMethod("дфт")]
-        static public void DocFindTblF()
-        {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                return;
-            }
-
-            Editor ed = doc.Editor;
-
-            List<McObjectId> idIds = ObjectFilter.Create(true).AddType(McTable.TypeID).AddDoc(McDocument.ActiveDocument).GetObjects();
-
-            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
-
-        }
-
-        [CommandMethod("фт")]
-        static public void FindTblF()
-        {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                return;
-            }
-
-            Editor ed = doc.Editor;
-
-            List<McObjectId> idIds = ObjectFilter.Create(false).AddType(McTable.TypeID).GetObjects();
-
-            ed.WriteMessage($"Во всех документах найдено {idIds.Count} таблиц");
-
-        }
-
-        [CommandMethod("PaintFile")]
-        static public void PaintFile()
-        {
-            string filName = @"d:\@Developers\Programmers\!NET\!SpecSPDS\res\test.dwg";
-            McDocument pDoc = McDocumentsManager.OpenDocument(filName, false, true);
-
-            using (Database db0 = new Database(false, false))
-            {
-                db0.ReadDwgFile(filName, FileOpenMode.OpenForReadAndAllShare, false, "", false);
-
-            }
-            McDocument pOldWD = McDocument.WorkingDocument;
-
-            McDocument.WorkingDocument = pDoc;
-            ObjectFilter of = ObjectFilter.Create(false).AddDoc(pDoc);
-            of.AllObjects = true;
-            List<McObjectId> ids = of.GetObjects();
-            foreach (McObjectId id in ids)
-            {
-                McDbEntity pEnt = id.GetObject().Cast<McDbEntity>();
-                if (pEnt == null)
-                    continue;
-                pEnt.Color = Color.Red;
-            }
-            McObjectManager.UpdateAll();
-            pDoc.SaveAs(filName);
-            pDoc.Close();
-            McDocument.WorkingDocument = pOldWD;
-        }
 
     }
 
 
 
 
-#endif
 
-    #endregion
 }

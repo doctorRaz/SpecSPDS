@@ -2,7 +2,7 @@
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
-namespace dRz.SpecSPDS.CadCommands
+namespace dRz.SpecSPDS.NCad.CadCommands
 {
     public partial class SpecSpdsCmd
     { /// <summary>

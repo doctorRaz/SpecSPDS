@@ -7,7 +7,7 @@ using Multicad.Symbols;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 
-namespace dRz.SpecSPDS
+namespace dRz.SpecSPDS.NCad.Services
 {
     /// <summary>
     /// получаем универсальный маркер
