@@ -69,7 +69,7 @@ namespace dRz.SpecSpdsConsole
 
 
 
-            goto lb;
+            //goto lb;
 
         }
 
