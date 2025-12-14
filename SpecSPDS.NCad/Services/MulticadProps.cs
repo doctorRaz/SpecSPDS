@@ -135,20 +135,27 @@ namespace dRz.SpecSPDS.NCad.Services
 
             propsSource.GetValueEx  ~ в 1,5 раза быстрее чем prop.GetValue()
             ----
-            безList<McProperty> props = propsSource.GetProps(); и цикла по props
 
-            All props 162364 in 00:00:37.9959353
-            Ex props 162364 in 00:00:27.9115082
-
-
-            ----
+            без List<McProperty> props = propsSource.GetProps(); и цикла по props
             ex props
             GetProps Ex props 162364 in 00:00:27.5163433
             Ex props 162364 in 00:00:28.1478998
-
+            ------------
             Ex props 162364 in 00:00:27.8239544
             GetProps Ex props 162364 in 00:00:29.0826902
+			
             цикл по propsSource.GetProps() vs propsSource в пределах погрешности
+
+
+            ----
+            пустой цикл
+            GetProps props 0 in 00:00:12.9194806
+            PropSourse props 0 in 00:00:13.5995537
+            ------------
+            PropSourse props 0 in 00:00:12.9806616
+            GetProps props 0 in 00:00:13.0468145
+
+            с заполнением словарика на 15 сек дольше!!!
 
             */
 
@@ -162,7 +169,7 @@ namespace dRz.SpecSPDS.NCad.Services
             foreach (McObjectId mcObjectId in McObjectIds)//по собранным ID маркеров
             {
 
-                Dictionary<string, object> mprop = new Dictionary<string, object>();
+                //Dictionary<string, object> mprop = new Dictionary<string, object>();
 
                 McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
 
@@ -181,10 +188,10 @@ namespace dRz.SpecSPDS.NCad.Services
 
                 {
                     //mprop.Add(prop.Name, prop.GetValue());
-                    mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
+                    //mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
                 }
 
-                _mprops.Add(mprop);
+                //_mprops.Add(mprop);
             }
             _stw.Stop();
             _tmrGetProps = _stw.Elapsed.ToString();
@@ -200,7 +207,7 @@ namespace dRz.SpecSPDS.NCad.Services
             foreach (McObjectId mcObjectId in McObjectIds)//по собранным ID маркеров
             {
 
-                Dictionary<string, object> mprop = new Dictionary<string, object>();
+                //Dictionary<string, object> mprop = new Dictionary<string, object>();
 
                 McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
 
@@ -219,11 +226,11 @@ namespace dRz.SpecSPDS.NCad.Services
 
                 {
                     //самый быстрый, ~ в 1,5 раза быстрее чем 
-                    mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
+                    //mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
 
                 }
 
-                _mprops.Add(mprop);
+                //_mprops.Add(mprop);
             }
 
             _stw.Stop();
