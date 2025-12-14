@@ -44,21 +44,29 @@ namespace dRz.SpecSpdsConsole
             PropXml propXml = new PropXml();
             propXml.LoadProps();
 
-            List< DefinitionMarkerProps> props = propXml.Props;
+            List<DefinitionMarkerProps> props = propXml.Props;
 
-            List<GroupedDefinitionMarkerProps> groupedDefinitionMarkerProps =DefinitionMarkerPropsGrouper.GroupAndSortDefinitionMarkers(props);
+            PropXml propXml2 = new PropXml();
+            propXml2.LoadProps();
 
-           var outConsole=new OutConsole(groupedDefinitionMarkerProps);
+            List<DefinitionMarkerProps> props2 = propXml2.Props;
 
-          
-             Console.WriteLine("****************************");
+
+           List<DefinitionMarkerProps> propsAll = props.Union(props2).ToList();
+
+            List<GroupedDefinitionMarkerProps> groupedDefinitionMarkerProps = DefinitionMarkerPropsGrouper.GroupAndSortDefinitionMarkers(props);
+
+            var outConsole = new OutConsole(groupedDefinitionMarkerProps);
+
+
+            Console.WriteLine("****************************");
             var groupAmount = new GroupAmount(props);
 
-           
 
-           
 
-           
+
+
+
 
             Console.ReadKey();
         }

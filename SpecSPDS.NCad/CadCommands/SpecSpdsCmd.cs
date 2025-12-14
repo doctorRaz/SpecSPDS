@@ -61,6 +61,12 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 
+            ed.WriteMessage($"{mcUmarkerProps.ResultString}");
+
+            mcUmarkerProps.ExtractAllProperties();
+
+            ed.WriteMessage($"All props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrAll}");
+            ed.WriteMessage($"Ex props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrEx}");
             #endregion
 
             //дальше пуляю в сортировку обработку
@@ -68,7 +74,6 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             //результат пишу в таблицу
 
-            ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
             PropXml propXml = new PropXml();
             propXml.Props = umProps;

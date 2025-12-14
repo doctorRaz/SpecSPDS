@@ -21,6 +21,17 @@ namespace dRz.SpecSPDS.NCad.Services
     {
         Stopwatch _stw { get; set; }
 
+
+        List<Dictionary<string, object>> _mprops;
+        public List<Dictionary<string, object>> Mprops => _mprops;
+        public string TmrAll => _tmrAll;
+
+        string _tmrAll;
+        public string TmrEx => _tmrEx;
+
+        string _tmrEx;
+
+
         string _tmrID;
 
         /// <summary>
@@ -41,9 +52,16 @@ namespace dRz.SpecSPDS.NCad.Services
         public string TmrProp => _tmrProp;
 
 
-        List<McObjectId> _idUmarkers;
+        List<McObjectId> _mcObjectIds;
 
-        List<McObjectId> IdUmarkers => _idUmarkers;
+        List<McObjectId> McObjectIds => _mcObjectIds;
+
+        public MultiCadProps(ApplicationSettings settings)
+        {
+
+            _stw = new Stopwatch();
+
+        }
 
         public MultiCadProps(Space space, ApplicationSettings settings)
         {
@@ -56,7 +74,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
             _isSpec = settings.IsSpec;//флаг что собирать false- собирать все
 
-            _idUmarkers = new List<McObjectId>();//на всякий
+            _mcObjectIds = new List<McObjectId>();//на всякий
 
             _stw.Start();
 
@@ -68,51 +86,148 @@ namespace dRz.SpecSPDS.NCad.Services
             //с открытых документов
             if (_space == Space.All)
             {
-                List<McDocument> docs = McDocumentsManager.GetDocuments();
-
                 of.AddDocs(McDocumentsManager.GetDocuments());//открытые документы
 
-                _idUmarkers = of.GetObjects();
+                _mcObjectIds = of.GetObjects();
             }
             //с активного документа
             else if (_space == Space.Document)
             {
                 of.AddDoc(McDocument.WorkingDocument);
 
-                _idUmarkers = of.GetObjects();
+                _mcObjectIds = of.GetObjects();
             }
             //с активного пространства
             else if (_space == Space.Layout)
             {
-                _idUmarkers = of.GetObjects();
+                _mcObjectIds = of.GetObjects();
             }
             // выбором
             else if (_space == Space.Select)
             {
-                _idUmarkers = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
+                _mcObjectIds = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, McUMarker.TypeID).ToList();
             }
 
             _stw.Stop();
             _tmrID = _stw.Elapsed.ToString();
             _stw.Restart();
 
-            ExtractProperties();
+            ExtractNamedProperties();//todo возвращаемое значение
 
 
         }
 
-        public void ExtractProperties()
+
+        /// <summary>
+        /// Extracts all propsSource. Все маркеры и все их свойства в список словарей
+        /// собирать все свойства в 30 раз медленнее чем выборочно
+        /// </summary>
+        public void ExtractAllProperties()
+        {
+            /*
+            Найдено всего: 162364 за 00:00:00.3047090
+            Включено в набор: 72162 маркеров за 00:00:01.7906102
+            С неподходящим именем: 72160
+            Без признака включения в спецификацию: 18040
+            С некорректными данными: 2
+            prop.GetValue() props           162364 in 00:00:35.3129445
+            propsSource.GetValueEx props    162364 in 00:00:26.0401367
+
+            propsSource.GetValueEx  ~ в 1,5 раза быстрее чем prop.GetValue()
+            ----
+            безList<McProperty> props = propsSource.GetProps(); и цикла по props
+
+            All props 162364 in 00:00:37.9959353
+            Ex props 162364 in 00:00:27.9115082
+
+            */
+
+            //test prop.Value
+
+            _stw.Restart();
+
+            _mprops = new List<Dictionary<string, object>>();
+
+
+            foreach (McObjectId mcObjectId in McObjectIds)//по собранным ID маркеров
+            {
+
+                Dictionary<string, object> mprop = new Dictionary<string, object>();
+
+                McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
+
+                if (tempUmark == null)//не маркер
+                {
+                    continue;
+                }
+
+                //список свойств
+                McProperties propsSource = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
+
+                //List<McProperty> props = propsSource.GetProps();
+
+
+                foreach (McProperty prop in propsSource/*props*/)
+
+                {
+                    mprop.Add(prop.Name, prop.GetValue());
+                }
+
+                _mprops.Add(mprop);
+            }
+            _stw.Stop();
+            _tmrAll = _stw.Elapsed.ToString();
+
+            //test EX
+            _stw.Restart();
+
+            _mprops = new List<Dictionary<string, object>>();
+
+            foreach (McObjectId mcObjectId in McObjectIds)//по собранным ID маркеров
+            {
+
+                Dictionary<string, object> mprop = new Dictionary<string, object>();
+
+                McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
+
+                if (tempUmark == null)//не маркер
+                {
+                    continue;
+                }
+
+                //список свойств
+                McProperties propsSource = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
+
+                //List<McProperty>  props = propsSource.GetProps();
+
+
+                foreach (McProperty prop in propsSource/*props*/)
+
+                {
+                    //самый быстрый, ~ в 1,5 раза быстрее чем 
+                    mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
+
+                }
+
+                _mprops.Add(mprop);
+            }
+
+            _stw.Stop();
+            _tmrEx = _stw.Elapsed.ToString();
+        }
+
+        public void ExtractNamedProperties()
         {
 
             int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
-            int counNotFlag = 0;//маркеров без признака включения в спеку
-            int counFalseName = 0;//маркеров с не тем именем
+            int countNotFlag = 0;//маркеров без признака включения в спеку
+            int countFalseName = 0;//маркеров с не тем именем
 
-            foreach (McObjectId idSelected in _idUmarkers)//по собранным ID маркеров
+            foreach (McObjectId mcObjectId in McObjectIds)//по собранным ID маркеров
             {
 
                 DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
-                McUMarker? tempUmark = McObjectManager.GetObject(idSelected) as McUMarker;
+                McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
 
                 if (tempUmark == null)//не маркер
                 {
@@ -130,7 +245,7 @@ namespace dRz.SpecSPDS.NCad.Services
                     || MarkerProp.MarkerName.IndexOf(_mcUmarkerName,
                                                      StringComparison.InvariantCultureIgnoreCase) < 0)
                 {
-                    counFalseName++;
+                    countFalseName++;
                     continue;
                 }
 
@@ -142,7 +257,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 {
                     if (!MarkerProp.FlagSpec)//признака спец нет
                     {
-                        counNotFlag++;
+                        countNotFlag++;
                         continue;
                     }
                 }
@@ -181,17 +296,17 @@ namespace dRz.SpecSPDS.NCad.Services
             _tmrProp = _stw.Elapsed.ToString();
 
             ResultString = $"\nМаркеры:";
-            ResultString += $"\nНайдено всего: {_idUmarkers.Count} за {TmrID}";
+            ResultString += $"\nНайдено всего: {_mcObjectIds.Count} за {TmrID}";
             ResultString += $"\nВключено в набор: {MarkerProps.Count} маркеров за {TmrProp}";
 
-            if (counFalseName > 0)
+            if (countFalseName > 0)
             {
-                ResultString += $"\nС неподходящим именем: {counFalseName}";
+                ResultString += $"\nС неподходящим именем: {countFalseName}";
             }
 
-            if (counNotFlag > 0)
+            if (countNotFlag > 0)
             {
-                ResultString += $"\nБез признака включения в спецификацию: {counNotFlag}";
+                ResultString += $"\nБез признака включения в спецификацию: {countNotFlag}";
             }
 
             if (countIncorrectData > 0)
