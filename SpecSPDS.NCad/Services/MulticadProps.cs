@@ -24,12 +24,12 @@ namespace dRz.SpecSPDS.NCad.Services
 
         List<Dictionary<string, object>> _mprops;
         public List<Dictionary<string, object>> Mprops => _mprops;
-        public string TmrAll => _tmrAll;
+        public string TmrGetProps => _tmrGetProps;
 
-        string _tmrAll;
-        public string TmrEx => _tmrEx;
+        string _tmrGetProps;
+        public string TmrPropSourse => _tmrPopsSource;
 
-        string _tmrEx;
+        string _tmrPopsSource;
 
 
         string _tmrID;
@@ -122,7 +122,7 @@ namespace dRz.SpecSPDS.NCad.Services
         /// Extracts all propsSource. Все маркеры и все их свойства в список словарей
         /// собирать все свойства в 30 раз медленнее чем выборочно
         /// </summary>
-        public void ExtractAllProperties()
+        public void ExtractAllPropertiesGetProps()
         {
             /*
             Найдено всего: 162364 за 00:00:00.3047090
@@ -139,6 +139,16 @@ namespace dRz.SpecSPDS.NCad.Services
 
             All props 162364 in 00:00:37.9959353
             Ex props 162364 in 00:00:27.9115082
+
+
+            ----
+            ex props
+            GetProps Ex props 162364 in 00:00:27.5163433
+            Ex props 162364 in 00:00:28.1478998
+
+            Ex props 162364 in 00:00:27.8239544
+            GetProps Ex props 162364 in 00:00:29.0826902
+            цикл по propsSource.GetProps() vs propsSource в пределах погрешности
 
             */
 
@@ -164,20 +174,24 @@ namespace dRz.SpecSPDS.NCad.Services
                 //список свойств
                 McProperties propsSource = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
 
-                //List<McProperty> props = propsSource.GetProps();
+                List<McProperty> props = propsSource.GetProps();
 
 
-                foreach (McProperty prop in propsSource/*props*/)
+                foreach (McProperty prop in /*propsSource*/ props)
 
                 {
-                    mprop.Add(prop.Name, prop.GetValue());
+                    //mprop.Add(prop.Name, prop.GetValue());
+                    mprop.Add(prop.Name, propsSource.GetValueEx(prop.Name, ""));
                 }
 
                 _mprops.Add(mprop);
             }
             _stw.Stop();
-            _tmrAll = _stw.Elapsed.ToString();
+            _tmrGetProps = _stw.Elapsed.ToString();
+        }
 
+        public void ExtractAllPropertiesPropsSource()
+        { 
             //test EX
             _stw.Restart();
 
@@ -201,7 +215,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 //List<McProperty>  props = propsSource.GetProps();
 
 
-                foreach (McProperty prop in propsSource/*props*/)
+                foreach (McProperty prop in propsSource /*props*/)
 
                 {
                     //самый быстрый, ~ в 1,5 раза быстрее чем 
@@ -213,7 +227,7 @@ namespace dRz.SpecSPDS.NCad.Services
             }
 
             _stw.Stop();
-            _tmrEx = _stw.Elapsed.ToString();
+            _tmrPopsSource = _stw.Elapsed.ToString();
         }
 
         public void ExtractNamedProperties()

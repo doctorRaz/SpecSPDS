@@ -63,10 +63,27 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
-            mcUmarkerProps.ExtractAllProperties();
+            mcUmarkerProps.ExtractAllPropertiesGetProps();
 
-            ed.WriteMessage($"All props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrAll}");
-            ed.WriteMessage($"Ex props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrEx}");
+            ed.WriteMessage($"GetProps props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrGetProps}");
+
+
+            mcUmarkerProps.ExtractAllPropertiesPropsSource();
+
+            ed.WriteMessage($"PropSourse props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrPropSourse}");
+
+
+            ed.WriteMessage("------------");
+
+            mcUmarkerProps.ExtractAllPropertiesPropsSource();
+
+            ed.WriteMessage($"PropSourse props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrPropSourse}");
+
+
+            mcUmarkerProps.ExtractAllPropertiesGetProps();
+
+            ed.WriteMessage($"GetProps props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrGetProps}");
+
             #endregion
 
             //дальше пуляю в сортировку обработку
