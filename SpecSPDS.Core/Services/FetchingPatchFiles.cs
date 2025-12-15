@@ -17,10 +17,10 @@ namespace dRz.SpecSPDS.NCad.Services
             //string folderPatch = string.Empty;
             //string[] filePatchs = new string[] { };
 
-            if (space == Space.Folder || space == Space.SybFolder)
+            if (space == Space.Folder || space == Space.SubFolder)
             {
                 //собрать файлы из каталога
-                return GetFilesOfDir(Browser(), space == Space.SybFolder);
+                return GetFilesOfDir(Browser(), space == Space.SubFolder);
             }
             else
             {           

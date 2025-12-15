@@ -49,7 +49,7 @@ namespace dRz.SpecSPDS.NCad.CadCommands
             {
                 new Keywords(nameof(Space.Files),Space.Files),
                 new Keywords(nameof(Space.Folder),Space.Folder),
-                new Keywords(nameof(Space.SybFolder),Space.SybFolder),
+                new Keywords(nameof(Space.SubFolder),Space.SubFolder),
                 new Keywords(nameof(Space.All),Space.All),
                 new Keywords(nameof(Space.Document),Space.Document),
                 new Keywords(nameof(Space.Layout),Space.Layout,true),
@@ -68,7 +68,7 @@ namespace dRz.SpecSPDS.NCad.CadCommands
             //из папки или файлов
             Space spase = (Space)propMod;
 
-            if (spase == Space.Folder || spase == Space.Files || spase == Space.SybFolder)
+            if (spase == Space.Folder || spase == Space.Files || spase == Space.SubFolder)
             {
                 List<string> filenames = FetchingPatchFiles.GetFiles(spase);
                

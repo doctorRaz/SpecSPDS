@@ -14,7 +14,7 @@ namespace dRz.SpecSPDS.Core.Enums
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
         [Description("")]
-        SybFolder,        
+        SubFolder,        
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
         [Description("Папка")]
