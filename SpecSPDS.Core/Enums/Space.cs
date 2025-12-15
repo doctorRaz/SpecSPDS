@@ -8,16 +8,31 @@ namespace dRz.SpecSPDS.Core.Enums
     public enum Space
     {
 
-        /// <summary> Обрабатывать все маркеры в открытых файлах </summary>
+        /// <summary> Обрабатывать все маркеры из файлов </summary>
+        [Description("Файлы")]
+        Files,        
+
+        /// <summary> Обрабатывать все маркеры в каталогах </summary>
+        [Description("")]
+        SybFolder,        
+
+        /// <summary> Обрабатывать все маркеры в каталогах </summary>
+        [Description("Папка")]
+        Folder,        
+		
+		/// <summary> Обрабатывать все маркеры в открытых файлах </summary>
         [Description("Все")]
         All,
-        /// <summary> Обрабатывать все маркеры в текущем файле </summary>
+        
+		/// <summary> Обрабатывать все маркеры в текущем файле </summary>
         [Description("Документ")]
         Document,
-        /// <summary>Обрабатывать все маркеры в активном пространстве </summary>
+        
+		/// <summary>Обрабатывать все маркеры в активном пространстве </summary>
         [Description("Текущее")]
         Layout,
-        /// <summary> Обрабатывать выбранные маркеры в текущем файле </summary>
+        
+		/// <summary> Обрабатывать выбранные маркеры в текущем файле </summary>
         [Description("вЫбрать")]
         Select,
 

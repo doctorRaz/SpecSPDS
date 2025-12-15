@@ -1,4 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Enums;
+using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
 using dRz.SpecSPDS.NCad.Services;
@@ -44,22 +45,45 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             #region выбор маркеров
             //получаю маркеры
-            List<Core.Services.Keyword> keywordsList = new List<Core.Services.Keyword>
+            List<Keywords> keywordsList = new List<Keywords>
             {
-                new Core.Services.Keyword(nameof(Space.All),Space.All),
-                new Core.Services.Keyword(nameof(Space.Document),Space.Document),
-                new Core.Services.Keyword(nameof(Space.Layout),Space.Layout,true),
-                new Core.Services.Keyword(nameof(Space.Select),Space.Select),
+                new Keywords(nameof(Space.Files),Space.Files),
+                new Keywords(nameof(Space.Folder),Space.Folder),
+                new Keywords(nameof(Space.SybFolder),Space.SybFolder),
+                new Keywords(nameof(Space.All),Space.All),
+                new Keywords(nameof(Space.Document),Space.Document),
+                new Keywords(nameof(Space.Layout),Space.Layout,true),
+                new Keywords(nameof(Space.Select),Space.Select),
 
             };
-
-            Enum propMod = KeywordAnswer(doc, keywordsList, "Выбрать маркер");
+            Enum propMod = KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
             if (propMod == null) return;//смысла продолжать нет
 
-            MultiCadProps mcUmarkerProps = new MultiCadProps((Space)propMod, settings);
 
-            List<Core.Models.DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
+
+            MultiCadProps mcUmarkerProps = null;
+
+
+            //из папки или файлов
+            Space spase = (Space)propMod;
+
+            if (spase == Space.Folder || spase == Space.Files || spase == Space.SybFolder)
+            {
+                List<string> filenames = FetchingPatchFiles.GetFiles(spase);
+               
+
+                mcUmarkerProps = new MultiCadProps(filenames, settings);
+            }
+            // с открытых чертежей
+            else
+            {
+
+                mcUmarkerProps = new MultiCadProps(spase, settings);
+
+            }
+
+            List<DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
 
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
