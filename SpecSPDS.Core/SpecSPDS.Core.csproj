@@ -12,8 +12,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="ini-parser-netstandard" Version="2.5.3" />
-	  <PackageReference Include="WindowsAPICodePack" Version="8.0.14" />
+	  <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>
 
 
