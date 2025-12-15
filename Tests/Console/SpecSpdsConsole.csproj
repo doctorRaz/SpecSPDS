@@ -4,6 +4,7 @@
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<UseWPF>true</UseWPF>
 		<Nullable>enable</Nullable>
 		<RootNamespace>dRz.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>

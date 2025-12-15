@@ -6,55 +6,104 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace dRz.SpecSPDS.NCad.Services
 {
     public class FetchingPatchFiles
     {
+        /// <summary>
+        /// Gets the files.
+        /// </summary>
+        /// <param name="space">The space.</param>
+        /// <returns></returns>
         public static List<string> GetFiles(Space space)
         {
-            //string folderPatch = string.Empty;
-            //string[] filePatchs = new string[] { };
 
             if (space == Space.Folder || space == Space.SubFolder)
             {
+                string description = "Выберите папку";
+
+                if (space == Space.SubFolder) description += " (обработаются файлы из подпапок)";
                 //собрать файлы из каталога
-                return GetFilesOfDir(Browser(), space == Space.SubFolder);
+                return GetFilesOfDir(Browser(description), space == Space.SubFolder);
             }
             else
-            {           
-                return new List<string>();
+            {
+                return Files();
             }
 
 
         }
 
-        static string Browser()
+        /// <summary>
+        /// путь к папке
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <returns></returns>
+        static string Browser(string description)
         {
             //https://autolisp.ru/2024/05/23/nanocad-net-select-folder/
             using (FolderBrowserDialog dlg = new FolderBrowserDialog())
             {
-                dlg.Description = "Выберите каталог";
+                dlg.Description = description;
                 dlg.UseDescriptionForTitle = true;
+                //dlg.Multiselect  = true;
                 // Остальные настройки
 
-                dlg.ShowDialog();
-
-                if (!string.IsNullOrWhiteSpace(dlg.SelectedPath))
+                if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    return dlg.SelectedPath;
+                    if (!string.IsNullOrWhiteSpace(dlg.SelectedPath))
+                    {
+                        return dlg.SelectedPath;
+                    }
                 }
+                else
+                {
+                    System.Windows.MessageBox.Show("Не выбран каталог!",
+                               "SpecSPDS",
+                               MessageBoxButton.OK,
+                               MessageBoxImage.Information);
+                }
+
                 return string.Empty;
             }
+
 
         }
 
 
-        static string[] Files()
+        static List<string> Files()
         {
+            //todo обернуть try canch???
 
-            return new string[] { };
+            using (OpenFileDialog dlg = new OpenFileDialog())
+            {
+                dlg.Multiselect = true;
+                dlg.Title = "Выберите файлы чертежей";
+                dlg.Filter = "Files dwg|*.dwg";
+                dlg.RestoreDirectory = true;
+                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // Проверка расширений файлов https://chat.deepseek.com
+                    List<string> validFiles = dlg.FileNames
+                        .Where(file => Path.GetExtension(file).Equals(".dwg", StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
+
+                    if (validFiles.Count > 0) return validFiles;
+
+                }
+
+                System.Windows.MessageBox.Show("Ничего не выбрано!",
+                       "SpecSPDS",
+                       MessageBoxButton.OK,
+                       MessageBoxImage.Information);
+
+                return new List<string>();
+
+            }
+
         }
 
         static List<string> GetFilesOfDir(string sPath, bool WithSubfolders = false, string sSerchPatern = "*.dwg")
@@ -77,11 +126,11 @@ namespace dRz.SpecSPDS.NCad.Services
             }
             catch (System.Exception ex)
             {
-                //todo переделать на интерфейс сообщений
+                //todo ВСЕ диалоги переделать на интерфейс сообщений
 #if NC || AC
                 Cad.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\n" + ex.Message);
 #else
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
 #endif
                 return new List<string>();
             }

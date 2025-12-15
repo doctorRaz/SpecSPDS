@@ -14,6 +14,7 @@ namespace dRz.SpecSPDS.NCad.TestCommand
         [CommandMethod("PaintFile")]
         static public void PaintFile()
         {
+            //https://developer.nanocad.ru/redmine/boards/4/topics/1681?r=1683#message-1683
             string filName = @"d:\@Developers\Programmers\!NET\!SpecSPDS\res\test.dwg";
             McDocument pDoc = McDocumentsManager.OpenDocument(filName, false, true);
 

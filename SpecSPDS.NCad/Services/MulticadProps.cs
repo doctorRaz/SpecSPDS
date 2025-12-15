@@ -58,8 +58,42 @@ namespace dRz.SpecSPDS.NCad.Services
 
         public MultiCadProps(ApplicationSettings settings)
         {
-
             _stw = new Stopwatch();
+
+
+        }
+
+        // todo переделать на возвращаемое значение???? в конструктор пихать settings в метод пихать или спасе или список файлов
+        public MultiCadProps(List<string> filenames, ApplicationSettings settings)
+        {
+
+            //запомним рабочий документ
+            McDocument pOldWD = McDocument.WorkingDocument;
+
+            foreach (string filename in filenames)
+            {
+                //если открыт то не нулл
+                McDocument mcDocument = McDocumentsManager.GetDocument(filename);
+                if (mcDocument == null)
+                {
+                    // открываем файл в скрытом режиме
+                    mcDocument = McDocumentsManager.OpenDocument(filename, false, true);
+                }
+
+                // делаем рабочим
+                McDocument.WorkingDocument = mcDocument;
+
+                //получаем с него ID
+
+                //дергаем сбор свойств
+
+
+                //после обработки закрываем
+                mcDocument.Close();
+            }
+
+            //вернем рабочий документ
+            McDocument.WorkingDocument = pOldWD;
 
         }
 
@@ -198,7 +232,7 @@ namespace dRz.SpecSPDS.NCad.Services
         }
 
         public void ExtractAllPropertiesPropsSource()
-        { 
+        {
             //test EX
             _stw.Restart();
 
@@ -381,11 +415,11 @@ namespace dRz.SpecSPDS.NCad.Services
         /// </summary>
         Space _space { get; set; }
     }
-	
-	//подгон от крыса
-	   public class NamedProperties
+
+    //подгон от крыса
+    public class NamedProperties
     {
-        public IEnumerable<McNamedProperty> Get(IEnumerable<McObjectId> objectIds)
+        public IEnumerable<DefinitionMarkerProps> Get(IEnumerable<McObjectId> objectIds)
         {
             return objectIds.Select(o => McObjectManager.GetObject(o) as McUMarker)
                 .Where(o => o != null)
@@ -393,7 +427,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 {
                     McProperties props = McPropertySource.GetPropertySource(o).ObjectProperties;
                     // Дальше тут наполнение своего класса необходимыми свойствами
-                    return new McNamedProperty();
+                    return new DefinitionMarkerProps();
                 });
         }
     }
