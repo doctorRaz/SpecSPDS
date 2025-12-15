@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace dRz.SpecSPDS.NCad.Services
+namespace dRz.SpecSPDS.Core.Services
 {
     public class FetchingPatchFiles
     {

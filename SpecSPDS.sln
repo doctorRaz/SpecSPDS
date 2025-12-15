@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSpdsConsole", "Tests\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloAvalonia23", "..\SDK\NC_SDK_RU_25.0.6998.4762.8055\samples\Mgd\HelloAvalonia\HelloAvalonia23.csproj", "{89B6AF2C-391F-3F72-45AB-9EF1067CF095}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestExampleКрыс", "TestExampleКрыс", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checks", "TestExample\Tests\Checks\Checks.csproj", "{D0DD185E-5837-34F6-FF0B-72371D401CAA}"
 EndProject
