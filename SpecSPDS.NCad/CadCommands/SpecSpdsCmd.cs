@@ -87,26 +87,9 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
-            mcUmarkerProps.ExtractAllPropertiesGetProps();
-
-            ed.WriteMessage($"GetProps props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrGetProps}");
 
 
-            mcUmarkerProps.ExtractAllPropertiesPropsSource();
 
-            ed.WriteMessage($"PropSourse props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrPropSourse}");
-
-
-            ed.WriteMessage("------------");
-
-            mcUmarkerProps.ExtractAllPropertiesPropsSource();
-
-            ed.WriteMessage($"PropSourse props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrPropSourse}");
-
-
-            mcUmarkerProps.ExtractAllPropertiesGetProps();
-
-            ed.WriteMessage($"GetProps props {mcUmarkerProps.Mprops.Count} in {mcUmarkerProps.TmrGetProps}");
 
             #endregion
 
