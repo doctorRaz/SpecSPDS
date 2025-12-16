@@ -32,6 +32,12 @@ namespace dRz.SpecSPDS.Core.Services
             set => FSD.Multiselect = value;
         }
 
+        public bool RestoreDirectory
+        {
+            get => FSD.RestoreDirectory;
+            set => FSD.RestoreDirectory = value;
+        }
+
         public string InitialDirectory
         {
             get => FSD.InitialDirectory;

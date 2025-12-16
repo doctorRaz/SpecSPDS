@@ -14,10 +14,10 @@ namespace dRz.SpecSPDS.Core.Services
     public class FetchingPatchFiles
     {
         /// <summary>
-        /// Gets the files.
+        /// Определяет способ получения файлов, выбор каталога или фалов
         /// </summary>
         /// <param name="space">The space.</param>
-        /// <returns></returns>
+        /// <returns>список путей к файлам</returns>
         public static List<string> GetFiles(Space space)
         {
 
@@ -25,7 +25,8 @@ namespace dRz.SpecSPDS.Core.Services
             {
                 string description = "Выберите папку";
 
-                if (space == Space.SubFolder) description += " (обработаются файлы из подпапок)";
+                if (space == Space.SubFolder) description += " (обработаются файлы в подпапках)";
+
                 //собрать файлы из каталога
                 return GetFilesOfDir(Browser(description), space == Space.SubFolder);
             }
@@ -41,7 +42,7 @@ namespace dRz.SpecSPDS.Core.Services
         /// путь к папке
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <returns></returns>
+        /// <returns>путь к папке</returns>
         static string Browser(string description)
         {
             //https://autolisp.ru/2024/05/23/nanocad-net-select-folder/
@@ -70,10 +71,12 @@ namespace dRz.SpecSPDS.Core.Services
                 return string.Empty;
             }
 
-
         }
 
-
+        /// <summary>
+        /// Выбор файлов чертежей.
+        /// </summary>
+        /// <returns>Список путей к файлам</returns>
         static List<string> Files()
         {
             //todo обернуть try canch???
@@ -84,7 +87,7 @@ namespace dRz.SpecSPDS.Core.Services
                 dlg.Title = "Выберите файлы чертежей";
                 dlg.Filter = "Files dwg|*.dwg";
                 dlg.RestoreDirectory = true;
-                if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     // Проверка расширений файлов https://chat.deepseek.com
                     List<string> validFiles = dlg.FileNames
@@ -106,6 +109,13 @@ namespace dRz.SpecSPDS.Core.Services
 
         }
 
+        /// <summary>
+        /// Получить пути файлов из каталога
+        /// </summary>
+        /// <param name="sPath">The s path.</param>
+        /// <param name="WithSubfolders">if set to <c>true</c> [with subfolders].</param>
+        /// <param name="sSerchPatern">The s serch patern.</param>
+        /// <returns>Список файлов</returns>
         static List<string> GetFilesOfDir(string sPath, bool WithSubfolders = false, string sSerchPatern = "*.dwg")
         {
             try
@@ -120,7 +130,6 @@ namespace dRz.SpecSPDS.Core.Services
                 }
                 else
                 {
-
                     return new List<string>();
                 }
             }
@@ -140,6 +149,6 @@ namespace dRz.SpecSPDS.Core.Services
 
 
 
-        //Space _space;
+
     }
 }

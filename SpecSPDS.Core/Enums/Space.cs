@@ -13,11 +13,11 @@ namespace dRz.SpecSPDS.Core.Enums
         Files,        
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
-        [Description("")]
+        [Description("Подпапки")]
         SubFolder,        
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
-        [Description("Папка")]
+        [Description("Каталог")]
         Folder,        
 		
 		/// <summary> Обрабатывать все маркеры в открытых файлах </summary>

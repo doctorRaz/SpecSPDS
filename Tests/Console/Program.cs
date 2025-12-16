@@ -23,7 +23,6 @@ using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Services.DeepSeek;
-using dRz.SpecSPDS.NCad.Services;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -39,31 +38,21 @@ namespace dRz.SpecSpdsConsole
         static void Main(string[] args)
         {
 
-           CommonOpenFileDialog cofd = new CommonOpenFileDialog();
-            cofd.IsFolderPicker = true;
-            cofd.Multiselect = true;
-            cofd.InitialDirectory = "";
-            cofd.RestoreDirectory = true;
-      
 
-            var cc = cofd.ShowDialog();
-
-            
-            List<string> fn = cofd.FileNames.ToList<string>();//.ToList<string>();
-
-              cc = cofd.ShowDialog();
-
-             List<string> fn2 = cofd.FileNames.ToList<string>();
-
-            //https://metanit.com/sharp/tutorial/15.4.php
-            List<string> d =fn.Union(fn2).ToList<string>();
-
-                 d.Sort ();
         Lb:
-            var ff = FetchingPatchFiles.GetFiles(Space.Files);
 
+            var oal = new OutAddList();
+
+            string[] str=  {"1","2","10"};   
+            
+            List<string> lstr= new List<string>{"zz","fd","sd"};    
+
+            oal.RefAdd(str,ref lstr);
+
+            var dd = lstr;
             goto Lb;
 
+            var ff = FetchingPatchFiles.GetFiles(Space.Folder);
             PropXml propXml = new PropXml();
             propXml.LoadProps();
 

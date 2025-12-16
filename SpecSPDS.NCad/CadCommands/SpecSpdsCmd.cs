@@ -5,7 +5,9 @@ using dRz.SpecSPDS.Core.Settings;
 using dRz.SpecSPDS.NCad.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using Multicad.DatabaseServices;
 using System.ComponentModel;
+using System.Diagnostics;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
@@ -43,7 +45,7 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             Editor ed = doc.Editor;
 
-            #region выбор маркеров
+            #region хотелки юзера
             //получаю маркеры
             List<Keywords> keywordsList = new List<Keywords>
             {
@@ -60,32 +62,32 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             if (propMod == null) return;//смысла продолжать нет
 
+            #endregion
 
+            #region Свойства маркера
+            //в конструктор только настройки
+            MultiCadProps mcUmarkerProps = new MultiCadProps(settings);
 
-            MultiCadProps mcUmarkerProps = null;
-
-
-            //из папки или файлов
+            //чего вернул кейворд
             Space spase = (Space)propMod;
 
+            List<DefinitionMarkerProps> props = new List<DefinitionMarkerProps>();
+
+            //собираем из папки или файлов
             if (spase == Space.Folder || spase == Space.Files || spase == Space.SubFolder)
             {
+                //получили список файлов
                 List<string> filenames = FetchingPatchFiles.GetFiles(spase);
-               
-
-                mcUmarkerProps = new MultiCadProps(filenames, settings);
+                if (filenames.Count > 0) props = mcUmarkerProps.GetProps(filenames);
             }
-            // с открытых чертежей
+            //собираем с открытых чертежей
             else
             {
-
-                mcUmarkerProps = new MultiCadProps(spase, settings);
-
+                props = mcUmarkerProps.GetProps(spase);
             }
 
-            List<DefinitionMarkerProps> umProps = mcUmarkerProps.MarkerProps;
-
-            ed.WriteMessage($"{mcUmarkerProps.ResultString}");
+            ed.WriteMessage($"Собрано: {props.Count}");
+            //ed.WriteMessage($"{mcUmarkerProps.ResultString}");
 
 
 
@@ -98,9 +100,9 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             //результат пишу в таблицу
 
-
+            //для тестов сортировки
             PropXml propXml = new PropXml();
-            propXml.Props = umProps;
+            propXml.Props = props;
             //props.MarkerName = "xxz";
             //props.FlagSpecRaw = "1";
 
