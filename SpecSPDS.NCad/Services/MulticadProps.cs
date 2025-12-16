@@ -38,7 +38,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
         }
 
-        // todo переделать на возвращаемое значение???? в конструктор пихать settings в метод пихать или спасе или список файлов
+       
 
         /// <summary>
         /// Gets the props.
@@ -82,7 +82,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 ExtractNamedProps(mcObjectIds, ref markerProps, ref counter);
 
                 //после обработки закрываем
-                if (mcDocument.IsHidden) mcDocument.Close();//todo если не открывали не закрывать
+                if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
             }
 
             _stw.Stop();
@@ -237,6 +237,10 @@ namespace dRz.SpecSPDS.NCad.Services
 
                 markerProps.Add(MarkerProp);
             }
+
+            Stats.countAdd = markerProps.Count;//todo счетчик не считает
+            Stats.countTotal += mcObjectIds.Count;
+
             //todo вынести статистику в класс
             /*
             #region Вынести счетчики в класс
@@ -346,14 +350,18 @@ namespace dRz.SpecSPDS.NCad.Services
         /// тип пространства откуда брать
         /// </summary>
         Space _space { get; set; }
+
+        public Statistics Stats { get; set; }= new Statistics();
     }
 
-    internal class Statistics
+    public class Statistics
     {
 
-        internal int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
-        internal int countNotFlag = 0;//маркеров без признака включения в спеку
-        internal int countFalseName = 0;//маркеров с не тем именем
+        public int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
+        public int countNotFlag = 0;//маркеров без признака включения в спеку
+        public int countFalseName = 0;//маркеров с не тем именем
+        public int countAdd = 0;//маркеров добавлено
+        public int countTotal = 0;//маркеров всего
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is ok.
@@ -361,7 +369,7 @@ namespace dRz.SpecSPDS.NCad.Services
         /// <value>
         ///   <c>true</c> if this instance is ok; otherwise, <c>false</c>.
         /// </value>
-        internal bool IsOk { get; set; }
+        public bool IsOk { get; set; }
 
     }
 
