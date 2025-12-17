@@ -53,6 +53,8 @@ namespace dRz.SpecSPDS.NCad.Services
 
             ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр долльше чем его сбросить
 
+            _countFilesTotal = filenames.Count;
+
             //запомним рабочий документ на всякий
             McDocument pOldWD = McDocument.WorkingDocument;
 
@@ -66,7 +68,15 @@ namespace dRz.SpecSPDS.NCad.Services
                 {
                     // открываем файл в скрытом режиме
                     mcDocument = McDocumentsManager.OpenDocument(filename, false, true);
+                    if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
+                    {
+                        _badFilePatchs.Add(filename);
+                        continue;
+                    }
+                  
                 }
+
+                _countFilesRead++;
 
                 of.Reset();//сброс фильтра иначе в цикле добавляет документы 
                 of.AddType(guid);
@@ -123,6 +133,8 @@ namespace dRz.SpecSPDS.NCad.Services
             //с открытых документов
             if (space == Space.All)
             {
+                _countFilesTotal = _countFilesRead = McDocumentsManager.GetDocuments().Count;
+
                 of.AddDocs(McDocumentsManager.GetDocuments());//открытые документы
 
                 mcObjectIds = of.GetObjects();
@@ -130,6 +142,8 @@ namespace dRz.SpecSPDS.NCad.Services
             //с активного документа
             else if (space == Space.Document)
             {
+                _countFilesTotal = _countFilesRead = 1;
+
                 of.AddDoc(McDocument.WorkingDocument);
 
                 mcObjectIds = of.GetObjects();
@@ -137,19 +151,24 @@ namespace dRz.SpecSPDS.NCad.Services
             //с активного пространства
             else if (space == Space.Layout)
             {
+                _countFilesTotal = _countFilesRead = 1;
+
                 mcObjectIds = of.GetObjects();
             }
             // выбором
             else if (space == Space.Select)
             {
+                _countFilesTotal = _countFilesRead = 1;
+
                 mcObjectIds = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, guid /*McUMarker.TypeID*/).ToList();
             }
 
             _stwID.Stop();
             _stwProp.Start();
-            _countTotal += mcObjectIds.Count;//всего получено
+            _countTotal = mcObjectIds.Count;//всего получено
 
             ExtractNamedProps(mcObjectIds, ref markerProps);
+
             _stwProp.Stop();
 
             _elapsedID = _stwID.Elapsed.ToString();
@@ -298,6 +317,18 @@ namespace dRz.SpecSPDS.NCad.Services
         public int CountTotal => _countTotal;//маркеров всего
         int _countTotal = 0;//маркеров всего
 
+        /// <summary>
+        /// файлов всего обработано
+        /// </summary>
+        public int CountFilesTotal => _countFilesTotal;//
+        int _countFilesTotal = 0;//файлов всего
+
+        /// <summary>
+        /// успешно файлов прочитано
+        /// </summary>
+        public int CountFilesRead => _countFilesRead;// 
+        int _countFilesRead = 0;//файлов всего
+
 
         /// <summary>
         /// Gets the TMR identifier.
@@ -319,7 +350,8 @@ namespace dRz.SpecSPDS.NCad.Services
         public string ElapsedProp => _elapsedProp;
         string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
 
-
+        public List<string> BadFilePatchs => _badFilePatchs;
+        List<string> _badFilePatchs = new List<string>();
 
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace dRz.SpecSPDS.Core.Enums
         Folder,
 
         /// <summary> Обрабатывать все маркеры в открытых файлах </summary>
-        [Description("Все")]
+        [Description("Открытые")]
         All,
 
         /// <summary> Обрабатывать все маркеры в текущем файле </summary>

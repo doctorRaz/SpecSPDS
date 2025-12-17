@@ -1,4 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Enums;
+using dRz.SpecSPDS.Core.Extensions;
 using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
@@ -43,6 +44,14 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             Editor ed = doc.Editor;
 
+            #region В словарик
+            //todo убрать в коре
+            List<string> wordFiles = new List<string> { "файл", "файла", "файлов" };
+            List<string> wordsMark = new List<string> { "маркер", "маркера", "маркеров" };
+            List<string> wordsDoc = new List<string> { "документ", "документа", "документов" };
+
+            #endregion
+
             #region хотелки юзера
             //получаю маркеры
             List<Keywords> keywordsList = new List<Keywords>
@@ -76,6 +85,10 @@ namespace dRz.SpecSPDS.NCad.CadCommands
             {
                 //получили список файлов
                 List<string> filenames = FetchingPatchFiles.GetFiles(spase);
+
+
+                ed.WriteMessage($"\nНайдено {filenames.Count} подходящих {wordFiles.Declens(filenames.Count)}");//todo вынести в интерфейс, волшебные слова через енум и словарик?
+
                 if (filenames.Count > 0) props = mcUmarkerProps.GetProps(filenames);
             }
             //собираем с открытых чертежей
@@ -86,26 +99,52 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             #region Result GetProps
 
-            string resultString = $"\nМаркеры:";
-            resultString += $"\nНайдено всего: {mcUmarkerProps.CountTotal} за {mcUmarkerProps.ElapsedID}";
-            resultString += $"\nВключено в набор: {mcUmarkerProps.CountAdded} маркеров за {mcUmarkerProps.ElapsedProp}";
+
+            string resultString = $"\nСтатистика:";
+
+            resultString += $"\nФайлов обработано:";
+
+
+            if (mcUmarkerProps.CountFilesTotal > 0)
+            {
+                resultString += $"\n\tВсего: {mcUmarkerProps.CountFilesTotal} {wordsDoc.Declens(mcUmarkerProps.CountFilesTotal)}";
+            }
+
+            if (mcUmarkerProps.CountFilesRead > 0)
+            {
+                resultString += $"\n\tПрочитано: {mcUmarkerProps.CountFilesRead} {wordsDoc.Declens(mcUmarkerProps.CountFilesRead)}";
+            }
+
+
+            if (mcUmarkerProps.BadFilePatchs.Count > 0)
+            {
+                foreach (string filename in mcUmarkerProps.BadFilePatchs)
+                {
+                    resultString += $"\n\tДокумент не прочитан: {filename}";
+                }
+            }
+            resultString += $"\nМаркеров:";
+
+            resultString += $"\n\tНайдено всего: {mcUmarkerProps.CountTotal} {wordsMark.Declens(mcUmarkerProps.CountTotal)} за {mcUmarkerProps.ElapsedID}";
+
 
             if (mcUmarkerProps.CountFalseName > 0)
             {
-                resultString += $"\nС неподходящим именем: {mcUmarkerProps.CountFalseName}";
+                resultString += $"\n\tС неподходящим именем: {mcUmarkerProps.CountFalseName} {wordsMark.Declens(mcUmarkerProps.CountFalseName)}";
             }
 
             if (mcUmarkerProps.CountNotFlag > 0)
             {
-                resultString += $"\nБез признака включения в спецификацию: {mcUmarkerProps.CountNotFlag}";
+                resultString += $"\n\tБез признака включения в спецификацию: {mcUmarkerProps.CountNotFlag} {wordsMark.Declens(mcUmarkerProps.CountNotFlag)}";
             }
 
             if (mcUmarkerProps.CountIncorrectData > 0)
             {
-                resultString += $"\nС некорректными данными: {mcUmarkerProps.CountIncorrectData}";
+                resultString += $"\n\tС некорректными данными: {mcUmarkerProps.CountIncorrectData} {wordsMark.Declens(mcUmarkerProps.CountIncorrectData)}";
             }
+            resultString += $"\n\tВключено в набор: {mcUmarkerProps.CountAdded} {wordsMark.Declens(mcUmarkerProps.CountAdded)} за {mcUmarkerProps.ElapsedProp}";
 
-            ed.WriteMessage($"{resultString}\n");
+            ed.WriteMessage($"{resultString}");
 
             #endregion
 
