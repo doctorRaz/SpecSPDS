@@ -23,7 +23,6 @@ using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Services.DeepSeek;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,16 +40,23 @@ namespace dRz.SpecSpdsConsole
 
         Lb:
 
+            NewClass newClass = new NewClass();
+
+            //newClass.Stats._tmrID = "10";
+
+
+
+            goto Lb;
+
             var oal = new OutAddList();
 
-            string[] str=  {"1","2","10"};   
-            
-            List<string> lstr= new List<string>{"zz","fd","sd"};    
+            string[] str = { "1", "2", "10" };
 
-            oal.RefAdd(str,ref lstr);
+            List<string> lstr = new List<string> { "zz", "fd", "sd" };
+
+            oal.RefAdd(str, ref lstr);
 
             var dd = lstr;
-            goto Lb;
 
             var ff = FetchingPatchFiles.GetFiles(Space.Folder);
             PropXml propXml = new PropXml();

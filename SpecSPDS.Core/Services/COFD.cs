@@ -60,9 +60,9 @@ namespace dRz.SpecSPDS.Core.Services
             get => FSD.FileNames;
         }
 
-        public bool ShowDialog( )
+        public bool ShowDialog()
         {
-            if (FSD.ShowDialog( ) == CommonFileDialogResult.Ok)
+            if (FSD.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 return true;
             }

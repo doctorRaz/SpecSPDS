@@ -5,12 +5,6 @@ using HostMgd.EditorInput;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols.Tables;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Teigha.DatabaseServices;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
@@ -21,7 +15,7 @@ namespace dRz.SpecSPDS.NCad.TestCommand
     public class McTableFinder
     {
 
-      
+
 
         /// <summary>
         /// в активном пространстве.
@@ -84,8 +78,8 @@ namespace dRz.SpecSPDS.NCad.TestCommand
 
         }
 
-      
-        
+
+
     }
 }
 #endif

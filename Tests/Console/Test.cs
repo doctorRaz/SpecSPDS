@@ -1,6 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
 using System;
-using System.Linq;
 
 namespace dRz.SpecSpdsConsole
 {

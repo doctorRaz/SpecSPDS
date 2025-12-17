@@ -3,29 +3,22 @@
 // Retrieved 2025-12-15, License - CC BY-SA 3.0
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FolderDialog
+namespace dRz.SpecSPDS.Core.Services
 {
     public class FolderSelectDialog
     {
-        System.Windows.Forms.OpenFileDialog ofd = null;
+        OpenFileDialog ofd = null;
         public FolderSelectDialog()
         {
-            ofd = new System.Windows.Forms.OpenFileDialog();
+            ofd = new OpenFileDialog();
             ofd.Filter = "Folders|\n";
             ofd.AddExtension = false;
             ofd.CheckFileExists = false;
             ofd.DereferenceLinks = true;
-            ofd.Multiselect = Multiselect;    
+            ofd.Multiselect = Multiselect;
 
         }
         public string InitialDirectory
@@ -69,7 +62,7 @@ namespace FolderDialog
                 Type typeIFileDialog = r.GetType("FileDialogNative.IFileDialog");
                 object dialog = r.Call(ofd, "CreateVistaDialog");
                 r.Call(ofd, "OnBeforeVistaDialog", dialog);
-                uint options = (uint)r.CallAs(typeof(System.Windows.Forms.FileDialog), ofd, "GetOptions");
+                uint options = (uint)r.CallAs(typeof(FileDialog), ofd, "GetOptions");
                 options |= (uint)r.GetEnum("FileDialogNative.FOS", "FOS_PICKFOLDERS");
                 r.CallAs(typeIFileDialog, dialog, "SetOptions", options);
                 object pfde = r.New("FileDialog.VistaDialogEvents", ofd);
@@ -90,8 +83,8 @@ namespace FolderDialog
             else
             {
                 var fbd = new FolderBrowserDialog();
-                fbd.Description = this.Title;
-                fbd.SelectedPath = this.InitialDirectory;
+                fbd.Description = Title;
+                fbd.SelectedPath = InitialDirectory;
                 fbd.ShowNewFolderButton = false;
                 if (fbd.ShowDialog(new WindowWrapper(hWndOwner)) != DialogResult.OK) return false;
                 ofd.FileName = fbd.SelectedPath;
@@ -100,7 +93,7 @@ namespace FolderDialog
             return flag;
         }
 
-        public class WindowWrapper : System.Windows.Forms.IWin32Window
+        public class WindowWrapper : IWin32Window
         {
             public WindowWrapper(IntPtr handle)
             {
@@ -206,7 +199,8 @@ namespace FolderDialog
         }
 
 
-        public static string OpenFileBrowserDialog(bool multiselect) {
+        public static string OpenFileBrowserDialog(bool multiselect)
+        {
             FolderSelectDialog fbd = new FolderSelectDialog();
             fbd.Multiselect = multiselect;
 

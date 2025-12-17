@@ -17,17 +17,17 @@ namespace dRz.SpecSPDS.Core.Models
         /// <summary>
         /// Раздел спецификации
         /// </summary>
-        public string Section { get; set; }= "";
+        public string Section { get; set; } = "";
 
         /// <summary>
         /// Позиция
         /// </summary>
-        public string PositionNumber { get; set; }= "";
+        public string PositionNumber { get; set; } = "";
 
         /// <summary>
         /// Наименование и техническая характеристика
         /// </summary>
-        public string DeviceName { get; set; }= "";
+        public string DeviceName { get; set; } = "";
 
         /// <summary>
         /// Тип, марка, обозначение документа, опросного листа

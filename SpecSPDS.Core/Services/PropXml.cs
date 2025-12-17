@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace dRz.SpecSPDS.Core.Services
@@ -17,10 +14,10 @@ namespace dRz.SpecSPDS.Core.Services
             //LoadProps();
         }
 
-        public List< DefinitionMarkerProps> Props
+        public List<DefinitionMarkerProps> Props
         {
             get => _props;
-            set => _props = value ?? new List< DefinitionMarkerProps>();
+            set => _props = value ?? new List<DefinitionMarkerProps>();
         }
 
         public void LoadProps()
@@ -61,7 +58,7 @@ namespace dRz.SpecSPDS.Core.Services
 
 
         }
-        private /*static*/ List< DefinitionMarkerProps> _props;
+        private /*static*/ List<DefinitionMarkerProps> _props;
 
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(List<DefinitionMarkerProps>));
 

@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Navigation;
 
 namespace dRz.SpecSPDS.Core.Services.DeepSeek
 {
@@ -29,7 +26,7 @@ namespace dRz.SpecSPDS.Core.Services.DeepSeek
 
     //https://chat.deepseek.com/a/chat/s/69f8a77a-7ee8-48af-b977-c1e8e838e0a9
     public static class DefinitionMarkerPropsGrouper
-    {     
+    {
 
 
         public static List<GroupedDefinitionMarkerProps> GroupAndSortDefinitionMarkers(

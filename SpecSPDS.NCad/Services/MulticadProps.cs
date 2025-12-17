@@ -5,7 +5,6 @@ using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 namespace dRz.SpecSPDS.NCad.Services
 {

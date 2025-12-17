@@ -5,9 +5,7 @@ using dRz.SpecSPDS.Core.Settings;
 using dRz.SpecSPDS.NCad.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using Multicad.DatabaseServices;
 using System.ComponentModel;
-using System.Diagnostics;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 

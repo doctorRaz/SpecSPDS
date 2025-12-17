@@ -10,29 +10,29 @@ namespace dRz.SpecSPDS.Core.Enums
 
         /// <summary> Обрабатывать все маркеры из файлов </summary>
         [Description("Файлы")]
-        Files,        
+        Files,
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
         [Description("Подпапки")]
-        SubFolder,        
+        SubFolder,
 
         /// <summary> Обрабатывать все маркеры в каталогах </summary>
         [Description("Каталог")]
-        Folder,        
-		
-		/// <summary> Обрабатывать все маркеры в открытых файлах </summary>
+        Folder,
+
+        /// <summary> Обрабатывать все маркеры в открытых файлах </summary>
         [Description("Все")]
         All,
-        
-		/// <summary> Обрабатывать все маркеры в текущем файле </summary>
+
+        /// <summary> Обрабатывать все маркеры в текущем файле </summary>
         [Description("Документ")]
         Document,
-        
-		/// <summary>Обрабатывать все маркеры в активном пространстве </summary>
+
+        /// <summary>Обрабатывать все маркеры в активном пространстве </summary>
         [Description("Текущее")]
         Layout,
-        
-		/// <summary> Обрабатывать выбранные маркеры в текущем файле </summary>
+
+        /// <summary> Обрабатывать выбранные маркеры в текущем файле </summary>
         [Description("вЫбрать")]
         Select,
 

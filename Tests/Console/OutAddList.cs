@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace dRz.SpecSpdsConsole
 {
     public class OutAddList
     {
 
-        public void RefAdd(string[] lst , ref List<string> reflist) 
+        public void RefAdd(string[] lst, ref List<string> reflist)
         {
             foreach (var item in lst)
             {

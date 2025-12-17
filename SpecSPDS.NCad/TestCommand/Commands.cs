@@ -1,10 +1,7 @@
 ﻿
-using Application = HostMgd.ApplicationServices.Application;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Teigha.Runtime;
 using Teigha.DatabaseServices;
+using Teigha.Runtime;
+using Application = HostMgd.ApplicationServices.Application;
 
 //https://adn-cis.org/forum/index.php?topic=10308.msg47463#msg47463
 namespace LineWeightChange
@@ -22,7 +19,7 @@ namespace LineWeightChange
                     Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\nCOMPLETE\n");
             }
         }
- 
+
         [CommandMethod("PARALLELMETHOD")]
         public void ParallelMethod()
         {
@@ -33,7 +30,7 @@ namespace LineWeightChange
                 Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\nCOMPLETE\n");
             }
         }
- 
+
         [CommandMethod("STANDARDMETHOD")]
         public void StandardMethod()
         {
@@ -44,7 +41,7 @@ namespace LineWeightChange
                 Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\nCOMPLETE\n");
             }
         }
- 
+
         private void WorkWithDrawing(string path)
         {
             using (Database database = new Database(false, true))
@@ -69,7 +66,7 @@ namespace LineWeightChange
                 database.SaveAs(path, true, DwgVersion.AC1024, security);
             }
         }
- 
+
         private async Task<bool> AsyncWorkWithDirectories(string path)
         {
             bool result = true;
@@ -85,7 +82,7 @@ namespace LineWeightChange
             }
             return result;
         }
- 
+
         private void ParallelWorkWithDirectories(string path)
         {
             DirectoryInfo currentDirectory = new DirectoryInfo(path);
@@ -99,7 +96,7 @@ namespace LineWeightChange
                 Parallel.Invoke(() => ParallelWorkWithDirectories(directory.FullName));
             }
         }
- 
+
         private void StandardWorkWithDirectories(string path)
         {
             DirectoryInfo currentDirectory = new DirectoryInfo(path);
@@ -113,7 +110,7 @@ namespace LineWeightChange
                 StandardWorkWithDirectories(directory.FullName);
             }
         }
- 
+
         private string Browser()
         {
             FolderBrowserDialog browser = new FolderBrowserDialog

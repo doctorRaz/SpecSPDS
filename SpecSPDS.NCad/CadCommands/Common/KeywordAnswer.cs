@@ -1,5 +1,4 @@
-﻿using dRz.SpecSPDS.Core.Services;
-using HostMgd.ApplicationServices;
+﻿using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
 namespace dRz.SpecSPDS.NCad.CadCommands
