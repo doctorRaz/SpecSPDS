@@ -26,6 +26,9 @@ using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Services.DeepSeek;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 
 namespace dRz.SpecSpdsConsole
@@ -33,24 +36,48 @@ namespace dRz.SpecSpdsConsole
 
     public class Program
     {
+        private static readonly string _logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                                  "logtest.txt");
+    static     string   dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF",
+                        CultureInfo.InvariantCulture);
+
 
         [STAThread]
         static void Main(string[] args)
         {
-
+            Stopwatch stw = new Stopwatch();
         Lb:
-            var ff1 = FetchingPatchFiles.GetFiles(Space.SubFolder);
+            Log log = new Log(_logPath);
 
+            string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                                  "logtest100.txt");
+            log._path=logPath;
+
+            stw.Start();
+            for (int i = 1; i <= 1000000; ++i)
+            {
+
+                log.LogWrite($" - {dat} {i} тестовый тест");
+            }
+
+            stw.Stop();
+            log.LogWrite($"********THE END************");
+            log.LogWrite($"Total Time {stw.Elapsed.ToString()}");
+
+            Console.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
             { }
             goto Lb;
+
+
+            var ff1 = FetchingPatchFiles.GetFiles(Space.SubFolder);
             new OutResult();
 
             List<string> list = new List<string> { "Маркер", "Маркера", "Маркеров" };
 
             for (int i = 0; i < 35; ++i)
             {
-            Console.WriteLine($"{i} {list.Declens(i)}");
-            
+                Console.WriteLine($"{i} {list.Declens(i)}");
+
             }
 
 

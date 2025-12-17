@@ -18,7 +18,11 @@ namespace dRz.SpecSPDS.NCad.Services
     public partial class MultiCadProps
 
     {
+        private static readonly string _logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                                          "log.log");
 
+
+        Log _log = new Log(_logPath);
 
         /// <summary>
         /// 
@@ -62,6 +66,9 @@ namespace dRz.SpecSPDS.NCad.Services
             {
                 _stwID.Start();
 
+                count++;
+
+                _log.LogWrite($"{count} OPEN {filename}");
                 //если открыт то не нулл
                 McDocument mcDocument = McDocumentsManager.GetDocument(filename);
                 if (mcDocument == null)
@@ -73,7 +80,7 @@ namespace dRz.SpecSPDS.NCad.Services
                         _badFilePatchs.Add(filename);
                         continue;
                     }
-                  
+
                 }
 
                 _countFilesRead++;
@@ -89,14 +96,22 @@ namespace dRz.SpecSPDS.NCad.Services
                 _stwProp.Start();
                 _countTotal += mcObjectIds.Count;//всего получено
 
+                _log.LogWrite($"\t\tprops");
                 //дергаем сбор свойств
                 ExtractNamedProps(mcObjectIds, ref markerProps);
 
                 _stwProp.Stop();
                 _stwID.Start();
 
+
+                _log.LogWrite($"\t\told props");
+
                 //после обработки закрываем
                 if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
+
+                _log.LogWrite($"{count} CLOSE {filename}");
+                _log.LogWrite($"-----------");
+
                 _stwID.Stop();
             }
 
