@@ -1,7 +1,9 @@
 ﻿using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Models;
+using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
 using Multicad;
+using Db = Teigha.DatabaseServices;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using System.Diagnostics;
@@ -43,13 +45,173 @@ namespace dRz.SpecSPDS.NCad.Services
 
         }
 
+        public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
+        {
+            _log._path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                                          "logTG.log");
+
+            _log.LogClear();
+
+            _log.LogWrite($"Total files: {filenames.Count}");
+
+            List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
+
+
+            List<McObjectId> mcObjectIds = new List<McObjectId>();
+
+            ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр долльше чем его сбросить
+
+            _countFilesTotal = filenames.Count;
+
+
+            //запомним рабочий документ на всякий
+            McDocument pOldWD = McDocument.WorkingDocument;
+            //!старая база запомним
+            Db.Database dbCarent = Db.HostApplicationServices.WorkingDatabase;
+
+            int count = 0;
+
+            foreach (string filename in filenames)
+            {
+                //_stwID.Start();
+
+                count++;
+
+                _log.LogWrite($"{count} OPEN {filename}");
+
+                //если открыт то не нулл
+                //McDocument mcDocument = McDocumentsManager.GetDocument(filename);
+                //if (mcDocument == null)
+                //{
+                    // открываем файл в тайге поставить тру?
+                    using (Db.Database db0 = new Db.Database(false, false))
+                    {
+                        try
+                        {
+                            // Ни одна из перегрузок метода "ReadDwgFile" не принимает 5 аргументов.PlotSPDSa21
+
+                            db0.ReadDwgFile(filename, Db.FileOpenMode.OpenForReadAndAllShare, false, "", false);
+
+                            Db.HostApplicationServices.WorkingDatabase = db0;
+
+                            //перекидываем в мультикад
+                            //mcDocument = McDocumentsManager.GetDocument(filename);
+
+
+                            //if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
+                            //{
+                            //    _badFilePatchs.Add(filename);
+                            //    _log.LogWrite($"{count} NULL {filename}");
+                            //    continue;
+                            //}
+
+                            /*▬
+                            //если не нулл работаем его
+                            _countFilesRead++;
+
+                            of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+                            of.AddType(guid);
+                            of.AddDoc(mcDocument);
+
+                            //получаем с него ID
+                            mcObjectIds = of.GetObjects();
+
+                            _stwID.Stop();
+                            _stwProp.Start();
+                            _countTotal += mcObjectIds.Count;//всего получено
+
+                            _log.LogWrite($"\t\tprops");
+                            //дергаем сбор свойств
+                            ExtractNamedProps(mcObjectIds, ref markerProps);
+
+                            _stwProp.Stop();
+                            _stwID.Start();
+
+
+                            _log.LogWrite($"\t\told props {markerProps.Count}");
+                            */
+                            
+                        }
+                        catch (Exception ex)
+                        {
+                            _badFilePatchs.Add($"{filename} {ex.Message}");
+                            _log.LogWrite($"{count} ERR {filename}\n{ex.Message}");
+                            continue;
+                        }
+                    }
+
+                    //_stwID.Stop();
+
+                    _log.LogWrite($"{count} CLOSE {filename}");
+                    _log.LogWrite($"-----------");
+
+
+                    _countFilesRead++;
+
+                //}
+                //else
+                //{
+                //    _log.LogWrite($"{count} ОТКРЫТ!!!! {filename}");
+                //    _countFilesRead++;
+
+                //    of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+                //    of.AddType(guid);
+                //    of.AddDoc(mcDocument);
+
+                //    //получаем с него ID
+                //    mcObjectIds = of.GetObjects();
+
+                //    //_stwID.Stop();
+                //    //_stwProp.Start();
+                //    _countTotal += mcObjectIds.Count;//всего получено
+
+                //    _log.LogWrite($"\t\tprops");
+                //    //дергаем сбор свойств
+                //    ExtractNamedProps(mcObjectIds, ref markerProps);
+
+                //    //_stwProp.Stop();
+                //    //_stwID.Start();
+
+
+                //    _log.LogWrite($"\t\told props");
+
+                //    //после обработки закрываем
+                //    if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
+
+                //    _log.LogWrite($"{count} CLOSE {filename}");
+                //    _log.LogWrite($"-----------");
+
+                //    //_stwID.Stop();
+
+                //}
+
+
+            }
+
+            _elapsedProp = _stwProp.Elapsed.ToString();
+            _elapsedID = _stwID.Elapsed.ToString();
+            _countAdded = markerProps.Count;//добавлено всего маркеров
+
+            //McDocument.WorkingDocument = pOldWD;
+            //Db.HostApplicationServices.WorkingDatabase = dbCarent;//возвращаем базу
+
+            return markerProps;
+        }
+
+
         /// <summary>
-        /// Gets the props.
+        /// Gets the props.Multicad
         /// </summary>
         /// <param name="filenames">список путей к файлам чертежей</param>
         /// <returns>Список свойств мультикад объектов</returns>
-        public List<DefinitionMarkerProps> GetProps(List<string> filenames)
+        public List<DefinitionMarkerProps> GetPropsMC(List<string> filenames)
         {
+            _log._path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                              "logMC.log");
+
+            _log.LogClear();
+
+            _log.LogWrite($"Total files: {filenames.Count}");
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
@@ -61,6 +223,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
             //запомним рабочий документ на всякий
             McDocument pOldWD = McDocument.WorkingDocument;
+            int count = 0;
 
             foreach (string filename in filenames)
             {
