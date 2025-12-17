@@ -86,14 +86,38 @@ namespace dRz.SpecSPDS.NCad.CadCommands
                 props = mcUmarkerProps.GetProps(spase);
             }
 
-            ed.WriteMessage($"Собрано: {props.Count}");
-            //ed.WriteMessage($"{mcUmarkerProps.ResultString}");
+            #region Result GetProps
 
+            string resultString = $"\nМаркеры:";
+            resultString += $"\nНайдено всего: {mcUmarkerProps.CountTotal} за {mcUmarkerProps.ElapsedID}";
+            resultString += $"\nВключено в набор: {mcUmarkerProps.CountAdded} маркеров за {mcUmarkerProps.ElapsedProp}";
 
+            if (mcUmarkerProps.CountFalseName > 0)
+            {
+                resultString += $"\nС неподходящим именем: {mcUmarkerProps.CountFalseName}";
+            }
 
+            if (mcUmarkerProps.CountNotFlag > 0)
+            {
+                resultString += $"\nБез признака включения в спецификацию: {mcUmarkerProps.CountNotFlag}";
+            }
 
+            if (mcUmarkerProps.CountIncorrectData > 0)
+            {
+                resultString += $"\nС некорректными данными: {mcUmarkerProps.CountIncorrectData}";
+            }
+
+            ed.WriteMessage($"{resultString}\n");
 
             #endregion
+
+            #endregion
+
+
+
+
+
+
 
             //дальше пуляю в сортировку обработку
 

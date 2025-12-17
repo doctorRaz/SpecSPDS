@@ -19,12 +19,14 @@ namespace dRz.SpecSPDS.NCad.Services
     public partial class MultiCadProps
 
     {
-        Guid guid => _guid;
-        Guid _guid;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
         public MultiCadProps(ApplicationSettings settings)
         {
-            _stw = new Stopwatch();//часики
 
             _guid = (new Guid(settings.Guid));//какой объект работаем
 
@@ -32,13 +34,11 @@ namespace dRz.SpecSPDS.NCad.Services
 
             _mcUmarkerName = settings.MarkerName;//имя-название маркера
 
-            _isSpec = settings.IsSpec;//флаг что собирать false- собирать все
+            _isSpec = settings.IsSpec;//признак сбора в спецификацию -true, только с флагом сбора
+                                      //false - собирать все
 
-            //mcObjectIds = new List<McObjectId>();//на всякий
 
         }
-
-       
 
         /// <summary>
         /// Gets the props.
@@ -47,13 +47,10 @@ namespace dRz.SpecSPDS.NCad.Services
         /// <returns>Список свойств мультикад объектов</returns>
         public List<DefinitionMarkerProps> GetProps(List<string> filenames)
         {
-            _stw.Start();//todo счетчики переделать все, отдельно на IDs отдельно на props
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
             List<McObjectId> mcObjectIds = new List<McObjectId>();
-
-            Statistics counter = new Statistics();
 
             ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр долльше чем его сбросить
 
@@ -62,7 +59,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
             foreach (string filename in filenames)
             {
-
+                _stwID.Start();
 
                 //если открыт то не нулл
                 McDocument mcDocument = McDocumentsManager.GetDocument(filename);
@@ -72,21 +69,32 @@ namespace dRz.SpecSPDS.NCad.Services
                     mcDocument = McDocumentsManager.OpenDocument(filename, false, true);
                 }
 
-                of.Reset();
+                of.Reset();//сброс фильтра иначе в цикле добавляет документы 
                 of.AddType(guid);
                 of.AddDoc(mcDocument);
 
                 //получаем с него ID
                 mcObjectIds = of.GetObjects();
+
+                _stwID.Stop();
+                _stwProp.Start();
+                _countTotal += mcObjectIds.Count;//всего получено
+
                 //дергаем сбор свойств
-                ExtractNamedProps(mcObjectIds, ref markerProps, ref counter);
+                ExtractNamedProps(mcObjectIds, ref markerProps);
+
+                _stwProp.Stop();
+                _stwID.Start();
 
                 //после обработки закрываем
                 if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
+                _stwID.Stop();
             }
 
-            _stw.Stop();
-            _tmrProp = _stw.Elapsed.ToString();
+            _elapsedProp = _stwProp.Elapsed.ToString();
+            _elapsedID = _stwID.Elapsed.ToString();
+            _countAdded = markerProps.Count;//добавлено всего маркеров
+
             //вернем рабочий документ мало ли
             McDocument.WorkingDocument = pOldWD;
 
@@ -102,33 +110,16 @@ namespace dRz.SpecSPDS.NCad.Services
         /// <returns>Список свойств мультикад объектов</returns>
         public List<DefinitionMarkerProps> GetProps(Space space)
         {
-            /*
-            //_stw = new Stopwatch();
-            //_space = space;
-
-            //_fieldName = settings.FieldNames;//имена полей
-
-
-
-            //_mcUmarkerName = settings.MarkerName;//имя-название маркера
-
-            //_isSpec = settings.IsSpec;//флаг что собирать false- собирать все
-
-            //mcObjectIds = new List<McObjectId>();//на всякий
-
-            */
-
-            _stw.Start();
-
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
             List<McObjectId> mcObjectIds = new List<McObjectId>();
 
-            Statistics counter = new Statistics();
 
             ObjectFilter of = new ObjectFilter(true);
 
             of.AddType(guid);
+
+            _stwID.Start();
 
             //с открытых документов
             if (space == Space.All)
@@ -155,33 +146,37 @@ namespace dRz.SpecSPDS.NCad.Services
                 mcObjectIds = McObjectManager.SelectObjects("Выберите McUmarkers <Esc -- Cansel>", false, guid /*McUMarker.TypeID*/).ToList();
             }
 
-            _stw.Stop();
-            _tmrID = _stw.Elapsed.ToString();
-            _stw.Restart();
+            _stwID.Stop();
+            _stwProp.Start();
+            _countTotal += mcObjectIds.Count;//всего получено
 
-            ExtractNamedProps(mcObjectIds, ref markerProps, ref counter);
+            ExtractNamedProps(mcObjectIds, ref markerProps);
+            _stwProp.Stop();
+
+            _elapsedID = _stwID.Elapsed.ToString();
+            _elapsedProp = _stwProp.Elapsed.ToString();
+
+            _countAdded = markerProps.Count;//добавлено всего маркеров
 
             return markerProps;
         }
-        void ExtractNamedProps(List<McObjectId> mcObjectIds, ref List<DefinitionMarkerProps> markerProps, ref Statistics counter)
+        void ExtractNamedProps(List<McObjectId> mcObjectIds, ref List<DefinitionMarkerProps> markerProps)
         {
             /*
-            tempUmark. DbEntity.Document тут IsModel, Name - имя листа, Path - genm ljrevtynf
+            tempUmark. DbEntity.Document тут IsModel, Name - имя листа, Path - путь документа
             DbEntity слой тип линий масштабы и прочее
 
             */
-            //int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
-            //int countNotFlag = 0;//маркеров без признака включения в спеку
-            //int countFalseName = 0;//маркеров с не тем именем
 
             foreach (McObjectId mcObjectId in mcObjectIds)//по собранным ID маркеров
             {
 
-                DefinitionMarkerProps MarkerProp = new DefinitionMarkerProps();
+                DefinitionMarkerProps markerProp = new DefinitionMarkerProps();
                 McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
 
                 if (tempUmark == null)//не маркер
                 {
+                    _countTotal = -1;//не маркер, не может такого быть но мало ли, на всякий случай
                     continue;
                 }
 
@@ -189,130 +184,71 @@ namespace dRz.SpecSPDS.NCad.Services
                 McProperties properties = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
 
                 //имя маркера
-                MarkerProp.MarkerName = properties.GetValueEx(_fieldName.Name, "").ToString()?.Trim();
+                markerProp.MarkerName = properties.GetValueEx(_fieldName.Name, "").ToString()?.Trim();
 
                 //имени нет или не то
-                if (string.IsNullOrWhiteSpace(MarkerProp.MarkerName)
-                    || MarkerProp.MarkerName.IndexOf(_mcUmarkerName,
+                if (string.IsNullOrWhiteSpace(markerProp.MarkerName)
+                    || markerProp.MarkerName.IndexOf(_mcUmarkerName,
                                                      StringComparison.InvariantCultureIgnoreCase) < 0)
                 {
-                    counter.countFalseName++;
+                    _countFalseName++;
                     continue;
                 }
 
                 //флаг спецификации
-                MarkerProp.FlagSpecRaw = properties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
+                markerProp.FlagSpecRaw = properties.GetValueEx(_fieldName.FlagSpec, "").ToString()?.Trim();
 
                 //учитывать признак спецификации
                 if (_isSpec)
                 {
-                    if (!MarkerProp.FlagSpec)//признака спец нет
+                    if (!markerProp.FlagSpec)//признака спец нет
                     {
-                        counter.countNotFlag++;
+                        _countNotFlag++;
                         continue;
                     }
                 }
 
                 //количество строка
-                MarkerProp.AmountRaw = properties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
+                markerProp.AmountRaw = properties.GetValueEx(_fieldName.Amount, "").ToString()?.Trim();
 
                 //наименование
-                MarkerProp.DeviceName = properties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
+                markerProp.DeviceName = properties.GetValueEx(_fieldName.DeviceName, "").ToString()?.Trim();
 
                 //проверка на некорректные данные, если количество минус или наименование пустое, то не включать в набор
-                if (MarkerProp.Amount < 0 || string.IsNullOrWhiteSpace(MarkerProp.DeviceName))
+                if (markerProp.Amount < 0 || string.IsNullOrWhiteSpace(markerProp.DeviceName))
                 {
-                    counter.countIncorrectData++;
+                    _countIncorrectData++;
                     continue;
                 }
 
-                MarkerProp.Section = properties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
-                MarkerProp.PositionNumber = properties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
-                MarkerProp.TypeModel = properties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
-                MarkerProp.ArticleNumber = properties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
-                MarkerProp.Vendor = properties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
-                MarkerProp.Unit = properties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
-                MarkerProp.UnitMass = properties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
-                MarkerProp.Comment = properties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
+                markerProp.Section = properties.GetValueEx(_fieldName.Section, "").ToString()?.Trim();
+                markerProp.PositionNumber = properties.GetValueEx(_fieldName.PositionNumber, "").ToString()?.Trim();
+                markerProp.TypeModel = properties.GetValueEx(_fieldName.TypeModel, "").ToString()?.Trim();
+                markerProp.ArticleNumber = properties.GetValueEx(_fieldName.ArticleNumber, "").ToString()?.Trim();
+                markerProp.Vendor = properties.GetValueEx(_fieldName.Vendor, "").ToString()?.Trim();
+                markerProp.Unit = properties.GetValueEx(_fieldName.Unit, "").ToString()?.Trim();
+                markerProp.UnitMass = properties.GetValueEx(_fieldName.UnitMass, "").ToString()?.Trim();
+                markerProp.Comment = properties.GetValueEx(_fieldName.Comment, "").ToString()?.Trim();
 
-                markerProps.Add(MarkerProp);
+                markerProps.Add(markerProp);
             }
 
-            Stats.countAdd = markerProps.Count;//todo счетчик не считает
-            Stats.countTotal += mcObjectIds.Count;
-
-            //todo вынести статистику в класс
-            /*
-            #region Вынести счетчики в класс
-
-
-            _stw.Stop();
-            _tmrProp = _stw.Elapsed.ToString();
-
-            if (markerProps.Count > 0)
-            {
-               counter. IsOk = true;
-            }
-
-            ResultString = $"\nМаркеры:";
-            ResultString += $"\nНайдено всего: {mcObjectIds.Count} за {TmrID}";
-            ResultString += $"\nВключено в набор: {markerProps.Count} маркеров за {TmrProp}";
-
-            if (counter.countFalseName > 0)
-            {
-                ResultString += $"\nС неподходящим именем: {counter.countFalseName}";
-            }
-
-            if (counter.countNotFlag > 0)
-            {
-                ResultString += $"\nБез признака включения в спецификацию: {counter.countNotFlag}";
-            }
-
-            if (counter.countIncorrectData > 0)
-            {
-                ResultString += $"\nС некорректными данными: {counter.countIncorrectData}";
-            }
-
-            #endregion
-            */
         }
 
-        Stopwatch _stw { get; set; }
-
-
-        List<Dictionary<string, object>> _mprops;
-        public List<Dictionary<string, object>> Mprops => _mprops;
-        public string TmrGetProps => _tmrGetProps;
-
-        string _tmrGetProps;
-        public string TmrPropSourse => _tmrPopsSource;
-
-        string _tmrPopsSource;
-
-
-        string _tmrID;
+        /// <summary>
+        ////таймер получения ID
+        /// </summary>
+        Stopwatch _stwID { get; set; } = new Stopwatch();
 
         /// <summary>
-        /// Gets the TMR identifier.
+        /// таймер получения свойств
         /// </summary>
-        /// <value>
-        /// The TMR identifier.
-        /// </value>
-        public string TmrID => _tmrID;
-        string _tmrProp;
+        Stopwatch _stwProp { get; set; } = new Stopwatch();
 
         /// <summary>
-        /// Gets the TMR property.
+        /// общее время
         /// </summary>
-        /// <value>
-        /// The TMR property.
-        /// </value>
-        public string TmrProp => _tmrProp;
-
-
-        //List<McObjectId> mcObjectIds;
-
-        //List<McObjectId> mcObjectIds => mcObjectIds;
+        Stopwatch _stwTotal { get; set; } = new Stopwatch();
 
         /// <summary>
         /// Gets or sets the result string.
@@ -321,8 +257,6 @@ namespace dRz.SpecSPDS.NCad.Services
         /// The result string.
         /// </value>
         public string ResultString { get; set; } = "";
-
-
 
         //public List<DefinitionMarkerProps> MarkerProps { get; set; } = new List<DefinitionMarkerProps>();
 
@@ -343,25 +277,51 @@ namespace dRz.SpecSPDS.NCad.Services
         /// </value>
         bool _isSpec { get; set; }
 
+        Guid guid => _guid;
+        Guid _guid;
 
-        //DefinitionMarkerProps MarkerProp { get; set; }
+
+        #region Statistics
+
+
+        public int CountIncorrectData => _countIncorrectData;//маркеры с отрицательной суммой, некорректными данными
+        int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
+
+        public int CountNotFlag => _countNotFlag;//маркеров без признака включения в спеку
+        int _countNotFlag = 0;//маркеров без признака включения в спеку
+
+        public int CountFalseName => _countFalseName;//маркеров с не тем именем
+        int _countFalseName = 0;//маркеров с не тем именем
+
+        public int CountAdded => _countAdded;//маркеров добавлено
+        int _countAdded = 0;//маркеров добавлено
+
+        public int CountTotal => _countTotal;//маркеров всего
+        int _countTotal = 0;//маркеров всего
+
 
         /// <summary>
-        /// тип пространства откуда брать
+        /// Gets the TMR identifier.
         /// </summary>
-        Space _space { get; set; }
+        /// <value>
+        /// The TMR identifier.
+        /// </value>
+        public string ElapsedID => _elapsedID;
+        string _elapsedID = "";
 
-        public Statistics Stats { get; set; }= new Statistics();
-    }
 
-    public class Statistics
-    {
 
-        public int countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
-        public int countNotFlag = 0;//маркеров без признака включения в спеку
-        public int countFalseName = 0;//маркеров с не тем именем
-        public int countAdd = 0;//маркеров добавлено
-        public int countTotal = 0;//маркеров всего
+        /// <summary>
+        /// Gets the TMR property.
+        /// </summary>
+        /// <value>
+        /// The TMR property.
+        /// </value>
+        public string ElapsedProp => _elapsedProp;
+        string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
+
+
+
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is ok.
@@ -371,6 +331,7 @@ namespace dRz.SpecSPDS.NCad.Services
         /// </value>
         public bool IsOk { get; set; }
 
-    }
+        #endregion
 
+    }
 }
