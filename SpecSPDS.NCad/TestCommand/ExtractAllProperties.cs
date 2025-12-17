@@ -34,24 +34,24 @@ namespace dRz.SpecSPDS.NCad.TestCommand
             propsSource.GetValueEx  ~ в 1,5 раза быстрее чем prop.GetValue()
             ----
 
-            без List<McProperty> props = propsSource.GetProps(); и цикла по props
+            без List<McProperty> props = propsSource.GetPropsMC(); и цикла по props
             ex props
-            GetProps Ex props 162364 in 00:00:27.5163433
+            GetPropsMC Ex props 162364 in 00:00:27.5163433
             Ex props 162364 in 00:00:28.1478998
             ------------
             Ex props 162364 in 00:00:27.8239544
-            GetProps Ex props 162364 in 00:00:29.0826902
+            GetPropsMC Ex props 162364 in 00:00:29.0826902
 			
-            цикл по propsSource.GetProps() vs propsSource в пределах погрешности
+            цикл по propsSource.GetPropsMC() vs propsSource в пределах погрешности
 
 
             ----
             пустой цикл
-            GetProps props 0 in 00:00:12.9194806
+            GetPropsMC props 0 in 00:00:12.9194806
             PropSourse props 0 in 00:00:13.5995537
             ------------
             PropSourse props 0 in 00:00:12.9806616
-            GetProps props 0 in 00:00:13.0468145
+            GetPropsMC props 0 in 00:00:13.0468145
 
             с заполнением словарика на 15 сек дольше!!!
 
@@ -117,7 +117,7 @@ namespace dRz.SpecSPDS.NCad.TestCommand
                 //список свойств
                 McProperties propsSource = McPropertySource.GetPropertySource(tempUmark).ObjectProperties;
 
-                //List<McProperty>  props = propsSource.GetProps();
+                //List<McProperty>  props = propsSource.GetPropsMC();
 
 
                 foreach (McProperty prop in propsSource /*props*/)
