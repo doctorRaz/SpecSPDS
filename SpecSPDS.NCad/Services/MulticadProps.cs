@@ -83,70 +83,71 @@ namespace dRz.SpecSPDS.NCad.Services
                 //McDocument mcDocument = McDocumentsManager.GetDocument(filename);
                 //if (mcDocument == null)
                 //{
-                    // открываем файл в тайге поставить тру?
-                    using (Db.Database db0 = new Db.Database(false, false))
+                // открываем файл в тайге поставить тру?
+                using (Db.Database db0 = new Db.Database(false, false))
+                {
+                    try
                     {
-                        try
-                        {
-                            // Ни одна из перегрузок метода "ReadDwgFile" не принимает 5 аргументов.PlotSPDSa21
+                        // Ни одна из перегрузок метода "ReadDwgFile" не принимает 5 аргументов.PlotSPDSa21
 
-                            db0.ReadDwgFile(filename, Db.FileOpenMode.OpenForReadAndAllShare, false, "", false);
+                        db0.ReadDwgFile(filename, Db.FileOpenMode.OpenForReadAndAllShare, false, "", false);
 
-                            Db.HostApplicationServices.WorkingDatabase = db0;
+                        Db.HostApplicationServices.WorkingDatabase = db0;
 
-                            //перекидываем в мультикад
-                            //mcDocument = McDocumentsManager.GetDocument(filename);
-
-
-                            //if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
-                            //{
-                            //    _badFilePatchs.Add(filename);
-                            //    _log.LogWrite($"{count} NULL {filename}");
-                            //    continue;
-                            //}
-
-                            /*▬
-                            //если не нулл работаем его
-                            _countFilesRead++;
-
-                            of.Reset();//сброс фильтра иначе в цикле добавляет документы 
-                            of.AddType(guid);
-                            of.AddDoc(mcDocument);
-
-                            //получаем с него ID
-                            mcObjectIds = of.GetObjects();
-
-                            _stwID.Stop();
-                            _stwProp.Start();
-                            _countTotal += mcObjectIds.Count;//всего получено
-
-                            _log.LogWrite($"\t\tprops");
-                            //дергаем сбор свойств
-                            ExtractNamedProps(mcObjectIds, ref markerProps);
-
-                            _stwProp.Stop();
-                            _stwID.Start();
+                        _log.LogWrite($"\tREAD");
+                        //перекидываем в мультикад
+                        //mcDocument = McDocumentsManager.GetDocument(filename);
 
 
-                            _log.LogWrite($"\t\told props {markerProps.Count}");
-                            */
-                            
-                        }
-                        catch (Exception ex)
-                        {
-                            _badFilePatchs.Add($"{filename} {ex.Message}");
-                            _log.LogWrite($"{count} ERR {filename}\n{ex.Message}");
-                            continue;
-                        }
+                        //if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
+                        //{
+                        //    _badFilePatchs.Add(filename);
+                        //    _log.LogWrite($"{count} NULL {filename}");
+                        //    continue;
+                        //}
+
+                        /*▬
+                        //если не нулл работаем его
+                        _countFilesRead++;
+
+                        of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+                        of.AddType(guid);
+                        of.AddDoc(mcDocument);
+
+                        //получаем с него ID
+                        mcObjectIds = of.GetObjects();
+
+                        _stwID.Stop();
+                        _stwProp.Start();
+                        _countTotal += mcObjectIds.Count;//всего получено
+
+                        _log.LogWrite($"\t\tprops");
+                        //дергаем сбор свойств
+                        ExtractNamedProps(mcObjectIds, ref markerProps);
+
+                        _stwProp.Stop();
+                        _stwID.Start();
+
+
+                        _log.LogWrite($"\t\told props {markerProps.Count}");
+                        */
+
                     }
+                    catch (Exception ex)
+                    {
+                        _badFilePatchs.Add($"{filename} {ex.Message}");
+                        _log.LogWrite($"{count} ERR {filename}\n{ex.Message}");
+                        continue;
+                    }
+                }
 
-                    //_stwID.Stop();
+                //_stwID.Stop();
 
-                    _log.LogWrite($"{count} CLOSE {filename}");
-                    _log.LogWrite($"-----------");
+                _log.LogWrite($"{count} CLOSE {filename}");
+                _log.LogWrite($"-----------");
 
 
-                    _countFilesRead++;
+                _countFilesRead++;
 
                 //}
                 //else
