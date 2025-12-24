@@ -7,6 +7,7 @@ using Db = Teigha.DatabaseServices;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using System.Diagnostics;
+using Cad = HostMgd.ApplicationServices.Application;
 
 namespace dRz.SpecSPDS.NCad.Services
 {
@@ -20,11 +21,11 @@ namespace dRz.SpecSPDS.NCad.Services
     public partial class MultiCadProps
 
     {
-        private static readonly string _logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                                          "log.log");
 
 
-        Log _log = new Log(_logPath);
+
+        Logger logger => _logger;
+        Logger _logger;
 
         /// <summary>
         /// 
@@ -42,17 +43,24 @@ namespace dRz.SpecSPDS.NCad.Services
             _isSpec = settings.IsSpec;//признак сбора в спецификацию -true, только с флагом сбора
                                       //false - собирать все
 
+            #region Logger
+
+            Version _version = Cad.Version;
+
+            string _appProductName = System.Windows.Forms.Application.ProductName;
+            string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
+
+            _logger = new Logger(_sender);
+            
+            #endregion
 
         }
 
         public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
         {
-            _log._path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                                          "logTG.log");
+            
 
-            _log.LogClear();
-
-            _log.LogWrite($"Total files: {filenames.Count}");
+            logger.Log($"Total files: {filenames.Count}");
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
@@ -77,7 +85,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
                 count++;
 
-                _log.LogWrite($"{count} OPEN {filename}");
+                logger.Log($"{count} OPEN {filename}");
 
                 //если открыт то не нулл
                 //McDocument mcDocument = McDocumentsManager.GetDocument(filename);
@@ -94,7 +102,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
                         Db.HostApplicationServices.WorkingDatabase = db0;
 
-                        _log.LogWrite($"\tREAD");
+                        logger.Log($"\tREAD");
                         //перекидываем в мультикад
                         //mcDocument = McDocumentsManager.GetDocument(filename);
 
@@ -102,7 +110,7 @@ namespace dRz.SpecSPDS.NCad.Services
                         //if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
                         //{
                         //    _badFilePatchs.Add(filename);
-                        //    _log.LogWrite($"{count} NULL {filename}");
+                        //    logger.Log($"{count} NULL {filename}");
                         //    continue;
                         //}
 
@@ -121,7 +129,7 @@ namespace dRz.SpecSPDS.NCad.Services
                         _stwProp.Start();
                         _countTotal += mcObjectIds.Count;//всего получено
 
-                        _log.LogWrite($"\t\tprops");
+                        logger.Log($"\t\tprops");
                         //дергаем сбор свойств
                         ExtractNamedProps(mcObjectIds, ref markerProps);
 
@@ -129,22 +137,22 @@ namespace dRz.SpecSPDS.NCad.Services
                         _stwID.Start();
 
 
-                        _log.LogWrite($"\t\told props {markerProps.Count}");
+                        logger.Log($"\t\told props {markerProps.Count}");
                         */
 
                     }
                     catch (Exception ex)
                     {
                         _badFilePatchs.Add($"{filename} {ex.Message}");
-                        _log.LogWrite($"{count} ERR {filename}\n{ex.Message}");
+                        logger.Log($"{count} ERR {filename}\n{ex.Message}");
                         continue;
                     }
                 }
 
                 //_stwID.Stop();
 
-                _log.LogWrite($"{count} CLOSE {filename}");
-                _log.LogWrite($"-----------");
+                logger.Log($"{count} CLOSE {filename}");
+                logger.Log($"-----------");
 
 
                 _countFilesRead++;
@@ -152,7 +160,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 //}
                 //else
                 //{
-                //    _log.LogWrite($"{count} ОТКРЫТ!!!! {filename}");
+                //    logger.Log($"{count} ОТКРЫТ!!!! {filename}");
                 //    _countFilesRead++;
 
                 //    of.Reset();//сброс фильтра иначе в цикле добавляет документы 
@@ -166,7 +174,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 //    //_stwProp.Start();
                 //    _countTotal += mcObjectIds.Count;//всего получено
 
-                //    _log.LogWrite($"\t\tprops");
+                //    logger.Log($"\t\tprops");
                 //    //дергаем сбор свойств
                 //    ExtractNamedProps(mcObjectIds, ref markerProps);
 
@@ -174,13 +182,13 @@ namespace dRz.SpecSPDS.NCad.Services
                 //    //_stwID.Start();
 
 
-                //    _log.LogWrite($"\t\told props");
+                //    logger.Log($"\t\told props");
 
                 //    //после обработки закрываем
                 //    if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
 
-                //    _log.LogWrite($"{count} CLOSE {filename}");
-                //    _log.LogWrite($"-----------");
+                //    logger.Log($"{count} CLOSE {filename}");
+                //    logger.Log($"-----------");
 
                 //    //_stwID.Stop();
 
@@ -207,12 +215,8 @@ namespace dRz.SpecSPDS.NCad.Services
         /// <returns>Список свойств мультикад объектов</returns>
         public List<DefinitionMarkerProps> GetPropsMC(List<string> filenames)
         {
-            _log._path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                              "logMC.log");
 
-            _log.LogClear();
-
-            _log.LogWrite($"Total files: {filenames.Count}");
+            logger.Log($"Total files: {filenames.Count}");
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
@@ -232,7 +236,7 @@ namespace dRz.SpecSPDS.NCad.Services
 
                 count++;
 
-                _log.LogWrite($"{count} OPEN {filename}");
+                logger.Log($"{count} OPEN {filename}");
                 //если открыт то не нулл
                 McDocument mcDocument = McDocumentsManager.GetDocument(filename);
                 if (mcDocument == null)
@@ -260,7 +264,7 @@ namespace dRz.SpecSPDS.NCad.Services
                 _stwProp.Start();
                 _countTotal += mcObjectIds.Count;//всего получено
 
-                _log.LogWrite($"\t\tprops");
+                logger.Log($"\t\tprops");
                 //дергаем сбор свойств
                 ExtractNamedProps(mcObjectIds, ref markerProps);
 
@@ -268,13 +272,13 @@ namespace dRz.SpecSPDS.NCad.Services
                 _stwID.Start();
 
 
-                _log.LogWrite($"\t\told props");
+                logger.Log($"\t\told props");
 
                 //после обработки закрываем
                 if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
 
-                _log.LogWrite($"{count} CLOSE {filename}");
-                _log.LogWrite($"-----------");
+                logger.Log($"{count} CLOSE {filename}");
+                logger.Log($"-----------");
 
                 _stwID.Stop();
             }
