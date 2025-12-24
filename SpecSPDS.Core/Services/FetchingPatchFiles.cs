@@ -113,7 +113,7 @@ namespace dRz.SpecSPDS.Core.Services
         /// <param name="WithSubfolders">if set to <c>true</c> [with subfolders].</param>
         /// <param name="sSerchPatern">The s serch patern.</param>
         /// <returns>Список файлов</returns>
-        static List<string> GetFilesOfDir(string sPath, bool WithSubfolders = false, string sSerchPatern = "*.dwg")
+      public  static List<string> GetFilesOfDir(string sPath, bool WithSubfolders = false, string sSerchPatern = "*.dwg")
         {
             try
             {
