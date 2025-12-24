@@ -1,6 +1,6 @@
 ﻿namespace dRz.SpecSpdsConsole
 {
-    internal class NewClass
+    internal class TestClass
     {
         public Statistics Stats { get; set; } = new Statistics();
 
@@ -11,7 +11,7 @@
 
 
         public string TmrID => _tmrID;
-        string _tmrID = "";
+        public string _tmrID = "100";
 
 
     }

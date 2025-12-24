@@ -30,75 +30,24 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace dRz.SpecSpdsConsole
 {
 
-    public class Program
+    public class AllProgs
     {
-        private static readonly string _logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                                  "logtest.txt");
-    static     string   dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF",
-                        CultureInfo.InvariantCulture);
+        static string dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF",
+                            CultureInfo.InvariantCulture);
 
 
         [STAThread]
         static void Main(string[] args)
         {
-            Stopwatch stw = new Stopwatch();
         Lb:
-            Log log = new Log(_logPath);
 
-            string logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                                  "logtest100.txt");
-            log._path=logPath;
+            #region Чтение запись настроек XML
 
-            stw.Start();
-            for (int i = 1; i <= 1000000; ++i)
-            {
-
-                log.LogWrite($" - {dat} {i} тестовый тест");
-            }
-
-            stw.Stop();
-            log.LogWrite($"********THE END************");
-            log.LogWrite($"Total Time {stw.Elapsed.ToString()}");
-
-            Console.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
-            { }
-            goto Lb;
-
-
-            var ff1 = FetchingPatchFiles.GetFiles(Space.SubFolder);
-            new OutResult();
-
-            List<string> list = new List<string> { "Маркер", "Маркера", "Маркеров" };
-
-            for (int i = 0; i < 35; ++i)
-            {
-                Console.WriteLine($"{i} {list.Declens(i)}");
-
-            }
-
-
-            NewClass newClass = new NewClass();
-
-            //newClass.Stats._tmrID = "10";
-
-
-
-
-            var oal = new OutAddList();
-
-            string[] str = { "1", "2", "10" };
-
-            List<string> lstr = new List<string> { "zz", "fd", "sd" };
-
-            oal.RefAdd(str, ref lstr);
-
-            var dd = lstr;
-
-            var ff = FetchingPatchFiles.GetFiles(Space.Folder);
             PropXml propXml = new PropXml();
             propXml.LoadProps();
 
@@ -109,16 +58,77 @@ namespace dRz.SpecSpdsConsole
 
             List<DefinitionMarkerProps> props2 = propXml2.Props;
 
-
             List<DefinitionMarkerProps> propsAll = props.Union(props2).ToList();
 
             List<GroupedDefinitionMarkerProps> groupedDefinitionMarkerProps = DefinitionMarkerPropsGrouper.GroupAndSortDefinitionMarkers(props);
 
             var outConsole = new OutConsole(groupedDefinitionMarkerProps);
 
+            GroupAmount groupAmount = new GroupAmount(props);
 
-            Console.WriteLine("****************************");
-            var groupAmount = new GroupAmount(props);
+            #endregion
+
+            goto Lb;
+
+            #region тест логгера
+
+            TestLogCuctom tst = new TestLogCuctom();
+
+            tst.Test();
+
+            #endregion
+
+            #region получение  файлов из каталогов
+
+            List<string> ff1 = FetchingPatchFiles.GetFiles(Space.SubFolder);
+
+            List<string> ff = FetchingPatchFiles.GetFiles(Space.Folder);
+
+            #endregion
+
+            #region тест вывода результата в консоль
+
+            new OutResult();
+
+            #endregion
+
+            #region Окончания слова
+
+            List<string> list = new List<string> { "Маркер", "Маркера", "Маркеров" };
+
+            for (int i = 0; i < 35; ++i)
+            {
+                Console.WriteLine($"{i} {list.Declens(i)}");
+
+            }
+
+            #endregion
+
+            #region Сборный класс типа настройки
+
+            TestClass newClass = new TestClass();
+            newClass.Stats._tmrID = "10";
+
+            #endregion
+
+            #region Передача по ссылке
+
+            OutAddList oal = new OutAddList();
+
+            string[] str = { "1", "2", "10" };
+
+            List<string> lstr = new List<string> { "zz", "fd", "sd" };
+
+            oal.RefAdd(str, ref lstr);
+
+            List<string> dd = lstr;
+
+            #endregion
+
+
+
+
+
 
 
 
