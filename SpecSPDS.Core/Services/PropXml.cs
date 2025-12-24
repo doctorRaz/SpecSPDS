@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Xml.Serialization;
 
 namespace dRz.SpecSPDS.Core.Services
@@ -25,9 +26,9 @@ namespace dRz.SpecSPDS.Core.Services
         {
             try
             {
-                if (File.Exists(_configPath))
+                if (File.Exists(_xmlPath))
                 {
-                    using (FileStream stream = new FileStream(_configPath, FileMode.Open))
+                    using (FileStream stream = new FileStream(_xmlPath, FileMode.Open))
                     {
                         _props = (List<DefinitionMarkerProps>)_serializer.Deserialize(stream);
                     }
@@ -45,13 +46,13 @@ namespace dRz.SpecSPDS.Core.Services
 
         public void SaveProps()
         {
-            string folder = Path.GetDirectoryName(_configPath);
+            string folder = Path.GetDirectoryName(_xmlPath);
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            using (FileStream writer = new FileStream(_configPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            using (FileStream writer = new FileStream(_xmlPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 _serializer.Serialize(writer, _props);
             }
@@ -62,8 +63,10 @@ namespace dRz.SpecSPDS.Core.Services
 
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(List<DefinitionMarkerProps>));
 
-        private static readonly string _configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                                          "SpecSPDS",
-                                                          "prop.xml");
+        //private static readonly string _xmlPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        //                                                  "SpecSPDS",
+        //                                                  "prop.xml");
+
+        private string _xmlPath => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "prop.xml");
     }
 }
