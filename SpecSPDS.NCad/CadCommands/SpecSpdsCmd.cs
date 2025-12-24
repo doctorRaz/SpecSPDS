@@ -44,15 +44,15 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             Editor ed = doc.Editor;
 
-            #region В словарик
-            //todo убрать в коре
+            #region Убрать в словарик
+            //todo убрать в коре в словарик
             List<string> wordFiles = new List<string> { "файл", "файла", "файлов" };
             List<string> wordsMark = new List<string> { "маркер", "маркера", "маркеров" };
             List<string> wordsDoc = new List<string> { "документ", "документа", "документов" };
 
             #endregion
 
-            #region хотелки юзера
+            #region Выбор юзера
             //получаю маркеры
             List<Keywords> keywordsList = new List<Keywords>
             {
@@ -100,7 +100,7 @@ namespace dRz.SpecSPDS.NCad.CadCommands
 
             #region Result GetProps
 
-
+            //todo вывод статистики вынести в логгер или  класс
             string resultString = $"\nСтатистика:";
 
             resultString += $"\nФайлов обработано:";
