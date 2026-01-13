@@ -32,7 +32,7 @@ namespace dRz.SpecSpdsConsole
 
             Logger log = new Logger($"{name}_v {ver}");
 
-            log.LogClear();
+            log.LogAllClear();
 
             count++;
 

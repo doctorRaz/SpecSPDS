@@ -17,15 +17,49 @@ namespace dRz.SpecSPDS.Core.Services
                       CultureInfo.InvariantCulture);
 
             _appName = $"{date}_{appName}.log";
+
+            ClearCount();
+
+
         }
 
-        public void LogClear()
+        List<string> logFiles
         {
-            //!удаляем BAK файл (после предыдущего обновления)
-            //каталог DLL
-            string sPath = Directory.GetParent(_path).FullName;
-            //список BAK
-            List<string> logFiles = FetchingPatchFiles.GetFilesOfDir(sPath, true, "*.log");
+            get
+            {
+                string sPath = Directory.GetParent(_path).FullName;
+
+                return FetchingPatchFiles.GetFilesOfDir(sPath, true, "*.log");
+
+            }
+        }
+
+
+        void ClearCount()
+        {
+            List<string> files = logFiles;
+            files.Sort();
+
+            int delcount = 10;
+
+            for (int i = 0; i < files.Count - delcount; i++)
+            {
+                try
+                {
+
+                    File.Delete(files[i]); //пытаемся удалить без проверки занят или нет    
+
+                }
+                catch { }
+
+            }
+
+        }
+
+
+        public void LogAllClear()
+        {
+
             foreach (string logFile in logFiles)
             {
                 try
@@ -35,6 +69,7 @@ namespace dRz.SpecSPDS.Core.Services
                 catch { }
             }
         }
+
         public async void Log(string message)
         {
 

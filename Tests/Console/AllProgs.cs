@@ -45,6 +45,13 @@ namespace dRz.SpecSpdsConsole
         static void Main(string[] args)
         {
         Lb:
+            Logger log = new Logger();
+
+          
+
+            goto Lb;
+          
+
 
             #region Чтение запись настроек XML
 
@@ -68,7 +75,6 @@ namespace dRz.SpecSpdsConsole
 
             #endregion
 
-            goto Lb;
 
             #region тест логгера
 
