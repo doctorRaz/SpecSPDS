@@ -1,4 +1,6 @@
-﻿using dRz.SpecSPDS.Core.Models;
+﻿#if DEBUG
+
+using dRz.SpecSPDS.Core.Models;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
@@ -21,3 +23,5 @@ namespace dRz.SpecSPDS.Cad.TestCommand
         }
     }
 }
+
+#endif

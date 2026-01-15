@@ -1,4 +1,5 @@
-﻿using Multicad;
+﻿#if DEBUG
+using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using System.Diagnostics;
@@ -137,3 +138,4 @@ namespace dRz.SpecSPDS.Cad.TestCommand
 
     }
 }
+#endif
