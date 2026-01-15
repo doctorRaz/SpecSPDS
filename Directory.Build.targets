@@ -7,7 +7,7 @@
 		<!--<DateTime -->
 		<StartYear>2014</StartYear>
 		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
-		
+				
 		<!--<Version />-->
 		<Deterministic>false</Deterministic>
 		<AssemblyVersion>0.1.*</AssemblyVersion>
@@ -16,8 +16,9 @@
 		<!--<Version />-->
 		
 		<!--<Name space />-->
-		<RootUser>drz100</RootUser>
+		<RootUser>drz</RootUser>
 		<RootNamespace>$(RootUser).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		
 		<!--<Name space />-->	
 		<!-- Description -->
 		<Product>SpecSPDS</Product>
@@ -25,7 +26,7 @@
 		<Authors>Разыграев Андрей</Authors>
 		<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>
 		<Copyright>Разыграев Андрей</Copyright>
-		<Trademark>©doctorRAZ $(StartYear)-$(CurrentYear)</Trademark>
+		<Trademark>©doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
 		<!-- Description -->
 		<!--<BaseOutputPath>..\bin.NET\</BaseOutputPath>-->
 	</PropertyGroup>

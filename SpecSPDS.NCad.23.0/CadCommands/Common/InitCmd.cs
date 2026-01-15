@@ -3,7 +3,7 @@ using HostMgd.EditorInput;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.NCad.CadCommands.Common
+namespace dRz.SpecSPDS.Cad.CadCommands.Common
 {
     partial class InitCmd : IExtensionApplication
     {

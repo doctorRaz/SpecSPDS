@@ -8,7 +8,7 @@ using Multicad.Symbols.Tables;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.NCad.TestCommand
+namespace dRz.SpecSPDS.Cad.TestCommand
 {
 
     //tests finds McTable

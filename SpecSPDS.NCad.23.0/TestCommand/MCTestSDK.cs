@@ -25,7 +25,7 @@ using Multicad.Runtime;
 using Multicad.Symbols;
 using Multicad.Symbols.Tables;
 
-namespace dRz.SpecSPDS.NCad.TestCommand
+namespace dRz.SpecSPDS.Cad.TestCommand
 {
     public class MCTestSDK //: IExtensionApplication
     {

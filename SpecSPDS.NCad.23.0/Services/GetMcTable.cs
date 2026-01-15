@@ -1,4 +1,4 @@
-﻿namespace dRz.SpecSPDS.NCad.Services
+﻿namespace dRz.SpecSPDS.Cad.Services
 {
 
     /// <summary>

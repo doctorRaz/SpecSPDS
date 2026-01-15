@@ -7,9 +7,9 @@ using Db = Teigha.DatabaseServices;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using System.Diagnostics;
-using Cad = HostMgd.ApplicationServices.Application;
+using CAD = HostMgd.ApplicationServices.Application;
 
-namespace dRz.SpecSPDS.NCad.Services
+namespace dRz.SpecSPDS.Cad.Services
 {
     /// <summary>
     /// получаем универсальный маркер
@@ -45,20 +45,20 @@ namespace dRz.SpecSPDS.NCad.Services
 
             #region Logger
 
-            Version _version = Cad.Version;
+            Version _version = CAD.Version;
 
             string _appProductName = System.Windows.Forms.Application.ProductName;
             string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
 
             _logger = new Logger(_sender);
-            
+
             #endregion
 
         }
 
         public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
         {
-            
+
 
             logger.Log($"Total files: {filenames.Count}");
 
