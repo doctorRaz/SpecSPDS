@@ -16,6 +16,7 @@ using NLog.Common;
 
 
 
+
 #if NC || NC26
 using Teigha.Runtime;
 
@@ -31,7 +32,7 @@ using Autodesk.AutoCAD.EditorInput;
 #endif
 
 
-namespace dRz.Test.OpenDwg
+namespace dRz.SpecSPDS.Cad.TestCommand
 {
     public class NlogTest
     {
