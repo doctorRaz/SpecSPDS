@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{83
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenDwg.NC.23.1", "..\!nanoCAD-API-bugs\Collection-of-nanoCAD-API-bugs\OpenDwg\OpenDwg.NC.23.1\OpenDwg.NC.23.1.csproj", "{F070C56D-ACE9-4EE1-AE03-2E02D4D20860}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggerApp", "..\!nanoCAD-API-bugs\Collection-of-nanoCAD-API-bugs\LoggerApp\LoggerApp.csproj", "{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug MD|Any CPU = Debug MD|Any CPU
@@ -219,6 +221,26 @@ Global
 		{F070C56D-ACE9-4EE1-AE03-2E02D4D20860}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F070C56D-ACE9-4EE1-AE03-2E02D4D20860}.Release|x64.ActiveCfg = Release|Any CPU
 		{F070C56D-ACE9-4EE1-AE03-2E02D4D20860}.Release|x64.Build.0 = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug MD|Any CPU.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug MD|Any CPU.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug MD|x64.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug MD|x64.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug NCAD|Any CPU.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug NCAD|Any CPU.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug NCAD|x64.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug NCAD|x64.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Debug|x64.Build.0 = Debug|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release NCAD|Any CPU.ActiveCfg = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release NCAD|Any CPU.Build.0 = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release NCAD|x64.ActiveCfg = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release NCAD|x64.Build.0 = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release|x64.ActiveCfg = Release|Any CPU
+		{872DDD8D-64F8-4CDC-8F62-D690C7E06EAE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
