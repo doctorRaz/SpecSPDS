@@ -5,27 +5,24 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 using System.Reflection;
-using dRz.CAD.Loader;
+using dRz.Cad.Loader;
+
 
 
 #if AC
 
-using cad = Autodesk.AutoCAD.ApplicationServices.Application;
 using Rtm = Autodesk.AutoCAD.Runtime;
 
 #elif NC
 
 using HostMgd.ApplicationServices;
-using Teigha.DatabaseServices;
-using Teigha.Geometry;
 using Rtm = Teigha.Runtime;
-using cad = HostMgd.ApplicationServices.Application;
 
 #endif
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.CAD.Loader
+namespace dRz.Cad.Loader
 {
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
@@ -52,7 +49,7 @@ namespace dRz.CAD.Loader
             //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
             // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
             // Version, полученного из Application.Version.
-            Version version = cad.Version;
+            Version version = Application.Version;
 
             string fileFullName = GetType().Assembly.Location;
 
@@ -77,7 +74,7 @@ namespace dRz.CAD.Loader
 
                     if (index >= 0)
                     {
-                        object application = cad.AcadApplication;
+                        object application = Application.AcadApplication;
 
                         application.GetType().InvokeMember(methodNames[index], BindingFlags
                           .InvokeMethod, null, application, new object[] {
