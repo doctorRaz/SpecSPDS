@@ -32,7 +32,7 @@ using Autodesk.AutoCAD.EditorInput;
 #endif
 
 
-namespace dRz.SpecSPDS.Cad.TestCommand
+namespace dRz.SpecSPDS.Cad.Commands.Test
 {
     public class NlogTest
     {

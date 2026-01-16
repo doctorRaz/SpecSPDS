@@ -5,7 +5,7 @@ using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 
-namespace dRz.SpecSPDS.Cad.TestCommand
+namespace dRz.SpecSPDS.Cad.Commands.Test
 {
     //подгон от крыса
     public class NamedProperties

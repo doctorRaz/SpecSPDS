@@ -4,7 +4,7 @@ using Multicad.DatabaseServices;
 using Teigha.DatabaseServices;
 using Teigha.Runtime;
 
-namespace dRz.SpecSPDS.Cad.TestCommand
+namespace dRz.SpecSPDS.Cad.Commands.Test
 {
     /// <summary>
     /// мультикад чтение и редактирование файла в скрытом режиме

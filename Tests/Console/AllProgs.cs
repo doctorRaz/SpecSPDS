@@ -47,7 +47,14 @@ namespace dRz.SpecSpdsConsole
         [STAThread]
         static void Main(string[] args)
         {
-            var fff=Assembly.GetExecutingAssembly().GetName().Name;
+            var product =
+                        Assembly.GetExecutingAssembly()
+                                .GetCustomAttribute<AssemblyProductAttribute>()!
+                                .Product;
+
+            CoreBootstrapper.Initialize(product);
+
+            //AppPaths.Initialize(product);
 
         Lb:
             //https://chatgpt.com/c/69693f7a-fe20-832b-a81b-3dacf5775ffd
@@ -59,9 +66,9 @@ namespace dRz.SpecSpdsConsole
             var log = LogManager.GetCurrentClassLogger();
             log.Info("Addon initialized");
 
-            AppSettings appSettings = new AppSettings();
+            //AppSettings appSettings = new AppSettings();
 
-            appSettings.Save();
+            //appSettings.Save();
 
 
             goto Lb;
@@ -158,6 +165,33 @@ namespace dRz.SpecSpdsConsole
 
 
             Console.ReadKey();
+        }
+    }
+
+
+    public static class CoreBootstrapper
+    {
+        public static void Initialize(string product)
+        {
+            AppPaths.Initialize(product);
+
+            var settings = new AppSettings();
+            settings.Load();
+
+            ApplyProduct(settings.Settings, product);
+
+            settings.Save();
+        }
+
+        private static void ApplyProduct(
+            ApplicationSettings settings,
+            string product)
+        {
+            // только если ещё не задано пользователем
+            if (string.IsNullOrWhiteSpace(settings.ApplicationName))
+            {
+                settings.ApplicationName = product;
+            }
         }
     }
 }

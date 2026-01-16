@@ -9,7 +9,17 @@ namespace drz.SpecSPDS.Core.Settings
 {
     public static class AppPaths
     {
-        private static string Product => AssemblyInfo.Product;
+        public static void Initialize(string product)
+        {
+            if (string.IsNullOrWhiteSpace(product))
+                throw new ArgumentException(nameof(product));
+
+            _product = product;
+        }
+
+        private static string? _product;
+        private static string Product =>
+                _product ?? throw new InvalidOperationException("AppPaths not initialized");
         public static string AppRoot =>
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

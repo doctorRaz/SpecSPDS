@@ -1,7 +1,7 @@
 ﻿using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
-namespace dRz.SpecSPDS.Cad.CadCommands
+namespace dRz.SpecSPDS.Cad.Commands
 {
     public partial class SpecSpdsCmd
     { /// <summary>

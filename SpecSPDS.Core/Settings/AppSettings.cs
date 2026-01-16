@@ -23,7 +23,7 @@ namespace dRz.SpecSPDS.Core.Settings
             if (!File.Exists(ConfigPath))
             {
                 _settings = new ApplicationSettings();
-                Save();
+                Save();//x лишннеее???
                 return;
             }
 

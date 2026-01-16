@@ -2,7 +2,7 @@
 {
     public class ApplicationSettings
     {
-        public string ApplicationName { get; set; } = "SpecSPDS";
+        public string ApplicationName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the unique identifier. McUmarker

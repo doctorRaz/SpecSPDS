@@ -3,7 +3,7 @@ using HostMgd.EditorInput;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.Cad.CadCommands.Common
+namespace dRz.SpecSPDS.Cad.Commands
 {
     partial class InitCmd : IExtensionApplication
     {
@@ -15,7 +15,9 @@ namespace dRz.SpecSPDS.Cad.CadCommands.Common
 
         public void Terminate()
         {
-            //throw new NotImplementedException();
+            //loger stop
+
+
         }
     }
 
@@ -31,7 +33,7 @@ namespace dRz.SpecSPDS.Cad.CadCommands.Common
 
             Editor ed = doc.Editor;
 
-            ed.WriteMessage($"Hello Spec SPDS");
+            ed.WriteMessage($"Hello Spec SPDS for nanoCAD 23-26");
         }
     }
 }
