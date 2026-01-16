@@ -11,7 +11,7 @@ namespace dRz.SpecSpdsConsole
     /// </summary>
     internal class TestLogCuctom
     {
-
+         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         internal void Test()
         {
             Stopwatch stw = new Stopwatch();
@@ -26,9 +26,9 @@ namespace dRz.SpecSpdsConsole
 
             string name = assembly.GetName().Name;
 
-            Logger log = new Logger($"{name}_v {ver}");
+          
 
-            log.LogAllClear();
+             
 
             count++;
 
@@ -36,12 +36,12 @@ namespace dRz.SpecSpdsConsole
             for (int i = 1; i <= 10; ++i)
             {
 
-                log.Log($" - {dat} {i} тест {count}");
+                log.Trace($" - {dat} {i} тест {count}");
             }
 
             stw.Stop();
-            log.Log($"********THE END************");
-            log.Log($"Total Time {stw.Elapsed.ToString()}");
+            log.Trace($"********THE END************");
+            log.Trace($"Total Time {stw.Elapsed.ToString()}");
 
             Console.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
         }

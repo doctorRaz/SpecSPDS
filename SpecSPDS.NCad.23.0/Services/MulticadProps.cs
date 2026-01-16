@@ -22,10 +22,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
     {
 
-
-
-        Logger logger => _logger;
-        Logger _logger;
+         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 
@@ -49,8 +46,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
             string _appProductName = System.Windows.Forms.Application.ProductName;
             string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
-
-            _logger = new Logger(_sender);
+                      
 
             #endregion
 
@@ -60,7 +56,7 @@ namespace dRz.SpecSPDS.Cad.Services
         {
 
 
-            logger.Log($"Total files: {filenames.Count}");
+            log.Trace($"Total files: {filenames.Count}");
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
@@ -85,7 +81,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
                 count++;
 
-                logger.Log($"{count} OPEN {filename}");
+                log.Trace($"{count} OPEN {filename}");
 
                 //если открыт то не нулл
                 //McDocument mcDocument = McDocumentsManager.GetDocument(filename);
@@ -102,7 +98,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
                         Db.HostApplicationServices.WorkingDatabase = db0;
 
-                        logger.Log($"\tREAD");
+                        log.Trace($"\tREAD");
                         //перекидываем в мультикад
                         //mcDocument = McDocumentsManager.GetDocument(filename);
 
@@ -144,15 +140,14 @@ namespace dRz.SpecSPDS.Cad.Services
                     catch (Exception ex)
                     {
                         _badFilePatchs.Add($"{filename} {ex.Message}");
-                        logger.Log($"{count} ERR {filename}\n{ex.Message}");
+                        log.Trace($"{count} ERR {filename}\n{ex.Message}");
                         continue;
                     }
                 }
 
                 //_stwID.Stop();
 
-                logger.Log($"{count} CLOSE {filename}");
-                logger.Log($"-----------");
+                log.Trace($"{count} CLOSE {filename}");
 
 
                 _countFilesRead++;
@@ -216,7 +211,7 @@ namespace dRz.SpecSPDS.Cad.Services
         public List<DefinitionMarkerProps> GetPropsMC(List<string> filenames)
         {
 
-            logger.Log($"Total files: {filenames.Count}");
+            log.Trace($"Total files: {filenames.Count}");
 
             List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
@@ -236,7 +231,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
                 count++;
 
-                logger.Log($"{count} OPEN {filename}");
+                log.Trace($"{count} OPEN {filename}");
                 //если открыт то не нулл
                 McDocument mcDocument = McDocumentsManager.GetDocument(filename);
                 if (mcDocument == null)
@@ -264,7 +259,7 @@ namespace dRz.SpecSPDS.Cad.Services
                 _stwProp.Start();
                 _countTotal += mcObjectIds.Count;//всего получено
 
-                logger.Log($"\t\tprops");
+                log.Trace($"\t\tprops");
                 //дергаем сбор свойств
                 ExtractNamedProps(mcObjectIds, ref markerProps);
 
@@ -272,13 +267,13 @@ namespace dRz.SpecSPDS.Cad.Services
                 _stwID.Start();
 
 
-                logger.Log($"\t\told props");
+                log.Trace($"\t\told props");
 
                 //после обработки закрываем
                 if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
 
-                logger.Log($"{count} CLOSE {filename}");
-                logger.Log($"-----------");
+                log.Trace($"{count} CLOSE {filename}");
+                log.Trace($"-----------");
 
                 _stwID.Stop();
             }
