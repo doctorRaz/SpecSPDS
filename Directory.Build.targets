@@ -21,7 +21,7 @@
 		
 		<!--<Name space />-->	
 		<!-- Description -->
-		<Product>SpecSPDS</Product>
+		<!-- <Product>SpecSPDS</Product> -->
 		<Company>doctorRAZ</Company>
 		<Authors>Разыграев Андрей</Authors>
 		<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>
@@ -30,4 +30,16 @@
 		<!-- Description -->
 		<!--<BaseOutputPath>..\bin.NET\</BaseOutputPath>-->
 	</PropertyGroup>
+	<PropertyGroup>
+		<SharedConfigDir>$(SolutionDir)\Shared</SharedConfigDir>
+	</PropertyGroup>
+
+	<Target Name="CopyNLogConfig" AfterTargets="Build">
+		<Copy
+		  SourceFiles="$(SharedConfigDir)\NLog.$(Configuration).config"
+		  DestinationFiles="$(OutDir)NLog.config"
+		  SkipUnchangedFiles="true"
+		  Condition="Exists('$(SharedConfigDir)\NLog.$(Configuration).config')" />
+	</Target>
+
 </Project>
