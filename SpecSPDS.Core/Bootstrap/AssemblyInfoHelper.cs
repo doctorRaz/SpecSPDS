@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace drz.SpecSPDS.Core.Bootstrap
+namespace dRz.SpecSPDS.Core.Bootstrap
 {
     //https://github.com/doctorRaz/SpecSPDS/wiki/Bootstrap#реализация-рекомендуемая
     internal static class AssemblyInfoHelper

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace drz.SpecSPDS.Core.Bootstrap
+namespace dRz.SpecSPDS.Core.Bootstrap
 {
     internal class CoreBootstrapper
-{
-}
+    {
+    }
 }

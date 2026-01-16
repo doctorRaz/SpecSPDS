@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace drz.SpecSPDS.Core.Settings
+namespace dRz.SpecSPDS.Core.Settings
 {
     public static class AppPaths
     {
