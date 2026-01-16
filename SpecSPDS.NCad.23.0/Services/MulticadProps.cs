@@ -6,7 +6,7 @@ using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using NLog;
 using System.Diagnostics;
-using CAD = HostMgd.ApplicationServices.Application;
+//using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
 namespace dRz.SpecSPDS.Cad.Services
@@ -42,7 +42,7 @@ namespace dRz.SpecSPDS.Cad.Services
 
             #region Logger
 
-            Version _version = CAD.Version;
+            Version _version = HostMgd.ApplicationServices.Application.Version;
 
             string _appProductName = System.Windows.Forms.Application.ProductName;
             string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
