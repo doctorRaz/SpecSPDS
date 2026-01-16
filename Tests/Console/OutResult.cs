@@ -1,11 +1,6 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.SpecSpdsConsole
 {
@@ -19,7 +14,7 @@ namespace dRz.SpecSpdsConsole
             List<string> wordsDoc = new List<string> { "документ", "документа", "документов" };
 
             string resultString = $"\nСтатистика:";
-              resultString += $"\nФайлов в обработке:";
+            resultString += $"\nФайлов в обработке:";
 
 
             if (mcUmarkerProps.CountFilesTotal > 0)
@@ -80,9 +75,9 @@ namespace dRz.SpecSpdsConsole
 
         public string ElapsedID = "10.10.10";
         public string ElapsedProp = "10.10.10";
-        
 
-        public List<string> BadFilePatchs= new List<string>() { "dddasdsa","dasdsa","ffffff"};
+
+        public List<string> BadFilePatchs = new List<string>() { "dddasdsa", "dasdsa", "ffffff" };
     }
 
 

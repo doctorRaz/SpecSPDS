@@ -1,6 +1,4 @@
-﻿using drz.SpecSPDS.Core.Settings;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml.Serialization;
 
 namespace dRz.SpecSPDS.Core.Settings

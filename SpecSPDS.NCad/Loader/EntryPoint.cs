@@ -41,7 +41,7 @@ namespace dRz.Cad.Loader
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
         public void Initialize()
-        
+
         {
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
@@ -220,6 +220,6 @@ namespace dRz.Cad.Loader
         public void Terminate()
         {
         }
-       
+
     }
 }

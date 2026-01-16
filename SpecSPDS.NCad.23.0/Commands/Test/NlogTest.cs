@@ -3,9 +3,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using NLog;
-using System;
 using System.Globalization;
-using System.IO;
 using NLog.Config;
 using NLog.Common;
 
