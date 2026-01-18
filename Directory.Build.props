@@ -13,7 +13,7 @@
 		<Product>SpecSPDS</Product>
 		<Company>doctorRaz</Company>
 		<Authors>Разыграев Андрей</Authors>
-		<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>
+		<Description>Спецификация из универсального маркера, nanoCAD 23-26</Description>
 		<Copyright>© Разыграев Андрей  $(StartYear)-$(CurrentYear)</Copyright>
 		<Trademark>doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
 		<PackageId>SpecSPDS</PackageId>
@@ -21,7 +21,7 @@
 		<!-- Description -->
 		<FileVersion>10.1.0.0</FileVersion>
 		<InformationalVersion>0.1 build $(CurrentYear)-$([System.DateTime]::Now.ToString("MMdd-HHmm"))</InformationalVersion>
-		<Title>SpecSPDS</Title>
+		<AssemblyTitle>SpecSPDS</AssemblyTitle>
 		<NeutralLanguage>ru-RU</NeutralLanguage>
 		<RepositoryUrl>https://github.com/doctorRaz/SpecSPDS</RepositoryUrl>
 	</PropertyGroup>

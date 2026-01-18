@@ -7,13 +7,15 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<RootNamespace>dRz.SpecSPDS.Core</RootNamespace>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+		<Description>SpecSPDS ядро nanoCAD</Description>
 		<!--<Deterministic>False</Deterministic>
 		<AssemblyVersion>1.0.*</AssemblyVersion>-->
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="NLog" Version="6.0.7" />
-	  <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+		<PackageReference Include="NLog" Version="6.0.7" />
+		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>
 
 
