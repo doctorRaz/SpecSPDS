@@ -4,7 +4,10 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+using System;
 using System.Reflection;
+using dRz.nCad.Loader.Infrastructure;
+
 
 
 #if AC
@@ -22,7 +25,7 @@ using Rtm = Teigha.Runtime;
 [assembly: Rtm.ExtensionApplication(typeof(dRz.nCad.Loader.EntryPoint))]
 
 namespace dRz.nCad.Loader
-{   
+{
 
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
@@ -42,7 +45,9 @@ namespace dRz.nCad.Loader
         /// </summary>
         public void Initialize()
 
-        {           
+        {
+            LoaderLogger.Info("Loader started");
+
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
             // формироваться по правилу: 
@@ -50,6 +55,8 @@ namespace dRz.nCad.Loader
             // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
             // Version, полученного из Application.Version.
             Version version = Application.Version;
+
+            LoaderLogger.Info($"nanoCAD detected: {version.ToString()}");
 
             string fileFullName = GetType().Assembly.Location;
 
@@ -59,8 +66,10 @@ namespace dRz.nCad.Loader
 
             if (targetDllFullName == null)
             {
-               var productName = Application.AcadApplication;
+                string msg = $"Не найден подходящий адаптер для nanoCAD {version.ToString()}";
+                LoaderLogger.Error($"{msg}");
 
+                //не найден хуже не будет, сообщаем об этом пользователю
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 if (doc == null)
                 {
@@ -69,9 +78,12 @@ namespace dRz.nCad.Loader
 
                 Editor ed = doc.Editor;
 
-                ed.WriteMessage($"Не найден подходящий адаптер для ");
+                ed.WriteMessage($"{msg}");
+
                 return;
             }
+
+            LoaderLogger.Info($"Loading adapter: {targetDllFullName}");
 
             // Если найден файл, соответствующий нашей версии AutoCAD, то 
             // загружаем его.
@@ -91,13 +103,17 @@ namespace dRz.nCad.Loader
 
                         application.GetType().InvokeMember(methodNames[index], BindingFlags
                           .InvokeMethod, null, application, new object[] {
-                targetDllFullName.FullName });
+                            targetDllFullName.FullName });
                     }
                 }
+                LoaderLogger.Info("Adapter initialized successfully");
             }
-            catch
+            catch (Exception ex)
             {
+                LoaderLogger.Error(ex.Message, ex);
             }
+
+
         }
 
         /// <summary>
@@ -232,7 +248,7 @@ namespace dRz.nCad.Loader
         /// </summary>
         public void Terminate()
         {
-          
+            LoaderLogger.Info("Loader terminated");
         }
 
     }

@@ -3,6 +3,7 @@ using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
+using Application = HostMgd.ApplicationServices.Application;
 using Rtm = Teigha.Runtime;
 
 
