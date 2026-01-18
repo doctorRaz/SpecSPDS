@@ -24,7 +24,7 @@
 		<!-- <Product>SpecSPDS</Product> -->
 		<Company>doctorRAZ</Company>
 		<Authors>Разыграев Андрей</Authors>
-		<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>
+		<!--<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>-->
 		<Copyright>Разыграев Андрей</Copyright>
 		<Trademark>©doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
 		<!-- Description -->
