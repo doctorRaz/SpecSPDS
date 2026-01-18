@@ -1,0 +1,28 @@
+﻿<Project>
+	<PropertyGroup>
+		<!--<DateTime -->
+		<StartYear>2014</StartYear>
+		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
+		<!--<Version />-->
+		<Deterministic>false</Deterministic>
+		<AssemblyVersion>0.1.*</AssemblyVersion>
+		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+		<!--<Version />-->
+		<!-- Description -->
+		<Product>SpecSPDS</Product>
+		<Company>doctorRaz</Company>
+		<Authors>Разыграев Андрей</Authors>
+		<Description>Спецификация из универсального маркера в nanoCAD 23 и новее</Description>
+		<Copyright>© Разыграев Андрей  $(StartYear)-$(CurrentYear)</Copyright>
+		<Trademark>doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
+		<PackageId>SpecSPDS</PackageId>
+		<PackageAuthors>Разыграев Андрей</PackageAuthors>
+		<!-- Description -->
+		<FileVersion>10.1.0.0</FileVersion>
+		<InformationalVersion>0.1 build $(CurrentYear)-$([System.DateTime]::Now.ToString("MMdd-HHmm"))</InformationalVersion>
+		<Title>SpecSPDS</Title>
+		<NeutralLanguage>ru-RU</NeutralLanguage>
+		<RepositoryUrl>https://github.com/doctorRaz/SpecSPDS</RepositoryUrl>
+	</PropertyGroup>
+</Project>

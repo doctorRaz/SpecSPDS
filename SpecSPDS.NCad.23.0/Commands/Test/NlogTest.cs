@@ -65,7 +65,7 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
 
             //по хорошему этот метод вызывать из инициализации аддона
             //заодно можно писать в sys.log диагностическую инфу о системе, что б меньше вопросов юзерам задавать
-            LogBootstrap.Init();//грузим nlog.config принудительно
+            //LogBootstrap.Init();//грузим nlog.config принудительно
                                 //можно сюда вынести управление диагностикой логера
                                 //и установку переменных в конфиге
 
@@ -185,9 +185,12 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
 
             string configPath = Path.Combine(dllDir, "nlog.config");
 
-            LogManager.Configuration = new XmlLoggingConfiguration(configPath);
+            LogManager.Setup().LoadConfigurationFromFile(configPath);
+            //LogManager.Configuration = new XmlLoggingConfiguration(configPath);
 
             #endregion
+
+            InternalLoggerOn_OFF(true);
 
             InternalLogger.LogFile = Path.Combine(dllDir, "${shortdate}_nlog-internal.log");
 

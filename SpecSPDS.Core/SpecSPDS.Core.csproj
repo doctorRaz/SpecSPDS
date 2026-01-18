@@ -5,10 +5,10 @@
 		<UseWPF>true</UseWPF>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWindowsForms>true</UseWindowsForms>
+		<RootNamespace>dRz.SpecSPDS.Core</RootNamespace>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<Deterministic>False</Deterministic>
-		<AssemblyVersion>1.0.*</AssemblyVersion>
-		<RootNamespace>dRz.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<!--<Deterministic>False</Deterministic>
+		<AssemblyVersion>1.0.*</AssemblyVersion>-->
 	</PropertyGroup>
 
 	<ItemGroup>

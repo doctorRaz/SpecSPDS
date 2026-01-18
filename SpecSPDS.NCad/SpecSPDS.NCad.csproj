@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<RootNamespace>dRz.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<RootNamespace>dRz.nCad.Loader</RootNamespace>
 		<BaseOutputPath>..\bin.NET\</BaseOutputPath>
-
-		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-		<Description>Загрузчик модулей SpecSPDS под версию nanoCAD</Description>
-		<Deterministic>false</Deterministic>
-		<AssemblyVersion>1.1.*</AssemblyVersion>
-
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+		<Description>Загрузчик модулей SpecSPDS под версию nanoCAD</Description>
+		
+		<!--<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+		<GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>-->
+		<!--<Deterministic>false</Deterministic>-->
+		<!--<AssemblyVersion>1.1.*</AssemblyVersion>-->
+		<!--<Product>nCadLoader</Product>-->
+
 
 	</PropertyGroup>
 
@@ -25,13 +27,17 @@
 		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Compile Remove="Command.cs" />
-	</ItemGroup>
+	<!--<ItemGroup>
+	  <Compile Remove="_experimental\**" />
+	  <EmbeddedResource Remove="_experimental\**" />
+	  <None Remove="_experimental\**" />
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="23.0.6177.4117" />
 		<PackageReference Include="NLog" Version="6.0.7" />
 	</ItemGroup>
+
+
 
 </Project>

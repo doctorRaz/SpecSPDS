@@ -1,21 +1,17 @@
-﻿using App = HostMgd.ApplicationServices;
-using Ed = HostMgd.EditorInput;
+﻿using dRz.nCad.Loader;
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
+using System.ComponentModel;
+using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-using System.Reflection;
 
-using Db = Teigha.DatabaseServices;
-using System.ComponentModel;
-using HostMgd.EditorInput;
-//using System.Reflection.Metadata;
-using HostMgd.ApplicationServices;
-//using drz.PlotSPDSn.Starter.NET.EntryPoint;
 
-[assembly: Rtm.CommandClass(typeof(drz.PlotSPDSn.Starter.NET.Command.Command))]
+//[assembly: Rtm.CommandClass(typeof(drz.PlotSPDSn.Starter.NET.Command.Command))]
 
-namespace drz.PlotSPDSn.Starter.NET.Command
+namespace drz.nCad.Loader.Experimental
 {
-    partial class Command:Rtm.IExtensionApplication
+    partial class Command //:Rtm.IExtensionApplication
     {
         [Rtm.CommandMethod("ll", Rtm.CommandFlags.UsePickSet)]
         [Description("тест загрузки")]
@@ -32,7 +28,7 @@ namespace drz.PlotSPDSn.Starter.NET.Command
             ed.WriteMessage($"\nHello word");
                        
 
-            EntryPoint.EntryPoint entryPoint = new EntryPoint.EntryPoint();
+            EntryPoint entryPoint = new EntryPoint();
 
             entryPoint.Initialize();
 

@@ -5,8 +5,6 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 using System.Reflection;
-using dRz.Cad.Loader;
-
 
 
 #if AC
@@ -16,14 +14,16 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 #elif NC
 
 using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 
 #endif
 
-[assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
+[assembly: Rtm.ExtensionApplication(typeof(dRz.nCad.Loader.EntryPoint))]
 
-namespace dRz.Cad.Loader
-{
+namespace dRz.nCad.Loader
+{   
+
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
@@ -42,7 +42,7 @@ namespace dRz.Cad.Loader
         /// </summary>
         public void Initialize()
 
-        {
+        {           
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
             // формироваться по правилу: 
@@ -58,7 +58,20 @@ namespace dRz.Cad.Loader
             FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
 
             if (targetDllFullName == null)
+            {
+               var productName = Application.AcadApplication;
+
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                if (doc == null)
+                {
+                    return;
+                }
+
+                Editor ed = doc.Editor;
+
+                ed.WriteMessage($"Не найден подходящий адаптер для ");
                 return;
+            }
 
             // Если найден файл, соответствующий нашей версии AutoCAD, то 
             // загружаем его.
@@ -125,7 +138,7 @@ namespace dRz.Cad.Loader
             string? directory = Path.GetDirectoryName(fileFullName);
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-            String coreString = String.Format("{0}.{1}", major.ToString(),
+            string coreString = string.Format("{0}.{1}", major.ToString(),
               minor.ToString());
             //string coreString = string.Format("{0}", major.ToString());
 
@@ -219,6 +232,7 @@ namespace dRz.Cad.Loader
         /// </summary>
         public void Terminate()
         {
+          
         }
 
     }
