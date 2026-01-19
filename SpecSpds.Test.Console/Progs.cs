@@ -35,14 +35,14 @@ using System.Reflection;
 namespace dRz.SpecSpdsConsole
 {
 
-    public class AllProgs
+    public class Progs
     {
         static string dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF",
                             CultureInfo.InvariantCulture);
 
 
         [STAThread]
-        static void Main(string[] args)
+        static void _Main(string[] args)
         {
             var product =
                         Assembly.GetExecutingAssembly()
