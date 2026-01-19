@@ -1,4 +1,5 @@
-﻿using dRz.SpecSPDS.Cad.Services;
+﻿using dRz.SpecSPDS.Cad.Application;
+using dRz.SpecSPDS.Cad.Services;
 using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Extensions;
 using dRz.SpecSPDS.Core.Models;
@@ -67,7 +68,7 @@ namespace dRz.SpecSPDS.Cad.Commands
                 new Keywords(nameof(Space.Select),Space.Select),
 
             };
-            Enum propMod = KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
+            Enum propMod = CadApplication.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
             if (propMod == null) return;//смысла продолжать нет
 

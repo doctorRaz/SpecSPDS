@@ -3,9 +3,9 @@ using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
 
-namespace dRz.SpecSPDS.Cad.Commands
+namespace dRz.SpecSPDS.Cad.Application
 {
-    public partial class SpecSpdsCmd
+    public  class CadApplication
     { /// <summary>
       /// Keywords the answer.
       /// </summary>

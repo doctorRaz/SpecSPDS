@@ -17,10 +17,9 @@ namespace dRz.nCad.Loader.Infrastructure
 
             #region load  nlog.config
 
-            string? dllDir = Path.GetDirectoryName(
-                typeof(LogBootstrap).Assembly.Location);
+            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
 
-            string configPath = Path.Combine(dllDir, "nlog.config");
+            string configPath = Path.Combine(dllDir, "NLogLoader.config");
 
             LogManager.Setup().LoadConfigurationFromFile(configPath);
             //LogManager.Configuration = new XmlLoggingConfiguration(configPath);
@@ -38,6 +37,6 @@ namespace dRz.nCad.Loader.Infrastructure
             InternalLogger.LogFile = Path.Combine(dllDir, "logs", $"{logTimestamp}_nlog-internal.log");
 
         }
-             
+
     }
 }

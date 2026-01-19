@@ -1,25 +1,48 @@
-﻿using dRz.SpecSPDS.Cad.Commands.Test;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
-using NLog;
-using NLog.Common;
+﻿using NLog.Common;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Teigha.Runtime;
-using App = HostMgd.ApplicationServices;
+using dRz.SpecSPDS.Cad.Commands.Test;
+using NLog;
+using dRz.SpecSPDS.Cad.Application;
 
-namespace dRz.SpecSPDS.Cad.Commands
+
+#if AC
+
+
+using Rtm = Autodesk.AutoCAD.Runtime;
+#elif NC
+
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
+//using Teigha.Runtime;
+using App = HostMgd.ApplicationServices;
+using Rtm = Teigha.Runtime;
+#endif
+
+
+
+
+
+[assembly: Rtm.ExtensionApplication(typeof(dRz.SpecSPDS.Cad.EntryPoint))]
+
+namespace dRz.SpecSPDS.Cad
 {
-    partial class InitCmd : IExtensionApplication
+    partial class EntryPoint : Rtm.IExtensionApplication
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        [CommandMethod("инит")]
+        [Rtm.CommandMethod("инит")]
         [Description("проверка работы лога")]
         public void Initialize()
         {
+            InternalLogger.LogWriter = new DebugTextWriter();
+
+            InternalLogger.Info("EntryPoint.Initialize() start");
+
+            ApplicationHost.Start();
+
             InternalDiagnostic.InitInternalLogger();
 
             log.Info("nanoCAD 23.1 перед LogBootstrap");
@@ -40,7 +63,7 @@ namespace dRz.SpecSPDS.Cad.Commands
 
         public void Terminate()
         {
-
+            log.Info("Shutdown");
             //loger stop
             LogManager.Shutdown();
 

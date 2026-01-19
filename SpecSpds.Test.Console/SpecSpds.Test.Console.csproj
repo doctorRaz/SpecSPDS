@@ -13,10 +13,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\LoaderLogger.cs" Link="Infrastructure\LoaderLogger.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="NLog" Version="6.0.7" />
 	</ItemGroup>
 	<ItemGroup>

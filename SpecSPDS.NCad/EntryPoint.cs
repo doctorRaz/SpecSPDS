@@ -11,26 +11,26 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using dRz.nCad.Loader.Infrastructure;
-
-
+using NLog.Common;
+using NLog;
 
 #if AC
 
 using Rtm = Autodesk.AutoCAD.Runtime;
 
+
 #elif NC
+
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using NLog;
-using NLog.Common;
 using Rtm = Teigha.Runtime;
 
 #endif
 
-[assembly: Rtm.ExtensionApplication(typeof(dRz.nCad.Loader.EntryPoint))]
+[assembly: Rtm.ExtensionApplication(typeof(dRz.Cad.Loader.EntryPoint))]
 
-namespace dRz.nCad.Loader
+namespace dRz.Cad.Loader
 {
 
     /// <summary>
@@ -265,8 +265,10 @@ namespace dRz.nCad.Loader
         /// </summary>
         public void Terminate()
         {
-            //LoaderLogger.Info("Loader terminated");
+
             log.Info("Loader terminated");
+            //loger stop
+            LogManager.Shutdown();
         }
     }
 
