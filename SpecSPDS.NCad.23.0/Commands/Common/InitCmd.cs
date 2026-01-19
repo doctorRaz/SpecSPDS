@@ -12,56 +12,27 @@ using App = HostMgd.ApplicationServices;
 
 namespace dRz.SpecSPDS.Cad.Commands
 {
-
-    /// <summary>
-    /// отладочная информация из nLog в output VS
-    /// </summary>
-    /// <seealso cref="System.IO.TextWriter" />
-    sealed class DebugTextWriter : TextWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void WriteLine(string? value)
-        {
-            Debug.WriteLine(value);
-        }
-
-        public override void Write(string? value)
-        {
-            Debug.Write(value);
-        }
-    }
-
     partial class InitCmd : IExtensionApplication
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         [CommandMethod("инит")]
         [Description("проверка работы лога")]
         public void Initialize()
         {
+            InternalDiagnostic.InitInternalLogger();
 
-            InternalLogger.LogLevel = LogLevel.Trace;
-
-            InternalLogger.LogWriter = new DebugTextWriter();
-
-
-            LogManager.ThrowExceptions = true;
-            LogManager.ThrowConfigExceptions = true;
-
-              InternalLogger.Trace("Cad.INIT.EntryPoint.Initialize()");
+            log.Info("nanoCAD 23.1 перед LogBootstrap");
 
             LogBootstrap.Init();
 
-            //LogManager.Setup().LoadConfigurationFromFile(@"d:\@Developers\Programmers\!NET\!SpecSPDS\bin.NET\Debug\NLog.config");
+            log.Info("nanoCAD 23.1 после LogBootstrap");
 
-            InternalLogger.Trace("23.1 инит");
+            //NlogTest.TestLog();
 
-            log.Info("nanoCAD 23.1 загружен");
+            Trace.WriteLine("nanoCAD 23.1 загружен Ok");
 
-            NlogTest.TestLog();
-
-            Trace.WriteLine("nanoCAD 23.1 загружен");
+            log.Info("nlogInit");
 
             Loader.HelloSpec();
             //throw new NotImplementedException();
@@ -91,4 +62,44 @@ namespace dRz.SpecSPDS.Cad.Commands
             ed.WriteMessage($"Hello Spec SPDS for nanoCAD 23-26");
         }
     }
+
+    /// <summary>
+    /// отладочная информация из nLog в output VS
+    /// </summary>
+    /// <seealso cref="System.IO.TextWriter" />
+    sealed class DebugTextWriter : TextWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
+
+        public override void WriteLine(string? value)
+        {
+            Debug.WriteLine(value);
+        }
+
+        public override void Write(string? value)
+        {
+            Debug.Write(value);
+        }
+    }
+
+    internal class InternalDiagnostic
+    {
+        internal static void InitInternalLogger()
+        {
+            #region InternalLogger configure
+
+            InternalLogger.LogLevel = LogLevel.Info;
+
+            InternalLogger.LogWriter = new DebugTextWriter();
+
+            LogManager.ThrowExceptions = true;
+
+            LogManager.ThrowConfigExceptions = true;
+
+            InternalLogger.Info("InternalLogger.Initialize()");
+
+            #endregion
+        }
+    }
+
 }

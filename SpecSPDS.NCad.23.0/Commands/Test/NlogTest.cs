@@ -49,7 +49,7 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
         [Description("проверка работы лога")]
         public static void TestLog()
         {
-
+            /*
             //подумать куда удобнее писать логи???
             //  addonDir/logs - рядом с адоном
             //      плюс, не сорим больше нигде,
@@ -74,26 +74,22 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
                                 //и установку переменных в конфиге
 
 
-
+            */
 
 
             //GlobalDiagnosticsContext.Set("appName", ServicesCAD.CallerName(count));
 
-            string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd-HH_mm_ss", CultureInfo.InvariantCulture)}_";
-
-            GlobalDiagnosticsContext.Set("logTimestamp", logTimestamp);
-
-            var config = LogManager.Configuration;
+           
 
             log.Info("Performance metrics: " +
-        "Memory: {MemoryUsage}MB, " +
-        /*   "CPU: {CpuUsage}%, " +*/
-        "Threads: {ThreadCount}, " +
-        "Handles: {HandleCount}",
-        Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024,
-        /*GetCpuUsage(),*/
-        Process.GetCurrentProcess().Threads.Count,
-        Process.GetCurrentProcess().HandleCount);
+                    "Memory: {MemoryUsage}MB, " +
+                    /*   "CPU: {CpuUsage}%, " +*/
+                    "Threads: {ThreadCount}, " +
+                    "Handles: {HandleCount}",
+                    Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024,
+                    /*GetCpuUsage(),*/
+                    Process.GetCurrentProcess().Threads.Count,
+                    Process.GetCurrentProcess().HandleCount);
 
 
             try
@@ -155,7 +151,7 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
                                    .Property("property1", $"Threads: {ThreadCount}")
                                    .Log();
 
-                LogManager.Shutdown();
+                //LogManager.Shutdown();
             }
 
 
@@ -194,9 +190,15 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
 
             #endregion
 
-            InternalLoggerOn_OFF(true);
+            //InternalLoggerOn_OFF(true);
 
-            InternalLogger.LogFile = Path.Combine(dllDir, "${shortdate}_nlog-internal.log");
+            string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd-HH_mm_ss", CultureInfo.InvariantCulture)}_";
+
+            GlobalDiagnosticsContext.Set("logTimestamp", logTimestamp);
+
+            var config = LogManager.Configuration;
+
+            InternalLogger.LogFile = Path.Combine(dllDir,"logs", $"{logTimestamp}_nlog-internal.log");
 
         }
 

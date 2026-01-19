@@ -6,8 +6,10 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using dRz.nCad.Loader.Infrastructure;
 
 
@@ -20,6 +22,8 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using NLog;
+using NLog.Common;
 using Rtm = Teigha.Runtime;
 
 #endif
@@ -40,15 +44,21 @@ namespace dRz.nCad.Loader
         static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB"
     };
 
+        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
         public void Initialize()
-
         {
-            LoaderLogger.Info("Loader started");
+            InternalDiagnostic.InitInternalLogger();
+
+            LogBootstrap.Init();
+
+            //LoaderLogger.Info("Loader started");
+            log.Info("Loader started");
 
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
@@ -58,7 +68,8 @@ namespace dRz.nCad.Loader
             // Version, полученного из Application.Version.
             Version version = Application.Version;
 
-            LoaderLogger.Info($"nanoCAD detected: {version.ToString()}");
+            //LoaderLogger.Info($"nanoCAD detected: {version.ToString()}");
+            log.Info($"nanoCAD detected: {version.ToString()}");
 
             string fileFullName = GetType().Assembly.Location;
 
@@ -69,7 +80,8 @@ namespace dRz.nCad.Loader
             if (targetDllFullName == null)
             {
                 string msg = $"Не найден подходящий адаптер для nanoCAD {version.ToString()}";
-                LoaderLogger.Error($"{msg}");
+                //LoaderLogger.Error($"{msg}");
+                log.Error($"{msg}");
 
                 //не найден хуже не будет, сообщаем об этом пользователю
                 Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -85,7 +97,8 @@ namespace dRz.nCad.Loader
                 return;
             }
 
-            LoaderLogger.Info($"Loading adapter: {targetDllFullName}");
+            //LoaderLogger.Info($"Loading adapter: {targetDllFullName}");
+            log.Info($"Loading adapter: {targetDllFullName}");
 
             // Если найден файл, соответствующий нашей версии AutoCAD, то 
             // загружаем его.
@@ -108,11 +121,13 @@ namespace dRz.nCad.Loader
                             targetDllFullName.FullName });
                     }
                 }
-                LoaderLogger.Info("Adapter initialized successfully");
+                log.Info("Adapter initialized successfully");
+                //LoaderLogger.Info("Adapter initialized successfully");
             }
             catch (Exception ex)
             {
-                LoaderLogger.Error(ex.Message, ex);
+                //LoaderLogger.Error(ex.Message, ex);
+                log.Error(ex.Message, ex);
             }
 
 
@@ -250,8 +265,47 @@ namespace dRz.nCad.Loader
         /// </summary>
         public void Terminate()
         {
-            LoaderLogger.Info("Loader terminated");
+            //LoaderLogger.Info("Loader terminated");
+            log.Info("Loader terminated");
+        }
+    }
+
+    /// <summary>
+    /// отладочная информация из nLog в output VS
+    /// </summary>
+    /// <seealso cref="System.IO.TextWriter" />
+    sealed class DebugTextWriter : TextWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
+
+        public override void WriteLine(string? value)
+        {
+            Debug.WriteLine(value);
         }
 
+        public override void Write(string? value)
+        {
+            Debug.Write(value);
+        }
+    }
+
+    internal class InternalDiagnostic
+    {
+        internal static void InitInternalLogger()
+        {
+            #region InternalLogger configure
+
+            InternalLogger.LogLevel = LogLevel.Info;
+
+            InternalLogger.LogWriter = new DebugTextWriter();
+
+            LogManager.ThrowExceptions = true;
+
+            LogManager.ThrowConfigExceptions = true;
+
+            InternalLogger.Info("InternalLogger.Initialize()");
+
+            #endregion
+        }
     }
 }
