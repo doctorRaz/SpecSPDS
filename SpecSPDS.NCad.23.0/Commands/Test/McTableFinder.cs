@@ -5,6 +5,7 @@ using HostMgd.EditorInput;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols.Tables;
+using System.Collections.Generic;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 

@@ -24,6 +24,8 @@ using Multicad.Geometry;
 using Multicad.Runtime;
 using Multicad.Symbols;
 using Multicad.Symbols.Tables;
+using System;
+using System.Drawing;
 
 namespace dRz.SpecSPDS.Cad.Commands.Test
 {

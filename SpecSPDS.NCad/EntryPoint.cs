@@ -5,6 +5,8 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using dRz.nCad.Loader.Infrastructure;
 

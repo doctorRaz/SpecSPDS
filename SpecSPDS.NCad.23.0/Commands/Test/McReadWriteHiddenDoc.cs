@@ -1,6 +1,10 @@
 ﻿#if DEBUG
 using Multicad;
 using Multicad.DatabaseServices;
+using System.Collections.Generic;
+using System.Drawing;
+
+//using Teigha.Colors;
 using Teigha.DatabaseServices;
 using Teigha.Runtime;
 

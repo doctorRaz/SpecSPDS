@@ -6,6 +6,8 @@ using dRz.SpecSPDS.Core.Services;
 using dRz.SpecSPDS.Core.Settings;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;

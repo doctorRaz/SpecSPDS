@@ -5,6 +5,7 @@ using NLog;
 using NLog.Common;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;

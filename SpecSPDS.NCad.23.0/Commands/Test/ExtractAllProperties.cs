@@ -2,6 +2,7 @@
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace dRz.SpecSPDS.Cad.Commands.Test

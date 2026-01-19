@@ -1,5 +1,7 @@
 ﻿using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using System;
+using System.Collections.Generic;
 
 namespace dRz.SpecSPDS.Cad.Commands
 {

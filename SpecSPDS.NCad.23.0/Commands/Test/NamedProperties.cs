@@ -4,6 +4,8 @@ using dRz.SpecSPDS.Core.Models;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace dRz.SpecSPDS.Cad.Commands.Test
 {
