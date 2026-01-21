@@ -1,4 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
+using System;
 
 namespace dRz.SpecSpds.Test._experimental
 {
@@ -54,16 +55,16 @@ namespace dRz.SpecSpds.Test._experimental
 
             foreach (string s in str)
             {
-                Test.WriteLine($"{s} \t{s.ToBoolean()}");
+                Console.WriteLine($"{s} \t{s.ToBoolean()}");
             }
 
-            Test.WriteLine("-----------------------");
+            Console.WriteLine("-----------------------");
             foreach (string s in str)
             {
-                Test.WriteLine($"{s} \t{s.ToDouble()}");
+                Console.WriteLine($"{s} \t{s.ToDouble()}");
             }
 
-            Test.WriteLine("-----------------------");
+            Console.WriteLine("-----------------------");
 
 
 

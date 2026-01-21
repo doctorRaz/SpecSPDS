@@ -6,13 +6,15 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
-using dRz.nCad.Loader.Infrastructure;
-using NLog.Common;
 using NLog;
+using dRz.Experimental.Bootstrap;
+using dRz.SpecSPDS.Core.InternalDiagnostic;
+
+
+
+
 
 #if AC
 
@@ -53,7 +55,10 @@ namespace dRz.Cad.Loader
         /// </summary>
         public void Initialize()
         {
-            InternalDiagnostic.InitInternalLogger();
+#if DEBUG
+            //debug internal nlog
+            InternalLoggerDiagnostic.InternalLoggerInit();
+#endif
 
             LogBootstrap.Init();
 
@@ -269,45 +274,6 @@ namespace dRz.Cad.Loader
             log.Info("Loader terminated");
             //loger stop
             LogManager.Shutdown();
-        }
-    }
-
-    /// <summary>
-    /// отладочная информация из nLog в output VS
-    /// </summary>
-    /// <seealso cref="System.IO.TextWriter" />
-    sealed class DebugTextWriter : TextWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void WriteLine(string? value)
-        {
-            Debug.WriteLine(value);
-        }
-
-        public override void Write(string? value)
-        {
-            Debug.Write(value);
-        }
-    }
-
-    internal class InternalDiagnostic
-    {
-        internal static void InitInternalLogger()
-        {
-            #region InternalLogger configure
-
-            InternalLogger.LogLevel = LogLevel.Info;
-
-            InternalLogger.LogWriter = new DebugTextWriter();
-
-            LogManager.ThrowExceptions = true;
-
-            LogManager.ThrowConfigExceptions = true;
-
-            InternalLogger.Info("InternalLogger.Initialize()");
-
-            #endregion
         }
     }
 }

@@ -1,12 +1,5 @@
 ﻿using NLog;
-using NLog.Common;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 //todo только для отладки загрузки nlog конфигурации
@@ -15,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace dRz.Experimental.Bootstrap
 {
-    public static class LogBootstrapper
+    public static class LogBootstrap
     {
         public static void Init()
         {
 
             #region load  nlogLoader.config
 
-            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrapper).Assembly.Location);
+            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
 
-            string configPath = Path.Combine(dllDir, "NLog.config");
+            string configPath = Path.Combine(dllDir, "NLogTest.config");
 
             LogManager.Setup().LoadConfigurationFromFile(configPath);
 
@@ -32,7 +25,7 @@ namespace dRz.Experimental.Bootstrap
             NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
 
             #endregion
-            
+
         }
 
     }

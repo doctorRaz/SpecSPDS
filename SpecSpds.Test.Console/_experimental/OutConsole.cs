@@ -1,4 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Services.DeepSeek;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,20 +19,20 @@ namespace dRz.SpecSpds.Test._experimental
             foreach (var section in groupedDefinitionMarkerPropsGrouped)
             {
 
-                Test.WriteLine($"\t{section.Key}");
+                Console.WriteLine($"\t{section.Key}");
                 foreach (var devise in section)
                 {
-                    Test.WriteLine($"{string.Join(", ", devise.PositionNumbers)} | {devise.DeviceName} | {devise.FirstTypeModel} | {devise.FirstArticleNumber} | {devise.FirstVendor} | {devise.TotalAmount.ToString()} | {devise.FirstUnit}");
+                    Console.WriteLine($"{string.Join(", ", devise.PositionNumbers)} | {devise.DeviceName} | {devise.FirstTypeModel} | {devise.FirstArticleNumber} | {devise.FirstVendor} | {devise.TotalAmount.ToString()} | {devise.FirstUnit}");
                 }
-                Test.WriteLine();
-                Test.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
             }
 
         }
 
         void PrintConsole()
         {
-            Test.WriteLine();
+            Console.WriteLine();
         }
     }
 }

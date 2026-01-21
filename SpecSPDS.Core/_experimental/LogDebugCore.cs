@@ -1,6 +1,5 @@
 ﻿using NLog;
 using System;
-using System.Windows.Forms;
 
 //todo удалить после отладки nlog
 
@@ -10,17 +9,17 @@ namespace dRz.SpecSPDS.Core._experimental
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        public  void Test()
+        public void Test()
         {
-            int b=0;
+            int b = 0;
 
             int calcs()
             {
                 int a = 10;
-              
+
                 return a + b;
             }
-            b=calcs();
+            b = calcs();
 
             if (log.IsDebugEnabled)
                 log.Warn("This is a message from {Calc}", calcs());
@@ -55,7 +54,7 @@ namespace dRz.SpecSPDS.Core._experimental
             }
             finally
             {
-                
+
             }
 
         }

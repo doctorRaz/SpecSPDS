@@ -123,7 +123,7 @@ namespace dRz.SpecSpds.Test._experimental
 
             for (int i = 0; i < 35; ++i)
             {
-                Test.WriteLine($"{i} {list.Declens(i)}");
+                Console.WriteLine($"{i} {list.Declens(i)}");
 
             }
 
@@ -161,7 +161,7 @@ namespace dRz.SpecSpds.Test._experimental
 
 
 
-            Test.ReadKey();
+            Console.ReadKey();
         }
     }
 

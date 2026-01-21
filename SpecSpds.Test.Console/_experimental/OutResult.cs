@@ -1,4 +1,5 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace dRz.SpecSpds.Test._experimental
@@ -55,7 +56,7 @@ namespace dRz.SpecSpds.Test._experimental
             }
             resultString += $"\n\tВключено в набор: {mcUmarkerProps.CountAdded} {wordsMark.Declens(mcUmarkerProps.CountAdded)} за {mcUmarkerProps.ElapsedProp}";
 
-            Test.WriteLine($"{resultString}\n");
+            Console.WriteLine($"{resultString}\n");
 
         }
     }

@@ -43,7 +43,7 @@ namespace dRz.SpecSpds.Test._experimental
             log.Trace($"********THE END************");
             log.Trace($"Total Time {stw.Elapsed.ToString()}");
 
-            Test.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
+            Console.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
         }
         static string dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF", CultureInfo.InvariantCulture);
     }

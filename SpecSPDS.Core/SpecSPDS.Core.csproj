@@ -14,11 +14,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\_experimental\LogBootstrapper.cs" Link="Bootstrap\LogBootstrapper.cs" />
+		<Compile Include="..\_experimental\LogBootstrap.cs" Link="Bootstrap\LogBootstrap.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="6.0.7"/>
+		<PackageReference Include="NLog" Version="6.0.7" />
 
 		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>

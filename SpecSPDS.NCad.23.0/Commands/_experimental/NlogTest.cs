@@ -1,4 +1,4 @@
-﻿#if DEBUG
+﻿//#if DEBUG
 
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,7 +6,6 @@ using NLog;
 using System.Globalization;
 using NLog.Config;
 using NLog.Common;
-using System;
 using System.IO;
 
 
@@ -154,69 +153,10 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
                 //LogManager.Shutdown();
             }
 
-
-
-
-
         }
 
-    }
-
-    public static class LogBootstrap
-    {
-        public static void InternalLoggerOn_OFF(bool enabled = false)
-        {
-            #region диагностика nLog
-
-            InternalLogger.LogLevel = LogLevel.Trace;
-
-            InternalLogger.LogToConsole = enabled;
-
-            #endregion
-        }
-
-        public static void Init()
-        {
-
-            #region load  nlog.config
-
-            string? dllDir = Path.GetDirectoryName(
-                typeof(LogBootstrap).Assembly.Location);
-
-            string configPath = Path.Combine(dllDir, "nlog.config");
-
-            LogManager.Setup().LoadConfigurationFromFile(configPath);
-            //LogManager.Configuration = new XmlLoggingConfiguration(configPath);
-
-            #endregion
-
-            //InternalLoggerOn_OFF(true);
-
-            string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd-HH_mm_ss", CultureInfo.InvariantCulture)}_";
-
-            GlobalDiagnosticsContext.Set("logTimestamp", logTimestamp);
-
-            var config = LogManager.Configuration;
-
-            InternalLogger.LogFile = Path.Combine(dllDir,"logs", $"{logTimestamp}_nlog-internal.log");
-
-        }
-
-        //GPT
-        public static void LogProcessMetrics(ILogger log)
-        {
-            var p = Process.GetCurrentProcess();
-
-            log.ForInfoEvent()
-               .Message("Process performance metrics")
-               .Property("memoryMb", Math.Round(p.WorkingSet64 / 1024d / 1024d, 2))
-               .Property("threadCount", p.Threads.Count)
-               .Property("pid", p.Id)
-               .Property("processName", p.ProcessName)
-               .Log();
-        }
     }
 }
 
 
-#endif
+//#endif

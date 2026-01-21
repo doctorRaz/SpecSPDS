@@ -1,11 +1,13 @@
-﻿using NLog.Common;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
-using dRz.SpecSPDS.Cad.Commands.Test;
 using NLog;
 using dRz.SpecSPDS.Cad.Application;
+using dRz.SpecSPDS.Core.InternalDiagnostic;
+using dRz.Experimental.Bootstrap;
+
+
+
+
 
 
 #if AC
@@ -37,18 +39,19 @@ namespace dRz.SpecSPDS.Cad
         [Description("проверка работы лога")]
         public void Initialize()
         {
-            InternalLogger.LogWriter = new DebugTextWriter();
 
-            InternalLogger.Info("EntryPoint.Initialize() start");
+#if DEBUG
+            //debug internal nlog
+            InternalLoggerDiagnostic.InternalLoggerInit();
+#endif
 
+            //setup environment
             ApplicationHost.Start();
 
-            InternalDiagnostic.InitInternalLogger();
-
             log.Info("nanoCAD 23.1 перед LogBootstrap");
-
+             NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
             LogBootstrap.Init();
-
+            config = LogManager.Configuration;
             log.Info("nanoCAD 23.1 после LogBootstrap");
 
             //NlogTest.TestLog();
@@ -86,43 +89,6 @@ namespace dRz.SpecSPDS.Cad
         }
     }
 
-    /// <summary>
-    /// отладочная информация из nLog в output VS
-    /// </summary>
-    /// <seealso cref="System.IO.TextWriter" />
-    sealed class DebugTextWriter : TextWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void WriteLine(string? value)
-        {
-            Debug.WriteLine(value);
-        }
-
-        public override void Write(string? value)
-        {
-            Debug.Write(value);
-        }
-    }
-
-    internal class InternalDiagnostic
-    {
-        internal static void InitInternalLogger()
-        {
-            #region InternalLogger configure
-
-            InternalLogger.LogLevel = LogLevel.Info;
-
-            InternalLogger.LogWriter = new DebugTextWriter();
-
-            LogManager.ThrowExceptions = true;
-
-            LogManager.ThrowConfigExceptions = true;
-
-            InternalLogger.Info("InternalLogger.Initialize()");
-
-            #endregion
-        }
-    }
+   
 
 }

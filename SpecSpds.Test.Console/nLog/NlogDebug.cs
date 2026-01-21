@@ -16,7 +16,7 @@ namespace dRz.SpecSpds.Test.nLog
             InternalLoggerDiagnostic.InternalLoggerInit();
 
             //init nlog
-            LogBootstrapper.Init();
+            LogBootstrap.Init();
 
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
@@ -32,6 +32,6 @@ namespace dRz.SpecSpds.Test.nLog
             LogManager.Shutdown();
 
             Console.ReadKey();
-        }
+         }
     }
 }

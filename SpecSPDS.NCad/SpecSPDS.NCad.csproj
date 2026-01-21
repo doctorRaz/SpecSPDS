@@ -27,7 +27,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\_experimental\LogBootstrapper.cs" Link="Infrastructure\LogBootstrapper.cs" />
+		<Compile Include="..\SpecSPDS.Core\InternalDiagnostic\DebugTextWriter.cs" Link="_InternalDiagnostic\DebugTextWriter.cs" />
+		<Compile Include="..\SpecSPDS.Core\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="_InternalDiagnostic\InternalLoggerDiagnostic.cs" />
+		<Compile Include="..\_experimental\LogBootstrap.cs" Link="Bootstrap\LogBootstrap.cs" />
 	</ItemGroup>
 
 	<!--<ItemGroup>
@@ -43,19 +45,20 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<PropertyGroup>
-		 <!--Общая папка с конфигурацией 
-		папка проекта-->
-		<SharedConfigDir>$(MSBuildThisFileDirectory)Shared</SharedConfigDir>
-		<!--папка решения-->
-		<SharedConfigDir>$(SolutionDir)Shared</SharedConfigDir>
+	<!--<PropertyGroup>-->
+
+	<!--Общая папка с конфигурацией-->
+	<!--папка проекта-->
+	<!--<SharedConfigDir>$(MSBuildThisFileDirectory)Shared</SharedConfigDir>-->
+	<!--папка решения-->
+	<!--<SharedConfigDir>$(SolutionDir)Shared</SharedConfigDir>
 	</PropertyGroup>
 
 	<Target Name="CopyNLogConfig" AfterTargets="Build" Inputs="$(SharedConfigDir)\NLogLoader.$(Configuration).config" Outputs="$(OutDir)NLog.config" Condition="Exists('$(SharedConfigDir)\NLogLoader.$(Configuration).config')">
 
 		<Copy SourceFiles="$(SharedConfigDir)\NLogLoader.$(Configuration).config" DestinationFiles="$(OutDir)NLogLoader.config" SkipUnchangedFiles="true" />
 
-	</Target>
+	</Target>-->
 
 
 
