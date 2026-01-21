@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
     public class OutAddList
     {

@@ -1,7 +1,6 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
-using System;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
     internal class Test
     {
@@ -55,16 +54,16 @@ namespace dRz.SpecSpdsConsole
 
             foreach (string s in str)
             {
-                Console.WriteLine($"{s} \t{s.ToBoolean()}");
+                Test.WriteLine($"{s} \t{s.ToBoolean()}");
             }
 
-            Console.WriteLine("-----------------------");
+            Test.WriteLine("-----------------------");
             foreach (string s in str)
             {
-                Console.WriteLine($"{s} \t{s.ToDouble()}");
+                Test.WriteLine($"{s} \t{s.ToDouble()}");
             }
 
-            Console.WriteLine("-----------------------");
+            Test.WriteLine("-----------------------");
 
 
 

@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
     /// <summary>
     /// тест логера
     /// </summary>
     internal class TestLogCuctom
     {
-         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         internal void Test()
         {
             Stopwatch stw = new Stopwatch();
@@ -26,9 +26,9 @@ namespace dRz.SpecSpdsConsole
 
             string name = assembly.GetName().Name;
 
-          
 
-             
+
+
 
             count++;
 
@@ -43,7 +43,7 @@ namespace dRz.SpecSpdsConsole
             log.Trace($"********THE END************");
             log.Trace($"Total Time {stw.Elapsed.ToString()}");
 
-            Console.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
+            Test.WriteLine($"*********** THE END {stw.Elapsed.ToString()} *****************");
         }
         static string dat => DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss.FFFFF", CultureInfo.InvariantCulture);
     }

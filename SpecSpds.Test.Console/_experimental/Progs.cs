@@ -32,7 +32,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
 
     public class Progs
@@ -123,7 +123,7 @@ namespace dRz.SpecSpdsConsole
 
             for (int i = 0; i < 35; ++i)
             {
-                Console.WriteLine($"{i} {list.Declens(i)}");
+                Test.WriteLine($"{i} {list.Declens(i)}");
 
             }
 
@@ -161,7 +161,7 @@ namespace dRz.SpecSpdsConsole
 
 
 
-            Console.ReadKey();
+            Test.ReadKey();
         }
     }
 

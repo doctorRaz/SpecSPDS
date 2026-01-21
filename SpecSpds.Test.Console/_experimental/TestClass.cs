@@ -1,4 +1,4 @@
-﻿namespace dRz.SpecSpdsConsole
+﻿namespace dRz.SpecSpds.Test._experimental
 {
     internal class TestClass
     {

@@ -1,8 +1,7 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
-using System;
 using System.Collections.Generic;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
     internal class OutResult
     {
@@ -56,7 +55,7 @@ namespace dRz.SpecSpdsConsole
             }
             resultString += $"\n\tВключено в набор: {mcUmarkerProps.CountAdded} {wordsMark.Declens(mcUmarkerProps.CountAdded)} за {mcUmarkerProps.ElapsedProp}";
 
-            Console.WriteLine($"{resultString}\n");
+            Test.WriteLine($"{resultString}\n");
 
         }
     }

@@ -1,9 +1,8 @@
 ﻿using dRz.SpecSPDS.Core.Services.DeepSeek;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dRz.SpecSpdsConsole
+namespace dRz.SpecSpds.Test._experimental
 {
     public class OutputString
     {
@@ -19,20 +18,20 @@ namespace dRz.SpecSpdsConsole
             foreach (var section in groupedDefinitionMarkerPropsGrouped)
             {
 
-                Console.WriteLine($"\t{section.Key}");
+                Test.WriteLine($"\t{section.Key}");
                 foreach (var devise in section)
                 {
-                    Console.WriteLine($"{string.Join(", ", devise.PositionNumbers)} | {devise.DeviceName} | {devise.FirstTypeModel} | {devise.FirstArticleNumber} | {devise.FirstVendor} | {devise.TotalAmount.ToString()} | {devise.FirstUnit}");
+                    Test.WriteLine($"{string.Join(", ", devise.PositionNumbers)} | {devise.DeviceName} | {devise.FirstTypeModel} | {devise.FirstArticleNumber} | {devise.FirstVendor} | {devise.TotalAmount.ToString()} | {devise.FirstUnit}");
                 }
-                Console.WriteLine();
-                Console.WriteLine();
+                Test.WriteLine();
+                Test.WriteLine();
             }
 
         }
 
         void PrintConsole()
         {
-            Console.WriteLine();
+            Test.WriteLine();
         }
     }
 }
