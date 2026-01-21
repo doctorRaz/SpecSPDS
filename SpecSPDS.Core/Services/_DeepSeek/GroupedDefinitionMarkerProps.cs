@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dRz.SpecSPDS.Core.Services.DeepSeek
+namespace dRz.SpecSPDS.Core.Services._DeepSeek
 {
     public class GroupedDefinitionMarkerProps
     {
