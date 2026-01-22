@@ -17,7 +17,7 @@ namespace dRz.Experimental.Bootstrap
 
             string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
 
-            string configPath = Path.Combine(dllDir, "NLogTest.config");
+            string configPath = Path.Combine(dllDir, "NLog.dll.nlog");
 
             LogManager.Setup().LoadConfigurationFromFile(configPath);
 

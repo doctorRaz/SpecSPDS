@@ -3,13 +3,13 @@
 	<PropertyGroup>
 		<SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir>
 		<ConfigNameIn>NLogLoader</ConfigNameIn>
-		<ConfigNameOut>NLogTest</ConfigNameOut>
+		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>
 
 	<Target Name="CopyNLogConfig" AfterTargets="Build">
 		<Copy
 		SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
-		DestinationFiles="$(OutDir)$(ConfigNameOut).config"
+		DestinationFiles="$(OutDir)$(ConfigNameOut)"
 		SkipUnchangedFiles="true"
 		Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')" />
 	</Target>
