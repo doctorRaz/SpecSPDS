@@ -23,7 +23,7 @@ using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Extensions;
 using dRz.SpecSPDS.Core.Models;
 using dRz.SpecSPDS.Core.Services;
-using dRz.SpecSPDS.Core.Services.DeepSeek;
+using dRz.SpecSPDS.Core.Services._DeepSeek;
 using dRz.SpecSPDS.Core.Settings;
 using NLog;
 using System;

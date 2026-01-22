@@ -7,48 +7,52 @@ using System.IO;
 using System.Reflection;
 
 //todo только для отладки загрузки nlog конфигурации
-// скопировать в dRz.SpecSPDS.Cad.Bootstrap
+// скопировать в drz.Cad.Cad.InternalDiagnostic
 
 namespace dRz.SpecSPDS.Core.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {
         /// <summary>
-        /// внутренняя инициализация логгера NLog для отладки самого NLog
+        /// внутренняя инициализация логгера NLog, только для отладки самого NLog
         /// </summary>
         public static void InternalLoggerInit()
         {
-            Debug.WriteLine($"OR\t{Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location}");
-
-            Debug.WriteLine($"GetExecutingAssembly\t{Assembly.GetExecutingAssembly().Location}");
-
-            Debug.WriteLine($"GetEntryAssembly\t{Assembly.GetEntryAssembly().Location}");
-
-          
-
             #region FilePathInternalLogger
-
-            string? moduleName = Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetExecutingAssembly().GetName().Name;
 
             string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)}";
 
-            string? dllDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location);
-            
+            Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+
+            string? moduleName = assembly.GetName().Name;
+            // Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetExecutingAssembly().GetName().Name;
+
+            string? dllDir = Path.GetDirectoryName(assembly.Location);
+            //Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location);
+
+            string? logFile = Path.Combine(dllDir, "logs", $"{logTimestamp}_{moduleName}_internal.log");
 
             #endregion
 
             #region InternalLogger configure
 
-            InternalLogger.LogLevel = LogLevel.Info;
+            var ll = InternalLogger.LogLevel;
+            var lf = InternalLogger.LogFile;
+            var te = LogManager.ThrowExceptions;
+            var tce = LogManager.ThrowConfigExceptions;
+
+
+            InternalLogger.LogLevel = LogLevel.Trace;
+
+            InternalLogger.LogFile = logFile;
 
             InternalLogger.LogWriter = new DebugTextWriter();
-            
-            LogManager.ThrowExceptions = true;
+
+            LogManager.ThrowExceptions = false;
 
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.LogFile = Path.Combine(dllDir, "logs", $"{logTimestamp}_{moduleName}_internal.log");
-            InternalLogger.Info($"[{moduleName}]: InternalLogger.Initialize()");
+            InternalLogger.Info($"{moduleName}: InternalLogger.Initialize");
 
             #endregion
         }

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dRz.nCad.Loader._experimental
-//namespace dRz.nCad.Loader.Infrastructure
+namespace dRz.Loader.Cad._experimental
+//namespace dRz.Cad.Cad.Infrastructure
 {
     internal class LoaderLogger
     {

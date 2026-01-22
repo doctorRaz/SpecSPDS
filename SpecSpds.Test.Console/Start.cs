@@ -36,6 +36,8 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         static void Main(string[] args)
         {
+             var assembly= Assembly.GetEntryAssembly()?? Assembly.GetExecutingAssembly() ;
+
             NlogDebug nlogDebug = new NlogDebug();
             nlogDebug.Test();
 

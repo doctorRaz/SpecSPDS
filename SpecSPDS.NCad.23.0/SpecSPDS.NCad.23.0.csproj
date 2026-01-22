@@ -22,18 +22,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\SpecSPDS.Core\InternalDiagnostic\DebugTextWriter.cs" Link="InternalDiagnostic\DebugTextWriter.cs" />
-		<Compile Include="..\SpecSPDS.Core\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="InternalDiagnostic\InternalLoggerDiagnostic.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MultiCAD.NET" Version="23.0.6177.4117" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="23.0.6177.4117" />
-		<PackageReference Include="NLog" Version="6.0.7"/>
+		<PackageReference Include="NLog" Version="6.0.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Entry\" />
 	</ItemGroup>
 
 

@@ -14,7 +14,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="..\_experimental\LogBootstrap.cs" Link="Bootstrap\LogBootstrap.cs" />
+	  <Compile Include="..\_experimental\LogBootstrap.cs" Link="Bootstrap\LogBootstrap.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

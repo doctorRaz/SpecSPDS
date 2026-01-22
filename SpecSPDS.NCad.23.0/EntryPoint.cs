@@ -5,37 +5,27 @@ using dRz.SpecSPDS.Cad.Application;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using dRz.Experimental.Bootstrap;
 
-
-
-
-
-
 #if AC
 
-
 using Rtm = Autodesk.AutoCAD.Runtime;
+
 #elif NC
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-//using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 #endif
-
-
-
-
 
 [assembly: Rtm.ExtensionApplication(typeof(dRz.SpecSPDS.Cad.EntryPoint))]
 
 namespace dRz.SpecSPDS.Cad
 {
-    partial class EntryPoint : Rtm.IExtensionApplication
+    public class EntryPoint : Rtm.IExtensionApplication
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        [Rtm.CommandMethod("инит")]
+        [Rtm.CommandMethod("инитАк")]
         [Description("проверка работы лога")]
         public void Initialize()
         {
@@ -45,31 +35,23 @@ namespace dRz.SpecSPDS.Cad
             InternalLoggerDiagnostic.InternalLoggerInit();
 #endif
 
-            //setup environment
-            ApplicationHost.Start();
+            NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
 
-            log.Info("nanoCAD 23.1 перед LogBootstrap");
-             NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
             LogBootstrap.Init();
+
             config = LogManager.Configuration;
+
             log.Info("nanoCAD 23.1 после LogBootstrap");
 
-            //NlogTest.TestLog();
-
-            Trace.WriteLine("nanoCAD 23.1 загружен Ok");
-
-            log.Info("nlogInit");
-
             Loader.HelloSpec();
-            //throw new NotImplementedException();
+
         }
 
         public void Terminate()
         {
-            log.Info("Shutdown");
-            //loger stop
-            LogManager.Shutdown();
+            log.Info("LogManager.Shutdown");
 
+            LogManager.Shutdown();
         }
     }
 
@@ -89,6 +71,6 @@ namespace dRz.SpecSPDS.Cad
         }
     }
 
-   
+
 
 }

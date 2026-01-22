@@ -11,18 +11,14 @@ using System.Reflection;
 using NLog;
 using dRz.Experimental.Bootstrap;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
-
-
-
+using dRz.Loader.Cad;
 
 
 #if AC
 
 using Rtm = Autodesk.AutoCAD.Runtime;
 
-
 #elif NC
-
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
@@ -30,9 +26,9 @@ using Rtm = Teigha.Runtime;
 
 #endif
 
-[assembly: Rtm.ExtensionApplication(typeof(dRz.Cad.Loader.EntryPoint))]
+[assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.Cad.Loader
+namespace dRz.Loader.Cad
 {
 
     /// <summary>
@@ -62,8 +58,8 @@ namespace dRz.Cad.Loader
 
             LogBootstrap.Init();
 
-            //LoaderLogger.Info("Loader started");
-            log.Info("Loader started");
+            //LoaderLogger.Info("Cad started");
+            log.Info("Cad started");
 
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
@@ -271,7 +267,7 @@ namespace dRz.Cad.Loader
         public void Terminate()
         {
 
-            log.Info("Loader terminated");
+            log.Info("Cad terminated");
             //loger stop
             LogManager.Shutdown();
         }

@@ -3,7 +3,7 @@ using System.IO;
 
 
 //todo только для отладки загрузки nlog конфигурации
-//скопировать в dRz.nCad.Loader.Infrastructure
+//скопировать в dRz.Cad.Cad.Bootstrap
 // скопировать в dRz.SpecSPDS.Cad.Bootstrap
 
 namespace dRz.Experimental.Bootstrap
@@ -12,7 +12,7 @@ namespace dRz.Experimental.Bootstrap
     {
         public static void Init()
         {
-
+            NLog.Config.LoggingConfiguration? config = LogManager.Configuration;//is Config?
             #region load  nlogLoader.config
 
             string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
@@ -21,8 +21,10 @@ namespace dRz.Experimental.Bootstrap
 
             LogManager.Setup().LoadConfigurationFromFile(configPath);
 
-            //посмотреть что там загрузилось
-            NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
+            //todo добавить установку пути в %appdata%\product\logs
+
+            //todo посмотреть что там загрузилось
+              config = LogManager.Configuration;
 
             #endregion
 

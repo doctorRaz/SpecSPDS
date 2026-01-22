@@ -7,15 +7,7 @@ using System.Globalization;
 using NLog.Config;
 using NLog.Common;
 using System.IO;
-
-
-
-
-
-
-
-
-
+using dRz.SpecSPDS.Core._experimental;
 
 
 #if NC || NC26
@@ -48,6 +40,11 @@ namespace dRz.SpecSPDS.Cad.Commands.Test
         [Description("проверка работы лога")]
         public static void TestLog()
         {
+
+            LogDebugCore ldc=new LogDebugCore();
+
+            ldc.Test();
+
             /*
             //подумать куда удобнее писать логи???
             //  addonDir/logs - рядом с адоном

@@ -7,7 +7,8 @@ namespace dRz.SpecSPDS.Core._experimental
 {
     public class LogDebugCore
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        Logger log = LogManager.GetLogger("dRz.Cad.Loader");
+        //private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         public void Test()
         {

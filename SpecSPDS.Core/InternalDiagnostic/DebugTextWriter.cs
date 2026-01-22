@@ -5,12 +5,12 @@ using System.IO;
 using System.Text;
 
 //todo только для отладки загрузки nlog конфигурации
-// скопировать в dRz.SpecSPDS.Cad.Bootstrap
+// скопировать в drz.Cad.Cad.InternalDiagnostic
 
 namespace dRz.SpecSPDS.Core.InternalDiagnostic
 {
     /// <summary>
-    /// отладочная информация из nLog в output VS
+    /// отладочная информация из nLog в output VS только для отладки!!!
     /// </summary>
     /// <seealso cref="TextWriter" />
     sealed class DebugTextWriter : TextWriter

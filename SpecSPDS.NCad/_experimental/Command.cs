@@ -1,9 +1,6 @@
-﻿using dRz.Cad.Loader;
-using dRz.nCad.Loader;
-using HostMgd.ApplicationServices;
+﻿using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
-using App = HostMgd.ApplicationServices;
 using Application = HostMgd.ApplicationServices.Application;
 using Rtm = Teigha.Runtime;
 
@@ -11,7 +8,7 @@ using Rtm = Teigha.Runtime;
 
 //[assembly: Rtm.CommandClass(typeof(drz.PlotSPDSn.Starter.NET.Command.Command))]
 
-namespace drz.nCad.Loader.Experimental
+namespace dRz.Loader.Cad._experimental
 {
     partial class Command //:Rtm.IExtensionApplication
     {
@@ -19,7 +16,7 @@ namespace drz.nCad.Loader.Experimental
         [Description("тест загрузки")]
         public static void TestLoad()
         {
-            App.Document doc = Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -28,7 +25,7 @@ namespace drz.nCad.Loader.Experimental
             Editor ed = doc.Editor;
 
             ed.WriteMessage($"\nHello word");
-                       
+
 
             EntryPoint entryPoint = new EntryPoint();
 
@@ -38,7 +35,7 @@ namespace drz.nCad.Loader.Experimental
 
         public void Initialize()
         {
-            App.Document doc = Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;

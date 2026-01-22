@@ -11,7 +11,7 @@ namespace dRz.SpecSpds.Test.nLog
 
         internal void Test()
         {
-
+            var nl = LogManager.Configuration;
             //debug internal nlog
             InternalLoggerDiagnostic.InternalLoggerInit();
 
@@ -23,6 +23,7 @@ namespace dRz.SpecSpds.Test.nLog
 
             logDebug.Test();
 
+            nl = LogManager.Configuration;
             //write   core nlog
             LogDebugCore logDebugCore = new LogDebugCore();
 
@@ -31,7 +32,7 @@ namespace dRz.SpecSpds.Test.nLog
             //shutdown nlog
             LogManager.Shutdown();
 
-            Console.ReadKey();
+            //Console.ReadKey();
          }
     }
 }

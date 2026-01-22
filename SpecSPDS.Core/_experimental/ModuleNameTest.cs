@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+//todo удалить после отладки nlog
 namespace dRz.SpecSPDS.Core._experimental
 {
     public class ModuleNameTest2
