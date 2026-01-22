@@ -5,10 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dRz.Loader.Cad._experimental
-//namespace dRz.Cad.Cad.Infrastructure
+namespace dRz.Loader.Cad._Draft
+
 {
-    internal class LoaderLogger
+    /// <summary>
+    /// Неиспользуется <br/>
+    /// Предложил GPT кастомный логгер <br/>
+    /// в принципе рабочий вариент, но <br/> 
+    /// не работает обрезка файла лога
+    /// </summary>
+    internal class LoaderLoggerGPT
     {
 
         private const long MaxSizeBytes = 256 * 1024; // 256 KB

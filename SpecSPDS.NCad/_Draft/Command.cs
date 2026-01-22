@@ -8,7 +8,7 @@ using Rtm = Teigha.Runtime;
 
 //[assembly: Rtm.CommandClass(typeof(drz.PlotSPDSn.Starter.NET.Command.Command))]
 
-namespace dRz.Loader.Cad._experimental
+namespace dRz.Loader.Cad._Draft
 {
     partial class Command //:Rtm.IExtensionApplication
     {
