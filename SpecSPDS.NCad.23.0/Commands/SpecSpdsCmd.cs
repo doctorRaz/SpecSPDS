@@ -1,4 +1,4 @@
-﻿using dRz.SpecSPDS.Cad.Application;
+﻿using dRz.SpecSPDS.Cad.CadServices;
 using dRz.SpecSPDS.Cad.Services;
 using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Extensions;
@@ -22,7 +22,7 @@ namespace dRz.SpecSPDS.Cad.Commands
     /// </br>
     /// </summary>
 
-    public partial class SpecSpdsCmd
+    public  class SpecSpdsCmd
     {
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace dRz.SpecSPDS.Cad.Commands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -68,7 +68,7 @@ namespace dRz.SpecSPDS.Cad.Commands
                 new Keywords(nameof(Space.Select),Space.Select),
 
             };
-            Enum propMod = CadApplication.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
+            Enum propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
             if (propMod == null) return;//смысла продолжать нет
 

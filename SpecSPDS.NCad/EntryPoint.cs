@@ -12,6 +12,8 @@ using NLog;
 using dRz.Experimental.Bootstrap;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using dRz.Loader.Cad;
+using System.ComponentModel;
+
 
 
 #if AC
@@ -49,17 +51,20 @@ namespace dRz.Loader.Cad
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
+#if DEBUG
+        [Rtm.CommandMethod("инитЛД")]
+        [Description("ручной инит загрузчика")]
+#endif
         public void Initialize()
         {
 #if DEBUG
             //debug internal nlog
-            InternalLoggerDiagnostic.InternalLoggerInit();
+            InternalLoggerDiagnostic.Init();
 #endif
 
             LogBootstrap.Init();
 
-            //LoaderLogger.Info("Cad started");
-            log.Info("Cad started");
+            log.Info("Logger started");
 
             // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
             // соответствующую ей версию файла. Имя такого файла должно 
@@ -69,8 +74,7 @@ namespace dRz.Loader.Cad
             // Version, полученного из Application.Version.
             Version version = Application.Version;
 
-            //LoaderLogger.Info($"nanoCAD detected: {version.ToString()}");
-            log.Info($"nanoCAD detected: {version.ToString()}");
+            log.Info($"CAD detected: {version.ToString()}");
 
             string fileFullName = GetType().Assembly.Location;
 
@@ -80,8 +84,8 @@ namespace dRz.Loader.Cad
 
             if (targetDllFullName == null)
             {
-                string msg = $"Не найден подходящий адаптер для nanoCAD {version.ToString()}";
-                //LoaderLogger.Error($"{msg}");
+                string msg = $"Не найден подходящий адаптер для CAD {version.ToString()}";
+
                 log.Error($"{msg}");
 
                 //не найден хуже не будет, сообщаем об этом пользователю
@@ -98,8 +102,7 @@ namespace dRz.Loader.Cad
                 return;
             }
 
-            //LoaderLogger.Info($"Loading adapter: {targetDllFullName}");
-            log.Info($"Loading adapter: {targetDllFullName}");
+            log.Info($"Loading CAD adapter: {targetDllFullName}");
 
             // Если найден файл, соответствующий нашей версии AutoCAD, то 
             // загружаем его.
@@ -122,12 +125,13 @@ namespace dRz.Loader.Cad
                             targetDllFullName.FullName });
                     }
                 }
-                log.Info("Adapter initialized successfully");
-                //LoaderLogger.Info("Adapter initialized successfully");
+
+                log.Info("Adapter CAD initialized successfully");
+
             }
             catch (Exception ex)
             {
-                //LoaderLogger.Error(ex.Message, ex);
+
                 log.Error(ex.Message, ex);
             }
 
@@ -267,8 +271,7 @@ namespace dRz.Loader.Cad
         public void Terminate()
         {
 
-            log.Info("Cad terminated");
-            //loger stop
+            log.Info("LogManager.Shutdown");
             LogManager.Shutdown();
         }
     }

@@ -3,9 +3,9 @@ using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
 
-namespace dRz.SpecSPDS.Cad.Application
+namespace dRz.SpecSPDS.Cad.CadServices
 {
-    public  class CadApplication
+    public  class CadService
     { /// <summary>
       /// Keywords the answer.
       /// </summary>
