@@ -13,6 +13,8 @@ using dRz.Experimental.Bootstrap;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using dRz.Loader.Cad;
 using System.ComponentModel;
+using NLog.Common;
+
 
 
 
@@ -57,38 +59,14 @@ namespace dRz.Loader.Cad
 #endif
         public void Initialize()
         {
-#if DEBUG
-            //debug internal nlog
-            InternalLoggerDiagnostic.Init();
-#endif
-
-            LogBootstrap.Init();
-
-            log.Info("Logger started");
-
-            // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
-            // соответствующую ей версию файла. Имя такого файла должно 
-            // формироваться по правилу: 
-            //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
-            // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
-            // Version, полученного из Application.Version.
-            Version version = Application.Version;
-
-            log.Info($"CAD detected: {version.ToString()}");
-
-            string fileFullName = GetType().Assembly.Location;
-
-            Version minVersion = new Version(23, 0);
-
-            FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
-
-            if (targetDllFullName == null)
+            //если нет библиотек или еще какой косяк
+            try
             {
-                string msg = $"Не найден подходящий адаптер для CAD {version.ToString()}";
-
-                log.Error($"{msg}");
-
-                //не найден хуже не будет, сообщаем об этом пользователю
+                Init();
+            }
+            // ошибка инициализации, все развалилось, лог смысла не имеет
+            catch (Exception ex)
+            {
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 if (doc == null)
                 {
@@ -97,42 +75,116 @@ namespace dRz.Loader.Cad
 
                 Editor ed = doc.Editor;
 
-                ed.WriteMessage($"{msg}");
-
-                return;
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
             }
+        }
 
-            log.Info($"Loading CAD adapter: {targetDllFullName}");
-
-            // Если найден файл, соответствующий нашей версии AutoCAD, то 
-            // загружаем его.
-            Assembly? asm = null;
+        private void Init()
+        {
             try
             {
-                if (targetDllFullName.Extension.Equals(netPluginExtension,
-                  StringComparison.CurrentCultureIgnoreCase))
-                    asm = Assembly.LoadFrom(targetDllFullName.FullName);
-                else
+#if DEBUG0
+                //чисто для диагностики ручное включение
+                new InternalLoggerDiagnostic("Internal logger manual");
+#endif
+
+                //если лог конфиг не загрузился сам грузим руками
+                if (LogManager.Configuration is null)
                 {
-                    int index = Array.IndexOf(extensions, targetDllFullName.Extension);
+                    //пытаемся грузить принудительно
+                    new LogBootstrap();
 
-                    if (index >= 0)
+                    //если конфиг не нашелся и не загрузился
+                    if (LogManager.Configuration is null)
                     {
-                        object application = Application.AcadApplication;
+                        //включим диагностику eсли выключена
+                        new InternalLoggerDiagnostic("LogManager empty Configuration");
 
-                        application.GetType().InvokeMember(methodNames[index], BindingFlags
-                          .InvokeMethod, null, application, new object[] {
-                            targetDllFullName.FullName });
+                        //дальше пишем внутренний лог
                     }
                 }
 
-                log.Info("Adapter CAD initialized successfully");
+                log.Info("Logger started");
 
+                // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
+                // соответствующую ей версию файла. Имя такого файла должно 
+                // формироваться по правилу: 
+                //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
+                // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
+                // Version, полученного из Application.Version.
+                Version version = Application.Version;
+
+                log.Info($"CAD detected: {version.ToString()}");
+
+                string fileFullName = GetType().Assembly.Location;
+
+                Version minVersion = new Version(23, 0);
+
+                FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
+
+                if (targetDllFullName == null)
+                {
+                    string msg = $"Не найден подходящий адаптер для CAD {version.ToString()}";
+
+                    log.Error($"{msg}");
+
+                    //не найден хуже не будет, сообщаем об этом пользователю
+                    Document doc = Application.DocumentManager.MdiActiveDocument;
+                    if (doc == null)
+                    {
+                        return;
+                    }
+
+                    Editor ed = doc.Editor;
+
+                    ed.WriteMessage($"{msg}");
+
+                    return;
+                }
+
+                log.Info($"Loading CAD adapter: {targetDllFullName}");
+
+                // Если найден файл, соответствующий нашей версии AutoCAD, то 
+                // загружаем его.
+                Assembly? asm = null;
+                try
+                {
+                    if (targetDllFullName.Extension.Equals(netPluginExtension,
+                      StringComparison.CurrentCultureIgnoreCase))
+                        asm = Assembly.LoadFrom(targetDllFullName.FullName);
+                    else
+                    {
+                        int index = Array.IndexOf(extensions, targetDllFullName.Extension);
+
+                        if (index >= 0)
+                        {
+                            object application = Application.AcadApplication;
+
+                            application.GetType().InvokeMember(methodNames[index], BindingFlags
+                              .InvokeMethod, null, application, new object[] {
+                            targetDllFullName.FullName });
+                        }
+                    }
+
+                    log.Info("Adapter CAD initialized successfully");
+
+                }
+                catch (Exception ex)
+                {
+                    log.Error(ex.Message, ex);
+                }
             }
             catch (Exception ex)
             {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                if (doc == null)
+                {
+                    return;
+                }
 
-                log.Error(ex.Message, ex);
+                Editor ed = doc.Editor;
+
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
             }
 
 

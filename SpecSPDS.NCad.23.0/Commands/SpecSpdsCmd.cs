@@ -22,7 +22,7 @@ namespace dRz.SpecSPDS.Cad.Commands
     /// </br>
     /// </summary>
 
-    public  class SpecSpdsCmd
+    public class SpecSpdsCmd
     {
 
         /// <summary>

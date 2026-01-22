@@ -8,27 +8,32 @@ using System.IO;
 
 namespace dRz.Experimental.Bootstrap
 {
-    public static class LogBootstrap
+    //todo добавить установку пути в %appdata%\product\logs
+    /// <summary>
+    /// 
+    /// </summary>
+    public class LogBootstrap
     {
-        public static void Init()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogBootstrap"/> class.
+        /// </summary>
+        public LogBootstrap()
         {
-            NLog.Config.LoggingConfiguration? config = LogManager.Configuration;//is Config?
-            #region load  nlogLoader.config
-
-            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
-
-            string configPath = Path.Combine(dllDir, "NLog.dll.nlog");
-
-            LogManager.Setup().LoadConfigurationFromFile(configPath);
-
-            //todo добавить установку пути в %appdata%\product\logs
-
-            //todo посмотреть что там загрузилось
-              config = LogManager.Configuration;
-
-            #endregion
+            LogManager.Setup().LoadConfigurationFromFile(configPath());
 
         }
 
+        string configPath()
+        {
+            //путь получать из сборки
+            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
+
+            return Path.Combine(dllDir, nLogConfigFileName);
+
+        }
+
+        const string nLogConfigFileName = "NLog.dll.nlog";
     }
+
 }
+

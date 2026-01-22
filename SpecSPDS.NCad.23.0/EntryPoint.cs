@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using NLog;
-using dRz.SpecSPDS.Cad.Application;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using dRz.Experimental.Bootstrap;
+using NLog.Common;
+using System;
+
+
 
 #if AC
 
@@ -13,7 +15,6 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 #endif
 
@@ -25,27 +26,76 @@ namespace dRz.SpecSPDS.Cad
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        [Rtm.CommandMethod("инитАк")]
-        [Description("проверка работы лога")]
+#if DEBUG
+        [Rtm.CommandMethod("инитАд")]
+        [Description("ручной инит адаптера")]
+#endif
         public void Initialize()
         {
+            //если нет библиотек или еще какой косяк
+            try
+            {
+                Init();
+            }
+            catch (Exception ex)
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                if (doc == null)
+                {
+                    return;
+                }
 
-#if DEBUG
-            //debug internal nlog
-            InternalLoggerDiagnostic.InternalLoggerInit();
+                Editor ed = doc.Editor;
+
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
+        }
+
+        private void Init()
+        {
+            try
+            {
+
+#if DEBUG0
+                //чисто для диагностики ручное включение
+                new InternalLoggerDiagnostic("Internal logger manual");
 #endif
 
-            NLog.Config.LoggingConfiguration? config = LogManager.Configuration;
+                //если лог конфиг не загрузился сам грузим руками
+                if (LogManager.Configuration is null)
+                {
+                    //пытаемся грузить принудительно
+                   new LogBootstrap();
 
-            LogBootstrap.Init();
+                    //если конфиг не нашелся и не загрузился
+                    if (LogManager.Configuration is null)
+                    {
+                        //включим диагностику eсли выключена
+                        new InternalLoggerDiagnostic("LogManager empty Configuration");
 
-            config = LogManager.Configuration;
+                        //дальше пишем внутренний лог
+                    }
+                }
 
-            log.Info("nanoCAD 23.1 после LogBootstrap");
+                log.Info("Logger Started");
 
-            Loader.HelloSpec();
+                Loader.HelloSpec();
 
+            }
+            catch (Exception ex)
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                if (doc == null)
+                {
+                    return;
+                }
+
+                Editor ed = doc.Editor;
+
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
         }
+
 
         public void Terminate()
         {
@@ -59,7 +109,7 @@ namespace dRz.SpecSPDS.Cad
     {
         internal static void HelloSpec()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -67,7 +117,7 @@ namespace dRz.SpecSPDS.Cad
 
             Editor ed = doc.Editor;
 
-            ed.WriteMessage($"Hello Spec SPDS for nanoCAD 23-26");
+            ed.WriteMessage($"Hello SpecSPDS for nanoCAD 23-26");
         }
     }
 

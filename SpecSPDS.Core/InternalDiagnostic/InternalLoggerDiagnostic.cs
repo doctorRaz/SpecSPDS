@@ -16,43 +16,85 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
         /// <summary>
         /// внутренняя инициализация логгера NLog, только для отладки самого NLog
         /// </summary>
-        public static void InternalLoggerInit()
+        /// <param name="OnlyDebugTextWriter">только вывод в отладку</param>
+        public InternalLoggerDiagnostic(string? message= null)
+        {
+            if (logLevel == LogLevel.Off)//диагностика не включена
+            {
+                //включаем
+                Writer();
+                Init();
+
+            }
+            else
+            {
+                //включена тогда только писатель
+                Writer();
+
+            }
+
+            //пишем в интернал лог
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                InternalLogger.Warn($"{message}");
+            }
+
+        }
+
+        public static void Writer()
+        {
+            InternalLogger.LogWriter = new DebugTextWriter();
+        }
+
+
+         void Init()
+        {
+            #region InternalLogger configure
+
+            //смотрим все события
+            InternalLogger.LogLevel = LogLevel.Trace;
+
+            //пишем в файл
+            InternalLogger.LogFile = LogFile();
+
+            //все исключения
+            LogManager.ThrowExceptions = false;
+
+            //ошибки конфига
+            LogManager.ThrowConfigExceptions = false;
+
+            InternalLogger.Info($"{moduleName}: InternalLogger Initialize manual");
+
+            #endregion
+        }
+
+
+
+        #region Log Diagnostic что б посмотреть в отладке
+
+        LogLevel logLevel => InternalLogger.LogLevel;
+
+        string? logFile => InternalLogger.LogFile;
+
+        bool throwExceptions => LogManager.ThrowExceptions;
+
+        bool? throwConfigExceptions => LogManager.ThrowConfigExceptions;
+
+        #endregion
+
+        Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+
+        string? moduleName => assembly.GetName().Name;
+
+        string LogFile()
         {
             #region FilePathInternalLogger
 
             string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)}";
 
-            Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-
-            string? moduleName = assembly.GetName().Name;
-            // Assembly.GetEntryAssembly()?.GetName().Name ?? Assembly.GetExecutingAssembly().GetName().Name;
-
             string? dllDir = Path.GetDirectoryName(assembly.Location);
-            //Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location);
 
-            string? logFile = Path.Combine(dllDir, "logs", $"{logTimestamp}_{moduleName}_internal.log");
-
-            #endregion
-
-            #region InternalLogger configure
-
-            var ll = InternalLogger.LogLevel;
-            var lf = InternalLogger.LogFile;
-            var te = LogManager.ThrowExceptions;
-            var tce = LogManager.ThrowConfigExceptions;
-
-
-            InternalLogger.LogLevel = LogLevel.Trace;
-
-            InternalLogger.LogFile = logFile;
-
-            InternalLogger.LogWriter = new DebugTextWriter();
-
-            LogManager.ThrowExceptions = false;
-
-            LogManager.ThrowConfigExceptions = true;
-
-            InternalLogger.Info($"{moduleName}: InternalLogger.Initialize");
+            return Path.Combine(dllDir, "logs", $"{logTimestamp}_{moduleName}_internal.log");
 
             #endregion
         }
