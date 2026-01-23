@@ -30,17 +30,20 @@ namespace dRz.SpecSpds.Test.nLog
                     //дальше пишем внутренний лог
                 }
             }
-            
+
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
 
-            logDebug.Test();
 
 
             //write   loader nlog
             LogDebugCore logDebugCore = new LogDebugCore();
 
-            logDebugCore.Test();
+            for (int i = 0; i < 10000; i++)
+            {
+                logDebug.Test();
+                logDebugCore.Test();
+            }
 
             //shutdown nlog
             LogManager.Shutdown();
