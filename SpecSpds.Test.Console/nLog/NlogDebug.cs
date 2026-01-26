@@ -1,9 +1,6 @@
-﻿using NLog;
-using System;
-using dRz.SpecSPDS.Core.InternalDiagnostic;
-using dRz.Experimental.Bootstrap;
-using dRz.SpecSPDS.Core._experimental;
-using NLog.Common;
+﻿using dRz.Loader.Cad.Bootstrap;
+using dRz.Loader.Cad.InternalDiagnostic;
+using NLog;
 
 namespace dRz.SpecSpds.Test.nLog
 {
@@ -14,6 +11,10 @@ namespace dRz.SpecSpds.Test.nLog
         {
             //писатель в debug internal nlog
             InternalLoggerDiagnostic.Writer();
+
+            GlobalDiagnosticsContext.Set("","");
+
+            var conf = LogManager.Configuration;
 
             //если лог конфиг не загрузился сам грузим руками
             if (LogManager.Configuration is null)
@@ -34,15 +35,12 @@ namespace dRz.SpecSpds.Test.nLog
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
 
+                      
 
-
-            //write   loader nlog
-            LogDebugCore logDebugCore = new LogDebugCore();
-
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 logDebug.Test();
-                logDebugCore.Test();
+           
             }
 
             //shutdown nlog

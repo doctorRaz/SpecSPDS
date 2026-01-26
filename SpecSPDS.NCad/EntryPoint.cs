@@ -9,14 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NLog;
-using dRz.Experimental.Bootstrap;
-using dRz.SpecSPDS.Core.InternalDiagnostic;
 using dRz.Loader.Cad;
 using System.ComponentModel;
-using NLog.Common;
-
-
-
+using dRz.Loader.Cad.Infrastructure;
+using dRz.Loader.Cad.InternalDiagnostic;
+using dRz.Loader.Cad.Bootstrap;
 
 #if AC
 
@@ -83,10 +80,16 @@ namespace dRz.Loader.Cad
         {
             try
             {
+                var root = new LoaderEnvironment();
+
 #if DEBUG0
                 //чисто для диагностики ручное включение
                 new InternalLoggerDiagnostic("Internal logger manual");
 #endif
+
+                //setup GDC путь, имя файла 
+
+
 
                 //если лог конфиг не загрузился сам грузим руками
                 if (LogManager.Configuration is null)

@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dRz.SpecSpds.Test
+namespace dRz.SpecSpds.Test._draft
 {
     internal class ModuleNameTest
     {

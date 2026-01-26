@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dRz.SpecSpds.Test._experimental
+namespace dRz.SpecSpds.Test._draft
 {
     public class TestCOFD
     {

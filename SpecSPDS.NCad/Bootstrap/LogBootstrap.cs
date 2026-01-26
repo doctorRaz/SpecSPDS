@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using dRz.Loader.Cad.Infrastructure;
+using NLog;
 using System.IO;
 
 
@@ -6,7 +7,7 @@ using System.IO;
 //скопировать в dRz.Cad.Cad.Bootstrap
 // скопировать в dRz.SpecSPDS.Cad.Bootstrap
 
-namespace dRz.Loader.Cad
+namespace dRz.Loader.Cad.Bootstrap
 {
     //todo добавить установку пути в %appdata%\product\logs
     /// <summary>
@@ -18,13 +19,16 @@ namespace dRz.Loader.Cad
         /// Initializes a new instance of the <see cref="LogBootstrap"/> class.
         /// </summary>
         public LogBootstrap()
-        {
+        {          
+            var gg = LoaderEnvironment.AssemblyDirectory;
             LogManager.Setup().LoadConfigurationFromFile(configPath());
 
         }
 
         string configPath()
         {
+            string pp=LoaderEnvironment.AssemblyPath;
+
             //путь получать из сборки
             string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
 

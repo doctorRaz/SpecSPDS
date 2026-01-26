@@ -6,7 +6,7 @@ using System.IO;
 //скопировать в dRz.Cad.Cad.Bootstrap
 // скопировать в dRz.SpecSPDS.Cad.Bootstrap
 
-namespace dRz.Loader.Cad
+namespace dRz.SpecSPDS.Core.Bootstrap
 {
     //todo добавить установку пути в %appdata%\product\logs
     /// <summary>
@@ -26,7 +26,7 @@ namespace dRz.Loader.Cad
         string configPath()
         {
             //путь получать из сборки
-            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
+            string dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
 
             return Path.Combine(dllDir, nLogConfigFileName);
 

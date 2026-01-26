@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace dRz.SpecSpds.Test.Infrastructure
+namespace dRz.SpecSpds.Test._draft
 {
     public   class RootEnvironment
     {

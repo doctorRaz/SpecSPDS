@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace dRz.SpecSpds.Test._experimental
+namespace dRz.SpecSpds.Test._draft
 {
     internal class OutResult
     {

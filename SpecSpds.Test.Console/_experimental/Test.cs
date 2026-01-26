@@ -1,7 +1,7 @@
 ﻿using dRz.SpecSPDS.Core.Extensions;
 using System;
 
-namespace dRz.SpecSpds.Test._experimental
+namespace dRz.SpecSpds.Test._draft
 {
     internal class Test
     {
