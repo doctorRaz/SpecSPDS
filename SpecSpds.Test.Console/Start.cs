@@ -34,8 +34,8 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         static void Main(string[] args)
         {
-            var ff = new _LoaderEnvironment();
-            var f = new LoaderEnvironment();
+            //var ff = new _LoaderEnvironment();
+            //var f = new LoaderEnvironment();
             NlogDebug nlogDebug = new NlogDebug();
             nlogDebug.Test();
 

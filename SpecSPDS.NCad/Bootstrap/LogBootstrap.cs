@@ -19,22 +19,22 @@ namespace dRz.Loader.Cad.Bootstrap
         /// Initializes a new instance of the <see cref="LogBootstrap"/> class.
         /// </summary>
         public LogBootstrap()
-        {          
-            var gg = LoaderEnvironment.AssemblyDirectory;
-            LogManager.Setup().LoadConfigurationFromFile(configPath());
-
-        }
-
-        string configPath()
         {
-            string pp=LoaderEnvironment.AssemblyPath;
-
-            //путь получать из сборки
-            string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
-
-            return Path.Combine(dllDir, nLogConfigFileName);
+            var configPath = LoaderEnvironment.nLogConfig;
+            LogManager.Setup().LoadConfigurationFromFile(configPath);
 
         }
+
+        //string configPath()
+        //{
+        //    string pp=LoaderEnvironment.AssemblyPath;
+
+        //    //путь получать из сборки
+        //    string? dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
+
+        //    return Path.Combine(dllDir, nLogConfigFileName);
+
+        //}
 
         const string nLogConfigFileName = "NLog.dll.nlog";
     }
