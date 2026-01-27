@@ -10,9 +10,12 @@ namespace dRz.SpecSpds.Test.nLog
         internal void Test()
         {
             //писатель в debug internal nlog
-            InternalLoggerDiagnostic.Writer();
+            //InternalLoggerDiagnostic.Writer();
 
-            GlobalDiagnosticsContext.Set("","");
+            GlobalDiagnosticsContext.Set("LogDir",LoaderEnvironment.AppDataProductLogPath);
+            GlobalDiagnosticsContext.Set("DefaultLogName",LoaderEnvironment.ProductName);
+
+
 
             var conf = LogManager.Configuration;
 
