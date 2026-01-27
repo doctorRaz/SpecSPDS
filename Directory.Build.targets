@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir>
-		<ConfigNameIn>NLogLoader</ConfigNameIn>
-		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
+		<ConfigNameIn>NLog</ConfigNameIn>
+		<ConfigNameOut>NLog.dll.test.nlog</ConfigNameOut>
 	</PropertyGroup>
 
 	<Target Name="CopyNLogConfig" AfterTargets="Build">
