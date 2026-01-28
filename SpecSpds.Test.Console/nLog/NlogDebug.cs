@@ -1,6 +1,10 @@
 ﻿using dRz.Loader.Cad.Bootstrap;
+using dRz.Loader.Cad.Infrastructure;
 using dRz.Loader.Cad.InternalDiagnostic;
+using dRz.SpecSPDS.Core._experimental;
 using NLog;
+using System;
+using System.Diagnostics;
 
 namespace dRz.SpecSpds.Test.nLog
 {
@@ -9,11 +13,14 @@ namespace dRz.SpecSpds.Test.nLog
 
         internal void Test()
         {
+            
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
             //писатель в debug internal nlog
             //InternalLoggerDiagnostic.Writer();
 
-            GlobalDiagnosticsContext.Set("LogDir",LoaderEnvironment.AppDataProductLogPath);
-            GlobalDiagnosticsContext.Set("DefaultLogName",LoaderEnvironment.ProductName);
+            GlobalDiagnosticsContext.Set("LogsDir",LoaderEnvironment.AppDataProductLogPath);
+            GlobalDiagnosticsContext.Set("AppName",LoaderEnvironment.ProductName);
 
 
 
@@ -35,21 +42,26 @@ namespace dRz.SpecSpds.Test.nLog
                 }
             }
 
+            conf = LogManager.Configuration;
+                      
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
 
-                      
+            LogDebugCore loggebCore = new LogDebugCore();      
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 logDebug.Test();
+                loggebCore.Test();
            
             }
 
             //shutdown nlog
             LogManager.Shutdown();
 
-            //Console.ReadKey();
+            stopwatch.Stop();
+            Console.WriteLine($"Total time: {stopwatch.Elapsed}");
+            Console.ReadKey();
         }
     }
 }

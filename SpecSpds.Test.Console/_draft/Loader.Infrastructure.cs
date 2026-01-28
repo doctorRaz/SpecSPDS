@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace Loader.Infrastructure
+namespace dRz.SpecSpds.Test._draft
 {
     /// <summary>
     /// Immutable runtime environment for loader.

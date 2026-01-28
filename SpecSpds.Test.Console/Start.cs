@@ -29,14 +29,28 @@ namespace dRz.SpecSpds.Test
 
     public class Start
     {
-     
         [STAThread]
         static void Main(string[] args)
         {
             var f = new LoaderEnvironment();
+            /*
+            TestSpeedConfig tSc = new TestSpeedConfig();
+
+            for (int i = 0; i < 1; i++)
+            {
+
+                tSc.Run(); 
+            }
+            Console.WriteLine("Press eny key...");
+            Console.ReadKey();
+            */
+
 
             NlogDebug nlogDebug = new NlogDebug();
+
             nlogDebug.Test();
+
+
 
             /*
             Console.WriteLine($"GetExecutingAssembly\t{Assembly.GetExecutingAssembly().Location}");
