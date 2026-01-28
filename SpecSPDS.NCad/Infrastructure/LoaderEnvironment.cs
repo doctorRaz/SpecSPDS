@@ -6,22 +6,23 @@ namespace dRz.Loader.Cad.Infrastructure
 {
     public class LoaderEnvironment
     {
-        //todo зависит от порядка свойств!!!!
+        //************ зависит от порядка свойств!!!! *************
+
         // Сборка — дешево
         private static readonly Assembly _assembly =
             typeof(LoaderEnvironment).Assembly;
 
         // Полный путь к DLL — дешево
-        public static readonly string AssemblyPath =
+        private static readonly string _assemblyPath =
             _assembly.Location;
 
         // Папка сборки
-        public static readonly string AssemblyDirectory =
-            Path.GetDirectoryName(AssemblyPath)!;
+        private static readonly string _assemblyDirectory =
+            Path.GetDirectoryName(_assemblyPath)!;
 
         // Имя файла без расширения (Specspds.ncad)
         private static readonly string _fileName =
-            Path.GetFileNameWithoutExtension(AssemblyPath);
+            Path.GetFileNameWithoutExtension(_assemblyPath);
 
         // ProductName = часть ДО первой точки (Specspds)
         public static readonly string ProductName =
@@ -33,12 +34,16 @@ namespace dRz.Loader.Cad.Infrastructure
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 ProductName);
 
-        public static readonly string nLogConfig = Path.Combine(AssemblyDirectory, nLogConfigFileName);
+        // %AppData%\Product
+        public static readonly string AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
+
+        public static readonly string NLogConfigPath = Path.Combine(_assemblyDirectory, _nLogConfigFileName);
 
         //----------------------------
 
         //имя лог файла
-        private const string nLogConfigFileName = "NLog.dll.nlog";
+        //private const string _nLogConfigFileName = "NLog.dll.nlog";
+        private const string _nLogConfigFileName = "NLog.dll.test.nlog";
 
         // -------------------------
 

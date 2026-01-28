@@ -1,7 +1,6 @@
 ﻿using NLog;
 using NLog.Common;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -9,7 +8,7 @@ using System.Reflection;
 //todo только для отладки загрузки nlog конфигурации
 // скопировать в drz.Cad.Cad.InternalDiagnostic
 
-namespace dRz.Loader.Cad.InternalDiagnostic
+namespace dRz.Loader.Cad.Infrastructure.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {
@@ -17,7 +16,7 @@ namespace dRz.Loader.Cad.InternalDiagnostic
         /// внутренняя инициализация логгера NLog, только для отладки самого NLog
         /// </summary>
         /// <param name="OnlyDebugTextWriter">только вывод в отладку</param>
-        public InternalLoggerDiagnostic(string? message= null)
+        public InternalLoggerDiagnostic(string? message = null)
         {
             if (logLevel == LogLevel.Off)//диагностика не включена
             {
@@ -47,7 +46,7 @@ namespace dRz.Loader.Cad.InternalDiagnostic
         }
 
 
-         void Init()
+        void Init()
         {
             #region InternalLogger configure
 
@@ -92,9 +91,9 @@ namespace dRz.Loader.Cad.InternalDiagnostic
 
             string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)}";
 
-            string? dllDir = Path.GetDirectoryName(assembly.Location);
+            string appDir = LoaderEnvironment.AppDataProductLogPath;
 
-            return Path.Combine(dllDir, "logs", $"{logTimestamp}_{moduleName}_internal.log");
+            return Path.Combine(appDir, $"{logTimestamp}_{moduleName}_internal.log");
 
             #endregion
         }
