@@ -36,7 +36,7 @@ namespace dRz.SpecSPDS.Core._experimental
                        .Property("prop2", 123)
                        .Log();
 
-                int e = 0;
+                int e = 10;
 
                 int ii = 10 / e;
             }

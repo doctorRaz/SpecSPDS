@@ -12,8 +12,10 @@ using NLog;
 using dRz.Loader.Cad;
 using System.ComponentModel;
 using dRz.Loader.Cad.Infrastructure;
-using dRz.Loader.Cad.InternalDiagnostic;
-using dRz.Loader.Cad.Bootstrap;
+using dRz.Loader.Cad.Infrastructure.Bootstrap;
+using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+
+
 
 #if AC
 
@@ -59,7 +61,7 @@ namespace dRz.Loader.Cad
             //если нет библиотек или еще какой косяк
             try
             {
-                Init();
+                InitLoger();
             }
             // ошибка инициализации, все развалилось, лог смысла не имеет
             catch (Exception ex)
@@ -76,7 +78,7 @@ namespace dRz.Loader.Cad
             }
         }
 
-        private void Init()
+        private void InitLoger()
         {
             try
             {

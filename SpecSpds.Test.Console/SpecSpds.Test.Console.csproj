@@ -24,10 +24,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\SpecSPDS.NCad\Bootstrap\LogBootstrap.cs" Link="Bootstrap\LogBootstrap.cs" />
+	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
 	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
-	  <Compile Include="..\SpecSPDS.NCad\InternalDiagnostic\DebugTextWriter.cs" Link="InternalDiagnostic\DebugTextWriter.cs" />
-	  <Compile Include="..\SpecSPDS.NCad\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="InternalDiagnostic\InternalLoggerDiagnostic.cs" />
+	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
+	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
 	  
 	</ItemGroup>
 

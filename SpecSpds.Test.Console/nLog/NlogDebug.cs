@@ -1,6 +1,5 @@
-﻿using dRz.Loader.Cad.Bootstrap;
-using dRz.Loader.Cad.Infrastructure;
-using dRz.Loader.Cad.InternalDiagnostic;
+﻿using dRz.Loader.Cad.Infrastructure.Bootstrap;
+using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
 using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;
@@ -19,39 +18,35 @@ namespace dRz.SpecSpds.Test.nLog
             //писатель в debug internal nlog
             //InternalLoggerDiagnostic.Writer();
 
-            GlobalDiagnosticsContext.Set("LogsDir",LoaderEnvironment.AppDataProductLogPath);
-            GlobalDiagnosticsContext.Set("AppName",LoaderEnvironment.ProductName);
+            //GlobalDiagnosticsContext.Set("LogsDir",LoaderEnvironment.AppDataProductLogPath);
+            //GlobalDiagnosticsContext.Set("AppName",LoaderEnvironment.ProductName);
 
 
 
-            var conf = LogManager.Configuration;
+            //var conf = LogManager.Configuration;
 
             //если лог конфиг не загрузился сам грузим руками
-            if (LogManager.Configuration is null)
-            {
+            //if (LogManager.Configuration is null)
+            //{
                 //пытаемся грузить принудительно
-                new LogBootstrap();
+                LogBootstrap.Init();
 
-                //если конфиг не нашелся и не загрузился
-                if (LogManager.Configuration is null)
-                {
-                    //включим диагностику eсли выключена
-                    new InternalLoggerDiagnostic("LogManager empty Configuration");
+             
+            //}
 
-                    //дальше пишем внутренний лог
-                }
-            }
-
-            conf = LogManager.Configuration;
+        var  conf = LogManager.Configuration;
                       
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
 
             LogDebugCore loggebCore = new LogDebugCore();      
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i < 1; i++)
             {
+                GlobalDiagnosticsContext.Set("Caller", nameof(Test));//todo на скаку путь имя лога переключать нельзя!!!!
+
                 logDebug.Test();
+
                 loggebCore.Test();
            
             }
@@ -61,7 +56,7 @@ namespace dRz.SpecSpds.Test.nLog
 
             stopwatch.Stop();
             Console.WriteLine($"Total time: {stopwatch.Elapsed}");
-            Console.ReadKey();
+          //  Console.ReadKey();
         }
     }
 }
