@@ -12,7 +12,7 @@ namespace dRz.SpecSpds.Test.nLog
 
         internal void Test()
         {
-            
+
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             //писатель в debug internal nlog
@@ -28,18 +28,18 @@ namespace dRz.SpecSpds.Test.nLog
             //если лог конфиг не загрузился сам грузим руками
             //if (LogManager.Configuration is null)
             //{
-                //пытаемся грузить принудительно
-                LogBootstrap.Init();
+            //пытаемся грузить принудительно
+            new LogBootstrap/*.Init*/();
 
-             
+
             //}
 
-        var  conf = LogManager.Configuration;
-                      
+            var conf = LogManager.Configuration;
+
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();
 
-            LogDebugCore loggebCore = new LogDebugCore();      
+            LogDebugCore loggebCore = new LogDebugCore();
 
             for (int i = 0; i < 1; i++)
             {
@@ -48,7 +48,7 @@ namespace dRz.SpecSpds.Test.nLog
                 logDebug.Test();
 
                 loggebCore.Test();
-           
+
             }
 
             //shutdown nlog
@@ -56,7 +56,7 @@ namespace dRz.SpecSpds.Test.nLog
 
             stopwatch.Stop();
             Console.WriteLine($"Total time: {stopwatch.Elapsed}");
-          //  Console.ReadKey();
+            //  Console.ReadKey();
         }
     }
 }

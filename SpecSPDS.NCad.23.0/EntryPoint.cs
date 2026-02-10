@@ -56,7 +56,7 @@ namespace dRz.SpecSPDS.Cad
             try
             {
 
-#if DEBUG0
+#if DEBUG
                 //чисто для диагностики ручное включение
                 new InternalLoggerDiagnostic("Internal logger manual");
 #endif

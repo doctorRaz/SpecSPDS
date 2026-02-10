@@ -21,7 +21,7 @@ namespace dRz.Loader.Cad.Infrastructure.Bootstrap
         /// <summary>
         /// настройка, конфигурирование логгера
         /// </summary>
-        public static void Init()
+        public LogBootstrap()
         {
 #if DEBUG
             string logTimestamp = $"{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture)}";

@@ -84,9 +84,9 @@ namespace dRz.Loader.Cad
             {
                 var root = new LoaderEnvironment();
 
-#if DEBUG0
+#if DEBUG
                 //чисто для диагностики ручное включение
-                new InternalLoggerDiagnostic("Internal logger manual");
+                new InternalLoggerDiagnostic("Internal logger manual DEBUG");
 #endif
 
                 //setup GDC путь, имя файла 
