@@ -1,0 +1,54 @@
+﻿<Project>
+	<PropertyGroup>
+		<!-- root решения относительно этого файла -->
+		<!--<RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>-->
+		<!-- root решения относительно каталога решения, имха более верно -->
+		<!--************* только при сборке из решения ******************-->
+		<RepoRoot>$(SolutionDir)</RepoRoot>
+		<!-- выходной каталог obj -->
+		<BaseIntermediateOutputPath>$(RepoRoot)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+		<!-- с WPF аккуратно, теряет ресурсы если root другой, -->
+		<RootNamespace>dRz</RootNamespace>
+		<LangVersion>latest</LangVersion>
+		<!--<DateTime -->
+		<StartYear>2014</StartYear>
+		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
+		<!--<Version />-->
+		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+		<Deterministic>false</Deterministic>
+		<AssemblyVersion>0.1.*</AssemblyVersion>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<!-- <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute> -->
+		<!--<Version />-->
+		<!-- ***********путь сборки -->
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<BaseOutputPath>..\bin\</BaseOutputPath>
+		<!--<OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>-->
+		<!-- *******************Description *************-->
+		<!-- ***************** Постоянные свойства ***************** -->
+		<!-- CompanyName -->
+		<Company>doctorRaz@gmail.com</Company>
+		<!-- LegalCopyright -->
+		<Copyright>Разыграев Андрей</Copyright>
+		<!-- LegalTrademarks -->
+		<Trademark>©doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
+		<!-- ***************** Переопределяются в проекте ***************** -->
+		<!-- ProductName -->
+		<Product>SpecSPDS</Product>
+		<!-- FileDescription он жэж Title-->
+		<!-- если все закоментить то в титул пойдет имя сборки -->
+		<!-- <AssemblyTitle>PlotSPDS</AssemblyTitle> -->
+		<!-- Comments -->
+		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
+		<!-- ProductVersion он жэж AssemblyInformationalVersion-->
+		<InformationalVersion>SpecSPDS for nanoCAD</InformationalVersion>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+		<NeutralLanguage>ru-RU</NeutralLanguage>
+		<RepositoryUrl>https://github.com/doctorRaz/SpecSPDS</RepositoryUrl>
+		<!-- ***************** ХЗ где используется ***************** -->
+		<!-- <PackageProjectUrl>http://doctorraz.blogspot.com/2022/10/PlotSPDS.NET.html</PackageProjectUrl> -->
+		<!-- <ProductVersion>ProductVersion</ProductVersion> -->
+		<!-- <AssemblyProductVersion>AssemblyProductVersion</AssemblyProductVersion> -->
+		<!-- <AssemblyInformationalVersionAttribute>AssemblyInformationalVersionAttribute</AssemblyInformationalVersionAttribute> -->
+	</PropertyGroup>
+</Project>

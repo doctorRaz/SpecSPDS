@@ -2,22 +2,21 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<UseWPF>true</UseWPF>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<UseWindowsForms>true</UseWindowsForms>
+		<PlatformTarget>x64</PlatformTarget>
 		<RootNamespace>dRz.SpecSPDS.Core</RootNamespace>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-
-		<Description>SpecSPDS ядро nanoCAD</Description>
-		<!--<Deterministic>False</Deterministic>
-		<AssemblyVersion>1.0.*</AssemblyVersion>-->
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>
+		<!--**********-->
+		<Description>SpecSPDS ядро</Description>
+		<AssemblyTitle>SpecSPDS.Core</AssemblyTitle>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="6.0.7" />
-
-		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+		<PackageReference Include="NLog" Version="6.0.7"  >
+		 <Private>true</Private>
+		</PackageReference>
+		<PackageReference Include="WindowsAPICodePack" Version="7.0.4"   />
 	</ItemGroup>
-
-
 </Project>

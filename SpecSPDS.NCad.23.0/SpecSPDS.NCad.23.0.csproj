@@ -2,59 +2,29 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<UseWindowsForms>true</UseWindowsForms>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<RootNamespace>dRz.SpecSPDS.Cad</RootNamespace>
 		<PlatformTarget>x64</PlatformTarget>
-		<BaseOutputPath>..\bin.NET</BaseOutputPath>
-
+		<RootNamespace>dRz.SpecSPDS.Cad</RootNamespace>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<UseWindowsForms>true</UseWindowsForms>
+		<UseWPF>true</UseWPF>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--******************-->
+		<Description>Спецификация из универсального маркера, nanoCAD 23-25</Description>
+		<AssemblyTitle>SpecSPDS.NET.23</AssemblyTitle>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<DefineConstants>$(DefineConstants);NC</DefineConstants>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="MultiCAD.NET" Version="23.0.6177.4117" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="23.0.6177.4117" />
 		<PackageReference Include="NLog" Version="6.0.7" />
 	</ItemGroup>
-
 	<ItemGroup>
-	  <Folder Include="Entry\" />
+		<Folder Include="Entry\" />
 	</ItemGroup>
-
-
-	<!--<PropertyGroup>-->
-	<!-- Общая папка с конфигурацией -->
-	<!--
-		-->
-	<!--папка проекта-->
-	<!--
-		-->
-	<!--<SharedConfigDir>$(MSBuildThisFileDirectory)Shared</SharedConfigDir>-->
-	<!--
-		-->
-	<!--папка решения-->
-	<!--
-		<SharedConfigDir>$(SolutionDir)Shared</SharedConfigDir>
-	</PropertyGroup>
-
-	<Target Name="CopyNLogConfig" AfterTargets="Build" Inputs="$(SharedConfigDir)\NLog.$(Configuration).config" Outputs="$(OutDir)NLog.config" Condition="Exists('$(SharedConfigDir)\NLog.$(Configuration).config')">
-
-		<Copy SourceFiles="$(SharedConfigDir)\NLog.$(Configuration).config" DestinationFiles="$(OutDir)NLog.config" SkipUnchangedFiles="true" />
-
-	</Target>-->
-
 </Project>

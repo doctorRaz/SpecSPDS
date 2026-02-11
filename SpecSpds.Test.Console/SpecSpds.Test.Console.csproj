@@ -1,65 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<UseWPF>true</UseWPF>
+		<OutputType>Exe</OutputType>
+		<PlatformTarget>x64</PlatformTarget>
 		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<!--*******-->
 		<Description>Отладка в консоли</Description>
 		<RootNamespace>dRz.SpecSpds.Test</RootNamespace>
-		<BaseOutputPath>..\bin.NET</BaseOutputPath>
 	</PropertyGroup>
-
 	<ItemGroup>
-	  <Compile Remove="_draft\**" />
-	  <Compile Remove="_experimental\**" />
-	  <EmbeddedResource Remove="_draft\**" />
-	  <EmbeddedResource Remove="_experimental\**" />
-	  <None Remove="_draft\**" />
-	  <None Remove="_experimental\**" />
-	  <Page Remove="_draft\**" />
-	  <Page Remove="_experimental\**" />
+		<Compile Remove="_draft\**" />
+		<Compile Remove="_experimental\**" />
+		<EmbeddedResource Remove="_draft\**" />
+		<EmbeddedResource Remove="_experimental\**" />
+		<None Remove="_draft\**" />
+		<None Remove="_experimental\**" />
+		<Page Remove="_draft\**" />
+		<Page Remove="_experimental\**" />
 	</ItemGroup>
-
 	<ItemGroup>
-	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
-	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
-	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
-	  <Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
-	  
+		<Compile Include="..\SpecSPDS.NCad\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
+		<Compile Include="..\SpecSPDS.NCad\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
+		<Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
+		<Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<PackageReference Include="NLog" Version="6.0.7">
 			<!--<PrivateAssets>all</PrivateAssets>-->
 		</PackageReference>
 	</ItemGroup>
-
 	<ItemGroup>
-	  <ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
+		<ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
-
-
-	<!--<PropertyGroup>
-		 -->
-	<!--Общая папка с конфигурацией 
-		папка проекта-->
-	<!--
-		-->
-	<!--<SharedConfigDir>$(MSBuildThisFileDirectory)Shared</SharedConfigDir>-->
-	<!--
-		-->
-	<!--папка решения-->
-	<!--
-		<SharedConfigDir>$(SolutionDir)Shared</SharedConfigDir>
-	</PropertyGroup>
-
-	<Target Name="CopyNLogConfig" AfterTargets="Build" Inputs="$(SharedConfigDir)\NLogLoader.$(Configuration).config" Outputs="$(OutDir)NLog.config" Condition="Exists('$(SharedConfigDir)\NLogLoader.$(Configuration).config')">
-
-		<Copy SourceFiles="$(SharedConfigDir)\NLogLoader.$(Configuration).config" DestinationFiles="$(OutDir)NLogLoader.config" SkipUnchangedFiles="true" />-->
-
-	<!--</Target>-->
-
 </Project>
