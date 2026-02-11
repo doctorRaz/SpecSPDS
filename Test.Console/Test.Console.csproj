@@ -7,6 +7,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
+		<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>
 		<!--*******-->
 		<Description>Отладка в консоли</Description>
 		<RootNamespace>dRz.SpecSpds.Test</RootNamespace>
@@ -22,10 +23,10 @@
 		<Page Remove="_experimental\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="..\SpecSPDS.NCad\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
-		<Compile Include="..\SpecSPDS.NCad\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
-		<Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
-		<Compile Include="..\SpecSPDS.NCad\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
+		<Compile Include="..\Loader\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
+		<Compile Include="..\Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
+		<Compile Include="..\Loader\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
+		<Compile Include="..\Loader\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="NLog" Version="6.0.7">
@@ -33,6 +34,6 @@
 		</PackageReference>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\SpecSPDS.Core\SpecSPDS.Core.csproj" />
+		<ProjectReference Include="..\Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
 </Project>

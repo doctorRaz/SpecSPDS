@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<PlatformTarget>x64</PlatformTarget>
+		<RootNamespace>dRz.SpecSPDS.Cad</RootNamespace>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<UseWindowsForms>true</UseWindowsForms>
+		<UseWPF>true</UseWPF>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--******************-->
+		<Description>Спецификация из универсального маркера, nanoCAD 26</Description>
+		<AssemblyTitle>SpecSPDS.NET.26</AssemblyTitle>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);NC;NC26</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Core\SpecSPDS.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MultiCAD.NET" Version="26.0.7226.4926" />
+		<PackageReference Include="nanoCAD.Platform.NET" Version="26.0.7226.4926" />
+		<PackageReference Include="NLog" Version="6.0.7" />
+	</ItemGroup>
+</Project>
