@@ -29,7 +29,7 @@ namespace dRz.SpecSpds.Test.nLog
             //if (LogManager.Configuration is null)
             //{
             //пытаемся грузить принудительно
-             //LogBootstrap/*.Init*/();
+             //LogBootstrapLoader/*.Init*/();
              _LogBootstrap.Initialize();
 
 
