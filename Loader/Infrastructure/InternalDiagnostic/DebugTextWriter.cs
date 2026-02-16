@@ -15,12 +15,12 @@ namespace dRz.Loader.Cad.Infrastructure.InternalDiagnostic
     {
         public override Encoding Encoding => Encoding.UTF8;
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             Debug.WriteLine(value);
         }
 
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             Debug.Write(value);
         }

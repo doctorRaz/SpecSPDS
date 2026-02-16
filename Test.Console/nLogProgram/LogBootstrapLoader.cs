@@ -1,26 +1,77 @@
-﻿using NLog;
+﻿using dRz.Loader.Cad.Infrastructure;
+using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+using NLog;
 using NLog.Common;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
+using System.IO;
 
+/// <summary>
+/// один таргет только для загрузчика
+/// </summary>
 public static class LogBootstrapLoader
 {
     private static bool _initialized;
+
+    private static readonly object _sync = new();
 
     public static void Initialize()
     {
         if (_initialized)
             return;
 
+        lock (_sync)
+        {
+            if (_initialized)
+                return;
+
+#if DEBUG
+            EnableInternalDiagnostics();
+#endif
+
+            SetupGlobalContext();
+            
+            LoadConfiguration();
+
+            _initialized = true;
+        }
+
+    }
+
+    /// <summary>
+    /// Setups the global context.
+    /// </summary>
+    private static void SetupGlobalContext()
+    {
+    }
+
+    /// <summary>
+    /// Enables the internal diagnostics.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    /// <param name="ex">The ex.</param>
+    private static void EnableInternalDiagnostics(string message = "", Exception? ex = null)
+    {
+
         // --- Internal log ---
-        InternalLogger.LogLevel = LogLevel.Off;
-        InternalLogger.LogFile = @"c:\temp\_SpecSPDS\logs\internal.log";
+        InternalLogger.LogWriter = new DebugTextWriter();//output VS
+        InternalLogger.LogLevel = LogLevel.Warn;
+        InternalLogger.LogFile = Path.Combine(LoaderEnvironment.AppDataProductLogPath,"internal.log");
         InternalLogger.LogToConsole = true;
         LogManager.ThrowExceptions = false;
         LogManager.ThrowConfigExceptions = true;
+
+    }
+
+    /// <summary>
+    /// Loads the configuration.
+    /// </summary>
+    private static void LoadConfiguration()
+    {
+
 
         var config = new LoggingConfiguration();
 
@@ -41,7 +92,7 @@ public static class LogBootstrapLoader
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.log",
             ArchiveEvery = FileArchivePeriod.Day,
             ArchiveAboveSize = 5242880,
-            ArchiveNumbering =ArchiveNumberingMode.Rolling,
+            ArchiveNumbering = ArchiveNumberingMode.Rolling,
             ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.{#}.log",
             MaxArchiveFiles = 10,
             KeepFileOpen = false,
@@ -84,7 +135,7 @@ public static class LogBootstrapLoader
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_All.log",
             Layout = new CsvLayout
             {
-                Delimiter =CsvColumnDelimiterMode /*CsvColumnDelimiter*/.Tab,
+                Delimiter = CsvColumnDelimiterMode /*CsvColumnDelimiter*/.Tab,
                 WithHeader = true,
                 Quoting = CsvQuotingMode.All,
                 Columns =
