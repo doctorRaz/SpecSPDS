@@ -14,6 +14,11 @@ using System.ComponentModel;
 using dRz.Loader.Cad.Infrastructure;
 using dRz.Loader.Cad.Infrastructure.Bootstrap;
 using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+using System.Globalization;
+using System.Diagnostics;
+
+
+
 
 
 
@@ -61,7 +66,11 @@ namespace dRz.Loader.Cad
             //если нет библиотек или еще какой косяк
             try
             {
+                //nlog
                 InitLoger();
+
+                //load adapter
+                InitLoader();
             }
             // ошибка инициализации, все развалилось, лог смысла не имеет
             catch (Exception ex)
@@ -85,8 +94,17 @@ namespace dRz.Loader.Cad
                 var root = new LoaderEnvironment();
 
 #if DEBUG
+
+                Debug.WriteLine("hash "+LogManager.LogFactory.GetHashCode());
+
                 //чисто для диагностики ручное включение
                 new InternalLoggerDiagnostic("Internal logger manual DEBUG");
+
+                //дата лога до секунды, во время сеанса не меняем
+                string logTimestamp = $"{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture)}";
+
+                GlobalDiagnosticsContext.Set("DateCreate", logTimestamp);
+
 #endif
 
                 //setup GDC путь, имя файла 
@@ -110,6 +128,25 @@ namespace dRz.Loader.Cad
                 }
 
                 log.Info("Logger started");
+            }
+            catch (Exception ex)
+            {
+                Document doc = Application.DocumentManager.MdiActiveDocument;
+                if (doc == null)
+                {
+                    return;
+                }
+
+                Editor ed = doc.Editor;
+
+                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+            }
+        }
+
+        private void InitLoader()
+        {
+            try
+            {
 
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
                 // соответствующую ей версию файла. Имя такого файла должно 

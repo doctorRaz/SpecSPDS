@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using NLog;
 using NLog.Common;
 
@@ -71,7 +73,9 @@ namespace dRz.Loader.Cad.Infrastructure.Bootstrap
         {
             // Включаем внутреннюю диагностику принудительно
             InternalLogger.LogLevel = LogLevel.Trace;
+
             InternalLogger.LogToConsole = true;
+
             InternalLogger.LogFile = System.IO.Path.Combine(
                 LoaderEnvironment.AppDataProductLogPath,
                 "nlog-internal.log"
@@ -86,6 +90,22 @@ namespace dRz.Loader.Cad.Infrastructure.Bootstrap
                 InternalLogger.Error(message);
 
             }
+        }
+
+        static Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+        static string? moduleName => assembly.GetName().Name;
+
+        static string LogFile()
+        {
+            #region FilePathInternalLogger
+
+            string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)}";
+
+            string appDir = LoaderEnvironment.AppDataProductLogPath;
+
+            return Path.Combine(appDir, $"{logTimestamp}_{moduleName}_internal.log");
+
+            #endregion
         }
     }
 }

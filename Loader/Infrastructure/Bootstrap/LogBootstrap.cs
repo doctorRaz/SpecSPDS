@@ -16,8 +16,19 @@ namespace dRz.Loader.Cad.Infrastructure.Bootstrap
     /// <summary>
     /// 
     /// </summary>
-    public class LogBootstrap
+    public /*static*/ class LogBootstrap
     {
+
+        private static bool _initialized;
+        private static readonly object _sync = new();
+
+        public static void Initialize()
+        {
+
+
+
+        }
+
         /// <summary>
         /// настройка, конфигурирование логгера
         /// </summary>

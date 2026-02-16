@@ -36,17 +36,13 @@ namespace dRz.Loader.Cad.Infrastructure
 
 
         /// <summary>
-        /// The s product GetCustomAttribute
+        /// Название продукта <br/>
+        /// AssemblyProductAttribute & префикс имени файла, если атрибута нет
         /// </summary>
-        public static readonly string sProduct = _assembly
+        public static readonly string ProductName = _assembly
                                                  .GetCustomAttribute<AssemblyProductAttribute>()?
                                                  .Product
-                                                 ?? _assembly.GetName().Name!;
-
-        /// <summary>
-        /// часть ДО первой точки (Specspds) 
-        /// </summary>
-        public static readonly string ProductName = ExtractProductPrefix(_fileName);
+                                                 ?? ExtractProductPrefix(_fileName);
 
         /// <summary>
         /// %AppData%\Product

@@ -3,6 +3,8 @@ using NLog;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using System;
 using dRz.SpecSPDS.Core.Bootstrap;
+using System.Diagnostics;
+
 
 
 
@@ -35,7 +37,9 @@ namespace dRz.SpecSPDS.Cad
             //если нет библиотек или еще какой косяк
             try
             {
-                Init();
+                InitLoger();
+
+                IniAdapter();
             }
             catch (Exception ex)
             {
@@ -51,12 +55,14 @@ namespace dRz.SpecSPDS.Cad
             }
         }
 
-        private void Init()
+        private void InitLoger()
         {
             try
             {
 
 #if DEBUG
+                //разные фабрики
+                Debug.WriteLine(LogManager.LogFactory.GetHashCode());
                 //чисто для диагностики ручное включение
                 new InternalLoggerDiagnostic("Internal logger manual DEBUG");
 #endif
@@ -79,7 +85,7 @@ namespace dRz.SpecSPDS.Cad
 
                 log.Info("Logger Started");
 
-                Loader.HelloSpec();
+              
 
             }
             catch (Exception ex)
@@ -96,6 +102,10 @@ namespace dRz.SpecSPDS.Cad
             }
         }
 
+        private void IniAdapter()
+        {
+              Loader.HelloSpec();
+        }
 
         public void Terminate()
         {

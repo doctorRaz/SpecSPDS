@@ -32,6 +32,6 @@ namespace dRz.SpecSPDS.Core.Bootstrap
 
         }
 
-        const string nLogConfigFileName = "NLog.dll.nlog";
+        const string nLogConfigFileName = "NLog.dll.test.nlog";
     }
 }
