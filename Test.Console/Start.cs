@@ -29,10 +29,28 @@ namespace dRz.SpecSpds.Test
 
     public class Start
     {
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+
         [STAThread]
         static void Main(string[] args)
         {
-            var f = new LoaderEnvironment();
+            var f = LoaderEnvironment.ProductName;
+
+            LogBootstrapAsync.Initialize();
+
+
+            logger.Trace("Plugin loaded");
+            logger.Debug("Plugin loaded");
+            logger.Info("Plugin loaded");
+            logger.Warn("Plugin loaded");
+            logger.Error("Plugin loaded");
+            logger.Fatal("Plugin loaded");
+
+
+
+            LogManager.Shutdown();
+
+            return;
             /*
             TestSpeedConfig tSc = new TestSpeedConfig();
 
@@ -52,7 +70,7 @@ namespace dRz.SpecSpds.Test
 
             var DateCreate = GlobalDiagnosticsContext.Get("DateCreate");
             var Caller = GlobalDiagnosticsContext.Get("Caller");
-            
+
 
             /*
             Console.WriteLine($"GetExecutingAssembly\t{Assembly.GetExecutingAssembly().Location}");

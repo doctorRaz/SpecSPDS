@@ -1,0 +1,8 @@
+Information
+Warning
+
+
+Error
+warn
+Trace
+Debug

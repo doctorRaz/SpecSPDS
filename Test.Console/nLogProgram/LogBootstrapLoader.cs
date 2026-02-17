@@ -69,6 +69,7 @@ public static class LogBootstrapLoader
     /// <summary>
     /// Loads the configuration.
     /// </summary>
+    [Obsolete]
     private static void LoadConfiguration()
     {
 
@@ -92,7 +93,7 @@ public static class LogBootstrapLoader
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.log",
             ArchiveEvery = FileArchivePeriod.Day,
             ArchiveAboveSize = 5242880,
-            ArchiveNumbering = ArchiveNumberingMode.Rolling,
+            ArchiveNumbering = "Rolling",
             ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.{#}.log",
             MaxArchiveFiles = 10,
             KeepFileOpen = false,
@@ -122,7 +123,7 @@ public static class LogBootstrapLoader
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.log",
             ArchiveEvery = FileArchivePeriod.Day,
             ArchiveAboveSize = 5242880,
-            ArchiveNumbering = ArchiveNumberingMode.Rolling,
+            ArchiveNumbering = "Rolling",
             ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.{#}.log",
             MaxArchiveFiles = 10,
             KeepFileOpen = false,
