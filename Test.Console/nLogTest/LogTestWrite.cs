@@ -1,11 +1,11 @@
 ﻿using NLog;
 using System;
 
-namespace dRz.SpecSpds.Test.nLog
+namespace dRz.SpecSpds.Test.nLogTest
 {
     internal class LogTestWrite
     {
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         internal void Test()
         {

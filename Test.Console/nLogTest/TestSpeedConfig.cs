@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dRz.SpecSpds.Test.nLog
+namespace dRz.SpecSpds.Test.nLogTest
 {
     /// <summary>
     /// Тест скорости работы конфигов в зависимости как внутри них задаются пути и тд

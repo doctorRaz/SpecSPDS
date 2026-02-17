@@ -11,53 +11,44 @@ namespace dRz.Loader.Cad.Infrastructure
         /// <summary>
         /// Сборка — дешево
         /// </summary>
-        private static readonly Assembly _assembly =
-            typeof(LoaderEnvironment).Assembly;
-
-
+        private static readonly Assembly _assembly = typeof(LoaderEnvironment).Assembly;
 
         /// <summary>
         /// Полный путь к DLL — дешево
         /// </summary>
-        private static readonly string _assemblyPath =
-            _assembly.Location;
+        private static readonly string _assemblyPath = _assembly.Location;
 
         /// <summary>
         /// Папка сборки
         /// </summary>
-        private static readonly string _assemblyDirectory =
-            Path.GetDirectoryName(_assemblyPath)!;
+        public static readonly string AssemblyDirectory = Path.GetDirectoryName(_assemblyPath)!;
 
         /// <summary>
         /// Имя файла без расширения (Specspds.ncad)
         /// </summary>
-        private static readonly string _fileName =
-            Path.GetFileNameWithoutExtension(_assemblyPath);
-
+        public static readonly string FileName = Path.GetFileNameWithoutExtension(_assemblyPath);
 
         /// <summary>
         /// Название продукта <br/>
         /// AssemblyProductAttribute & префикс имени файла, если атрибута нет
         /// </summary>
-        public static readonly string ProductName = _assembly
-                                                 .GetCustomAttribute<AssemblyProductAttribute>()?
-                                                 .Product
-                                                 ?? ExtractProductPrefix(_fileName);
+        public static readonly string ProductName = _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
+                                                    ?? ExtractProductPrefix(FileName);
 
         /// <summary>
         /// %AppData%\Product
         /// </summary>
         public static readonly string AppDataProductPath =
-                                        Path.Combine(
-                                            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                            ProductName);
+                                                        Path.Combine(
+                                                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                        ProductName);
 
         /// <summary>
         /// %AppData%\Product\Logs
         /// </summary>
         public static readonly string AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
 
-        public static readonly string NLogConfigPath = Path.Combine(_assemblyDirectory, _nLogConfigFileName);
+        public static readonly string NLogConfigPath = Path.Combine(AssemblyDirectory, _nLogConfigFileName);
 
         //----------------------------
 

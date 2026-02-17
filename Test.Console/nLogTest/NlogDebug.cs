@@ -5,7 +5,7 @@ using NLog;
 using System;
 using System.Diagnostics;
 
-namespace dRz.SpecSpds.Test.nLog
+namespace dRz.SpecSpds.Test.nLogTest
 {
     internal class NlogDebug
     {
@@ -29,8 +29,8 @@ namespace dRz.SpecSpds.Test.nLog
             //if (LogManager.Configuration is null)
             //{
             //пытаемся грузить принудительно
-             //LogBootstrapLoader/*.Init*/();
-             _LogBootstrap.Initialize();
+            //LogBootstrapLoader/*.Init*/();
+            _LogBootstrap.Initialize();
 
 
             //}

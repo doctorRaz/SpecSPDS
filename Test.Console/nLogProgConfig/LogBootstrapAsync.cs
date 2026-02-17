@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using dRz.Loader.Cad.Infrastructure;
+using NLog;
 using NLog.Common;
 using NLog.Config;
 using NLog.Layouts;
@@ -6,6 +7,7 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -79,37 +81,70 @@ public static class LogBootstrapAsync
     {
 #if DEBUG
         InternalLogger.LogLevel = LogLevel.Trace;
-        InternalLogger.LogToConsole = false;
+
+        //пишем в файл
+        InternalLogger.LogFile = LogFile();
+
         InternalLogger.LogWriter = new OutputDebugStringWriter();
+
+        InternalLogger.LogToConsole = false;
+
+        //все исключения
+        LogManager.ThrowExceptions = false;
+
+        //ошибки конфига
+        LogManager.ThrowConfigExceptions = false;
+
+        InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize manual");
+
 #else
         InternalLogger.LogLevel = LogLevel.Off;
 #endif
     }
 
+    static string LogFile()
+    {
+
+        string logTimestamp = $"{DateTime.Now.ToString("yyyyMMdd", CultureInfo.InvariantCulture)}";
+
+        string appDir = LoaderEnvironment.AppDataProductLogPath;
+
+        return Path.Combine(appDir, $"{logTimestamp}_{LoaderEnvironment.FileName}_internal.log");
+
+    }
+
+    /// <summary>
+    /// отладочная информация из nLog в output VS только для отладки!!!
+    /// </summary>
+    /// <seealso cref="TextWriter" />
     private sealed class OutputDebugStringWriter : TextWriter
     {
         public override Encoding Encoding => Encoding.UTF8;
 
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             Debug.WriteLine("[NLog] " + value);
         }
 
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             Debug.Write("[NLog] " + value);
         }
     }
 
-    // --------------------------------------------------
-    // Чтение уровня один раз
-    // --------------------------------------------------
+    /// <summary>
+    /// Чтение уровня лога один раз
+    /// </summary>
+    /// <returns>LogLevel</returns>
     private static LogLevel ReadLogLevelOnce()
     {
         try
         {
-            var levelFile = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
+            // ищем рядом с dll
+            string AppDir = LoaderEnvironment.AssemblyDirectory;
+
+            string levelFile = Path.Combine(
+                AppDir,
                 "loglevel.txt");
 
             if (!File.Exists(levelFile))
@@ -117,11 +152,11 @@ public static class LogBootstrapAsync
 
             foreach (var line in File.ReadLines(levelFile))
             {
-                var text = line.Trim();
+                string text = line.Trim();
                 if (string.IsNullOrWhiteSpace(text))
                     continue;
 
-                var level = LogLevel.FromString(text);
+                LogLevel level = LogLevel.FromString(text);
                 return level ?? LogLevel.Error;
             }
 

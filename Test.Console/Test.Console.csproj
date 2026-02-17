@@ -24,7 +24,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="..\Loader\Infrastructure\Bootstrap\LogBootstrap.cs" Link="Infrastructure\Bootstrap\LogBootstrap.cs" />
-		<Compile Include="..\Loader\Infrastructure\Bootstrap\_LogBootstrap.cs" Link="nLogConfig\_LogBootstrap.cs" />
+		<Compile Include="..\Loader\Infrastructure\Bootstrap\_LogBootstrap.cs" Link="nLogXmlConfig\_LogBootstrap.cs" />
 		<Compile Include="..\Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
 		<Compile Include="..\Loader\Infrastructure\InternalDiagnostic\DebugTextWriter.cs" Link="Infrastructure\InternalDiagnostic\DebugTextWriter.cs" />
 		<Compile Include="..\Loader\Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" Link="Infrastructure\InternalDiagnostic\InternalLoggerDiagnostic.cs" />
