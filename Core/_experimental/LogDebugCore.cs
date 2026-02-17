@@ -25,7 +25,7 @@ namespace dRz.SpecSPDS.Core._experimental
             if (log.IsDebugEnabled)
                 log.Warn("This is a message from {Calc}", calcs());
 
-            int i0 = 0;
+            int i0 = 20;
             try
             {
 
@@ -36,7 +36,7 @@ namespace dRz.SpecSPDS.Core._experimental
                        .Property("prop2", 123)
                        .Log();
 
-                int e = 10;
+                int e = 0;
 
                 int ii = 10 / e;
             }

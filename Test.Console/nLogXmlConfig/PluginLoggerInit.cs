@@ -20,7 +20,7 @@ public static class PluginLoggerInit
 
         var config = LogManager.LoadConfiguration("NLog.config");
 
-        var fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
+        FileTarget? fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
 
         // Каталог логов рядом с DLL плагина
         string pluginDir = Path.GetDirectoryName(pluginAssemblyPath);
@@ -31,7 +31,7 @@ public static class PluginLoggerInit
         // Часть имени файла — имя плагина
         string namePart = Path.GetFileNameWithoutExtension(pluginAssemblyPath);
 
-        fileTarget.FileName = SimpleLayout.FromString(
+        fileTarget.FileName = Layout.FromString(
             $@"{logDir}\${{shortdate}}_{namePart}.log"
         );
 

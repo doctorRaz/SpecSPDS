@@ -25,6 +25,7 @@ using dRz.SpecSpds.Test.nLogTest;
 using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;
+using System.Diagnostics;
 namespace dRz.SpecSpds.Test
 {
 
@@ -38,10 +39,13 @@ namespace dRz.SpecSpds.Test
             var f = LoaderEnvironment.ProductName;
             var ff = new LoaderEnvironment();
 
+             Stopwatch stopwatch = Stopwatch.StartNew();
+
             LogBootstrapAsync.Initialize();
 
+            Console.WriteLine($"Init nLog: {stopwatch.Elapsed}");
 
-            logger.Trace("Plugin loaded");
+            logger.Info("Plugin loaded");
             //logger.Debug("Plugin loaded");
             //logger.Info("Plugin loaded");
             //logger.Warn("Plugin loaded");
@@ -60,6 +64,10 @@ namespace dRz.SpecSpds.Test
 
 
             LogManager.Shutdown();
+
+            stopwatch.Stop();
+            Console.WriteLine($"Total time: {stopwatch.Elapsed}");
+            Console.ReadKey();
 
             return;
             /*

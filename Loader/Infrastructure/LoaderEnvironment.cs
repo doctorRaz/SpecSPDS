@@ -35,6 +35,9 @@ namespace dRz.Loader.Cad.Infrastructure
         public static readonly string ProductName = _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
                                                     ?? ExtractProductPrefix(FileName);
 
+        public static readonly string ProductTitle = _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
+                                            ?? FileName;
+
         /// <summary>
         /// %AppData%\Product
         /// </summary>

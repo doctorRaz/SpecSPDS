@@ -7,10 +7,11 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
-		<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>
+		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
 		<!--*******-->
 		<Description>Отладка в консоли</Description>
 		<RootNamespace>dRz.SpecSpds.Test</RootNamespace>
+		<AssemblyTitle>Test.Cmd</AssemblyTitle>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="_draft\**" />
