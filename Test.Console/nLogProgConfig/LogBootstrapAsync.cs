@@ -12,7 +12,7 @@ using System.IO;
 /// <summary>
 /// 
 /// </summary>
-public static partial class LogBootstrapAsync 
+public static /*partial*/ class LogBootstrap 
 {
     /// <summary>
     /// Initializes this instance.
@@ -25,10 +25,10 @@ public static partial class LogBootstrapAsync
         lock (_sync)
         {
             if (_initialized) return;
-
-            ConfigureInternalLogger();
-
-            SetupGlobalContext();
+            InternalLoggerHelpers.
+                        ConfigureInternalLogger();
+            SetupGlobalContextHelpers.
+                        SetupGlobalContext();
 
             LoadConfiguration();
 
@@ -38,27 +38,13 @@ public static partial class LogBootstrapAsync
     }
 
     /// <summary>
-    /// Setups the global context.
-    /// </summary>
-    private static void SetupGlobalContext()
-    {
-#if DEBUG
-        // фиксируем момент старта процесса
-        GlobalDiagnosticsContext.Set(
-            "DateCreate",
-            DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture)
-        );
-#endif
-
-        GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
-        GlobalDiagnosticsContext.Set("AppName", LoaderEnvironment.ProductName);
-    }
-
-    /// <summary>
     /// Loads the configuration.
     /// </summary>
     private static void LoadConfiguration()
     {
+        string appDataProductLogPath = LoaderEnvironment.AppDataProductLogPath;
+
+        string productTitle = LoaderEnvironment.ProductTitle;
 
         LogManager.Configuration = null;
 
@@ -67,18 +53,18 @@ public static partial class LogBootstrapAsync
 
         FileTarget fileTarget = new FileTarget("xmlFile")
         {
-            FileName = Path.Combine(appDirLogs, $"${{shortdate}}_{LoaderEnvironment.ProductTitle}.log"),
-            //FileName = Path.Combine(appDirLogs, $"${{date:universalTime=true:format=yyyy-MM-dd HH}}_{LoaderEnvironment.ProductName}.log"),
-
-            ArchiveFileName = Path.Combine(appDirLogs, $"${{shortdate}}_{LoaderEnvironment.ProductTitle}.{{#}}.log"),
-            //ArchiveFileName = Path.Combine(appDirLogs, $"${{date:universalTime=true:format=yyyy-MM-dd HH}}_{LoaderEnvironment.ProductName}.{{#}}.log"),
-
-
+            FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{productTitle}.log"),
+    
+            ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{productTitle}.{{#}}.log"),
+    
             ArchiveEvery = FileArchivePeriod.Day,
+            
             ArchiveAboveSize = 5 * 1024 * 1024,
+            
             MaxArchiveFiles = 10,
 
             KeepFileOpen = false,
+
             Layout = CreateXmlLayout()
         };
 
@@ -94,33 +80,27 @@ public static partial class LogBootstrapAsync
         };
 
         config.AddTarget("asyncFile", asyncTarget);
+
         config.LoggingRules.Add(new LoggingRule("*", level, asyncTarget));
-        //config.LoggingRules.Add(new LoggingRule("*", level, fileTarget));
 
         LogManager.Configuration = config;
 
     }
 
     /// <summary>
-    /// Logs the file.
-    /// </summary>
-    /// <returns></returns>
-    private static string LogFile()
-    {
-
-        string logTimestamp = $"{DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}";
-
-
-        return Path.Combine(appDirLogs, $"{logTimestamp}_{LoaderEnvironment.FileName}_internal.log");
-
-    }
-
-    /// <summary>
-    /// Чтение уровня лога один раз
+    /// Чтение уровня лога из файла <br/>
+    /// просто  строка<br/>
+    /// trace <br/>
+    /// debug <br/>
+    /// info <br/>
+    /// ... <br/>
+    /// регистр не важен <br/>
+    /// на случай сбоем у юзера, что бы можно было оперативно вкобчить отладку, трассировку в лог
     /// </summary>
     /// <returns>LogLevel</returns>
     private static LogLevel ReadLogLevelOnce()
     {
+        // в релизе уровень Error если не переопределено файлом loglevel.txt
 #if DEBUG
         LogLevel LevelDefault = LogLevel.Debug;
 #else
@@ -129,7 +109,7 @@ public static partial class LogBootstrapAsync
 
         try
         {
-            // ищем рядом с dll
+            // ищем рядом с нашей dll
             string AppDir = LoaderEnvironment.AssemblyDirectory;
 
             string levelFile = Path.Combine(AppDir, "loglevel.txt");
@@ -139,8 +119,7 @@ public static partial class LogBootstrapAsync
                 return LevelDefault;
             }
 
-
-            foreach (var line in File.ReadLines(levelFile))
+            foreach (string line in File.ReadLines(levelFile))
             {
                 string text = line.Trim();
 
@@ -200,41 +179,5 @@ public static partial class LogBootstrapAsync
     /// The synchronize
     /// </summary>
     private static readonly object _sync = new();
-
-    /// <summary>
-    /// The application dir logs
-    /// </summary>
-    private readonly static string appDirLogs = LoaderEnvironment.AppDataProductLogPath;
-
-
-    /// <summary>
-    /// Internal logger → Output Window (DEBUG)
-    /// </summary>
-    private static void ConfigureInternalLogger()
-    {
-#if DEBUG
-
-        InternalLogger.LogLevel = LogLevel.Info;
-
-        //пишем в файл
-        InternalLogger.LogFile = LogFile();
-
-        InternalLogger.LogWriter = new OutputDebugTextWriter();
-
-        InternalLogger.LogToConsole = false;
-
-        //все исключения
-        LogManager.ThrowExceptions = false;
-
-        //ошибки конфига
-        LogManager.ThrowConfigExceptions = true;
-
-        InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize manual");
-
-#else
-
-        InternalLogger.LogLevel = LogLevel.Off;
-
-#endif
-    }
+        
 }

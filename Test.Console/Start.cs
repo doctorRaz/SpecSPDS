@@ -37,14 +37,14 @@ namespace dRz.SpecSpds.Test
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         [STAThread]
-        static void Main(string[] args)        
+        static void Main(string[] args)
         {
             string f = LoaderEnvironment.ProductName;
             LoaderEnvironment ff = new LoaderEnvironment();
 
-             Stopwatch stopwatch = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
-            LogBootstrapAsync.Initialize();
+            LogBootstrap.Initialize();
 
             Console.WriteLine($"Init nLog: {stopwatch.Elapsed}");
 
@@ -59,7 +59,7 @@ namespace dRz.SpecSpds.Test
 
             LogDebugCore loggebCore = new LogDebugCore();
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 1000000; i++)
             {
                 logDebug.Test();
                 loggebCore.Test();

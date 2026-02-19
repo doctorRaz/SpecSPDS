@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-//public static partial class LogBootstrapAsync
+//public static partial class LogBootstrap
 //{
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!
