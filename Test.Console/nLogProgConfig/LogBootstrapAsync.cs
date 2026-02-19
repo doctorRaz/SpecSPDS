@@ -6,41 +6,25 @@ using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text;
 
 /// <summary>
 /// 
 /// </summary>
-public static class LogBootstrapAsync
+public static partial class LogBootstrapAsync 
 {
-
-    /// <summary>
-    /// The initialized
-    /// </summary>
-    private static bool _initialized;
-
-
-    /// <summary>
-    /// The synchronize
-    /// </summary>
-    private static readonly object _sync = new();
-
-
     /// <summary>
     /// Initializes this instance.
     /// </summary>
     public static void Initialize()
     {
-        if (_initialized)
-            return;
+        if (_initialized) return;
 
+        // лочим, что бы никто нее влез
         lock (_sync)
         {
-            if (_initialized)
-                return;
+            if (_initialized) return;
 
             ConfigureInternalLogger();
 
@@ -70,7 +54,6 @@ public static class LogBootstrapAsync
         GlobalDiagnosticsContext.Set("AppName", LoaderEnvironment.ProductName);
     }
 
-
     /// <summary>
     /// Loads the configuration.
     /// </summary>
@@ -92,9 +75,9 @@ public static class LogBootstrapAsync
 
 
             ArchiveEvery = FileArchivePeriod.Day,
-            ArchiveAboveSize = 5 * 1024  * 1024,
+            ArchiveAboveSize = 5 * 1024 * 1024,
             MaxArchiveFiles = 10,
-          
+
             KeepFileOpen = false,
             Layout = CreateXmlLayout()
         };
@@ -102,7 +85,7 @@ public static class LogBootstrapAsync
         // ---------------------------
         // Async wrapper
         // ---------------------------
-        var asyncTarget = new AsyncTargetWrapper(fileTarget)
+        AsyncTargetWrapper asyncTarget = new AsyncTargetWrapper(fileTarget)
         {
             QueueLimit = 10000,              // размер очереди
             OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
@@ -119,41 +102,10 @@ public static class LogBootstrapAsync
     }
 
     /// <summary>
-    /// Internal logger → Output Window (DEBUG)
-    /// </summary>
-    private static void ConfigureInternalLogger()
-    {
-#if DEBUG
-
-        InternalLogger.LogLevel = LogLevel.Info;
-
-        //пишем в файл
-        InternalLogger.LogFile = LogFile();
-
-        InternalLogger.LogWriter = new OutputDebugStringWriter();
-
-        InternalLogger.LogToConsole = false;
-
-        //все исключения
-        LogManager.ThrowExceptions = false;
-
-        //ошибки конфига
-        LogManager.ThrowConfigExceptions = true;
-
-        InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize manual");
-
-#else
-
-        InternalLogger.LogLevel = LogLevel.Off;
-
-#endif
-    }
-
-    /// <summary>
     /// Logs the file.
     /// </summary>
     /// <returns></returns>
-    static string LogFile()
+    private static string LogFile()
     {
 
         string logTimestamp = $"{DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}";
@@ -164,37 +116,13 @@ public static class LogBootstrapAsync
     }
 
     /// <summary>
-    /// The application dir logs
-    /// </summary>
-    private readonly static string appDirLogs = LoaderEnvironment.AppDataProductLogPath;
-
-    /// <summary>
-    /// отладочная информация из nLog в output VS только для отладки!!!
-    /// </summary>
-    /// <seealso cref="TextWriter" />
-    private sealed class OutputDebugStringWriter : TextWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
-
-        public override void WriteLine(string? value)
-        {
-            Debug.WriteLine("[NLog] " + value);
-        }
-
-        public override void Write(string? value)
-        {
-            Debug.Write("[NLog] " + value);
-        }
-    }
-
-    /// <summary>
     /// Чтение уровня лога один раз
     /// </summary>
     /// <returns>LogLevel</returns>
     private static LogLevel ReadLogLevelOnce()
     {
 #if DEBUG
-        LogLevel LevelDefault = LogLevel.Trace;
+        LogLevel LevelDefault = LogLevel.Debug;
 #else
         LogLevel LevelDefault=LogLevel.Error;
 #endif
@@ -234,7 +162,6 @@ public static class LogBootstrapAsync
         }
     }
 
-
     /// <summary>
     /// XML layout
     /// </summary>
@@ -246,7 +173,7 @@ public static class LogBootstrapAsync
         {
             IncludeEventProperties = true,
             IndentXml = true,
-            MaxRecursionLimit=10,
+            MaxRecursionLimit = 10,
             ElementName = "logevent",
 
             Attributes =
@@ -262,5 +189,52 @@ public static class LogBootstrapAsync
                 new XmlElement("exception", "${exception:format=ToString}")
             }
         };
+    }
+
+    /// <summary>
+    /// The initialized
+    /// </summary>
+    private static bool _initialized;
+
+    /// <summary>
+    /// The synchronize
+    /// </summary>
+    private static readonly object _sync = new();
+
+    /// <summary>
+    /// The application dir logs
+    /// </summary>
+    private readonly static string appDirLogs = LoaderEnvironment.AppDataProductLogPath;
+
+
+    /// <summary>
+    /// Internal logger → Output Window (DEBUG)
+    /// </summary>
+    private static void ConfigureInternalLogger()
+    {
+#if DEBUG
+
+        InternalLogger.LogLevel = LogLevel.Info;
+
+        //пишем в файл
+        InternalLogger.LogFile = LogFile();
+
+        InternalLogger.LogWriter = new OutputDebugTextWriter();
+
+        InternalLogger.LogToConsole = false;
+
+        //все исключения
+        LogManager.ThrowExceptions = false;
+
+        //ошибки конфига
+        LogManager.ThrowConfigExceptions = true;
+
+        InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize manual");
+
+#else
+
+        InternalLogger.LogLevel = LogLevel.Off;
+
+#endif
     }
 }

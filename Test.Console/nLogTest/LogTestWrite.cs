@@ -23,7 +23,7 @@ namespace dRz.SpecSpds.Test.nLogTest
                 log.Warn("This is a message from {Calc}", calcs());
 
             int i0 = 0;
-            var t = new tt();
+            tt t = new tt();
 
             try
             {

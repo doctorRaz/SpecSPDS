@@ -74,7 +74,7 @@ public static class LogBootstrapLoader
     {
 
 
-        var config = new LoggingConfiguration();
+        LoggingConfiguration config = new LoggingConfiguration();
 
         // =========================
         // Variables
@@ -88,7 +88,7 @@ public static class LogBootstrapLoader
         // =========================
 
         // ---------- XML Loader ----------
-        var xmlFileLoader = new FileTarget("xmlFileLoader")
+        FileTarget xmlFileLoader = new FileTarget("xmlFileLoader")
         {
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.log",
             ArchiveEvery = FileArchivePeriod.Day,
@@ -118,7 +118,7 @@ public static class LogBootstrapLoader
         };
 
         // ---------- XML Adapter ----------
-        var xmlFileAdapter = new FileTarget("xmlFileAdapter")
+        FileTarget xmlFileAdapter = new FileTarget("xmlFileAdapter")
         {
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.log",
             ArchiveEvery = FileArchivePeriod.Day,
@@ -131,7 +131,7 @@ public static class LogBootstrapLoader
         };
 
         // ---------- CSV All ----------
-        var csvFileAll = new FileTarget("csvFileAll")
+        FileTarget csvFileAll = new FileTarget("csvFileAll")
         {
             FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_All.log",
             Layout = new CsvLayout
@@ -153,7 +153,7 @@ public static class LogBootstrapLoader
         };
 
         // ---------- Debug logfile ----------
-        var logfile = new FileTarget("logfile")
+        FileTarget logfile = new FileTarget("logfile")
         {
             FileName = "${nlogdir:dir=logs}/${gdc:DateCreate}_${gdc:Caller}_${processname}.log"
         };
@@ -168,12 +168,12 @@ public static class LogBootstrapLoader
         // Rules
         // =========================
 
-        var minLevel = LogLevel.FromString(config.Variables["LevelMay"].ToString());
+        LogLevel minLevel = LogLevel.FromString(config.Variables["LevelMay"].ToString());
 
         config.LoggingRules.Add(new LoggingRule("*", minLevel, logfile));
         config.LoggingRules.Add(new LoggingRule("*", minLevel, csvFileAll));
 
-        var loaderRule = new LoggingRule("dRz.Loader*", minLevel, xmlFileLoader)
+        LoggingRule loaderRule = new LoggingRule("dRz.Loader*", minLevel, xmlFileLoader)
         {
             Final = true
         };

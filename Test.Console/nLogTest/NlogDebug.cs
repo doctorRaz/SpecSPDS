@@ -35,7 +35,7 @@ namespace dRz.SpecSpds.Test.nLogTest
 
             //}
 
-            var conf = LogManager.Configuration;
+            NLog.Config.LoggingConfiguration? conf = LogManager.Configuration;
 
             //write test nlog
             LogTestWrite logDebug = new LogTestWrite();

@@ -18,7 +18,7 @@ public static class PluginLoggerInit
 
         _initialized = true;
 
-        var config = LogManager.LoadConfiguration("NLog.config");
+        LogFactory config = LogManager.LoadConfiguration("NLog.config");
 
         FileTarget? fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
 
