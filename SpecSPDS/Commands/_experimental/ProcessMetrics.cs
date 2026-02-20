@@ -28,7 +28,7 @@ using Autodesk.AutoCAD.EditorInput;
 #endif
 
 
-namespace dRz.SpecSPDS.Cad.Commands.Test
+namespace dRz.SpecSPDS.nCad.Commands.Test
 {
     public static class ProcessMetrics
     {

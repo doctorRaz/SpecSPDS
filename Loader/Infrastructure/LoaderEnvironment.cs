@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace dRz.Loader.Cad.Infrastructure
+namespace dRz.Loader.nCad.Infrastructure
 {
     public class LoaderEnvironment
     {
@@ -39,7 +39,7 @@ namespace dRz.Loader.Cad.Infrastructure
                                             ?? FileName;
 
         /// <summary>
-        /// %AppData%\Product
+        /// %AppData%\ProductName
         /// </summary>
         public static readonly string AppDataProductPath =
                                                         Path.Combine(
@@ -47,7 +47,7 @@ namespace dRz.Loader.Cad.Infrastructure
                                                         ProductName);
 
         /// <summary>
-        /// %AppData%\Product\Logs
+        /// %AppData%\ProductName\Logs
         /// </summary>
         public static readonly string AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
 

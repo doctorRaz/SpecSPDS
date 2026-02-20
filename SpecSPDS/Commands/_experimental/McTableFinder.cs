@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.Cad.Commands.Test
+namespace dRz.SpecSPDS.nCad.Commands.Test
 {
 
     //tests finds McTable

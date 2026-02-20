@@ -1,5 +1,5 @@
-﻿using dRz.Loader.Cad.Infrastructure;
-using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+﻿using dRz.Loader.nCad.Infrastructure;
+using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
 using NLog;
 using NLog.Common;
 using NLog.Config;
@@ -9,137 +9,140 @@ using NLog.Targets.Wrappers;
 using System;
 using System.IO;
 
-/// <summary>
-/// один таргет только для загрузчика
-/// </summary>
-public static class LogBootstrapLoader
+namespace dRz.SpecSpds.Test.nLogProgConfig._draft
 {
-    private static bool _initialized;
 
-    private static readonly object _sync = new();
-
-    public static void Initialize()
+    /// <summary>
+    /// один таргет только для загрузчика
+    /// </summary>
+    public static class LogBootstrapLoader
     {
-        if (_initialized)
-            return;
+        private static bool _initialized;
 
-        lock (_sync)
+        private static readonly object _sync = new();
+
+        public static void Initialize()
         {
             if (_initialized)
                 return;
 
+            lock (_sync)
+            {
+                if (_initialized)
+                    return;
+
 #if DEBUG
-            EnableInternalDiagnostics();
+                EnableInternalDiagnostics();
 #endif
 
-            SetupGlobalContext();
-            
-            LoadConfiguration();
+                SetupGlobalContext();
 
-            _initialized = true;
+                LoadConfiguration();
+
+                _initialized = true;
+            }
+
         }
 
-    }
-
-    /// <summary>
-    /// Setups the global context.
-    /// </summary>
-    private static void SetupGlobalContext()
-    {
-    }
-
-    /// <summary>
-    /// Enables the internal diagnostics.
-    /// </summary>
-    /// <param name="message">The message.</param>
-    /// <param name="ex">The ex.</param>
-    private static void EnableInternalDiagnostics(string message = "", Exception? ex = null)
-    {
-
-        // --- Internal log ---
-        InternalLogger.LogWriter = new DebugTextWriter();//output VS
-        InternalLogger.LogLevel = LogLevel.Warn;
-        InternalLogger.LogFile = Path.Combine(LoaderEnvironment.AppDataProductLogPath,"internal.log");
-        InternalLogger.LogToConsole = true;
-        LogManager.ThrowExceptions = false;
-        LogManager.ThrowConfigExceptions = true;
-
-    }
-
-    /// <summary>
-    /// Loads the configuration.
-    /// </summary>
-    [Obsolete]
-    private static void LoadConfiguration()
-    {
-
-
-        LoggingConfiguration config = new LoggingConfiguration();
-
-        // =========================
-        // Variables
-        // =========================
-        config.Variables["LevelMay"] = "Trace";
-        config.Variables["maxArchiveFiles"] = "10";
-        config.Variables["archiveAboveSize"] = "5242880";
-
-        // =========================
-        // Targets (async=true)
-        // =========================
-
-        // ---------- XML Loader ----------
-        FileTarget xmlFileLoader = new FileTarget("xmlFileLoader")
+        /// <summary>
+        /// Setups the global context.
+        /// </summary>
+        private static void SetupGlobalContext()
         {
-            FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.log",
-            ArchiveEvery = FileArchivePeriod.Day,
-            ArchiveAboveSize = 5242880,
-            ArchiveNumbering = "Rolling",
-            ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.{#}.log",
-            MaxArchiveFiles = 10,
-            KeepFileOpen = false,
-            Layout = new XmlLayout
+        }
+
+        /// <summary>
+        /// Enables the internal diagnostics.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="ex">The ex.</param>
+        private static void EnableInternalDiagnostics(string message = "", Exception? ex = null)
+        {
+
+            // --- Internal log ---
+            InternalLogger.LogWriter = new DebugTextWriter();//output VS
+            InternalLogger.LogLevel = LogLevel.Warn;
+            InternalLogger.LogFile = Path.Combine(LoaderEnvironment.AppDataProductLogPath, "internal.log");
+            InternalLogger.LogToConsole = true;
+            LogManager.ThrowExceptions = false;
+            LogManager.ThrowConfigExceptions = true;
+
+        }
+
+        /// <summary>
+        /// Loads the configuration.
+        /// </summary>
+        [Obsolete]
+        private static void LoadConfiguration()
+        {
+
+
+            LoggingConfiguration config = new LoggingConfiguration();
+
+            // =========================
+            // Variables
+            // =========================
+            config.Variables["LevelMay"] = "Trace";
+            config.Variables["maxArchiveFiles"] = "10";
+            config.Variables["archiveAboveSize"] = "5242880";
+
+            // =========================
+            // Targets (async=true)
+            // =========================
+
+            // ---------- XML Loader ----------
+            FileTarget xmlFileLoader = new FileTarget("xmlFileLoader")
             {
-                IncludeEventProperties = true,
-                IndentXml = true,
-                MaxRecursionLimit = 10,
-                ElementName = "logevent",
-                Attributes =
+                FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.log",
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveAboveSize = 5242880,
+                ArchiveNumbering = "Rolling",
+                ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Loader.{#}.log",
+                MaxArchiveFiles = 10,
+                KeepFileOpen = false,
+                Layout = new XmlLayout
+                {
+                    IncludeEventProperties = true,
+                    IndentXml = true,
+                    MaxRecursionLimit = 10,
+                    ElementName = "logevent",
+                    Attributes =
                 {
                     new XmlAttribute("time", "${longdate}"),
                     new XmlAttribute("level", "${level:upperCase=true}"),
                     new XmlAttribute("logger", "${logger}")
                 },
-                Elements =
+                    Elements =
                 {
                     new XmlElement("message", "${message}"),
                     new XmlElement("error", "${exception:format=ToString}")
                 }
-            }
-        };
+                }
+            };
 
-        // ---------- XML Adapter ----------
-        FileTarget xmlFileAdapter = new FileTarget("xmlFileAdapter")
-        {
-            FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.log",
-            ArchiveEvery = FileArchivePeriod.Day,
-            ArchiveAboveSize = 5242880,
-            ArchiveNumbering = "Rolling",
-            ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.{#}.log",
-            MaxArchiveFiles = 10,
-            KeepFileOpen = false,
-            Layout = xmlFileLoader.Layout
-        };
-
-        // ---------- CSV All ----------
-        FileTarget csvFileAll = new FileTarget("csvFileAll")
-        {
-            FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_All.log",
-            Layout = new CsvLayout
+            // ---------- XML Adapter ----------
+            FileTarget xmlFileAdapter = new FileTarget("xmlFileAdapter")
             {
-                Delimiter = CsvColumnDelimiterMode /*CsvColumnDelimiter*/.Tab,
-                WithHeader = true,
-                Quoting = CsvQuotingMode.All,
-                Columns =
+                FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.log",
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveAboveSize = 5242880,
+                ArchiveNumbering = "Rolling",
+                ArchiveFileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_Adapter.{#}.log",
+                MaxArchiveFiles = 10,
+                KeepFileOpen = false,
+                Layout = xmlFileLoader.Layout
+            };
+
+            // ---------- CSV All ----------
+            FileTarget csvFileAll = new FileTarget("csvFileAll")
+            {
+                FileName = "${gdc:LogsDir}/${date:universalTime=true:format=yyyy-MM-dd HH}_${gdc:AppName}_All.log",
+                Layout = new CsvLayout
+                {
+                    Delimiter = CsvColumnDelimiterMode /*CsvColumnDelimiter*/.Tab,
+                    WithHeader = true,
+                    Quoting = CsvQuotingMode.All,
+                    Columns =
                 {
                     new CsvColumn("time", "${longdate}"),
                     new CsvColumn("level", "${level:upperCase=true}"),
@@ -149,40 +152,41 @@ public static class LogBootstrapLoader
                     new CsvColumn("prop1", "${event-properties:prop1}"),
                     new CsvColumn("prop2", "${event-properties:prop2}")
                 }
-            }
-        };
+                }
+            };
 
-        // ---------- Debug logfile ----------
-        FileTarget logfile = new FileTarget("logfile")
-        {
-            FileName = "${nlogdir:dir=logs}/${gdc:DateCreate}_${gdc:Caller}_${processname}.log"
-        };
+            // ---------- Debug logfile ----------
+            FileTarget logfile = new FileTarget("logfile")
+            {
+                FileName = "${nlogdir:dir=logs}/${gdc:DateCreate}_${gdc:Caller}_${processname}.log"
+            };
 
-        // Оборачиваем в Async
-        config.AddTarget(new AsyncTargetWrapper(xmlFileLoader));
-        config.AddTarget(new AsyncTargetWrapper(xmlFileAdapter));
-        config.AddTarget(new AsyncTargetWrapper(csvFileAll));
-        config.AddTarget(new AsyncTargetWrapper(logfile));
+            // Оборачиваем в Async
+            config.AddTarget(new AsyncTargetWrapper(xmlFileLoader));
+            config.AddTarget(new AsyncTargetWrapper(xmlFileAdapter));
+            config.AddTarget(new AsyncTargetWrapper(csvFileAll));
+            config.AddTarget(new AsyncTargetWrapper(logfile));
 
-        // =========================
-        // Rules
-        // =========================
+            // =========================
+            // Rules
+            // =========================
 
-        LogLevel minLevel = LogLevel.FromString(config.Variables["LevelMay"].ToString());
+            LogLevel minLevel = LogLevel.FromString(config.Variables["LevelMay"].ToString());
 
-        config.LoggingRules.Add(new LoggingRule("*", minLevel, logfile));
-        config.LoggingRules.Add(new LoggingRule("*", minLevel, csvFileAll));
+            config.LoggingRules.Add(new LoggingRule("*", minLevel, logfile));
+            config.LoggingRules.Add(new LoggingRule("*", minLevel, csvFileAll));
 
-        LoggingRule loaderRule = new LoggingRule("dRz.Loader*", minLevel, xmlFileLoader)
-        {
-            Final = true
-        };
-        config.LoggingRules.Add(loaderRule);
+            LoggingRule loaderRule = new LoggingRule("dRz.Loader*", minLevel, xmlFileLoader)
+            {
+                Final = true
+            };
+            config.LoggingRules.Add(loaderRule);
 
-        config.LoggingRules.Add(new LoggingRule("*", minLevel, xmlFileAdapter));
+            config.LoggingRules.Add(new LoggingRule("*", minLevel, xmlFileAdapter));
 
-        LogManager.Configuration = config;
+            LogManager.Configuration = config;
 
-        _initialized = true;
+            _initialized = true;
+        }
     }
 }

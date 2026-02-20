@@ -6,9 +6,9 @@ using System.IO;
 using System.Reflection;
 
 //todo только для отладки загрузки nlog конфигурации
-// скопировать в drz.Cad.Cad.InternalDiagnostic
+// скопировать в drz.nCad.nCad.InternalDiagnostic
 
-namespace dRz.Loader.Cad.Infrastructure.InternalDiagnostic
+namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {

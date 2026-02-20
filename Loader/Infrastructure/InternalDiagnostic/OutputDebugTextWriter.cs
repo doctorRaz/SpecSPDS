@@ -2,27 +2,28 @@
 using System.IO;
 using System.Text;
 
-//todo только для отладки загрузки nlog конфигурации
-// скопировать в drz.Cad.Cad.InternalDiagnostic
-
-namespace dRz.Loader.Cad.Infrastructure.InternalDiagnostic
+namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
 {
+
+    //public static partial class LogBootstrap
+    //{
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!
     /// </summary>
     /// <seealso cref="TextWriter" />
-    sealed class DebugTextWriter : TextWriter
+    sealed class OutputDebugTextWriter : TextWriter
     {
         public override Encoding Encoding => Encoding.UTF8;
 
         public override void WriteLine(string? value)
         {
-            Debug.WriteLine(value);
+            Debug.WriteLine("[NLog] " + value);
         }
 
         public override void Write(string? value)
         {
-            Debug.Write(value);
+            Debug.Write("[NLog] " + value);
         }
     }
 }
+//}

@@ -5,7 +5,7 @@ using System.Reflection;
 using NLog;
 using NLog.Common;
 
-namespace dRz.Loader.Cad.Infrastructure.Bootstrap
+namespace dRz.Loader.nCad.Infrastructure.Bootstrap
 {
        //todo рабочий код от бота, надо допилить конфиг из xml
 

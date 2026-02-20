@@ -1,4 +1,4 @@
-﻿namespace dRz.SpecSPDS.Cad.Commands._experimental
+﻿namespace dRz.SpecSPDS.nCad.Commands._experimental
 {
 
     /// <summary>

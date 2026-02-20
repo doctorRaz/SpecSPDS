@@ -7,7 +7,7 @@ using Multicad.Symbols;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dRz.SpecSPDS.Cad.Commands.Test
+namespace dRz.SpecSPDS.nCad.Commands.Test
 {
     //подгон от крыса
     public class NamedProperties

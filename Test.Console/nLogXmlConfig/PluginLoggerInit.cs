@@ -4,37 +4,41 @@ using NLog.Layouts;
 using NLog.Targets;
 using System.IO;
 
-/// <summary>
-/// Загрузка пути напрямую в target 
-/// </summary>
-public static class PluginLoggerInit
+namespace dRz.SpecSpds.Test.nLogXmlConfig
 {
-    private static bool _initialized;
 
-    public static void Init(string pluginAssemblyPath)
+    /// <summary>
+    /// Загрузка пути напрямую в target 
+    /// </summary>
+    public static class PluginLoggerInit
     {
-        if (_initialized)
-            return;
+        private static bool _initialized;
 
-        _initialized = true;
+        public static void Init(string pluginAssemblyPath)
+        {
+            if (_initialized)
+                return;
 
-        LogFactory config = LogManager.LoadConfiguration("NLog.config");
+            _initialized = true;
 
-        FileTarget? fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
+            LogFactory config = LogManager.LoadConfiguration("NLog.config");
 
-        // Каталог логов рядом с DLL плагина
-        string pluginDir = Path.GetDirectoryName(pluginAssemblyPath);
-        string logDir = Path.Combine(pluginDir, "logs");
+            FileTarget? fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
 
-        Directory.CreateDirectory(logDir);
+            // Каталог логов рядом с DLL плагина
+            string pluginDir = Path.GetDirectoryName(pluginAssemblyPath);
+            string logDir = Path.Combine(pluginDir, "logs");
 
-        // Часть имени файла — имя плагина
-        string namePart = Path.GetFileNameWithoutExtension(pluginAssemblyPath);
+            Directory.CreateDirectory(logDir);
 
-        fileTarget.FileName = Layout.FromString(
-            $@"{logDir}\${{shortdate}}_{namePart}.log"
-        );
+            // Часть имени файла — имя плагина
+            string namePart = Path.GetFileNameWithoutExtension(pluginAssemblyPath);
 
-        LogManager.ReconfigExistingLoggers();
+            fileTarget.FileName = Layout.FromString(
+                $@"{logDir}\${{shortdate}}_{namePart}.log"
+            );
+
+            LogManager.ReconfigExistingLoggers();
+        }
     }
 }

@@ -5,7 +5,7 @@ using Multicad.Symbols;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace dRz.SpecSPDS.Cad.Commands.Test
+namespace dRz.SpecSPDS.nCad.Commands.Test
 {
     //test скорости сбора свойств
     internal class ExtractAllProperties

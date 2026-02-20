@@ -1,11 +1,10 @@
-﻿using dRz.Loader.nCad.Infrastructure;
-using NLog;
+﻿using NLog;
 using NLog.Common;
 using System;
 using System.Globalization;
 using System.IO;
 
-namespace dRz.SpecSpds.Test.nLogProgConfig
+namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
 {
     internal static class InternalLoggerHelpers
     {

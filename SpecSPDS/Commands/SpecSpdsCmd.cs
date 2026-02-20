@@ -1,5 +1,5 @@
-﻿using dRz.SpecSPDS.Cad.CadServices;
-using dRz.SpecSPDS.Cad.Services;
+﻿using dRz.SpecSPDS.nCad.CadServices;
+using dRz.SpecSPDS.nCad.Services;
 using dRz.SpecSPDS.Core.Enums;
 using dRz.SpecSPDS.Core.Extensions;
 using dRz.SpecSPDS.Core.Models;
@@ -13,7 +13,7 @@ using System.ComponentModel;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.Cad.Commands
+namespace dRz.SpecSPDS.nCad.Commands
 {
     /// <summary>
     /// получение маркеров.. выбором с пространства с документа с нескольких документов 

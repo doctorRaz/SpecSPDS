@@ -9,13 +9,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using NLog;
-using dRz.Loader.Cad;
+using dRz.Loader.nCad;
 using System.ComponentModel;
-using dRz.Loader.Cad.Infrastructure;
-using dRz.Loader.Cad.Infrastructure.Bootstrap;
-using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+using dRz.Loader.nCad.Infrastructure;
+using dRz.Loader.nCad.Infrastructure.Bootstrap;
+using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
 using System.Globalization;
 using System.Diagnostics;
+using dRz.Loader.nCad.Interfaces;
+using dRz.Loader.nCad.Services;
+
+
+
 
 
 
@@ -36,7 +41,7 @@ using Rtm = Teigha.Runtime;
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.Loader.Cad
+namespace dRz.Loader.nCad
 {
 
     /// <summary>
@@ -51,6 +56,8 @@ namespace dRz.Loader.Cad
     };
 
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
+
+        private IMessageService msg = new MessageService();
 
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
@@ -67,23 +74,27 @@ namespace dRz.Loader.Cad
             try
             {
                 //nlog
+
+                //LogBootstrap.Initialize();
                 InitLoger();
 
                 //load adapter
-                InitLoader();
+                CadLoading();
             }
             // ошибка инициализации, все развалилось, лог смысла не имеет
             catch (Exception ex)
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
+                //Document doc = Application.DocumentManager.MdiActiveDocument;
+                //if (doc == null)
+                //{
+                //    return;
+                //}
 
-                Editor ed = doc.Editor;
+                //Editor ed = doc.Editor;
 
-                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+
+               msg.ExceptionMessage(ex);
             }
         }
 
@@ -91,63 +102,30 @@ namespace dRz.Loader.Cad
         {
             try
             {
-                var root = new LoaderEnvironment();
+                LogBootstrap.Initialize();
 
-#if DEBUG
-
-                Debug.WriteLine("hash "+LogManager.LogFactory.GetHashCode());
-
-                //чисто для диагностики ручное включение
-                new InternalLoggerDiagnostic("Internal logger manual DEBUG");
-
-                //дата лога до секунды, во время сеанса не меняем
-                string logTimestamp = $"{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture)}";
-
-                GlobalDiagnosticsContext.Set("DateCreate", logTimestamp);
-
-#endif
-
-                //setup GDC путь, имя файла 
-
-
-
-                //если лог конфиг не загрузился сам грузим руками
-                if (LogManager.Configuration is null)
-                {
-                    //пытаемся грузить принудительно
-                    new LogBootstrap();
-
-                    //если конфиг не нашелся и не загрузился
-                    if (LogManager.Configuration is null)
-                    {
-                        //включим диагностику eсли выключена
-                        new InternalLoggerDiagnostic("LogManager empty Configuration");
-
-                        //дальше пишем внутренний лог
-                    }
-                }
-
-                log.Info("Logger started");
+                //log.Info("Logger started");
             }
             catch (Exception ex)
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
+                //Document doc = Application.DocumentManager.MdiActiveDocument;
+                //if (doc == null)
+                //{
+                //    return;
+                //}
 
-                Editor ed = doc.Editor;
+                //Editor ed = doc.Editor;
 
-                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+
+               msg.ExceptionMessage(ex);
             }
         }
 
-        private void InitLoader()
+        private void CadLoading()
         {
             try
             {
-
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
                 // соответствующую ей версию файла. Имя такого файла должно 
                 // формироваться по правилу: 
@@ -166,34 +144,36 @@ namespace dRz.Loader.Cad
 
                 if (targetDllFullName == null)
                 {
-                    string msg = $"Не найден подходящий адаптер для CAD {version.ToString()}";
+                    string mesag = $"Не найден подходящий адаптер для CAD {version.ToString()}";
 
-                    log.Error($"{msg}");
+                    log.Error($"{mesag}");
 
                     //не найден хуже не будет, сообщаем об этом пользователю
-                    Document doc = Application.DocumentManager.MdiActiveDocument;
-                    if (doc == null)
-                    {
-                        return;
-                    }
+                    //Document doc = Application.DocumentManager.MdiActiveDocument;
+                    //if (doc == null)
+                    //{
+                    //    return;
+                    //}
 
-                    Editor ed = doc.Editor;
+                    //Editor ed = doc.Editor;
 
-                    ed.WriteMessage($"{msg}");
+                    //ed.WriteMessage($"{mesag}");
+                    msg.ConsoleMessage($"{mesag}");
 
                     return;
                 }
 
-                log.Info($"Loading CAD adapter: {targetDllFullName}");
+                log.Info($"CadLoading CAD adapter: {targetDllFullName}");
 
                 // Если найден файл, соответствующий нашей версии AutoCAD, то 
                 // загружаем его.
                 Assembly? asm = null;
                 try
                 {
-                    if (targetDllFullName.Extension.Equals(netPluginExtension,
-                      StringComparison.CurrentCultureIgnoreCase))
+                    if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         asm = Assembly.LoadFrom(targetDllFullName.FullName);
+                    }
                     else
                     {
                         int index = Array.IndexOf(extensions, targetDllFullName.Extension);
@@ -218,15 +198,16 @@ namespace dRz.Loader.Cad
             }
             catch (Exception ex)
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
+                //Document doc = Application.DocumentManager.MdiActiveDocument;
+                //if (doc == null)
+                //{
+                //    return;
+                //}
 
-                Editor ed = doc.Editor;
+                //Editor ed = doc.Editor;
 
-                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                msg.ExceptionMessage(ex);
             }
 
 

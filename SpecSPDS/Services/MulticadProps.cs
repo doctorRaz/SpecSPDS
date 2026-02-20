@@ -13,7 +13,7 @@ using System.Linq;
 //using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace dRz.SpecSPDS.Cad.Services
+namespace dRz.SpecSPDS.nCad.Services
 {
     /// <summary>
     /// получаем универсальный маркер

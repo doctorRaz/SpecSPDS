@@ -1,5 +1,5 @@
-﻿using dRz.Loader.Cad.Infrastructure.Bootstrap;
-using dRz.Loader.Cad.Infrastructure.InternalDiagnostic;
+﻿using dRz.Loader.nCad.Infrastructure.Bootstrap;
+using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
 using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;
