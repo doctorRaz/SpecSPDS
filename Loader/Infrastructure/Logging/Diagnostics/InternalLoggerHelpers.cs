@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using System.IO;
 
-namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
+namespace dRz.Loader.nCad.Infrastructure.Logging.Diagnostics
 {
     internal static class InternalLoggerHelpers
     {

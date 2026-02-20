@@ -1,4 +1,4 @@
-﻿using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
+﻿using dRz.Loader.nCad.Infrastructure.Logging.Diagnostics;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
 using HostMgd.ApplicationServices;
@@ -12,18 +12,18 @@ using System;
 using System.IO;
 using System.Net.Configuration;
 
-namespace dRz.Loader.nCad.Infrastructure.Bootstrap
+namespace dRz.Loader.nCad.Infrastructure.Logging
 {
     /// <summary>
     /// 
     /// </summary>
-    public static /*partial*/ class LogBootstrap
+    internal static /*partial*/ class LogBootstrap
     {
 
         /// <summary>
         /// Initializes this instance.
         /// </summary>
-        public static void Initialize()
+        internal static void Initialize()
         {
 
             /*private*/

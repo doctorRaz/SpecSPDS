@@ -1,9 +1,8 @@
-﻿using dRz.Loader.nCad.Infrastructure;
-using NLog;
+﻿using NLog;
 using System;
 using System.Globalization;
 
-namespace dRz.Loader.nCad.Infrastructure.Bootstrap;
+namespace dRz.Loader.nCad.Infrastructure.Logging;
 
 internal static class SetupGlobalContextHelpers
 {

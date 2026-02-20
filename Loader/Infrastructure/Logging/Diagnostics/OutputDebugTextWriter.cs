@@ -2,16 +2,13 @@
 using System.IO;
 using System.Text;
 
-namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
+namespace dRz.Loader.nCad.Infrastructure.Logging.Diagnostics
 {
-
-    //public static partial class LogBootstrap
-    //{
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!
     /// </summary>
     /// <seealso cref="TextWriter" />
-    sealed class OutputDebugTextWriter : TextWriter
+    public sealed class OutputDebugTextWriter : TextWriter
     {
         public override Encoding Encoding => Encoding.UTF8;
 

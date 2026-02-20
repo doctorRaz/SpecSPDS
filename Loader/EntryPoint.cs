@@ -11,20 +11,9 @@ using System.Reflection;
 using NLog;
 using dRz.Loader.nCad;
 using System.ComponentModel;
-using dRz.Loader.nCad.Infrastructure;
-using dRz.Loader.nCad.Infrastructure.Bootstrap;
-using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
-using System.Globalization;
-using System.Diagnostics;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
-
-
-
-
-
-
-
+using dRz.Loader.nCad.Infrastructure.Logging;
 
 
 #if AC
@@ -34,7 +23,6 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 #elif NC
 
 using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 
 #endif
@@ -48,7 +36,7 @@ namespace dRz.Loader.nCad
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
     /// </summary>
-    public sealed class EntryPoint : Rtm.IExtensionApplication
+    internal sealed class EntryPoint : Rtm.IExtensionApplication
     {
         const string netPluginExtension = ".dll";
         static readonly string[] extensions = new string[] { ".arx", ".dvb" };

@@ -19,7 +19,7 @@
 		<None Remove="_Draft\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427"/>
+		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
 		<PackageReference Include="NLog" Version="6.0.7" />
 	</ItemGroup>
 </Project>
