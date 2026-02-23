@@ -14,6 +14,8 @@ using System.ComponentModel;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
 using dRz.Loader.nCad.Infrastructure.Logging;
+using dRz.Loader.nCad.Infrastructure;
+
 
 
 #if AC
@@ -70,17 +72,7 @@ namespace dRz.Loader.nCad
             // ошибка инициализации, все развалилось, лог смысла не имеет
             catch (Exception ex)
             {
-                //Document doc = Application.DocumentManager.MdiActiveDocument;
-                //if (doc == null)
-                //{
-                //    return;
-                //}
-
-                //Editor ed = doc.Editor;
-
-                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
-
-               msg.ExceptionMessage(ex);
+                msg.ExceptionMessage(ex);
             }
         }
 
@@ -90,21 +82,12 @@ namespace dRz.Loader.nCad
             {
                 LogBootstrap.Initialize();
 
-                //log.Info("Logger started");
+                log.Info("Logger started");
             }
             catch (Exception ex)
             {
-                //Document doc = Application.DocumentManager.MdiActiveDocument;
-                //if (doc == null)
-                //{
-                //    return;
-                //}
 
-                //Editor ed = doc.Editor;
-
-                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
-
-               msg.ExceptionMessage(ex);
+                msg.ExceptionMessage(ex);
             }
         }
 
@@ -184,15 +167,6 @@ namespace dRz.Loader.nCad
             }
             catch (Exception ex)
             {
-                //Document doc = Application.DocumentManager.MdiActiveDocument;
-                //if (doc == null)
-                //{
-                //    return;
-                //}
-
-                //Editor ed = doc.Editor;
-
-                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
                 msg.ExceptionMessage(ex);
             }
 
@@ -331,9 +305,12 @@ namespace dRz.Loader.nCad
         /// </summary>
         public void Terminate()
         {
-
-            log.Info("LogManager.Shutdown");
-            LogManager.Shutdown();
+            try
+            {
+                log.Info("LogManager.Shutdown");
+                LogManager.Shutdown();
+            }
+            catch { }
         }
     }
 }

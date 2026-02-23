@@ -51,15 +51,7 @@ namespace dRz.Loader.nCad.Infrastructure.Logging
             }
             catch (Exception ex)
             {
-                //Document doc = Application.DocumentManager.MdiActiveDocument;
-                //if (doc == null)
-                //{
-                //    return;
-                //}
-
-                //Editor ed = doc.Editor;
-
-                //ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+           
                 msg.ExceptionMessage(ex);
             }
         }
