@@ -4,70 +4,108 @@ using System.Reflection;
 
 namespace dRz.Loader.nCad.Infrastructure
 {
-    public class LoaderEnvironment
+    /// <summary>
+    /// Runtime environment for loader assembly.
+    /// Immutable static context.
+    /// </summary>
+    public static class LoaderEnvironment
     {
-        //************ зависит от порядка свойств!!!! *************
+
+
+        static LoaderEnvironment()
+        {
+            Assembly assembly = typeof(LoaderEnvironment).Assembly;
+
+            AssemblyPath = assembly.Location;
+            AssemblyDirectory = Path.GetDirectoryName(AssemblyPath)!;
+            FileName = Path.GetFileNameWithoutExtension(AssemblyPath);
+
+            ProductName =
+                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
+                ?? ExtractProductPrefix(FileName);
+
+            ProductTitle =
+                assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
+                ?? FileName;
+
+            AppDataProductPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                ProductName);
+
+            AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
+
+            NLogConfigPath = Path.Combine(AssemblyDirectory, _nLogConfigFileName);
+        }
+
+        // -------------------- Public API --------------------
+             
 
         /// <summary>
-        /// Сборка — дешево
+        /// Gets the assembly path.
         /// </summary>
-        private static readonly Assembly _assembly = typeof(LoaderEnvironment).Assembly;
+        /// <value>
+        /// The assembly path.
+        /// </value>
+        public static string AssemblyPath { get; }
 
         /// <summary>
-        /// Полный путь к DLL — дешево
+        /// Gets the assembly directory.
         /// </summary>
-        private static readonly string _assemblyPath = _assembly.Location;
+        /// <value>
+        /// The assembly directory.
+        /// </value>
+        public static string AssemblyDirectory { get; }
 
         /// <summary>
-        /// Папка сборки
+        /// Gets the name of the file.
         /// </summary>
-        public static readonly string AssemblyDirectory = Path.GetDirectoryName(_assemblyPath)!;
+        /// <value>
+        /// The name of the file.
+        /// </value>
+        public static string FileName { get; }
 
         /// <summary>
-        /// Имя файла без расширения (Specspds.ncad)
+        /// Gets the name of the product.
         /// </summary>
-        public static readonly string FileName = Path.GetFileNameWithoutExtension(_assemblyPath);
+        /// <value>
+        /// The name of the product.
+        /// </value>
+        public static string ProductName { get; }
 
         /// <summary>
-        /// Название продукта <br/>
-        /// AssemblyProductAttribute & префикс имени файла, если атрибута нет
+        /// Gets the product title.
         /// </summary>
-        public static readonly string ProductName = _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
-                                                    ?? ExtractProductPrefix(FileName);
-
-        public static readonly string ProductTitle = _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
-                                            ?? FileName;
+        /// <value>
+        /// The product title.
+        /// </value>
+        public static string ProductTitle { get; }
 
         /// <summary>
-        /// %AppData%\ProductName
+        /// Gets the application data product path.
         /// </summary>
-        public static readonly string AppDataProductPath =
-                                                        Path.Combine(
-                                                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                                        ProductName);
+        /// <value>
+        /// The application data product path.
+        /// </value>
+        public static string AppDataProductPath { get; }
 
         /// <summary>
-        /// %AppData%\ProductName\Logs
+        /// Gets the application data product log path.
         /// </summary>
-        public static readonly string AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
-
-        public static readonly string NLogConfigPath = Path.Combine(AssemblyDirectory, _nLogConfigFileName);
-
-        //----------------------------
+        /// <value>
+        /// The application data product log path.
+        /// </value>
+        public static string AppDataProductLogPath { get; }
 
         /// <summary>
-        /// имя лог файла
+        /// Gets the n log configuration path.
         /// </summary>
-        //private const string _nLogConfigFileName = "NLog.dll.nlog";
-        private const string _nLogConfigFileName = "NLog.dll.test.nlog";
+        /// <value>
+        /// The n log configuration path.
+        /// </value>
+        public static string NLogConfigPath { get; }
 
-        // -------------------------
+        // -------------------- Helpers --------------------
 
-        /// <summary>
-        /// Extracts the product prefix.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
         private static string ExtractProductPrefix(string fileName)
         {
             int dotIndex = fileName.IndexOf('.');
@@ -75,5 +113,7 @@ namespace dRz.Loader.nCad.Infrastructure
                 ? fileName.Substring(0, dotIndex)
                 : fileName;
         }
+
+        private const string _nLogConfigFileName = "NLog.dll.test.nlog";
     }
 }

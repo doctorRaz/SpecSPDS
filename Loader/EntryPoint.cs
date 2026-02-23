@@ -62,8 +62,6 @@ namespace dRz.Loader.nCad
             try
             {
                 //nlog
-
-                //LogBootstrap.Initialize();
                 InitLoger();
 
                 //load adapter

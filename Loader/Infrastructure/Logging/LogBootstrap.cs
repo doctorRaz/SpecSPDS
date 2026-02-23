@@ -73,8 +73,6 @@ namespace dRz.Loader.nCad.Infrastructure.Logging
 
             string productTitle = LoaderEnvironment.ProductTitle;
 
-            LogManager.Configuration = null;
-
             LoggingConfiguration config = new LoggingConfiguration();
 
             LogLevel level = ReadLogLevelOnce();
