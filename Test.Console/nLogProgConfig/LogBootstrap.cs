@@ -50,7 +50,7 @@ namespace dRz.SpecSpds
 
             string productTitle = LoaderEnvironment.ProductTitle;
 
-            LogManager.Configuration = null;
+            //LogManager.Configuration = null;
 
             LoggingConfiguration config = new LoggingConfiguration();
             LogLevel level = ReadLogLevelOnce();
@@ -106,7 +106,7 @@ namespace dRz.SpecSpds
         {
             // в релизе уровень Error если не переопределено файлом loglevel.txt
 #if DEBUG
-            LogLevel LevelDefault = LogLevel.Debug;
+            LogLevel LevelDefault = LogLevel.Trace;
 #else
         LogLevel LevelDefault=LogLevel.Error;
 #endif

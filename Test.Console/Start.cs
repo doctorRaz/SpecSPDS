@@ -40,8 +40,8 @@ namespace dRz.SpecSpds.Test
         static void Main(string[] args)
         {
             string f = LoaderEnvironment.ProductName;
-            LoaderEnvironment ff = new LoaderEnvironment();
-
+            string f1 = LoaderEnvironment.ProductTitle;
+         
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             LogBootstrap.Initialize();
@@ -59,7 +59,7 @@ namespace dRz.SpecSpds.Test
 
             LogDebugCore loggebCore = new LogDebugCore();
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 1; i++)
             {
                 logDebug.Test();
                 loggebCore.Test();
