@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.ComponentModel;
 
 
-
 #if AC
 
 using Rtm = Autodesk.AutoCAD.Runtime;
@@ -23,7 +22,7 @@ using Rtm = Teigha.Runtime;
 
 namespace dRz.SpecSPDS.nCad
 {
-    public class EntryPoint : Rtm.IExtensionApplication
+    public partial class EntryPoint : Rtm.IExtensionApplication
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -36,13 +35,16 @@ namespace dRz.SpecSPDS.nCad
             //если нет библиотек или еще какой косяк
             try
             {
+                             
+                AsmEventAdd();//add  event Assembly resolve  
+
                 InitLoger();
 
                 InitAdapter();
             }
             catch (Exception ex)
             {
-                Document doc = App. DocumentManager.MdiActiveDocument;
+                Document doc = App.DocumentManager.MdiActiveDocument;
                 if (doc == null)
                 {
                     return;
