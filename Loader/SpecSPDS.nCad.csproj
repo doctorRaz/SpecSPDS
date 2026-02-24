@@ -6,7 +6,7 @@
 		<RootNamespace>dRz.Loader.nCad</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей SpecSPDS под версию CAD</Description>
 		<AssemblyTitle>SpecSPDS.Loader</AssemblyTitle>
@@ -20,7 +20,8 @@
 		<None Remove="_Draft\**" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
-		<PackageReference Include="NLog" Version="6.0.7" />
+		<!--<PackageReference Include="NLog" Version="6.0.7" />-->
 	</ItemGroup>
 </Project>

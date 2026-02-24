@@ -65,7 +65,7 @@ namespace dRz.Loader.nCad
             try
             {
                 AssemblyResolver resolver = new AssemblyResolver();
-                
+
                 // Подписка на событие AssemblyResolve
                 resolver.Register();
 
@@ -122,16 +122,6 @@ namespace dRz.Loader.nCad
 
                     log.Error($"{mesag}");
 
-                    //не найден хуже не будет, сообщаем об этом пользователю
-                    //Document doc = Application.DocumentManager.MdiActiveDocument;
-                    //if (doc == null)
-                    //{
-                    //    return;
-                    //}
-
-                    //Editor ed = doc.Editor;
-
-                    //ed.WriteMessage($"{mesag}");
                     msg.ConsoleMessage($"{mesag}");
 
                     return;
@@ -174,8 +164,6 @@ namespace dRz.Loader.nCad
             {
                 msg.ExceptionMessage(ex);
             }
-
-
         }
 
         /// <summary>
@@ -199,30 +187,23 @@ namespace dRz.Loader.nCad
                 throw new ArgumentNullException("fileFullName");
 
             if (fileFullName.Trim() == string.Empty)
-                throw new ArgumentException(
-                  "fileFullName.Trim() == String.Empty");
+                throw new ArgumentException("fileFullName.Trim() == String.Empty");
 
             if (expectedVersion < minVersion)
-                throw new ArgumentException(
-                  "expectedVersion < minVersion");
+                throw new ArgumentException("expectedVersion < minVersion");
 
             int major = expectedVersion.Major;
-            //if (major != 26)
-            //{
-            //    major = 23;
-            //}
+
             int minor = expectedVersion.Minor;
 
             string? directory = Path.GetDirectoryName(fileFullName);
+
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-            string coreString = string.Format("{0}.{1}", major.ToString(),
-              minor.ToString());
-            //string coreString = string.Format("{0}", major.ToString());
+            string coreString = string.Format("{0}.{1}", major.ToString(), minor.ToString());
 
             string subDirectoryName = "R" + coreString;
-            string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4
-              ? "x86" : "x64");
+            string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4 ? "x86" : "x64");
 
             string targetFileName = string.Empty;
             string targetFileName_xPlatform = string.Empty;
@@ -237,10 +218,8 @@ namespace dRz.Loader.nCad
             foreach (string extension in items)
             {
 
-                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString,
-                  extension);
-                targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName,
-                  coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
+                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString, extension);
+                targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName, coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
 
                 // Сначала выполняем поиск в текущем каталоге
                 targetFileFullName = Path.Combine(directory, targetFileName);
@@ -249,8 +228,8 @@ namespace dRz.Loader.nCad
                     name = targetFileFullName;
                     break;
                 }
-                targetFileFullName_xPlatform = Path.Combine(directory,
-                  targetFileName_xPlatform);
+                targetFileFullName_xPlatform = Path.Combine(directory, targetFileName_xPlatform);
+
                 if (File.Exists(targetFileFullName_xPlatform))
                 {
                     name = targetFileFullName_xPlatform;
@@ -259,16 +238,15 @@ namespace dRz.Loader.nCad
 
                 // Если в текущем каталоге подходящий файл не найден, то продолжаем
                 // поиск по соответствующим подкаталогам
-                targetFileFullName = directory + "\\" + subDirectoryName +
-                  "\\" + targetFileName;
+                targetFileFullName = directory + "\\" + subDirectoryName + "\\" + targetFileName;
                 if (File.Exists(targetFileFullName))
                 {
                     name = targetFileFullName;
                     break;
                 }
 
-                targetFileFullName_xPlatform = directory + "\\" +
-                  subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
+                targetFileFullName_xPlatform = directory + "\\" + subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
+
                 if (File.Exists(targetFileFullName_xPlatform))
                 {
                     name = targetFileFullName_xPlatform;
@@ -297,10 +275,11 @@ namespace dRz.Loader.nCad
                 }
 
                 Version version = new Version(major, minor);
+
                 if (version < minVersion)
                     return null;
-                FileInfo file = FindFile(fileFullName, new Version(major, minor),
-                  minVersion);
+
+                FileInfo file = FindFile(fileFullName, new Version(major, minor), minVersion);
                 return file;
             }
         }

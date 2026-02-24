@@ -1,11 +1,11 @@
-﻿using dRz.Loader.nCad.Interfaces;
+﻿using dRz.SpecSPDS.nCad.Interfaces;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace dRz.Loader.nCad.Services
+namespace dRz.SpecSPDS.nCad.Services
 {
     internal class MessageService : IMessageService
     {
@@ -39,7 +39,7 @@ namespace dRz.Loader.nCad.Services
         /// </summary>
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
-        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
             //MessageBox.Show(message, _titlePrefix, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -51,7 +51,7 @@ namespace dRz.Loader.nCad.Services
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
@@ -61,7 +61,7 @@ namespace dRz.Loader.nCad.Services
         /// </summary>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ExceptionMessage(Exception ex, string message="", [CallerMemberName] string caller = null)
+        public void ExceptionMessage(Exception ex, string message="", [CallerMemberName] string? caller = null)
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)

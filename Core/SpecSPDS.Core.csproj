@@ -15,9 +15,10 @@
 		<AssemblyTitle>SpecSPDS.Core</AssemblyTitle>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="6.0.7"  >
-		 <Private>true</Private>
-		</PackageReference>
-		<PackageReference Include="WindowsAPICodePack" Version="7.0.4"   />
+		<!--<PackageReference Include="NLog" Version="6.0.7">-->
+		 <!--<Private>true</Private>-->
+		<!--</PackageReference>-->
+		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
-﻿using dRz.Loader.nCad.Interfaces;
-using dRz.Loader.nCad.Services;
+﻿using dRz.SpecSPDS.nCad.Interfaces;
+using dRz.SpecSPDS.nCad.Services;
 using System;
 using System.IO;
 using System.Linq;

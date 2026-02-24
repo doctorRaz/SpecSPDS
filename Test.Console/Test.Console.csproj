@@ -28,9 +28,10 @@
 		<Compile Include="..\Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="NLog" Version="6.0.7">
-			<!--<PrivateAssets>all</PrivateAssets>-->
-		</PackageReference>
+		<!--<PackageReference Include="NLog" Version="6.0.7">-->
+		<!--<PrivateAssets>all</PrivateAssets>-->
+		<!--</PackageReference>-->
+		<PackageReference Include="drzNLog" Version="1.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Core\SpecSPDS.Core.csproj" />

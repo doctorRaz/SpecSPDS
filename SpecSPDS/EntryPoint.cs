@@ -5,6 +5,10 @@ using dRz.SpecSPDS.Core.Bootstrap;
 using System.Diagnostics;
 using System.ComponentModel;
 using dRz.SpecSPDS.nCad.AssemblyResolve;
+using dRz.SpecSPDS.nCad.Interfaces;
+using dRz.SpecSPDS.nCad.Services;
+
+
 
 
 
@@ -28,6 +32,8 @@ namespace dRz.SpecSPDS.nCad
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
+        private IMessageService msg = new MessageService();
+
 #if DEBUG
         [Rtm.CommandMethod("инитАд")]
         [Description("ручной инит адаптера")]
@@ -38,8 +44,10 @@ namespace dRz.SpecSPDS.nCad
             try
             {
 
-                AssemblyResolver assembLyResolve = new AssemblyResolver();
-                assembLyResolve.Register();//add  event Assembly resolve  
+                AssemblyResolver resolver = new AssemblyResolver();
+
+                //add  event Assembly resolve  
+                resolver.Register();
 
                 InitLoger();
 
@@ -47,15 +55,8 @@ namespace dRz.SpecSPDS.nCad
             }
             catch (Exception ex)
             {
-                Document doc = App.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
 
-                Editor ed = doc.Editor;
-
-                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                msg.ExceptionMessage(ex);
             }
         }
 
@@ -63,15 +64,6 @@ namespace dRz.SpecSPDS.nCad
         {
             try
             {
-
-#if DEBUG
-                //разные фабрики
-                Debug.WriteLine(LogManager.LogFactory.GetHashCode());
-                //чисто для диагностики ручное включение
-                new InternalLoggerDiagnostic("Internal logger manual DEBUG");
-#endif
-
-                var conf = LogManager.Configuration;
 
                 //если лог конфиг не загрузился сам грузим руками
                 if (LogManager.Configuration is null)
@@ -94,21 +86,14 @@ namespace dRz.SpecSPDS.nCad
             }
             catch (Exception ex)
             {
-                Document doc = App.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
-
-                Editor ed = doc.Editor;
-
-                ed.WriteMessage($"{ex.Message}\n{ex.StackTrace}");
+                msg.ExceptionMessage(ex);
             }
         }
 
         private void InitAdapter()
         {
-            Loader.HelloSpec();
+            Loader loader = new Loader();
+            loader.HelloSpec();
         }
 
         public void Terminate()
@@ -121,17 +106,10 @@ namespace dRz.SpecSPDS.nCad
 
     class Loader
     {
-        internal static void HelloSpec()
+        private IMessageService msg = new MessageService();
+        internal void HelloSpec()
         {
-            Document doc = App.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                return;
-            }
-
-            Editor ed = doc.Editor;
-
-            ed.WriteMessage($"Hello SpecSPDS for nanoCAD {App.Version.Major.ToString()}.{App.Version.Minor.ToString()}");
+            msg.ConsoleMessage($"Hello SpecSPDS for nanoCAD {App.Version.Major.ToString()}.{App.Version.Minor.ToString()}");
         }
     }
 
