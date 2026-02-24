@@ -38,7 +38,7 @@ namespace dRz.Loader.nCad.Infrastructure
         }
 
         // -------------------- Public API --------------------
-             
+
 
         /// <summary>
         /// Gets the assembly path.

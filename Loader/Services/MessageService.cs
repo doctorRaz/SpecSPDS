@@ -9,7 +9,7 @@ namespace dRz.Loader.nCad.Services
 {
     internal class MessageService : IMessageService
     {
-        private const  string prefix = "\n";
+        private const string prefix = "\n";
         static MessageService()
         {
             Assembly assembly = typeof(MessageService).Assembly;
@@ -29,7 +29,7 @@ namespace dRz.Loader.nCad.Services
             {
                 return;
                 InfoMessage(message, caller);
-            }                        
+            }
 
             doc.Editor.WriteMessage(prefix + message);
         }
@@ -67,11 +67,11 @@ namespace dRz.Loader.nCad.Services
             if (doc == null)
             {
                 return;
-               
+
             }
-                        
+
             doc.Editor.WriteMessage($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
-                                   
+
             /*
             if (_handle != IntPtr.Zero)
             {

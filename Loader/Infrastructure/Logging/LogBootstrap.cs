@@ -1,8 +1,6 @@
 ﻿using dRz.Loader.nCad.Infrastructure.Logging.Diagnostics;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
@@ -10,7 +8,6 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
-using System.Net.Configuration;
 
 namespace dRz.Loader.nCad.Infrastructure.Logging
 {
@@ -47,11 +44,10 @@ namespace dRz.Loader.nCad.Infrastructure.Logging
                     _initialized = true;
                     LogManager.GetCurrentClassLogger().Info("Logger started");
                 }
-
             }
             catch (Exception ex)
             {
-           
+
                 msg.ExceptionMessage(ex);
             }
         }
