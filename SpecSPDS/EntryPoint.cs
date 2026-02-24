@@ -4,6 +4,8 @@ using System;
 using dRz.SpecSPDS.Core.Bootstrap;
 using System.Diagnostics;
 using System.ComponentModel;
+using dRz.SpecSPDS.nCad.AssemblyResolve;
+
 
 
 #if AC

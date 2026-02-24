@@ -14,7 +14,9 @@ using System.ComponentModel;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
 using dRz.Loader.nCad.Infrastructure.Logging;
-using dRz.SpecSPDS.nCad;
+using dRz.Loader.nCad.AssemblyResolve;
+
+
 
 
 #if AC

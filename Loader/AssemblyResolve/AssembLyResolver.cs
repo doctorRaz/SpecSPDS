@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace dRz.SpecSPDS.nCad.AssemblyResolve
+namespace dRz.Loader.nCad.AssemblyResolve
 {
     internal class AssemblyResolver
     {
@@ -126,13 +126,13 @@ namespace dRz.SpecSPDS.nCad.AssemblyResolve
             {
                 return Directory.GetFiles(path,
                                         serchPatern,
-                                        (withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                                        withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
                                         );
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex, $"Error searching files in {path}\n");
-               return Array.Empty<string>();
+                return Array.Empty<string>();
                 // return new string[0];
             }
         }
