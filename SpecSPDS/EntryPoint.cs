@@ -22,7 +22,7 @@ using Rtm = Teigha.Runtime;
 
 namespace dRz.SpecSPDS.nCad
 {
-    public partial class EntryPoint : Rtm.IExtensionApplication
+    public /*partial*/ class EntryPoint : Rtm.IExtensionApplication
     {
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
@@ -35,8 +35,9 @@ namespace dRz.SpecSPDS.nCad
             //если нет библиотек или еще какой косяк
             try
             {
-                             
-                AsmEventAdd();//add  event Assembly resolve  
+
+                AssembLyResolve assembLyResolve = new AssembLyResolve();
+                assembLyResolve.AsmEventAdd();//add  event Assembly resolve  
 
                 InitLoger();
 

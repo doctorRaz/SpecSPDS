@@ -6,7 +6,7 @@
 		<RootNamespace>dRz.SpecSPDS.nCad</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<UseWindowsForms>true</UseWindowsForms>
+		<UseWindowsForms>false</UseWindowsForms>
 		<UseWPF>true</UseWPF>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******************-->

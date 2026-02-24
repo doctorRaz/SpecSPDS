@@ -14,8 +14,7 @@ using System.ComponentModel;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
 using dRz.Loader.nCad.Infrastructure.Logging;
-using dRz.Loader.nCad.Infrastructure;
-
+using dRz.SpecSPDS.nCad;
 
 
 #if AC
@@ -63,6 +62,9 @@ namespace dRz.Loader.nCad
             //если нет библиотек или еще какой косяк
             try
             {
+                AssembLyResolve assembLyResolve = new AssembLyResolve();
+                assembLyResolve.AsmEventAdd();//add  event Assembly resolve  
+
                 //nlog
                 InitLoger();
 
@@ -82,7 +84,6 @@ namespace dRz.Loader.nCad
             {
                 LogBootstrap.Initialize();
 
-                log.Info("Logger started");
             }
             catch (Exception ex)
             {

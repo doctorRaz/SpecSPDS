@@ -8,7 +8,7 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<UseWindowsForms>true</UseWindowsForms>
 		<UseWPF>true</UseWPF>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<!--******************-->
 		<Description>Спецификация из универсального маркера, nanoCAD 26</Description>
 		<AssemblyTitle>SpecSPDS.NET.26</AssemblyTitle>

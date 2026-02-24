@@ -6,6 +6,7 @@
 		<RootNamespace>dRz.Loader.nCad</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей SpecSPDS под версию CAD</Description>
 		<AssemblyTitle>SpecSPDS.Loader</AssemblyTitle>
@@ -17,6 +18,9 @@
 		<Compile Remove="_Draft\**" />
 		<EmbeddedResource Remove="_Draft\**" />
 		<None Remove="_Draft\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Include="..\SpecSPDS\AssemblyResolve\AssembLyResolve.cs" Link="AssembLyResolve\AssembLyResolve.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />

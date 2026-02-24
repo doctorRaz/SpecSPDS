@@ -8,6 +8,7 @@
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>
 		<!--**********-->
 		<Description>SpecSPDS ядро</Description>

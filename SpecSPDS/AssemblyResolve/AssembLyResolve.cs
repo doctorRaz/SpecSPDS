@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.SpecSPDS.nCad
 {
-    public partial class EntryPoint /*: Rtm.IExtensionApplication*/
+    internal class AssembLyResolve
     {
 
         /// <summary>
         /// add  event Assembly resolve    
         /// </summary>
-        bool AsmEventAdd()
+        internal bool AsmEventAdd()
         {
 
             //https://adn-cis.org/forum/index.php?topic=10332.msg47741#msg47741
@@ -27,10 +23,10 @@ namespace dRz.SpecSPDS.nCad
             {
                 return false;
             }
-             ;
+                ;
         }
 
-        private System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string sPath = string.Empty;
 
@@ -45,7 +41,7 @@ namespace dRz.SpecSPDS.nCad
 
             if (sPath != string.Empty)
             {
-                return System.Reflection.Assembly.LoadFile(sPath);
+                return Assembly.LoadFile(sPath);
             }
             return null;
         }
@@ -61,7 +57,7 @@ namespace dRz.SpecSPDS.nCad
             string asmPath = String.Empty;
             string sAsmFileFullName = asmFulPath;//каталог DLL
                                                  // string sAsmFileFullName = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-            string sPath = Directory.GetParent(sAsmFileFullName).FullName;
+            string sPath = Directory.GetParent(sAsmFileFullName)?.FullName;
 
 
             string[] asmPaths = GetFilesOfDir(sPath, true, sDllName);
@@ -102,7 +98,7 @@ namespace dRz.SpecSPDS.nCad
         /// <summary>
         /// Полный путь к этой сборке
         /// </summary>
-        private readonly string asmFulPath = typeof(EntryPoint).Assembly.Location;
+        private readonly string asmFulPath = typeof(AssembLyResolve).Assembly.Location;
 
     }
 }
