@@ -1,16 +1,20 @@
-﻿using System;
+﻿using dRz.Loader.nCad.Interfaces;
+using dRz.Loader.nCad.Services;
+using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace dRz.SpecSPDS.nCad
 {
-    internal class AssembLyResolve
+    internal class AssemblyResolver
     {
+        private IMessageService msg = new MessageService();
 
         /// <summary>
-        /// add  event Assembly resolve    
+        /// Подписка на событие AssemblyResolve 
         /// </summary>
-        internal bool AsmEventAdd()
+        internal bool Register()
         {
 
             //https://adn-cis.org/forum/index.php?topic=10332.msg47741#msg47741
@@ -19,48 +23,87 @@ namespace dRz.SpecSPDS.nCad
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                msg.ExceptionMessage(ex, "AssemblyResolver registration failed\n");
                 return false;
             }
-                ;
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        /// <summary>
+        /// Обработчик события AssemblyResolve
+        /// </summary>
+        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            string sPath = string.Empty;
+            //GPT
+            try
+            {
+                string dllName = args.Name.Split(',')[0] + ".dll";
+
+                string fullPath = GetFullAssemblyPath(dllName);
+
+                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                {
+                    return Assembly.LoadFile(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to resolve assembly {args.Name}: {ex.Message}");
+            }
+
+            return null;
+
+            //by dRz on 24.02.2026 at 15:39
+            /*
+            string path = string.Empty;
 
             if (args.Name.IndexOf(",") > -1)
             {
-                sPath = AssemblFulNameDll(args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll");
+                path = AssemblFulNameDll(args.Name.Substring(0, args.Name.IndexOf(",")) + ".dll");
             }
             else
             {
-                sPath = AssemblFulNameDll(args.Name + ".dll");
+                path = AssemblFulNameDll(args.Name + ".dll");
             }
 
-            if (sPath != string.Empty)
+            if (path != string.Empty)
             {
-                return Assembly.LoadFile(sPath);
+                return Assembly.LoadFile(path);
             }
             return null;
+            */
         }
 
+        /// <summary>
+        /// Получить полный путь к DLL по имени
+        /// </summary>
+        private string GetFullAssemblyPath(string dllName)
+        {
+            //GPT
+            var files = GetFilesOfDir(_assemblyDirectory, true, dllName);
+            return files.FirstOrDefault() ?? string.Empty;
+        }
+
+
+
+        //by dRz on 24.02.2026 at 15:43
+        /*
         /// <summary>
         /// Получить полный путь к файлу загружаемой dll
         /// </summary>
         /// <param name="sDllName">имя dll</param>
         /// <returns>Путь и имя к библиотеке</returns>
-        /*static*/
+     
         string AssemblFulNameDll(string sDllName)
         {
             string asmPath = String.Empty;
-            string sAsmFileFullName = asmFulPath;//каталог DLL
-                                                 // string sAsmFileFullName = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-            string sPath = Directory.GetParent(sAsmFileFullName)?.FullName;
+            string sAsmFileFullName = _assemblyDirectory;//каталог DLL
+                                                         // string sAsmFileFullName = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+            string path = Directory.GetParent(sAsmFileFullName)?.FullName;
 
 
-            string[] asmPaths = GetFilesOfDir(sPath, true, sDllName);
+            string[] asmPaths = GetFilesOfDir(path, true, sDllName);
             if (asmPaths.Length > 0)
             {
                 string asmPathTmp = asmPaths[0];//хватаем первую в списке
@@ -69,36 +112,35 @@ namespace dRz.SpecSPDS.nCad
             }
             return asmPath;
         }
-
+        
+        */
 
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="sPath">Директория с файлами</param>
-        /// <param name="WithSubfolders">Учитывать поддиректории</param>
-        /// <param name="sSerchPatern">Маска поиска</param>
+        /// <param name="withSubfolders">Учитывать поддиректории</param>
+        /// <param name="serchPatern">Маска поиска</param>
         /// <returns>Пути к файлам</returns>
-        internal static string[] GetFilesOfDir(string sPath, bool WithSubfolders, string sSerchPatern = "*.dwg")
+        internal /*static*/ string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
         {
             try
             {
-                return Directory.GetFiles(sPath,
-                                            sSerchPatern,
-                                            (WithSubfolders
-                                            ? SearchOption.AllDirectories
-                                            : SearchOption.TopDirectoryOnly));
+                return Directory.GetFiles(path,
+                                        serchPatern,
+                                        (withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                                        );
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                //#if NC||AC
-                //                Cad.DocumentManager.MdiActiveDocument.Editor.WriteMessage("\n" + ex.Message);
-                //#endif
-                return new string[0];
+                msg.ExceptionMessage(ex, $"Error searching files in {path}\n");
+               return Array.Empty<string>();
+                // return new string[0];
             }
         }
 
         /// <summary>
-        /// Полный путь к этой сборке
+        /// Полный путь к текущей сборке
         /// </summary>
-        private readonly string asmFulPath = typeof(AssembLyResolve).Assembly.Location;
+        private readonly string _assemblyDirectory = Path.GetDirectoryName(typeof(AssemblyResolver).Assembly.Location) ?? string.Empty;
 
     }
 }

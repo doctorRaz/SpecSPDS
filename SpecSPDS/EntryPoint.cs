@@ -36,8 +36,8 @@ namespace dRz.SpecSPDS.nCad
             try
             {
 
-                AssembLyResolve assembLyResolve = new AssembLyResolve();
-                assembLyResolve.AsmEventAdd();//add  event Assembly resolve  
+                AssemblyResolver assembLyResolve = new AssemblyResolver();
+                assembLyResolve.Register();//add  event Assembly resolve  
 
                 InitLoger();
 

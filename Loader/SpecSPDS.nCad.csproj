@@ -20,7 +20,7 @@
 		<None Remove="_Draft\**" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Include="..\SpecSPDS\AssemblyResolve\AssembLyResolve.cs" Link="AssembLyResolve\AssembLyResolve.cs" />
+	  <Compile Include="..\SpecSPDS\AssemblyResolve\AssemblyResolver.cs" Link="AssembLyResolve\AssemblyResolver.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />

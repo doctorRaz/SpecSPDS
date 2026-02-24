@@ -62,8 +62,10 @@ namespace dRz.Loader.nCad
             //если нет библиотек или еще какой косяк
             try
             {
-                AssembLyResolve assembLyResolve = new AssembLyResolve();
-                assembLyResolve.AsmEventAdd();//add  event Assembly resolve  
+                AssemblyResolver resolver = new AssemblyResolver();
+                
+                // Подписка на событие AssemblyResolve
+                resolver.Register();
 
                 //nlog
                 InitLoger();
