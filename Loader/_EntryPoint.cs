@@ -1,23 +1,17 @@
-﻿/* EntryPoint.cs
- * © Andrey Bushman, 2014
- * Поиск и загрузка версии плагина .NET, ARX или VBA, наиболее пригодной для 
- * текущей версии AutoCAD.
- * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
- */
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using NLog;
-using dRz.Loader.nCad;
-using System.ComponentModel;
+﻿//неудачный совет  GPT((
+
+using dRz.Loader.nCad.AssemblyResolve;
+using dRz.Loader.nCad.Infrastructure.Logging;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
-using dRz.Loader.nCad.Infrastructure.Logging;
-using dRz.Loader.nCad.AssemblyResolve;
-using dRz.Loader.nCad.Infrastructure;
-
-
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
 
 
 
@@ -33,162 +27,166 @@ using Rtm = Teigha.Runtime;
 
 #endif
 
-[assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
-
 namespace dRz.Loader.nCad
 {
-
-    /// <summary>
-    /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
-    /// подходящей для него версии плагина.
-    /// </summary>
-    internal sealed class EntryPoint : Rtm.IExtensionApplication
+    internal sealed class _EntryPoint : Rtm.IExtensionApplication
     {
-        const string netPluginExtension = ".dll";
-        static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB"
-    };
+        private const string netPluginExtension = ".dll";
+        private static readonly string[] extensions = { ".arx", ".dvb" };
+        private static readonly string[] methodNames = { "LoadArx", "LoadDVB" };
 
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private static Logger? _log;
+        private IMessageService _msg = new MessageService();
 
-        private IMessageService msg = new MessageService();
-
-
-        /// <summary>
-        /// Код этого метода будет запущен на исполнение при загрузке сборки в 
-        /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
-        /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
-        /// </summary>
-#if DEBUG
-        [Rtm.CommandMethod("инитЛД")]
-        [Description("ручной инит загрузчика")]
-#endif
         public void Initialize()
         {
-            //если нет библиотек или еще какой косяк
             try
             {
-                AssemblyResolver resolver = new AssemblyResolver();
+                // 1. AssemblyResolve должен отработать максимально рано
+                TryRegisterAssemblyResolver();
 
-                // Подписка на событие AssemblyResolve
-                resolver.Register();
+                // 2. Инициализация логгера (может упасть)
+                TryInitLogger();
 
-                //nlog
-                TryInitLoger();
-
-                //load adapter
-                if (!TryCadLoading())
-                {
-                    msg.ConsoleMessage($"\n-= [{nameof(Initialize)}] сбой загрузки. {LoaderEnvironment.ProductName} не загружен =-\n");
-                }
+                // 3. Загрузка CAD-адаптера
+                TryCadLoading();
             }
-            catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
+            catch (Exception ex)
             {
-                msg.ExceptionMessage(ex);
+                // Абсолютный предохранитель — сюда доходить не должны,
+                // но если вдруг — не позволяем CAD упасть
+                SafeFallbackException(ex);
             }
         }
 
+        private void TryRegisterAssemblyResolver()
+        {
+            try
+            {
+                var resolver = new AssemblyResolver();
+                resolver.Register();
+            }
+            catch (Exception ex)
+            {
+                SafeFallbackException(ex);
+            }
+        }
 
-        private bool TryInitLoger()
+        private void TryInitLogger()
         {
             try
             {
                 LogBootstrap.Initialize();
-                return true;
-
+                _log = LogManager.GetCurrentClassLogger();
             }
             catch (Exception ex)
             {
-                //todo если Nlog нет подменить интерфейс на IMaessageService
-                msg.ExceptionMessage(ex);
-                return false;
+                // логгер не поднялся — работаем без него
+                _log = null;
+                SafeFallbackException(ex);
             }
         }
 
-        /// <summary>
-        /// Загрузка адаптера
-        /// </summary>
-        /// <returns>успех</returns>
-        private bool TryCadLoading()
+        private void TryCadLoading()
         {
             try
             {
                 CadLoading();
-                return true;
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex);
-                return false;
+                // Не даём вылететь наружу
+                SafeFallbackException(ex);
             }
         }
+
         private void CadLoading()
+        {
+            Version version = Application.Version;
+
+            SafeLogInfo($"CAD detected: {version}");
+
+            string fileFullName = GetType().Assembly.Location;
+            Version minVersion = new Version(23, 0);
+
+            FileInfo? targetDll = FindFile(fileFullName, version, minVersion);
+
+            if (targetDll == null)
+            {
+                string message = $"Не найден подходящий адаптер для CAD {version}";
+                SafeLogError(message);
+                _msg.ConsoleMessage(message);
+                return;
+            }
+
+            SafeLogInfo($"Loading CAD adapter: {targetDll.FullName}");
+
+            if (targetDll.Extension.Equals(netPluginExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                Assembly.LoadFrom(targetDll.FullName);
+            }
+            else
+            {
+                int index = Array.IndexOf(extensions, targetDll.Extension);
+                if (index >= 0)
+                {
+                    object application = Application.AcadApplication;
+                    application.GetType().InvokeMember(
+                        methodNames[index],
+                        BindingFlags.InvokeMethod,
+                        null,
+                        application,
+                        new object[] { targetDll.FullName });
+                }
+            }
+
+            SafeLogInfo("Adapter initialized successfully");
+        }
+
+        // ---------------- SAFE LOGGING ----------------
+
+        private void SafeLogInfo(string message)
         {
             try
             {
-                // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
-                // соответствующую ей версию файла. Имя такого файла должно 
-                // формироваться по правилу: 
-                //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
-                // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
-                // Version, полученного из Application.Version.
-                Version version = Application.Version;
-
-                log.Info($"CAD detected: {version.ToString()}");
-
-                string fileFullName = GetType().Assembly.Location;
-
-                Version minVersion = new Version(23, 0);
-
-                FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
-
-                if (targetDllFullName == null)
-                {
-                    string mesag = $"Не найден подходящий адаптер для CAD {version.ToString()}";
-
-                    log.Error($"{mesag}");
-
-                    msg.ConsoleMessage($"{mesag}");
-
-                    return;
-                }
-
-                log.Info($"CadLoading CAD adapter: {targetDllFullName}");
-
-                // Если найден файл, соответствующий нашей версии AutoCAD, то 
-                // загружаем его.
-                Assembly? asm = null;
-                try
-                {
-                    if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        asm = Assembly.LoadFrom(targetDllFullName.FullName);
-                    }
-                    else
-                    {
-                        int index = Array.IndexOf(extensions, targetDllFullName.Extension);
-
-                        if (index >= 0)
-                        {
-                            object application = Application.AcadApplication;
-
-                            application.GetType().InvokeMember(methodNames[index], BindingFlags
-                              .InvokeMethod, null, application, new object[] {
-                            targetDllFullName.FullName });
-                        }
-                    }
-
-                    log.Info("Adapter CAD initialized successfully");
-
-                }
-                catch (Exception ex)
-                {
-                    log.Error(ex.Message, ex);
-                }
+                _log?.Info(message);
             }
-            catch (Exception ex)
+            catch
             {
-                msg.ExceptionMessage(ex);
+                _msg.ConsoleMessage(message);
+            }
+        }
+
+        private void SafeLogError(string message)
+        {
+            try
+            {
+                _log?.Error(message);
+            }
+            catch
+            {
+                _msg.ConsoleMessage(message);
+            }
+        }
+
+        private void SafeFallbackException(Exception ex)
+        {
+            try
+            {
+                _log?.Error(ex);
+            }
+            catch
+            {
+                // игнор — логгер сломан
+            }
+
+            try
+            {
+                _msg.ExceptionMessage(ex);
+            }
+            catch
+            {
+                // даже IMessageService не должен уронить Initialize
             }
         }
 
@@ -310,17 +308,17 @@ namespace dRz.Loader.nCad
             }
         }
 
-        /// <summary>
-        /// Код данного метода выполняется при завершении работы AutoCAD.
-        /// </summary>
         public void Terminate()
         {
             try
             {
-                log.Info("LogManager.Shutdown");
+                SafeLogInfo("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
-            catch { }
+            catch
+            {
+                // Игнорируем полностью
+            }
         }
     }
 }

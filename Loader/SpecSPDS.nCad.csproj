@@ -6,7 +6,7 @@
 		<RootNamespace>dRz.Loader.nCad</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей SpecSPDS под версию CAD</Description>
 		<AssemblyTitle>SpecSPDS.Loader</AssemblyTitle>
@@ -18,6 +18,9 @@
 		<Compile Remove="_Draft\**" />
 		<EmbeddedResource Remove="_Draft\**" />
 		<None Remove="_Draft\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="_EntryPoint.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
