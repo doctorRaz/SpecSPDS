@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<RootNamespace>dRz.SpecSPDS.Abstractions</RootNamespace>
+		<Description>SpecSPDS абстракции, интерфейсы</Description>
+		<AssemblyTitle>SpecSPDS.Abstractions</AssemblyTitle>
+	</PropertyGroup>
+
+</Project>

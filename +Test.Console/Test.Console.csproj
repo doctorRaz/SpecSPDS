@@ -25,15 +25,15 @@
 		<Page Remove="_experimental\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="..\Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
+		<Compile Include="..\+Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--<PackageReference Include="NLog" Version="6.0.7">-->
 		<!--<PrivateAssets>all</PrivateAssets>-->
 		<!--</PackageReference>-->
-		<PackageReference Include="drzNLog" Version="1.0.0" />
+		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Core\SpecSPDS.Core.csproj" />
+		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj" />
 	</ItemGroup>
 </Project>
