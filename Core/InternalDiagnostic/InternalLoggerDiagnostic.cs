@@ -1,7 +1,6 @@
 ﻿using NLog;
 using NLog.Common;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -17,7 +16,7 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
         /// внутренняя инициализация логгера NLog, только для отладки самого NLog
         /// </summary>
         /// <param name="OnlyDebugTextWriter">только вывод в отладку</param>
-        public InternalLoggerDiagnostic(string? message= null)
+        public InternalLoggerDiagnostic(string? message = null)
         {
             if (logLevel == LogLevel.Off)//диагностика не включена
             {
@@ -47,7 +46,7 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
         }
 
 
-         void Init()
+        void Init()
         {
             #region InternalLogger configure
 

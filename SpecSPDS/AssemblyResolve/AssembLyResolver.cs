@@ -132,7 +132,7 @@ namespace dRz.SpecSPDS.nCad.AssemblyResolve
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex, $"Error searching files in {path}\n");
-               return Array.Empty<string>();
+                return Array.Empty<string>();
                 // return new string[0];
             }
         }

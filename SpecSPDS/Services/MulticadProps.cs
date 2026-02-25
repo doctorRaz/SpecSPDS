@@ -26,7 +26,7 @@ public partial class MultiCadProps
 
 {
 
-     private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// 
@@ -50,7 +50,7 @@ public partial class MultiCadProps
 
         string _appProductName = System.Windows.Forms.Application.ProductName;
         string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
-                  
+
 
         #endregion
 

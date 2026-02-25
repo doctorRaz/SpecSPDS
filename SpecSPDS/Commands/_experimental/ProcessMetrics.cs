@@ -1,8 +1,8 @@
 ﻿//#if DEBUG
 
-using System.Diagnostics;
 using NLog;
 using System;
+using System.Diagnostics;
 
 
 
@@ -32,7 +32,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
 {
     public static class ProcessMetrics
     {
-       
+
         //GPT
         public static void LogProcessMetrics(ILogger log)
         {

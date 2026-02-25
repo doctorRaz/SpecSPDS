@@ -3,10 +3,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using NLog;
-using System.Globalization;
-using NLog.Config;
-using NLog.Common;
-using System.IO;
 using dRz.SpecSPDS.Core._experimental;
 
 
@@ -41,7 +37,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
         public static void TestLog()
         {
 
-            LogDebugCore ldc=new LogDebugCore();
+            LogDebugCore ldc = new LogDebugCore();
 
             ldc.Test();
 
@@ -75,7 +71,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
 
             //GlobalDiagnosticsContext.Set("appName", ServicesCAD.CallerName(count));
 
-           
+
 
             log.Info("Performance metrics: " +
                     "Memory: {MemoryUsage}MB, " +

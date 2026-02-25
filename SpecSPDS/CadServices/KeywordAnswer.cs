@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace dRz.SpecSPDS.nCad.CadServices
 {
-    public  class CadService
+    public class CadService
     { /// <summary>
       /// Keywords the answer.
       /// </summary>

@@ -2,7 +2,6 @@
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using System;
 using dRz.SpecSPDS.Core.Bootstrap;
-using System.Diagnostics;
 using System.ComponentModel;
 using dRz.SpecSPDS.nCad.AssemblyResolve;
 using dRz.SpecSPDS.nCad.Interfaces;
@@ -19,8 +18,6 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 #elif NC
 
 using App = HostMgd.ApplicationServices.Application;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 #endif
 

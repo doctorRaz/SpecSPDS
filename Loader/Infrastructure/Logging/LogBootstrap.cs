@@ -47,7 +47,7 @@ namespace dRz.Loader.nCad.Infrastructure.Logging
             }
             catch (Exception ex)
             {
-
+                //логер не поднялся
                 msg.ExceptionMessage(ex);
             }
         }
@@ -170,17 +170,17 @@ namespace dRz.Loader.nCad.Infrastructure.Logging
                 ElementName = "logevent",
 
                 Attributes =
-            {
-                new XmlAttribute("time", "${longdate}"),
-                new XmlAttribute("level", "${level:uppercase=true}"),
-                new XmlAttribute("logger", "${logger}"),
-            },
+                {
+                    new XmlAttribute("time", "${longdate}"),
+                    new XmlAttribute("level", "${level:uppercase=true}"),
+                    new XmlAttribute("logger", "${logger}"),
+                },
 
                 Elements =
-            {
-                new XmlElement("message", "${message}"),
-                new XmlElement("exception", "${exception:format=ToString}")
-            }
+                {
+                    new XmlElement("message", "${message}"),
+                    new XmlElement("exception", "${exception:format=ToString}")
+                }
             };
         }
 
