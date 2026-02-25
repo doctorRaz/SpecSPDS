@@ -19,8 +19,15 @@ namespace dRz.SpecSPDS.nCad.Interfaces
         /// <param name="caller">Вызывающий метода</param>
         void ErrorMessage(string message, [CallerMemberName] string? caller = null);
         /// <summary> Сообщение об исключении </summary>
+        /// <param name="message">Сообщение</param>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        void ExceptionMessage(Exception ex, string message="", [CallerMemberName] string? caller = null);
+        void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null);
+
+        /// <summary>
+        ///  Сообщение об исключении </summary>
+        /// <param name="ex"></param>
+        /// <param name="caller"></param>
+        void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null);
     }
 }
