@@ -26,11 +26,34 @@ using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+
+
 namespace dRz.SpecSpds.Test
 {
 
     public class Start
     {
+
+        internal string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        {
+            try
+            {
+                return Directory.GetFiles(path,
+                                        serchPatern,
+                                        withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
+                                        );
+            }
+            catch (Exception ex)
+            {
+
+
+                return Array.Empty<string>();
+
+            }
+        }
+
         /// <summary>
         /// общий логгер
         /// </summary>
@@ -39,9 +62,63 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         static void Main(string[] args)
         {
+
+            string[] argus = { "fff", "te,st", "", null };
+            string t = "";
+
+
+            //string _assemblyDirectory = Path.GetDirectoryName(typeof(Start).Assembly.Location) ?? string.Empty;
+            string _assemblyDirectory = @"c:\System Volume Information\10\";
+
+
+            var start = new Start();
+
+            var dll = "*";
+
+            var files = start.GetFilesOfDir(_assemblyDirectory, true,dll);
+
+
+            var fil=files.FirstOrDefault() ?? string.Empty;
+
+
+
+
+
+
+
+
+
+
+
+
+
+            foreach (var arg in argus)
+            {
+                try
+                {
+                    if (arg.IndexOf(",") > -1)
+                    {
+
+                        t = arg.Substring(0, arg.IndexOf(","));
+                    }
+                    else
+                    {
+
+                        t = arg;
+                    }
+
+                    Console.WriteLine($"Index \t {t}.dll");
+                    Console.WriteLine($"Split \t {arg.Split(',')[0]}.dll");
+                }
+                catch { }
+            }
+
+
+
+
             string f = LoaderEnvironment.ProductName;
             string f1 = LoaderEnvironment.ProductTitle;
-         
+
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             LogBootstrap.Initialize();

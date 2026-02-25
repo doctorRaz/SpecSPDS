@@ -14,8 +14,9 @@ using System.ComponentModel;
 using dRz.Loader.nCad.Interfaces;
 using dRz.Loader.nCad.Services;
 using dRz.Loader.nCad.Infrastructure.Logging;
-using dRz.Loader.nCad.AssemblyResolve;
 using dRz.Loader.nCad.Infrastructure;
+using System.Linq;
+
 
 
 
@@ -68,10 +69,7 @@ namespace dRz.Loader.nCad
             //если нет библиотек или еще какой косяк
             try
             {
-                AssemblyResolver resolver = new AssemblyResolver();
-
-                // Подписка на событие AssemblyResolve
-                resolver.Register();
+                TryRegisterAssemblyResolver();
 
                 //nlog
                 TryInitLoger();
@@ -88,6 +86,19 @@ namespace dRz.Loader.nCad
             }
         }
 
+        private void TryRegisterAssemblyResolver()
+        {
+            //https://adn-cis.org/forum/index.php?topic=10332.msg47741#msg47741
+            //https://autolisp.ru/2025/01/27/loading-another-assemblies/
+            try
+            {
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex, "AssemblyResolver registration failed");
+            }
+        }
 
         private bool TryInitLoger()
         {
@@ -113,16 +124,16 @@ namespace dRz.Loader.nCad
         {
             try
             {
-                CadLoading();
-                return true;
+                return CadLoading() & true;
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex);
+                log.Error(ex.Message, ex);
                 return false;
             }
         }
-        private void CadLoading()
+        private bool CadLoading()
         {
             try
             {
@@ -150,7 +161,7 @@ namespace dRz.Loader.nCad
 
                     msg.ConsoleMessage($"{mesag}");
 
-                    return;
+                    return false;
                 }
 
                 log.Info($"CadLoading CAD adapter: {targetDllFullName}");
@@ -183,13 +194,19 @@ namespace dRz.Loader.nCad
                 }
                 catch (Exception ex)
                 {
+                    msg.ExceptionMessage(ex);
                     log.Error(ex.Message, ex);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex);
+                log.Error(ex.Message, ex);
+                return false;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -307,6 +324,58 @@ namespace dRz.Loader.nCad
 
                 FileInfo file = FindFile(fileFullName, new Version(major, minor), minVersion);
                 return file;
+            }
+        }
+
+        /// <summary>
+        /// Обработчик события AssemblyResolve
+        /// </summary>
+        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            //by dRz on 25.02.2026 at 22:19
+            try
+            {
+                string dllName = $"{args.Name.Split(',')[0]}.dll";
+
+                // Полный путь к текущей сборке
+                string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
+
+                var files = GetFilesOfDir(_assemblyDirectory, true, dllName);
+
+                string fullPath = files.FirstOrDefault() ?? string.Empty;
+
+
+                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                {
+                    return Assembly.LoadFile(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage($"Failed to resolve assembly", ex);
+            }
+
+            return null;
+
+        }
+
+        /// <summary>Получить список путей фалов в директории</summary>
+        /// <param name="path">Директория с файлами</param>
+        /// <param name="withSubfolders">Учитывать поддиректории</param>
+        /// <param name="serchPatern">Маска поиска</param>
+        /// <returns>Пути к файлам</returns>
+        private string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        {
+            try
+            {
+                return Directory.GetFiles(path,
+                                          serchPatern,
+                                          withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex, $"Error searching files in {path}");
+                return Array.Empty<string>();
             }
         }
 
