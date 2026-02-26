@@ -1,5 +1,5 @@
 ﻿using dRz.Loader.nCad.Infrastructure;
-using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
+using dRz.SpecSpds.Test.Infrastructure.InternalDiagnostic;
 using NLog;
 using NLog.Common;
 using NLog.Config;

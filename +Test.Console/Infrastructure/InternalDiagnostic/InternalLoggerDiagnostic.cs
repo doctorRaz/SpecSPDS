@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using dRz.Loader.nCad.Infrastructure;
+using NLog;
 using NLog.Common;
 using System;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Reflection;
 //todo только для отладки загрузки nlog конфигурации
 // скопировать в drz.nCad.nCad.InternalDiagnostic
 
-namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
+namespace dRz.SpecSpds.Test.Infrastructure.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {

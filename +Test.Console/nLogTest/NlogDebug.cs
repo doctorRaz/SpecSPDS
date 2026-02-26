@@ -1,4 +1,4 @@
-﻿using dRz.Loader.nCad.Infrastructure.Bootstrap;
+﻿using dRz.SpecSpds.Test.Infrastructure.Bootstrap;
 using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;

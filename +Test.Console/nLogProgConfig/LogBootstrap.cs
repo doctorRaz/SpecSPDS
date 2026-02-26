@@ -1,5 +1,4 @@
 ﻿using dRz.Loader.nCad.Infrastructure;
-using dRz.SpecSpds.Test.nLogProgConfig;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
@@ -7,7 +6,7 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System.IO;
 
-namespace dRz.SpecSpds
+namespace dRz.SpecSpds.Test.nLogProgConfig
 {
 
     /// <summary>

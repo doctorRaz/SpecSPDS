@@ -1,4 +1,5 @@
-﻿using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
+﻿using dRz.Loader.nCad.Infrastructure;
+using dRz.SpecSpds.Test.Infrastructure.InternalDiagnostic;
 using NLog;
 using System;
 using System.Globalization;
@@ -8,7 +9,7 @@ using System.Globalization;
 //скопировать в dRz.nCad.nCad.Bootstrap
 // скопировать в dRz.SpecSPDS.nCad.Bootstrap
 
-namespace dRz.Loader.nCad.Infrastructure.Bootstrap
+namespace dRz.SpecSpds.Test.Infrastructure.Bootstrap
 {
     //todo добавить установку пути в %appdata%\product\logs
     /// <summary>

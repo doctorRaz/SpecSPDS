@@ -5,7 +5,7 @@ using System.Text;
 //todo только для отладки загрузки nlog конфигурации
 // скопировать в drz.nCad.nCad.InternalDiagnostic
 
-namespace dRz.Loader.nCad.Infrastructure.InternalDiagnostic
+namespace dRz.SpecSpds.Test.Infrastructure.InternalDiagnostic
 {
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!

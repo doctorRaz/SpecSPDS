@@ -1,11 +1,12 @@
-﻿using NLog;
+﻿using dRz.Loader.nCad.Infrastructure;
+using NLog;
 using NLog.Common;
 using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 
-namespace dRz.Loader.nCad.Infrastructure.Bootstrap
+namespace dRz.SpecSpds.Test.Infrastructure.Bootstrap
 {
     //todo рабочий код от бота, надо допилить конфиг из xml
 
