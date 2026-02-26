@@ -4,134 +4,52 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+using dRz.SpecSpds.Test.Interfaces;
+using dRz.SpecSpds.Test.Services;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using NLog;
-using dRz.Loader.nCad;
-using System.ComponentModel;
-using dRz.Loader.nCad.Interfaces;
-using dRz.Loader.nCad.Services;
-using dRz.Loader.nCad.Infrastructure.Logging;
-using dRz.Loader.nCad.Infrastructure;
 using System.Linq;
+using System.Reflection;
+using System.Windows;
 
 
 
-
-
-
-
-#if AC
-
-using Rtm = Autodesk.AutoCAD.Runtime;
-
-#elif NC
-
-using HostMgd.ApplicationServices;
-using Rtm = Teigha.Runtime;
-
-#endif
-
-[assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
-
-namespace dRz.Loader.nCad
+namespace dRz.SpecSpds.Test.Loader
 {
 
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
     /// </summary>
-    internal sealed class EntryPoint : Rtm.IExtensionApplication
+    internal sealed class EntryPoint
     {
         const string netPluginExtension = ".dll";
-        static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
+        //static readonly string[] extensions = new string[] { ".arx", ".dvb" };
+        //static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
 
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         private IMessageService msg = new MessageService();
 
 
-        /// <summary>
-        /// Код этого метода будет запущен на исполнение при загрузке сборки в 
-        /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
-        /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
-        /// </summary>
-#if DEBUG
-        [Rtm.CommandMethod("инитЛД")]
-        [Description("ручной инит загрузчика")]
-#endif
-        public void Initialize()
+        internal void Run()
         {
-            //если нет библиотек или еще какой косяк
-            try
+            if (!CadLoading())
             {
-                TryRegisterAssemblyResolver();
-
-                //nlog
-                TryInitLoger();
-
-                //load adapter
-                if (!TryCadLoading())
-                {
-                    msg.ConsoleMessage($"\n-= [{nameof(Initialize)}] сбой загрузки. {LoaderEnvironment.ProductName} не загружен =-\n");
-                }
+                string mesag = "Ошибка загрузки адаптера для AutoCAD. Работа плагина невозможна.";
+                log.Error($"{mesag}");
+                msg.ConsoleMessage($"{mesag}");
             }
-            catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
+            else
             {
-                msg.ExceptionMessage(ex);
+                string mesag = "Адаптер для AutoCAD загружен успешно.";
+                log.Info($"{mesag}");
+                msg.ConsoleMessage($"{mesag}");
             }
         }
 
-        private void TryRegisterAssemblyResolver()
-        {
-            //https://adn-cis.org/forum/index.php?topic=10332.msg47741#msg47741
-            //https://autolisp.ru/2025/01/27/loading-another-assemblies/
-            try
-            {
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex, "AssemblyResolver registration failed");
-            }
-        }
-
-        private bool TryInitLoger()
-        {
-            try
-            {
-                LogBootstrap.Initialize();
-                return true;
-
-            }
-            catch (Exception ex)
-            {
-                //todo если Nlog нет подменить интерфейс на IMaessageService
-                msg.ExceptionMessage(ex);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Загрузка адаптера
-        /// </summary>
-        /// <returns>успех</returns>
-        private bool TryCadLoading()
-        {
-            try
-            {
-                return CadLoading() & true;
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-                log.Error(ex.Message, ex);
-                return false;
-            }
-        }
         private bool CadLoading()
         {
             try
@@ -142,7 +60,7 @@ namespace dRz.Loader.nCad
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
                 // Version, полученного из Application.Version.
-                Version version = Application.Version;
+                Version version = new Version(25, 5);// Application.Version;
 
                 log.Info($"CAD detected: {version.ToString()}");
 
@@ -176,16 +94,16 @@ namespace dRz.Loader.nCad
                     }
                     else
                     {
-                        int index = Array.IndexOf(extensions, targetDllFullName.Extension);
+                        //int index = Array.IndexOf(extensions, targetDllFullName.Extension);
 
-                        if (index >= 0)
-                        {
-                            object application = Application.AcadApplication;
+                        //if (index >= 0)
+                        //{
+                        //    object application = Application.AcadApplication;
 
-                            application.GetType().InvokeMember(methodNames[index], BindingFlags
-                              .InvokeMethod, null, application, new object[] {
-                            targetDllFullName.FullName });
-                        }
+                        //    application.GetType().InvokeMember(methodNames[index], BindingFlags
+                        //      .InvokeMethod, null, application, new object[] {
+                        //    targetDllFullName.FullName });
+                        //}
                     }
 
                     log.Info("Adapter CAD initialized successfully");
@@ -194,14 +112,14 @@ namespace dRz.Loader.nCad
                 catch (Exception ex)
                 {
                     msg.ExceptionMessage(ex);
-                    log.Error(ex.Message, ex);
+                    log.Error(ex, ex.Message);
                     return false;
                 }
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex);
-                log.Error(ex.Message, ex);
+                log.Error(ex, ex.Message);
                 return false;
             }
 
@@ -244,57 +162,58 @@ namespace dRz.Loader.nCad
 
             string coreString = string.Format("{0}.{1}", major.ToString(), minor.ToString());
 
-            string subDirectoryName = "R" + coreString;
-            string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4 ? "x86" : "x64");
+            //string subDirectoryName = "R" + coreString;
+            //string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4 ? "x86" : "x64");
 
             string targetFileName = string.Empty;
             string targetFileName_xPlatform = string.Empty;
             string targetFileFullName = string.Empty;
             string targetFileFullName_xPlatform = string.Empty;
 
-            List<string> items = new List<string>(extensions);
-            items.Insert(0, netPluginExtension);
+            //List<string> items = new List<string>(extensions);
+            //items.Insert(0, netPluginExtension);
 
             string name = string.Empty;
 
-            foreach (string extension in items)
-            {
+            //foreach (string extension in items)
+            //{
 
-                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString, extension);
-                targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName, coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
+                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString, netPluginExtension);
+            //    targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName, coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
 
-                // Сначала выполняем поиск в текущем каталоге
-                targetFileFullName = Path.Combine(directory, targetFileName);
-                if (File.Exists(targetFileFullName))
-                {
-                    name = targetFileFullName;
-                    break;
-                }
-                targetFileFullName_xPlatform = Path.Combine(directory, targetFileName_xPlatform);
+            //    // Сначала выполняем поиск в текущем каталоге
+                //targetFileFullName = Path.Combine(directory, targetFileName);
+            name = GetFilesOfDir(directory, true,targetFileName);
+                //if (File.Exists(targetFileFullName))
+            //    {
+                    //name = targetFileFullName;
+            //        break;
+            //    }
+            //    targetFileFullName_xPlatform = Path.Combine(directory, targetFileName_xPlatform);
 
-                if (File.Exists(targetFileFullName_xPlatform))
-                {
-                    name = targetFileFullName_xPlatform;
-                    break;
-                }
+            //    if (File.Exists(targetFileFullName_xPlatform))
+            //    {
+            //        name = targetFileFullName_xPlatform;
+            //        break;
+            //    }
 
-                // Если в текущем каталоге подходящий файл не найден, то продолжаем
-                // поиск по соответствующим подкаталогам
-                targetFileFullName = directory + "\\" + subDirectoryName + "\\" + targetFileName;
-                if (File.Exists(targetFileFullName))
-                {
-                    name = targetFileFullName;
-                    break;
-                }
+            //    // Если в текущем каталоге подходящий файл не найден, то продолжаем
+            //    // поиск по соответствующим подкаталогам
+            //    targetFileFullName = directory + "\\" + subDirectoryName + "\\" + targetFileName;
+            //    if (File.Exists(targetFileFullName))
+            //    {
+            //        name = targetFileFullName;
+            //        break;
+            //    }
 
-                targetFileFullName_xPlatform = directory + "\\" + subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
+            //    targetFileFullName_xPlatform = directory + "\\" + subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
 
-                if (File.Exists(targetFileFullName_xPlatform))
-                {
-                    name = targetFileFullName_xPlatform;
-                    break;
-                }
-            }
+            //    if (File.Exists(targetFileFullName_xPlatform))
+            //    {
+            //        name = targetFileFullName_xPlatform;
+            //        break;
+            //    }
+            //}
 
             // Если найден файл, соответствующий нашей версии AutoCAD, то возвращаем 
             // соответствующий ему объект FileInfo.
@@ -326,69 +245,28 @@ namespace dRz.Loader.nCad
             }
         }
 
-        /// <summary>
-        /// Обработчик события AssemblyResolve
-        /// </summary>
-        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            //by dRz on 25.02.2026 at 22:19
-            try
-            {
-                string dllName = $"{args.Name.Split(',')[0]}.dll";
-
-                // Полный путь к текущей сборке
-                string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
-
-                var files = GetFilesOfDir(_assemblyDirectory, true, dllName);
-
-                string fullPath = files.FirstOrDefault() ?? string.Empty;
-
-
-                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
-                {
-                    return Assembly.LoadFile(fullPath);
-                }
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage($"Failed to resolve assembly", ex);
-            }
-
-            return null;
-
-        }
-
+       
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
         /// <param name="withSubfolders">Учитывать поддиректории</param>
         /// <param name="serchPatern">Маска поиска</param>
         /// <returns>Пути к файлам</returns>
-        private string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        private string GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
         {
             try
             {
-                return Directory.GetFiles(path,
+                string[] files = Directory.GetFiles(path,
                                           serchPatern,
                                           withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+
+                return files.FirstOrDefault() ?? string.Empty;
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex, $"Error searching files in {path}");
-                return Array.Empty<string>();
+                return string.Empty;
             }
         }
 
-        /// <summary>
-        /// Код данного метода выполняется при завершении работы AutoCAD.
-        /// </summary>
-        public void Terminate()
-        {
-            try
-            {
-                log.Info("LogManager.Shutdown");
-                LogManager.Shutdown();
-            }
-            catch { }
-        }
     }
 }
