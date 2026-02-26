@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir>
 		<ConfigNameIn>NLog</ConfigNameIn>
-		<ConfigNameOut>NLog.dll.test.nlog</ConfigNameOut>
+		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>
 
 	<Target Name="CopyNLogConfig" AfterTargets="Build">
