@@ -21,13 +21,12 @@ AppSettings я б засунул именно в то, что работает �
 
 
 using dRz.Loader.nCad.Infrastructure;
+using dRz.SpecSpds.Test.Loader;
 using dRz.SpecSpds.Test.nLogTest;
 using dRz.SpecSPDS.Core._experimental;
 using NLog;
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 
 namespace dRz.SpecSpds.Test
@@ -36,84 +35,28 @@ namespace dRz.SpecSpds.Test
     public class Start
     {
 
-        internal string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
-        {
-            try
-            {
-                return Directory.GetFiles(path,
-                                        serchPatern,
-                                        withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
-                                        );
-            }
-            catch (Exception ex)
-            {
-
-
-                return Array.Empty<string>();
-
-            }
-        }
-
         /// <summary>
         /// общий логгер
         /// </summary>
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
+            LogBootstrap.Initialize();
 
-            string[] argus = { "fff", "te,st", "", null };
-            string t = "";
+            EntryPoint entryPoint = new EntryPoint();
 
-
-            //string _assemblyDirectory = Path.GetDirectoryName(typeof(Start).Assembly.Location) ?? string.Empty;
-            string _assemblyDirectory = @"c:\System Volume Information\10\";
-
-
-            var start = new Start();
-
-            var dll = "*";
-
-            var files = start.GetFilesOfDir(_assemblyDirectory, true,dll);
-
-
-            var fil=files.FirstOrDefault() ?? string.Empty;
+            entryPoint.Test();
 
 
 
 
+            Console.ReadKey();
 
 
 
-
-
-
-
-
-
-            foreach (var arg in argus)
-            {
-                try
-                {
-                    if (arg.IndexOf(",") > -1)
-                    {
-
-                        t = arg.Substring(0, arg.IndexOf(","));
-                    }
-                    else
-                    {
-
-                        t = arg;
-                    }
-
-                    Console.WriteLine($"Index \t {t}.dll");
-                    Console.WriteLine($"Split \t {arg.Split(',')[0]}.dll");
-                }
-                catch { }
-            }
-
-
+            return;
 
 
             string f = LoaderEnvironment.ProductName;
@@ -153,7 +96,7 @@ namespace dRz.SpecSpds.Test
             /*
             TestSpeedConfig tSc = new TestSpeedConfig();
 
-            for (int i = 0; i < 1; i++)
+            for (int major = 0; major < 1; major++)
             {
 
                 tSc.Run(); 

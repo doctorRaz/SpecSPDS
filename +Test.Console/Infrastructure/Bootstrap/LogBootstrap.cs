@@ -1,9 +1,7 @@
-﻿using dRz.Loader.nCad.Infrastructure;
-using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
+﻿using dRz.Loader.nCad.Infrastructure.InternalDiagnostic;
 using NLog;
 using System;
 using System.Globalization;
-using System.IO;
 
 
 //todo только для отладки загрузки nlog конфигурации

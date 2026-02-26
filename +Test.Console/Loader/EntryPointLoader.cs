@@ -8,48 +8,61 @@ using dRz.SpecSpds.Test.Interfaces;
 using dRz.SpecSpds.Test.Services;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-
-
 
 namespace dRz.SpecSpds.Test.Loader
 {
-
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
     /// </summary>
     internal sealed class EntryPoint
     {
-        const string netPluginExtension = ".dll";
-        //static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        //static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
-
+        private const string netPluginExtension = ".dll";
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
-
         private IMessageService msg = new MessageService();
+        private Version? _version;
 
-
-        internal void Run()
+        internal void Test()
         {
+            for (int major = 22; major < 28; major++)
+
+            {
+                for (int minor = 0; minor < 5; minor++)
+                {
+                    Run(new Version(major, minor));
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Runs this instance.
+        /// </summary>
+        private void Run(Version version)
+        {
+            _version = version;
+
             if (!CadLoading())
             {
-                string mesag = "Ошибка загрузки адаптера для AutoCAD. Работа плагина невозможна.";
+                string mesag = "Ошибка загрузки адаптера для CAD. Работа плагина невозможна.";
                 log.Error($"{mesag}");
                 msg.ConsoleMessage($"{mesag}");
             }
             else
             {
-                string mesag = "Адаптер для AutoCAD загружен успешно.";
+                string mesag = "Адаптер для CAD загружен успешно.";
                 log.Info($"{mesag}");
                 msg.ConsoleMessage($"{mesag}");
             }
         }
 
+        /// <summary>
+        /// Cads the loading.
+        /// </summary>
+        /// <returns></returns>
         private bool CadLoading()
         {
             try
@@ -60,15 +73,16 @@ namespace dRz.SpecSpds.Test.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
                 // Version, полученного из Application.Version.
-                Version version = new Version(25, 5);// Application.Version;
+
+                Version minVersion = new Version(23, 0);
+
+                Version version = _version;// Application.Version;
 
                 log.Info($"CAD detected: {version.ToString()}");
 
                 string fileFullName = GetType().Assembly.Location;
 
-                Version minVersion = new Version(23, 0);
-
-                FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
+                FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
                 if (targetDllFullName == null)
                 {
@@ -90,20 +104,17 @@ namespace dRz.SpecSpds.Test.Loader
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        asm = Assembly.LoadFrom(targetDllFullName.FullName);
+                        string mesag = $"Загружается адаптер для CAD {version.ToString()}: {targetDllFullName.FullName}";
+
+                        msg.ConsoleMessage(mesag);
+                        log.Trace(mesag);
+
+                        //asm = Assembly.LoadFrom(targetDllFullName.FullName);
                     }
                     else
                     {
-                        //int index = Array.IndexOf(extensions, targetDllFullName.Extension);
-
-                        //if (index >= 0)
-                        //{
-                        //    object application = Application.AcadApplication;
-
-                        //    application.GetType().InvokeMember(methodNames[index], BindingFlags
-                        //      .InvokeMethod, null, application, new object[] {
-                        //    targetDllFullName.FullName });
-                        //}
+                        //на случай, если в будущем будет поддержка других типов плагинов, например ARX или VBA
+                        throw new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
                     }
 
                     log.Info("Adapter CAD initialized successfully");
@@ -139,113 +150,62 @@ namespace dRz.SpecSpds.Test.Loader
         /// <returns>Возвращается FileInfo наиболее подходящего файла, для его 
         /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то 
         /// возвращается null.</returns>
-        private FileInfo FindFile(string fileFullName, Version expectedVersion,
+        private FileInfo? FindFile(string fileFullName, Version expectedVersion,
           Version minVersion)
         {
 
             if (fileFullName == null)
-                throw new ArgumentNullException("fileFullName");
+                throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
 
             if (fileFullName.Trim() == string.Empty)
-                throw new ArgumentException("fileFullName.Trim() == String.Empty");
+                throw new ArgumentException("The fileFullName parameter cannot be an empty string.", nameof(fileFullName));
 
             if (expectedVersion < minVersion)
-                throw new ArgumentException("expectedVersion < minVersion");
-
-            int major = expectedVersion.Major;
-
-            int minor = expectedVersion.Minor;
+                throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
 
             string? directory = Path.GetDirectoryName(fileFullName);
+            if (directory == null)
+                throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-            string coreString = string.Format("{0}.{1}", major.ToString(), minor.ToString());
+            int major = expectedVersion.Major;
+            int minor = expectedVersion.Minor;
 
-            //string subDirectoryName = "R" + coreString;
-            //string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4 ? "x86" : "x64");
-
-            string targetFileName = string.Empty;
-            string targetFileName_xPlatform = string.Empty;
-            string targetFileFullName = string.Empty;
-            string targetFileFullName_xPlatform = string.Empty;
-
-            //List<string> items = new List<string>(extensions);
-            //items.Insert(0, netPluginExtension);
-
-            string name = string.Empty;
-
-            //foreach (string extension in items)
-            //{
-
-                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString, netPluginExtension);
-            //    targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName, coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
-
-            //    // Сначала выполняем поиск в текущем каталоге
-                //targetFileFullName = Path.Combine(directory, targetFileName);
-            name = GetFilesOfDir(directory, true,targetFileName);
-                //if (File.Exists(targetFileFullName))
-            //    {
-                    //name = targetFileFullName;
-            //        break;
-            //    }
-            //    targetFileFullName_xPlatform = Path.Combine(directory, targetFileName_xPlatform);
-
-            //    if (File.Exists(targetFileFullName_xPlatform))
-            //    {
-            //        name = targetFileFullName_xPlatform;
-            //        break;
-            //    }
-
-            //    // Если в текущем каталоге подходящий файл не найден, то продолжаем
-            //    // поиск по соответствующим подкаталогам
-            //    targetFileFullName = directory + "\\" + subDirectoryName + "\\" + targetFileName;
-            //    if (File.Exists(targetFileFullName))
-            //    {
-            //        name = targetFileFullName;
-            //        break;
-            //    }
-
-            //    targetFileFullName_xPlatform = directory + "\\" + subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
-
-            //    if (File.Exists(targetFileFullName_xPlatform))
-            //    {
-            //        name = targetFileFullName_xPlatform;
-            //        break;
-            //    }
-            //}
-
-            // Если найден файл, соответствующий нашей версии AutoCAD, то возвращаем 
-            // соответствующий ему объект FileInfo.
-            if (File.Exists(name))
+            while (true)
             {
-                return new FileInfo(name);
-            }
-            // Если соответствия не найдено, то продолжаем поиск, последовательно 
-            // проверяя наличие подходящего файла для более ранних версий AutoCAD
-            else
-            {
+                string coreString_ = $"{major}.{minor}";
+                string targetFileName_ = $"{fileName}.{coreString_}{netPluginExtension}";
+
+                string foundPath = GetFilesOfDir(directory, true, targetFileName_);
+
+                if (!string.IsNullOrEmpty(foundPath) && File.Exists(foundPath))
+                {
+                    return new FileInfo(foundPath);
+                }
+
+                // Понижение версии
                 if (minor == 0)
                 {
-                    minor = 3;
-                    --major;
+                    minor = 5;
+                    major--;
                 }
                 else
                 {
-                    --minor;
+                    minor--;
                 }
 
-                Version version = new Version(major, minor);
+                Version currentVersion = new Version(major, minor);
 
-                if (version < minVersion)
-                    return null;
-
-                FileInfo file = FindFile(fileFullName, new Version(major, minor), minVersion);
-                return file;
+                if (currentVersion < minVersion)
+                    break;
             }
+
+            return null;
+
         }
 
-       
+
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
         /// <param name="withSubfolders">Учитывать поддиректории</param>

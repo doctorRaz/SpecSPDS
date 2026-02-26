@@ -11,7 +11,7 @@ namespace dRz.SpecSpds.Test.nLogProgConfig
     /// отладочная информация из nLog в output VS только для отладки!!!
     /// </summary>
     /// <seealso cref="TextWriter" />
-    sealed class OutputDebugTextWriter : TextWriter
+    internal sealed class OutputDebugTextWriter : TextWriter
     {
         public override Encoding Encoding => Encoding.UTF8;
 

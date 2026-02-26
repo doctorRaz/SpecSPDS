@@ -14,7 +14,7 @@ namespace dRz.SpecSpds.Test.Services
         {
             Assembly assembly = typeof(MessageService).Assembly;
             _titlePrefix = assembly.GetName().Name + " v." + assembly.GetName().Version + ": ";
-          
+
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="caller">Вызывающий метода</param>
         public void ConsoleMessage(string message, [CallerMemberName] string? caller = null)
         {
-    
+
             Console.WriteLine(prefix + message);
         }
 
@@ -57,8 +57,8 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="caller">Вызывающий метод</param>
         public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
         {
-           Console.WriteLine($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
-                       
+            Console.WriteLine($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
+
         }
 
 
@@ -70,9 +70,9 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="caller">Вызывающий метод</param>
         public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
         {
-           Console.WriteLine($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");
+            Console.WriteLine($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");
 
-       
+
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]

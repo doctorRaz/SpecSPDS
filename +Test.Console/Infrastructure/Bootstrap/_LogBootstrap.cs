@@ -1,13 +1,13 @@
-﻿using System;
+﻿using NLog;
+using NLog.Common;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using NLog;
-using NLog.Common;
 
 namespace dRz.Loader.nCad.Infrastructure.Bootstrap
 {
-       //todo рабочий код от бота, надо допилить конфиг из xml
+    //todo рабочий код от бота, надо допилить конфиг из xml
 
     // https://chatgpt.com/c/698b67b7-61e0-838c-99b6-4c3785949f94#:~:text=%D0%A3%D0%BB%D1%83%D1%87%D1%88%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F%20%D1%80%D0%B5%D0%B0%D0%BB%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F
 
@@ -79,9 +79,9 @@ namespace dRz.Loader.nCad.Infrastructure.Bootstrap
             InternalLogger.LogToConsole = true;
 
             InternalLogger.LogFile = LogFile();
-                //System.IO.Path.Combine(
-                //LoaderEnvironment.AppDataProductLogPath,
-                //"nlog-internal.log"
+            //System.IO.Path.Combine(
+            //LoaderEnvironment.AppDataProductLogPath,
+            //"nlog-internal.log"
             //);
 
             if (ex != null)
@@ -95,10 +95,10 @@ namespace dRz.Loader.nCad.Infrastructure.Bootstrap
             }
         }
 
-        static Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-        static string? moduleName => assembly.GetName().Name;
+        private static Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+        private static string? moduleName => assembly.GetName().Name;
 
-        static  string LogFile()
+        private static string LogFile()
         {
             #region FilePathInternalLogger
 

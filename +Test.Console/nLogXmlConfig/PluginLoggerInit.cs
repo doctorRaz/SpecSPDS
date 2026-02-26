@@ -1,5 +1,4 @@
 ﻿using NLog;
-using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using System.IO;
@@ -23,10 +22,10 @@ namespace dRz.SpecSpds.Test.nLogXmlConfig
 
             LogFactory config = LogManager.LoadConfiguration("NLog.config");
 
-            FileTarget? fileTarget = (FileTarget)config.Configuration.FindTargetByName("pluginFile");
+            FileTarget? fileTarget = (FileTarget?)config.Configuration?.FindTargetByName("pluginFile");
 
             // Каталог логов рядом с DLL плагина
-            string pluginDir = Path.GetDirectoryName(pluginAssemblyPath);
+            string? pluginDir = Path.GetDirectoryName(pluginAssemblyPath);
             string logDir = Path.Combine(pluginDir, "logs");
 
             Directory.CreateDirectory(logDir);

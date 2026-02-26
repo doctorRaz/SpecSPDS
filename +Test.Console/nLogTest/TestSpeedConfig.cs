@@ -6,9 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.SpecSpds.Test.nLogTest
 {
@@ -17,7 +14,7 @@ namespace dRz.SpecSpds.Test.nLogTest
     /// </summary>
     internal class TestSpeedConfig
     {
-        string testPath = @"d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\Test nLog config";
+        private string testPath = @"d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\Test nLog config";
         internal void Run()
         {
             List<string> configs = FetchingPatchFiles.GetFilesOfDir(testPath, false, "*");
