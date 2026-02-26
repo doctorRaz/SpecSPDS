@@ -4,21 +4,20 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+
+
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NLog;
-using dRz.Loader.nCad;
 using System.ComponentModel;
-using dRz.Loader.nCad.Interfaces;
-using dRz.Loader.nCad.Services;
-using dRz.Loader.nCad.Infrastructure.Logging;
 using dRz.Loader.nCad.Infrastructure;
 using System.Linq;
-
-
-
+using dRz.Loader.Cad.Interfaces;
+using dRz.Loader.Cad.Infrastructure.Logging;
+using dRz.Loader.Cad;
+using dRz.Loader.Cad.Services;
 
 
 
@@ -36,7 +35,7 @@ using Rtm = Teigha.Runtime;
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.Loader.nCad
+namespace dRz.Loader.Cad
 {
 
     /// <summary>
@@ -45,9 +44,9 @@ namespace dRz.Loader.nCad
     /// </summary>
     internal sealed class EntryPoint : Rtm.IExtensionApplication
     {
-        const string netPluginExtension = ".dll";
-        static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
+        private const string netPluginExtension = ".dll";
+        private static readonly string[] extensions = new string[] { ".arx", ".dvb" };
+        private static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
 
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
@@ -339,7 +338,7 @@ namespace dRz.Loader.nCad
                 // Полный путь к текущей сборке
                 string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
 
-                var files = GetFilesOfDir(_assemblyDirectory, true, dllName);
+                string[] files = GetFilesOfDir(_assemblyDirectory, true, dllName);
 
                 string fullPath = files.FirstOrDefault() ?? string.Empty;
 

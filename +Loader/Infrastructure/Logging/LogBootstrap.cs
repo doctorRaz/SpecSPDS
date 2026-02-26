@@ -1,6 +1,7 @@
-﻿using dRz.Loader.nCad.Infrastructure.Logging.Diagnostics;
-using dRz.Loader.nCad.Interfaces;
-using dRz.Loader.nCad.Services;
+﻿using dRz.Loader.Cad.Infrastructure.Logging.Diagnostics;
+using dRz.Loader.Cad.Interfaces;
+using dRz.Loader.Cad.Services;
+using dRz.Loader.nCad.Infrastructure;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
@@ -9,7 +10,7 @@ using NLog.Targets.Wrappers;
 using System;
 using System.IO;
 
-namespace dRz.Loader.nCad.Infrastructure.Logging
+namespace dRz.Loader.Cad.Infrastructure.Logging
 {
     /// <summary>
     /// 

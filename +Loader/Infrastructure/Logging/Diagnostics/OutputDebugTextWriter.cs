@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace dRz.Loader.nCad.Infrastructure.Logging.Diagnostics
+namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
 {
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!
