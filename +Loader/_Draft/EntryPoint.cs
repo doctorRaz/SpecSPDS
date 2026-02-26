@@ -47,7 +47,8 @@ namespace dRz.Loader.nCad
     {
         const string netPluginExtension = ".dll";
         static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
+        static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB"
+    };
 
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
