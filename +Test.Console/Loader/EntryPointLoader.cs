@@ -21,6 +21,8 @@ namespace dRz.SpecSpds.Test.Loader
     internal sealed class EntryPoint
     {
         private const string netPluginExtension = ".dll";
+
+        //todo В боевом коде логер включать в методе??? возможен вызов до инициализации
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         private IMessageService msg = new MessageService();
         private Version? _version;

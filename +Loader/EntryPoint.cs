@@ -48,6 +48,7 @@ namespace dRz.Loader.Cad
         private static readonly string[] extensions = new string[] { ".arx", ".dvb" };
         private static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
 
+        //возможен вызов до инициализации??
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         private IMessageService msg = new MessageService();
@@ -67,6 +68,7 @@ namespace dRz.Loader.Cad
             //если нет библиотек или еще какой косяк
             try
             {
+                //todo понаблюдать, возможно тормозит нану
                 TryRegisterAssemblyResolver();
 
                 //nlog
@@ -108,7 +110,6 @@ namespace dRz.Loader.Cad
             }
             catch (Exception ex)
             {
-                //todo если Nlog нет подменить интерфейс на IMaessageService
                 msg.ExceptionMessage(ex);
                 return false;
             }
@@ -330,7 +331,6 @@ namespace dRz.Loader.Cad
         /// </summary>
         private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            //by dRz on 25.02.2026 at 22:19
             try
             {
                 string dllName = $"{args.Name.Split(',')[0]}.dll";
