@@ -39,21 +39,40 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                 lock (_sync)
                 {
                     if (_initialized) return;
-                    InternalLoggerHelpers.
-                                ConfigureInternalLogger();
-                    SetupGlobalContextHelpers.
-                                SetupGlobalContext();
+
+                    InternalLoggerHelpers.ConfigureInternalLogger();
+
+                    //конфиг есть
+                    if (LogManager.Configuration != null)
+                    {
+                        //подгружаем GDC
+                        SetupGlobalContextHelpers.SetupGlobalContext();
+
+                        LogManager.GetCurrentClassLogger().Debug("Logger started");
+
+                        _initialized = LogManager.Configuration != null;
+
+                        if (_initialized)//иначе программный конфиг
+                            return;
+                    }
 
                     LoadConfiguration();
 
-                    _initialized = true;
-                    LogManager.GetCurrentClassLogger().Info("Logger started");
+                    _initialized = (LogManager.Configuration != null);
+
+                    if (_initialized)
+                    {
+                        LogManager.GetCurrentClassLogger().Info("Logger started");
+                    }
+                    else
+                    {
+                        msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(Initialize)}]: Ошибка в конфигурации Logger. Загрузка {LoaderEnvironment.ProductName} будет продолжена");
+                    }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                //логер не поднялся
-                msg.ExceptionMessage(ex);
+                throw;
             }
         }
 

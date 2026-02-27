@@ -49,7 +49,7 @@ namespace dRz.Loader.Cad
         private static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
 
         //возможен вызов до инициализации??
-        private static readonly Logger log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         private IMessageService msg = new MessageService();
 
@@ -72,11 +72,13 @@ namespace dRz.Loader.Cad
                 TryRegisterAssemblyResolver();
 
                 //nlog
+                //todo если false return и message
                 TryInitLoger();
 
                 //load adapter
                 if (!TryCadLoading())
                 {
+                    //todo messagg  Error
                     msg.ConsoleMessage($"\n-= [{nameof(Initialize)}] сбой загрузки. {LoaderEnvironment.ProductName} не загружен =-\n");
                 }
             }
@@ -104,9 +106,8 @@ namespace dRz.Loader.Cad
         {
             try
             {
-                LogBootstrap.Initialize();
-                return true;
-
+               return LogBootstrap.Initialize();
+                 
             }
             catch (Exception ex)
             {
@@ -123,7 +124,7 @@ namespace dRz.Loader.Cad
         {
             try
             {
-                return CadLoading() & true;
+                return CadLoading();
             }
             catch (Exception ex)
             {
@@ -201,7 +202,7 @@ namespace dRz.Loader.Cad
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex);
-                log.Error(ex.Message, ex);
+                log.Error(ex, ex.Message);
                 return false;
             }
 
@@ -338,11 +339,8 @@ namespace dRz.Loader.Cad
                 // Полный путь к текущей сборке
                 string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
 
-                string[] files = GetFilesOfDir(_assemblyDirectory, true, dllName);
-
-                string fullPath = files.FirstOrDefault() ?? string.Empty;
-
-
+                string fullPath  = GetFilesOfDir(_assemblyDirectory, true, dllName);
+                
                 if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
                 {
                     return Assembly.LoadFile(fullPath);
@@ -350,11 +348,10 @@ namespace dRz.Loader.Cad
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage($"Failed to resolve assembly", ex);
+                msg.ExceptionMessage(ex,"Failed to resolve assembly");
             }
 
             return null;
-
         }
 
         /// <summary>Получить список путей фалов в директории</summary>
@@ -362,18 +359,19 @@ namespace dRz.Loader.Cad
         /// <param name="withSubfolders">Учитывать поддиректории</param>
         /// <param name="serchPatern">Маска поиска</param>
         /// <returns>Пути к файлам</returns>
-        private string[] GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        private string GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
         {
             try
             {
-                return Directory.GetFiles(path,
+                string[] files = Directory.GetFiles(path,
                                           serchPatern,
                                           withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                return files.FirstOrDefault() ?? string.Empty;
             }
             catch (Exception ex)
             {
                 msg.ExceptionMessage(ex, $"Error searching files in {path}");
-                return Array.Empty<string>();
+                return string.Empty;
             }
         }
 

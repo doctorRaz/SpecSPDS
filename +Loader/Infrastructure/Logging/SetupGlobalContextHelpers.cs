@@ -22,6 +22,6 @@ internal static class SetupGlobalContextHelpers
 #endif
 
         GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
-        GlobalDiagnosticsContext.Set("AppName", LoaderEnvironment.ProductName);
+        GlobalDiagnosticsContext.Set("AppName", LoaderEnvironment.ProductTitle);
     }
 }

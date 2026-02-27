@@ -25,41 +25,117 @@ namespace dRz.SpecSpds.Test.Loader
         private const string netPluginExtension = ".dll";
 
         //todo В боевом коде логер включать в методе??? возможен вызов до инициализации
+
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
         private IMessageService msg = new MessageService();
+
         private Version? _version;
 
-        internal void Test()
+        private bool _registered;
+
+        public EntryPoint(Version version)
         {
-            for (int major = 22; major < 28; major++)
+            _version = version;
+        }
 
+        public void Initialize()
+        {
+            //если нет библиотек или еще какой косяк
+            try
             {
-                for (int minor = 0; minor < 5; minor++)
-                {
-                    Run(new Version(major, minor));
-                }
+                //todo понаблюдать, возможно тормозит нану
+                TryRegisterAssemblyResolver();//теоретически упасть не может
 
+                //nlog
+                TryInitLoger();
+
+                //load adapter
+                if (!TryCadLoading())
+                {
+                 //   throw new FileNotFoundException($"Не найден подходящий адаптер для {LoaderEnvironment.ProductName}");
+                }
+            }
+            catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
+            {
+                msg.ExceptionMessage($"{LoaderEnvironment.ProductName} не загружен", ex);
+            }
+
+            //отписываемся независимо от результата этот аддон больше не нужен
+            finally
+            {
+                try
+                {
+                    TryUnregisterAssemblyResolver();
+                }
+                catch { }
+            }
+
+        }
+
+
+        private void TryRegisterAssemblyResolver()
+        {
+            try
+            {
+                if (_registered) return;
+
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+                _registered = true;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+
+        private void TryUnregisterAssemblyResolver()
+        {
+            try
+            {
+                if (!_registered) return;
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+
+                _registered = false;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+        private void TryInitLoger()
+        {
+            /*
+            ищет конфиг:
+                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\SpecSPDS.nCad.exe.nlog
+                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\SpecSPDS.nCad.dll.nlog
+                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\NLog.config
+                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\drzNLog.dll.nlog
+            */
+            try
+            {
+                LogBootstrap.Initialize();
+            }
+            catch
+            {
+                throw;
             }
         }
 
         /// <summary>
         /// Runs this instance.
         /// </summary>
-        private void Run(Version version)
+        private bool TryCadLoading()
         {
-            _version = version;
 
-            if (!CadLoading())
+            try
             {
-                string mesag = "Ошибка загрузки адаптера для CAD. Работа плагина невозможна.";
-                log.Error($"{mesag}");
-                msg.ConsoleMessage($"{mesag}");
+                return CadLoading();
             }
-            else
+            catch 
             {
-                string mesag = "Адаптер для CAD загружен успешно.";
-                log.Info($"{mesag}");
-                msg.ConsoleMessage($"{mesag}");
+                throw;
             }
         }
 
@@ -126,16 +202,14 @@ namespace dRz.SpecSpds.Test.Loader
                 }
                 catch (Exception ex)
                 {
-                    msg.ExceptionMessage(ex);
                     log.Error(ex, ex.Message);
-                    return false;
+                    throw;
                 }
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex);
                 log.Error(ex, ex.Message);
-                return false;
+                throw;
             }
 
             return true;
@@ -227,10 +301,67 @@ namespace dRz.SpecSpds.Test.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex, $"Error searching files in {path}");
+                string messag = $"Error searching files in {path}";
+
+                log.Error(ex,messag);   
+                msg.ExceptionMessage(messag, ex);
+                
                 return string.Empty;
             }
         }
 
+
+        /// <summary>
+        /// Обработчик события AssemblyResolve
+        /// </summary>
+        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            try
+            {
+                string dllName = $"{args.Name.Split(',')[0]}.dll";
+
+                // Полный путь к текущей сборке
+                string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
+
+                string fullPath = GetFilesOfDir(_assemblyDirectory, true, dllName);
+
+                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                {
+                    return Assembly.LoadFile(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("Failed to resolve assembly", ex);
+            }
+
+            return null;
+        }
+
+        public void Terminate()
+        {
+            try
+            {
+                TryTerminate();
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex);
+            }
+        }
+
+        void TryTerminate()
+        {
+            try
+            {
+                log.Info("LogManager.Shutdown");
+                LogManager.Shutdown();
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex);
+            }
+
+        }
     }
 }

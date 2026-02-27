@@ -6,7 +6,7 @@
 		<PlatformTarget>x64</PlatformTarget>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<UseWPF>true</UseWPF>
 		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
 		<!--*******-->
@@ -27,14 +27,13 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="..\+Loader\Infrastructure\LoaderEnvironment.cs" Link="Infrastructure\LoaderEnvironment.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Infrastructure\Logging\LogBootstrap.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Logging\SetupGlobalContextHelpers.cs" Link="Infrastructure\Logging\SetupGlobalContextHelpers.cs" />
+		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Interfaces\IMessageService.cs" />
 	</ItemGroup>
 	<ItemGroup>
-		<!--<PackageReference Include="NLog" Version="6.0.7">-->
-		<!--<PrivateAssets>all</PrivateAssets>-->
-		<!--</PackageReference>-->
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj" />
+	  <PackageReference Include="drzNLog" Version="6.1.0-drz" />
 	</ItemGroup>
 </Project>

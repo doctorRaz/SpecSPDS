@@ -33,112 +33,38 @@ namespace dRz.SpecSpds.Test
 
     public class Start
     {
-
+        
         /// <summary>
         /// общий логгер
         /// </summary>
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         [STAThread]
         private static void Main(string[] args)
         {
-            LogBootstrap.Initialize();
-            Exception ex = new Exception("test");
+            //InternalLoggerHelpers.ConfigureInternalLogger();
+
+            //var conf = LogManager.Configuration;
+
+            //log.Error("Err");
+
+            int major = 22;
+            int minor = 2;
+            Version version = new Version(major, minor);
+
+            EntryPoint entryPoint = new EntryPoint(version);
+
+            entryPoint.Initialize();
+
+            entryPoint.Terminate();
           
-            Console.WriteLine($"Message {ex.Message}");
-            Console.WriteLine($"StackTrace {ex.StackTrace}");
-
-            EntryPoint entryPoint = new EntryPoint();
-
-            entryPoint.Test();
-
-
 
 
             Console.ReadKey();
 
 
 
-            return;
 
-
-            string f = LoaderEnvironment.ProductName;
-            string f1 = LoaderEnvironment.ProductTitle;
-
-            Stopwatch stopwatch = Stopwatch.StartNew();
-
-            LogBootstrap.Initialize();
-
-            Console.WriteLine($"Init nLog: {stopwatch.Elapsed}");
-
-            logger.Info("Plugin loaded");
-            //logger.Debug("Plugin loaded");
-            //logger.Info("Plugin loaded");
-            //logger.Warn("Plugin loaded");
-            //logger.Error("Plugin loaded");
-            //logger.Fatal("Plugin loaded");
-
-            LogTestWrite logDebug = new LogTestWrite();
-
-            LogDebugCore loggebCore = new LogDebugCore();
-
-            for (int i = 0; i < 1; i++)
-            {
-                logDebug.Test();
-                loggebCore.Test();
-            }
-
-
-            LogManager.Shutdown();
-
-            stopwatch.Stop();
-            Console.WriteLine($"Total time: {stopwatch.Elapsed}");
-            Console.ReadKey();
-
-            return;
-            /*
-            TestSpeedConfig tSc = new TestSpeedConfig();
-
-            for (int major = 0; major < 1; major++)
-            {
-
-                tSc.Run(); 
-            }
-            Console.WriteLine("Press eny key...");
-            Console.ReadKey();
-            */
-
-
-            NlogDebug nlogDebug = new NlogDebug();
-
-            nlogDebug.Test();
-
-            string DateCreate = GlobalDiagnosticsContext.Get("DateCreate");
-            string Caller = GlobalDiagnosticsContext.Get("Caller");
-
-
-            /*
-            Console.WriteLine($"GetExecutingAssembly\t{Assembly.GetExecutingAssembly().Location}");
-
-            Console.WriteLine($"GetEntryAssembly\t{Assembly.GetEntryAssembly().Location}");
-
-            Console.WriteLine($"OR\t{Assembly.GetEntryAssembly()?.Location ?? Assembly.GetExecutingAssembly().Location}");
-
-            Console.WriteLine($"Start{typeof(Start).Assembly.Location}");
-
-            
-            */
-
-            /*
-            ModuleNameTest2 callerMemberNameTest2 = new ModuleNameTest2();
-
-            callerMemberNameTest2.CallerName("test");
-
-            ModuleNameTest callerMemberNameTest = new ModuleNameTest();
-
-            callerMemberNameTest.CallerName("test");
-            */
-            //Test.ReadKey();
         }
     }
 

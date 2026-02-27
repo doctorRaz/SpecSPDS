@@ -45,7 +45,7 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
@@ -55,9 +55,9 @@ namespace dRz.SpecSpds.Test.Services
         /// </summary>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            Console.WriteLine($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
+            Console.WriteLine($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.ToString()}");
 
         }
 
@@ -68,11 +68,10 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="message">сообщение</param>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null)
         {
-            Console.WriteLine($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");
-
-
+            Console.WriteLine($"{prefix}[{caller}]: {message}{prefix}{ex.ToString()}");
+         
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]

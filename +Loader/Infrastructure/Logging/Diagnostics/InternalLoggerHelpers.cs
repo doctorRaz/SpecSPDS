@@ -18,7 +18,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
         {
 #if DEBUG
 
-            InternalLogger.LogLevel = LogLevel.Info;
+            InternalLogger.LogLevel = LogLevel.Trace;
 
             //пишем в файл
             InternalLogger.LogFile = LogFile();
@@ -34,7 +34,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
             //ошибки конфига
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize DEBUG");
+            InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize Level={InternalLogger.LogLevel}");
 
 #else
         InternalLogger.LogLevel = LogLevel.Off;
