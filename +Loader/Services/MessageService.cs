@@ -70,7 +70,7 @@ namespace dRz.Loader.Cad.Services
 
             }
 
-            doc.Editor.WriteMessage($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
+            doc.Editor.WriteMessage($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.ToString()}");
 
             /*
             if (_handle != IntPtr.Zero)
@@ -98,7 +98,7 @@ namespace dRz.Loader.Cad.Services
 
             }
 
-            doc.Editor.WriteMessage($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");
+            doc.Editor.WriteMessage($"{prefix}[{caller}]: {message}{prefix}{ex.ToString()}");
 
             /*
             if (_handle != IntPtr.Zero)

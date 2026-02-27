@@ -57,10 +57,9 @@ namespace dRz.SpecSpds.Test.Services
         /// <param name="caller">Вызывающий метод</param>
         public void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            Console.WriteLine($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.ToString()}");
+            Console.WriteLine($"{prefix}[{caller}]: {ex.ToString()}");
 
         }
-
 
         /// <summary>
         /// Сообщение об исключении
@@ -71,7 +70,7 @@ namespace dRz.SpecSpds.Test.Services
         public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null)
         {
             Console.WriteLine($"{prefix}[{caller}]: {message}{prefix}{ex.ToString()}");
-         
+
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]

@@ -4,9 +4,9 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+using dRz.Loader.Cad.Infrastructure;
 using dRz.Loader.Cad.Infrastructure.Logging;
 using dRz.Loader.Cad.Interfaces;
-using dRz.Loader.Cad.Infrastructure;
 using dRz.SpecSpds.Test.Services;
 using NLog;
 using System;
@@ -48,13 +48,12 @@ namespace dRz.SpecSpds.Test.Loader
                 TryRegisterAssemblyResolver();//теоретически упасть не может
 
                 //nlog
+                //LogBootstrap.Initialize();
                 TryInitLoger();
 
                 //load adapter
-                if (!TryCadLoading())
-                {
-                 //   throw new FileNotFoundException($"Не найден подходящий адаптер для {LoaderEnvironment.ProductName}");
-                }
+                TryCadLoading();
+
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
@@ -73,6 +72,7 @@ namespace dRz.SpecSpds.Test.Loader
 
         }
 
+     
 
         private void TryRegisterAssemblyResolver()
         {
@@ -104,6 +104,9 @@ namespace dRz.SpecSpds.Test.Loader
                 msg.ExceptionMessage("AssemblyResolver registration failed", ex);
             }
         }
+       
+        
+
         private void TryInitLoger()
         {
             /*
@@ -133,7 +136,7 @@ namespace dRz.SpecSpds.Test.Loader
             {
                 return CadLoading();
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -158,7 +161,7 @@ namespace dRz.SpecSpds.Test.Loader
 
                 Version version = _version;// Application.Version;
 
-                log.Info($"CAD detected: {version.ToString()}");
+                log.Debug($"CAD detected: {version.ToString()}");
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -170,12 +173,12 @@ namespace dRz.SpecSpds.Test.Loader
 
                     log.Error($"{mesag}");
 
-                    msg.ConsoleMessage($"{mesag}");
+                    msg.ExceptionMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
 
-                log.Info($"CadLoading CAD adapter: {targetDllFullName}");
+                log.Debug($"CadLoading CAD adapter: {targetDllFullName}");
 
                 // Если найден файл, соответствующий нашей версии AutoCAD, то 
                 // загружаем его.
@@ -187,7 +190,7 @@ namespace dRz.SpecSpds.Test.Loader
                         string mesag = $"Загружается адаптер для CAD {version.ToString()}: {targetDllFullName.FullName}";
 
                         msg.ConsoleMessage(mesag);
-                        log.Trace(mesag);
+                        log.Debug(mesag);
 
                         //asm = Assembly.LoadFrom(targetDllFullName.FullName);
                     }
@@ -197,7 +200,7 @@ namespace dRz.SpecSpds.Test.Loader
                         throw new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
                     }
 
-                    log.Info("Adapter CAD initialized successfully");
+                    log.Debug("Adapter CAD initialized successfully");
 
                 }
                 catch (Exception ex)
@@ -303,9 +306,9 @@ namespace dRz.SpecSpds.Test.Loader
             {
                 string messag = $"Error searching files in {path}";
 
-                log.Error(ex,messag);   
+                log.Error(ex, messag);
                 msg.ExceptionMessage(messag, ex);
-                
+
                 return string.Empty;
             }
         }
@@ -354,7 +357,7 @@ namespace dRz.SpecSpds.Test.Loader
         {
             try
             {
-                log.Info("LogManager.Shutdown");
+                log.Trace("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
             catch (Exception ex)

@@ -1,5 +1,4 @@
-﻿using dRz.Loader.Cad.Infrastructure;
-using NLog;
+﻿using NLog;
 using System;
 using System.Globalization;
 

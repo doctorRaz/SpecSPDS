@@ -5,7 +5,6 @@ using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
-using System;
 using System.IO;
 
 #if NC
@@ -62,7 +61,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
 
                     if (_initialized)
                     {
-                        LogManager.GetCurrentClassLogger().Info("Logger started");
+                        LogManager.GetCurrentClassLogger().Trace("Logger started");
                     }
                     else
                     {
