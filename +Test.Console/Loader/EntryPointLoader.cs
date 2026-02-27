@@ -306,7 +306,6 @@ namespace dRz.SpecSpds.Test.Loader
             {
                 string messag = $"Error searching files in {path}";
 
-                log.Error(ex, messag);
                 msg.ExceptionMessage(messag, ex);
 
                 return string.Empty;
