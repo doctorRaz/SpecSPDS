@@ -1,4 +1,4 @@
-﻿using dRz.SpecSpds.Test.Interfaces;
+﻿using dRz.Loader.Cad.Interfaces;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;

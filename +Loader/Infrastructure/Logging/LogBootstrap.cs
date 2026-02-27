@@ -1,7 +1,5 @@
 ﻿using dRz.Loader.Cad.Infrastructure.Logging.Diagnostics;
 using dRz.Loader.Cad.Interfaces;
-using dRz.Loader.Cad.Services;
-using dRz.Loader.nCad.Infrastructure;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
@@ -9,6 +7,12 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
+
+#if NC
+using dRz.Loader.Cad.Services;
+#else
+using dRz.SpecSpds.Test.Services;
+#endif
 
 namespace dRz.Loader.Cad.Infrastructure.Logging
 {

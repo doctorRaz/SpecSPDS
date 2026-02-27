@@ -4,7 +4,9 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
-using dRz.SpecSpds.Test.Interfaces;
+using dRz.Loader.Cad.Infrastructure.Logging;
+using dRz.Loader.Cad.Interfaces;
+using dRz.Loader.Cad.Infrastructure;
 using dRz.SpecSpds.Test.Services;
 using NLog;
 using System;
