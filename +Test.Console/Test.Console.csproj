@@ -30,7 +30,6 @@
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Infrastructure\Logging\LogBootstrap.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\SetupGlobalContextHelpers.cs" Link="Infrastructure\Logging\SetupGlobalContextHelpers.cs" />
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Interfaces\IMessageService.cs" />
 	</ItemGroup>
 	<ItemGroup>

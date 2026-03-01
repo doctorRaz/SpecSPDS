@@ -106,7 +106,8 @@ namespace dRz.Loader.Cad
         {
             try
             {
-               return LogBootstrap.Initialize();
+                    LogBootstrap.Initialize();
+                return true;
                  
             }
             catch (Exception ex)

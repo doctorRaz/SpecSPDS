@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Globalization;
+using System.IO;
 
 namespace dRz.Loader.Cad.Infrastructure.Logging;
 
@@ -14,13 +15,16 @@ internal static class SetupGlobalContextHelpers
     {
 #if DEBUG
         // фиксируем момент старта процесса
-        GlobalDiagnosticsContext.Set(
-            "DateCreate",
-            DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture)
-        );
+        GlobalDiagnosticsContext.Set("DateCreate", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture));
 #endif
 
+        GlobalDiagnosticsContext.Set("UserLevel", ReadLogLevelOnce());
+
         GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
+
         GlobalDiagnosticsContext.Set("AppName", LoaderEnvironment.ProductTitle);
+
     }
+
+   
 }

@@ -45,26 +45,38 @@ namespace dRz.SpecSpds.Test.Loader
             try
             {
                 //todo понаблюдать, возможно тормозит нану
+                //выключать если точно не понадобится
+                //если ех оставляем там, продолжаем работу
                 TryRegisterAssemblyResolver();//теоретически упасть не может
 
                 //nlog
-                //LogBootstrap.Initialize();
-                TryInitLoger();
+                // если ехception, поднимаем его сюда, стоп работа
+                // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
+                // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
+                // и поднимем internalLogger для разработчика а разработчику о том, что логер не поднялся, так как это может помешать отлову других ошибок
+                if (!LogBootstrap.Initialize())
+                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(Initialize)}]: Ошибка в конфигурации Logger. Загрузка {LoaderEnvironment.ProductName} будет продолжена");
 
-                //load adapter
-                TryCadLoading();
+                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
+                CadLoading();
 
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                msg.ExceptionMessage($"{LoaderEnvironment.ProductName} не загружен", ex);
+                string message = $"{LoaderEnvironment.ProductName} не загружен!!!" +
+                    $"\nСкопируйте это сообщение и отправьте разработчику";
+
+                System.Diagnostics.Trace.WriteLine($"{message}:{ex}");
+
+                msg.ExceptionMessage(message, ex);
             }
 
-            //отписываемся независимо от результата этот аддон больше не нужен
+            //отписываемся независимо от результата этому аддону подписка  больше не нужен
             finally
             {
                 try
                 {
+
                     TryUnregisterAssemblyResolver();
                 }
                 catch { }
@@ -72,75 +84,6 @@ namespace dRz.SpecSpds.Test.Loader
 
         }
 
-     
-
-        private void TryRegisterAssemblyResolver()
-        {
-            try
-            {
-                if (_registered) return;
-
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-
-                _registered = true;
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
-            }
-        }
-
-        private void TryUnregisterAssemblyResolver()
-        {
-            try
-            {
-                if (!_registered) return;
-                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
-
-                _registered = false;
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
-            }
-        }
-       
-        
-
-        private void TryInitLoger()
-        {
-            /*
-            ищет конфиг:
-                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\SpecSPDS.nCad.exe.nlog
-                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\SpecSPDS.nCad.dll.nlog
-                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\NLog.config
-                D:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\bin\Debug\drzNLog.dll.nlog
-            */
-            try
-            {
-                LogBootstrap.Initialize();
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Runs this instance.
-        /// </summary>
-        private bool TryCadLoading()
-        {
-
-            try
-            {
-                return CadLoading();
-            }
-            catch
-            {
-                throw;
-            }
-        }
 
         /// <summary>
         /// Cads the loading.
@@ -179,10 +122,6 @@ namespace dRz.SpecSpds.Test.Loader
                 }
 
                 log.Debug($"CadLoading CAD adapter: {targetDllFullName}");
-
-                // Если найден файл, соответствующий нашей версии AutoCAD, то 
-                // загружаем его.
-                Assembly? asm = null;
                 try
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
@@ -258,7 +197,7 @@ namespace dRz.SpecSpds.Test.Loader
                 string coreString_ = $"{major}.{minor}";
                 string targetFileName_ = $"{fileName}.{coreString_}{netPluginExtension}";
 
-                string foundPath = GetFilesOfDir(directory, true, targetFileName_);
+                string foundPath = GetFileOfDir(directory, true, targetFileName_);
 
                 if (!string.IsNullOrEmpty(foundPath) && File.Exists(foundPath))
                 {
@@ -292,7 +231,7 @@ namespace dRz.SpecSpds.Test.Loader
         /// <param name="withSubfolders">Учитывать поддиректории</param>
         /// <param name="serchPatern">Маска поиска</param>
         /// <returns>Пути к файлам</returns>
-        private string GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        private string GetFileOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
         {
             try
             {
@@ -313,6 +252,45 @@ namespace dRz.SpecSpds.Test.Loader
         }
 
 
+        #region AssemblyResolver
+
+        /// <summary>
+        /// Tries the register assembly resolver.
+        /// </summary>
+        private void TryRegisterAssemblyResolver()
+        {
+            try
+            {
+                if (_registered) return;
+
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+                _registered = true;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+
+        /// <summary>
+        /// Tries the unregister assembly resolver.
+        /// </summary>
+        private void TryUnregisterAssemblyResolver()
+        {
+            try
+            {
+                if (!_registered) return;
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+
+                _registered = false;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+
         /// <summary>
         /// Обработчик события AssemblyResolve
         /// </summary>
@@ -325,7 +303,7 @@ namespace dRz.SpecSpds.Test.Loader
                 // Полный путь к текущей сборке
                 string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
 
-                string fullPath = GetFilesOfDir(_assemblyDirectory, true, dllName);
+                string fullPath = GetFileOfDir(_assemblyDirectory, true, dllName);
 
                 if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
                 {
@@ -340,6 +318,8 @@ namespace dRz.SpecSpds.Test.Loader
             return null;
         }
 
+        #endregion
+
         public void Terminate()
         {
             try
@@ -352,7 +332,7 @@ namespace dRz.SpecSpds.Test.Loader
             }
         }
 
-        void TryTerminate()
+        private void TryTerminate()
         {
             try
             {
