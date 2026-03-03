@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir>
-		<ConfigNameIn>Single</ConfigNameIn>
+		<ConfigNameIn>Single_gdc</ConfigNameIn>
 		<!-- <ConfigNameOut>$(AssemblyName).dll.nlog</ConfigNameOut> -->
 		<ConfigNameOut>drzNLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>

@@ -6,7 +6,6 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System.IO;
 using System;
-using System.Globalization;
 
 
 
@@ -81,19 +80,19 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
 
         private static void ApplyCommonVariables(LoggingConfiguration? config)
         {
-//#if DEBUG
-//            GlobalDiagnosticsContext.Set("DateCreate", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture));
-//#endif
-            config.Variables["LevelMay"] = ReadLogLevelOnce().ToString();
-            config.Variables["LogsDir"] = LoaderEnvironment.AppDataProductLogPath;
-            config.Variables["AppTitle"] = LoaderEnvironment.ProductTitle;
+            //#if DEBUG
+            //            GlobalDiagnosticsContext.Set("DateCreate", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture));
+            //#endif
+            //config.Variables["LevelMay"] = ReadLogLevelOnce().ToString();
+            //config.Variables["LogsDir"] = LoaderEnvironment.AppDataProductLogPath;
+            //config.Variables["AppTitle"] = LoaderEnvironment.ProductTitle;
 
 
-            //GlobalDiagnosticsContext.Set("LevelMay", ReadLogLevelOnce().ToString());
-            //GlobalDiagnosticsContext.Set("AppTitle", LoaderEnvironment.ProductTitle);
-            //GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
+            GlobalDiagnosticsContext.Set("LevelMay", ReadLogLevelOnce().ToString());
+            GlobalDiagnosticsContext.Set("AppTitle", LoaderEnvironment.ProductTitle);
+            GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
 
-            LogManager.ReconfigExistingLoggers();
+            //LogManager.ReconfigExistingLoggers();
         }
 
         /// <summary>
