@@ -9,6 +9,14 @@ namespace dRz.SpecSpds.Test.nLogTest
 
         internal void Test()
         {
+
+            log.Trace("Сообщение {prop1} {prop2}", "1", "2");
+            log.Debug("Сообщение {prop1} {prop2}", "1", "2");
+            log.Info("Сообщение {prop1} {prop2}", "1", "2");
+            log.Warn("Сообщение {prop1} {prop2}", "1", "2");
+            log.Error("Сообщение {prop1} {prop2}", "1", "2");
+            log.Fatal("Сообщение {prop1} {prop2}", "1", "2");
+
             int b = 0;
 
             int calcs()

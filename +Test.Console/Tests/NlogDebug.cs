@@ -1,5 +1,4 @@
-﻿using NLog;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace dRz.SpecSpds.Test.nLogTest
 {
@@ -16,7 +15,7 @@ namespace dRz.SpecSpds.Test.nLogTest
 
 
 
-            for (int i = 0; i < 100000; i++)
+            for (int i = 0; i <  1000000; i++)
             {
                 //GlobalDiagnosticsContext.Set("Caller", nameof(Test));//todo на скаку путь имя лога переключать нельзя!!!!
 
