@@ -26,7 +26,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         /// <summary>
         /// Initializes
         /// </summary>
-        internal static bool Initialize()
+        internal static bool Init()
         {
 
             if (_initialized) return true;
