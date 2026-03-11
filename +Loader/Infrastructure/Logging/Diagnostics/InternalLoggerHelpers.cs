@@ -1,6 +1,7 @@
 ﻿using NLog;
 using NLog.Common;
 using System;
+using dRz.Loader.Cad.Infrastructure.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,14 +18,11 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
         /// </summary>
         internal static void ConfigureInternalLogger()
         {
-            string flagFile = Path.Combine(LoaderEnvironment.AssemblyDirectory, "diagnostic.mode");
+            // Если файла нет — Off (ничего не делаем). 
+            // Если файл создан, но пустой — Trace (максимум инфы).
+            LogLevel level = LogLevelReader.GetLevelFromFile("diagnostic.mode", LogLevel.Off, LogLevel.Trace);
 
-            // Используем File.Exists напрямую, это быстро
-            if (!File.Exists(flagFile))
-            {
-                InternalLogger.LogLevel = LogLevel.Off;
-                return;
-            }
+            if (level == LogLevel.Off) return;
 
             string logDir = LoaderEnvironment.AppDataProductLogPath;
 
@@ -35,7 +33,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
             string currentLogPath = GetInternalLogPath(logDir);
             CheckCurrentFileSize(currentLogPath);
 
-            InternalLogger.LogLevel = LogLevel.Trace;
+            InternalLogger.LogLevel = level;
 
             //пишем в файл
             InternalLogger.LogFile = currentLogPath;
@@ -51,7 +49,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
             //ошибки конфига
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize Level={InternalLogger.LogLevel}");
+            InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize Level={level}");
 
         }
 
@@ -112,7 +110,6 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
         private static string GetInternalLogPath(string logDir) =>
            Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{LoaderEnvironment.FileName}_internal.log");
 
-        private static bool IsDiagnosticModeEnabled() =>
-            File.Exists(Path.Combine(LoaderEnvironment.AssemblyDirectory, "diagnostic.mode"));
+
     }
 }

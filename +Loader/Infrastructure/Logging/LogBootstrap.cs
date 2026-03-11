@@ -6,7 +6,7 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System.IO;
 using System;
-
+using System.Linq;
 
 
 #if NC
@@ -36,8 +36,10 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
             {
                 if (_initialized) return true;
 
+                bool isProgrammatic = false; // Флаг
+
                 try
-                {
+                 {
                     //диагностика
                     InternalLoggerHelpers.ConfigureInternalLogger();
 
@@ -45,6 +47,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     {
                         // Создаем с нуля и сразу заполняем всем необходимым
                         LoadConfiguration();
+                        isProgrammatic = true;
                     }
                     else
                     {
@@ -53,13 +56,13 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                         ApplyCommonVariables(LogManager.Configuration);
                     }
 
-
                     _initialized = LogManager.Configuration != null;
 
                     if (_initialized)
                     {
+                        string mode = isProgrammatic ? "Programm" : "External";
 
-                        LogManager.GetCurrentClassLogger().Info("Logger started. App: {0}", LoaderEnvironment.ProductTitle);
+                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}",mode, LoaderEnvironment.ProductTitle);
                     }
 
                 }
@@ -80,18 +83,15 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
 
         private static void ApplyCommonVariables(LoggingConfiguration? config)
         {
-            //#if DEBUG
-            //            GlobalDiagnosticsContext.Set("DateCreate", DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss", CultureInfo.InvariantCulture));
-            //#endif
-            //config.Variables["LevelMay"] = ReadLogLevelOnce().ToString();
-            //config.Variables["LogsDir"] = LoaderEnvironment.AppDataProductLogPath;
-            //config.Variables["AppTitle"] = LoaderEnvironment.ProductTitle;
+            //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
 
+            var currentLevel = ReadLogLevelOnce();
 
-            GlobalDiagnosticsContext.Set("LevelMay", ReadLogLevelOnce().ToString());
+            GlobalDiagnosticsContext.Set("LevelMay", currentLevel.ToString());
             GlobalDiagnosticsContext.Set("AppTitle", LoaderEnvironment.ProductTitle);
             GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
 
+            //возможно, стоит вызвать, что бы все обновилось, если конфиг уже был, но может и не нужно, так как мы не меняем правила и шаблоны, а только переменные. Надо протестировать.
             //LogManager.ReconfigExistingLoggers();
         }
 
@@ -101,6 +101,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         private static void LoadConfiguration()
         {
             LoggingConfiguration config = new LoggingConfiguration();
+
             LogLevel level = ReadLogLevelOnce();
 
             // Настройка целевого файла
@@ -139,59 +140,14 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         }
 
         /// <summary>
-        /// Чтение уровня лога из файла <br/>
-        /// просто  строка<br/>
-        /// trace <br/>
-        /// debug <br/>
-        /// info <br/>
-        /// ... <br/>
-        /// регистр не важен <br/>
-        /// на случай сбоем у юзера, что бы можно было оперативно вкобчить отладку, трассировку в лог
+        /// Reads the log level once.
         /// </summary>
-        /// <returns>LogLevel</returns>
+        /// <returns></returns>
         private static LogLevel ReadLogLevelOnce()
         {
-            // в релизе уровень Error если не переопределено файлом loglevel.txt
-#if DEBUG
-            LogLevel levelDefault = LogLevel.Error;
-#else
-            LogLevel levelDefault = LogLevel.Error;
-#endif
-
-            try
-            {
-                // ищем рядом с нашей dll
-                string levelFile = Path.Combine(LoaderEnvironment.AssemblyDirectory, "loglevel.txt");
-
-                if (!File.Exists(levelFile)) return levelDefault;
-
-                //foreach (string line in File.ReadLines(levelFile))
-                //{
-                //    string text = line.Trim();
-
-                //    if (string.IsNullOrWhiteSpace(text))
-                //    {
-                //        continue;
-                //    }
-
-                //    LogLevel level = LogLevel.FromString(text);
-
-                //    return level ?? LevelDefault;
-                //}
-
-                //return LevelDefault;
-                // Читаем без блокировки файла
-                using FileStream fs = new FileStream(levelFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using StreamReader sr = new StreamReader(fs);
-                string? text = sr.ReadLine()?.Trim();
-
-                return string.IsNullOrWhiteSpace(text) ? levelDefault : (LogLevel.FromString(text) ?? levelDefault);
-
-            }
-            catch
-            {
-                return levelDefault;
-            }
+            // Если файла нет — Info. 
+            // Если файл есть, но пустой — тоже Info
+            return LogLevelReader.GetLevelFromFile("log.level", LogLevel.Info, LogLevel.Info);
         }
 
         /// <summary>

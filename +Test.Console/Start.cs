@@ -41,6 +41,12 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
+
+            var info = HostInfo.Current;
+
+            string log = info.ToDiagnosticString();
+
+
             Console.WriteLine("-=Start=-");
             Console.ReadKey();
             //InternalLoggerHelpers.ConfigureInternalLogger();
