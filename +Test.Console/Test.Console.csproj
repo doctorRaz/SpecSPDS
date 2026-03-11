@@ -13,7 +13,7 @@
 		<Description>Отладка в консоли</Description>
 		<RootNamespace>dRz.SpecSpds.Test</RootNamespace>
 		<AssemblyTitle>Test.Cmd</AssemblyTitle>
-		<AssemblyName>SpecSPDS.nCad</AssemblyName>
+		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="_draft\**" />
