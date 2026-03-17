@@ -106,7 +106,7 @@ namespace dRz.SpecSPDS.nCad
         private IMessageService msg = new MessageService();
         internal void HelloSpec()
         {
-            msg.ConsoleMessage($"Hello SpecSPDS for nanoCAD {App.Version.Major.ToString()}.{App.Version.Minor.ToString()}");
+            msg.ConsoleMessage($"Hello SpecSPDS for nanoCAD v{App.Version.Major}.{App.Version.Minor}");
         }
     }
 
