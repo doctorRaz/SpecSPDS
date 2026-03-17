@@ -136,7 +136,7 @@ namespace dRz.Loader.Cad
                 Version version = Application.Version;
 
                 //получаем информацию о хосте для лога
-                InfoCad infoCad = InfoCad.GetInfo;
+                InfoCad infoCad = InfoCad.Current;
 
                 string fileDescription = infoCad.FileDescription;
 

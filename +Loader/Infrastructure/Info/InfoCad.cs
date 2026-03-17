@@ -10,7 +10,7 @@ namespace dRz.Loader.Cad.Infrastructure.Info
     public sealed class InfoCad
     {
 
-        public static InfoCad GetInfo { get; } = new InfoCad();
+        public static InfoCad Current { get; } = new InfoCad();
 
         public string ExePath { get; } = string.Empty;
 
@@ -63,12 +63,11 @@ namespace dRz.Loader.Cad.Infrastructure.Info
 
                     FileVersion = fvi.FileVersion!;
 
-                    int major = fvi.ProductMajorPart;
-                    int minor = fvi.ProductMinorPart;
-                    int build = fvi.ProductBuildPart;
-                    int privatePart = fvi.ProductPrivatePart;
-
-                    ProductVersion = new Version(major, minor, build, privatePart);
+                    ProductVersion = new Version(
+                        fvi.ProductMajorPart,
+                        fvi.ProductMinorPart,
+                        fvi.ProductBuildPart,
+                        fvi.ProductPrivatePart);
 
                     #endregion
 

@@ -41,14 +41,14 @@ namespace dRz.SpecSpds.Test
         private static void Main(string[] args)
         {
 
-            var cad = InfoHosts.GetEnvironment();
+            var cad = InfoHosts.Current;
 
             Console.WriteLine(cad.ToString());
 
 
-            InfoCad cadInfo = InfoCad.GetInfo;
+            InfoCad cadInfo = InfoCad.Current;
 
-            InfoOs osInfo = InfoOs.GetInfo;
+            InfoOs osInfo = InfoOs.Current;
 
             Console.WriteLine("-=Start=-");
             Console.ReadKey();

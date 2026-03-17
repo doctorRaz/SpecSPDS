@@ -10,11 +10,11 @@
 
         private InfoHosts()
         {
-            Cad = InfoCad.GetInfo;
-            OS = InfoOs.GetInfo;
+            Cad = InfoCad.Current;
+            OS = InfoOs.Current;
         }
 
-        public static InfoHosts GetEnvironment() => new InfoHosts();
+        public static InfoHosts Current { get; } = new InfoHosts();
 
         public override string ToString()
         {
