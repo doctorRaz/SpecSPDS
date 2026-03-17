@@ -13,7 +13,7 @@ namespace dRz.SpecSPDS.Core.Settings
             _product = product;
         }
 
-        private static string? _product;
+        private static string _product;
         private static string Product =>
                 _product ?? throw new InvalidOperationException("AppPaths not initialized");
         public static string AppRoot =>

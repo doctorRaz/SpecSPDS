@@ -1,5 +1,8 @@
 ﻿namespace dRz.SpecSPDS.Abstractions.Services
 {
+    /// <summary>
+    /// Сервис документа
+    /// </summary>
     public interface IDocumentService
     {
         /// <summary> Активен ли документ </summary>

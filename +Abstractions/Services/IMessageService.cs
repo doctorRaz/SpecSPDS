@@ -8,7 +8,7 @@ namespace dRz.SpecSPDS.Abstractions.Services
     {
         /// <summary> Сообщение в консоль CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически. В случае, если ком.строка недоступна,<br/>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически. В случае, если ком.строка недоступна,<br/>
         /// рекомендуется реализовывать вызов <see cref="InfoMessage"/> с теми же параметрам </param>
         /// <example>Пример использования в C#
         /// <code language="cs">
@@ -19,9 +19,10 @@ namespace dRz.SpecSPDS.Abstractions.Services
         /// </code></example>
         /// <remarks>В зависимости от основной CAD-системы может понадобиться в реализации обрамлять сообщение символами перевода строки (\n)</remarks>
         void Console(string message, [CallerMemberName] string caller = null);
+
         /// <summary> Информационное сообщение для CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[
@@ -33,7 +34,7 @@ namespace dRz.SpecSPDS.Abstractions.Services
         void InfoMessage(string message, [CallerMemberName] string caller = null);
         /// <summary> Сообщение об ошибке, не вызывающей критическую остановку выполнения кода </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[
@@ -45,7 +46,7 @@ namespace dRz.SpecSPDS.Abstractions.Services
         void ErrorMessage(string message, [CallerMemberName] string caller = null);
         /// <summary> Сообщение об исключении. Как правило, блокирует дальнейшее выполнение кода </summary>
         /// <param name="ex">Полное описание ошибки</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[

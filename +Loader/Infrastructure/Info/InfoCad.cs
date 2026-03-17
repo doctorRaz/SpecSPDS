@@ -99,7 +99,7 @@ namespace dRz.Loader.Cad.Infrastructure.Info
             ExePath: {ExePath}
             InstallDirectory: {InstallDirectory}
             FileName: {FileName}
-            ProductVersion: {ProductVersion.ToString()}
+            ProductVersion: {ProductVersion}
             FileVersion: {FileVersion}
             ProductName: {ProductName}
             CompanyName: {CompanyName}

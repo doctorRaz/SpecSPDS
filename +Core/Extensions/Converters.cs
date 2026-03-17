@@ -40,7 +40,7 @@ namespace dRz.SpecSPDS.Core.Extensions
             try
             {
                 if (s != null && !string.IsNullOrWhiteSpace(s))
-                    if (!s.Contains(","))
+                    if (!s.Contains(','))
                         result = double.Parse(s, CultureInfo.InvariantCulture);
                     else
                         result = Convert.ToDouble(s.Replace(".", systemSeparator.ToString()).Replace(",", systemSeparator.ToString()));

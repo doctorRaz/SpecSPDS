@@ -15,7 +15,7 @@ namespace dRz.SpecSPDS.Infrastructure.Infrastructure
 
         public Version Version
         {
-            get => _assembly.GetName().Version;
+            get => _assembly.GetName().Version!;
         }
         public string Path
         {
@@ -23,7 +23,7 @@ namespace dRz.SpecSPDS.Infrastructure.Infrastructure
         }
         public string Name
         {
-            get => _assembly.FullName;
+            get => _assembly.FullName!;
         }
 
         public IntPtr CadWindowHandle { get => _handle; }
