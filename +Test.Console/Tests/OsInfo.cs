@@ -19,7 +19,7 @@ namespace dRz.SpecSpds.Test.Tests
         {
             Is64BitOS = Environment.Is64BitOperatingSystem;
 
-            OSArchitecture = Is64BitOS == true ? "x64" : "x32";
+            OSArchitecture = Is64BitOS ? "64-bit" : "32-bit";
 
             OSDescription = Environment.OSVersion.VersionString;
 
@@ -29,10 +29,10 @@ namespace dRz.SpecSpds.Test.Tests
         public override string ToString()
         {
             return
-            $@"OS
+            $@"     OS
             Description: {OSDescription}
             Version: {OSVersion}
-            Architecture: {OSArchitecture} 
+            OSArchitecture: {OSArchitecture} 
             Is64BitOS {(Is64BitOS ? "64-bit" : "32-bit")}";
         }
     }

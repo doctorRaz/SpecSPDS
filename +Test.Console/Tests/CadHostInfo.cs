@@ -34,7 +34,7 @@ namespace dRz.SpecSpds.Test.Tests
 
         public bool Is64BitProcess { get; }
 
-        public string ArchitectureName { get; } = string.Empty;
+        public string HostArchitecture { get; } = string.Empty;
 
 
         private CadHostInfo()
@@ -45,7 +45,7 @@ namespace dRz.SpecSpds.Test.Tests
                 ExePath = CadHostExePath.GetExePathProcess();
 
 #if !(NC || NC26)
-                ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCadM.exe";
+                //ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCadM.exe";
 #endif
 
                 if (!string.IsNullOrEmpty(ExePath))
@@ -84,7 +84,7 @@ namespace dRz.SpecSpds.Test.Tests
 
                     Is64BitProcess = Environment.Is64BitProcess;
 
-                    ArchitectureName = Is64BitProcess == true ? "x64" : "x32";
+                    HostArchitecture = Is64BitProcess ? "64-bit" : "32-bit";
                 }
             }
             catch
@@ -96,13 +96,19 @@ namespace dRz.SpecSpds.Test.Tests
         public override string ToString()
         {
             return
-            $@"CAD
-            InstallDir:     {InstallDirectory}
-            ProgramData:    {ProductName}
-            UserAppData:    {CompanyName}
-            PluginData:     {OriginalFilename}
-            Logs:           {Copyright}
-            Temp:           {ArchitectureName}";
+            $@"     CAD
+            ExePath: {ExePath}
+            InstallDirectory: {InstallDirectory}
+            FileName: {FileName}
+            ProductVersion: {ProductVersion.ToString()}
+            FileVersion: {FileVersion}
+            ProductName: {ProductName}
+            CompanyName: {CompanyName}
+            FileDescription: {FileDescription}
+            OriginalFilename: {OriginalFilename}
+            Copyright: {Copyright}
+            HostArchitecture: {HostArchitecture}
+            Is64BitProcess: {(Is64BitProcess ? "64-bit" : "32-bit")}";
         }
     }
 }
