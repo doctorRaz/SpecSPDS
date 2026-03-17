@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Import Project="Shared.props" Condition="Exists('Shared.props')"/>
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
@@ -16,13 +16,9 @@
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);NC;NC26</DefineConstants>
 	</PropertyGroup>
+
 	<ItemGroup>
-		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="MultiCAD.NET" Version="26.0.7226.4926" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="26.0.7226.4926" />
-		<!--<PackageReference Include="NLog" Version="6.0.7" />-->
 	</ItemGroup>
 </Project>
