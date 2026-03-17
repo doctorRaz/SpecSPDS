@@ -2,9 +2,9 @@
 
 namespace dRz.SpecSpds.Test.Tests
 {
-    public sealed class OsInfo
+    public sealed class InfoOs
     {
-        public static OsInfo GetInfo { get; } = new OsInfo();
+        public static InfoOs GetInfo { get; } = new InfoOs();
 
         public bool Is64BitOS { get; }
 
@@ -15,7 +15,7 @@ namespace dRz.SpecSpds.Test.Tests
         public string OSArchitecture { get; } = string.Empty;
 
 
-        private OsInfo()
+        private InfoOs()
         {
             Is64BitOS = Environment.Is64BitOperatingSystem;
 

@@ -8,7 +8,7 @@ namespace dRz.SpecSpds.Test.Tests
     /// <summary>
     /// Класс для получения пути к исполняемому файлу хоста (exe)
     /// </summary>
-    public static class CadHostExePath
+    public static class CadPath
     {
         /// <summary>
         /// Получить полный путь к exe текущего процесса

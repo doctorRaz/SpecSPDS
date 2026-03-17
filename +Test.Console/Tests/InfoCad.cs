@@ -7,10 +7,10 @@ namespace dRz.SpecSpds.Test.Tests
     /// <summary>
     /// Максимально полная информация о процессе-хосте (nanoCAD)
     /// </summary>
-    public sealed class CadHostInfo
+    public sealed class InfoCad
     {
 
-        public static CadHostInfo GetInfo { get; } = new CadHostInfo();
+        public static InfoCad GetInfo { get; } = new InfoCad();
 
         public string ExePath { get; } = string.Empty;
 
@@ -37,12 +37,12 @@ namespace dRz.SpecSpds.Test.Tests
         public string HostArchitecture { get; } = string.Empty;
 
 
-        private CadHostInfo()
+        private InfoCad()
         {
             try
             {
                 //ExePath = HostExePath.GetExePath();
-                ExePath = CadHostExePath.GetExePathProcess();
+                ExePath = CadPath.GetExePathProcess();
 
 #if !(NC || NC26)
                 //ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCadM.exe";

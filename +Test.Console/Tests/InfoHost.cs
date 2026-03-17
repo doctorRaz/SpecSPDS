@@ -3,18 +3,18 @@
     /// <summary>
     /// Универсальная среда CAD (Host + OS)
     /// </summary>
-    public sealed class CadEnvironment
+    public sealed class InfoHost
     {
-        public CadHostInfo Cad { get; }
-        public OsInfo OS { get; }
+        public InfoCad Cad { get; }
+        public InfoOs OS { get; }
 
-        private CadEnvironment()
+        private InfoHost()
         {
-            Cad = CadHostInfo.GetInfo;
-            OS = OsInfo.GetInfo;
+            Cad = InfoCad.GetInfo;
+            OS = InfoOs.GetInfo;
         }
 
-        public static CadEnvironment GetEnvironment() => new CadEnvironment();
+        public static InfoHost GetEnvironment() => new InfoHost();
 
         public override string ToString()
         {
