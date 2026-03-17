@@ -1,13 +1,13 @@
-﻿using dRz.Loader.Cad.Infrastructure.Logging.Diagnostics;
+﻿using dRz.Loader.Cad.Infrastructure.Info;
+using dRz.Loader.Cad.Infrastructure.Logging.Diagnostics;
+
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
-using System.IO;
 using System;
-using dRz.Loader.Cad.Infrastructure.Info;
-
+using System.IO;
 
 
 #if NC
@@ -23,7 +23,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
     /// </summary>
     internal static class LogBootstrap
     {
-
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// Initializes
         /// </summary>
@@ -68,11 +68,11 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     if (_initialized)
                     {
                         string mode = isProgrammatic ? "Programm" : "External";
+                        //инфа про ос и кад
+                        log.Info("Logger started. Mode={0}. App={1}", mode, InfoAdOn.ProductTitle);
+                        log.Info("OS={0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
 
-                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}", mode, InfoAdOn.ProductTitle);
-                        //todo здесь пишем информацию о системе
                     }
-
                 }
 
                 //исключения поднимаем наверх,
@@ -80,7 +80,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                 //логгер используется везде
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Trace.WriteLine($"Critical Logger Failure: {ex}");
+
                     throw;
                 }
             }
@@ -137,7 +137,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                 QueueLimit = 10000,              // размер очереди
                 OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
                 BatchSize = 500,
-                TimeToSleepBetweenBatches = 1,
+                TimeToSleepBetweenBatches = 10,
             };
 
             config.AddTarget("asyncFile", asyncTarget);
