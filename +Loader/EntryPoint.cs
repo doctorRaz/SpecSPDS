@@ -4,11 +4,12 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
-using dRz.Loader.Cad.Interfaces;
-using dRz.Loader.Cad.Infrastructure.Logging;
 using dRz.Loader.Cad;
-using dRz.Loader.Cad.Services;
+using dRz.Loader.Cad.Interfaces;
 using dRz.Loader.Cad.Infrastructure;
+using dRz.Loader.Cad.Infrastructure.Info;
+using dRz.Loader.Cad.Infrastructure.Logging;
+using dRz.Loader.Cad.Services;
 
 using NLog;
 using System;
@@ -16,13 +17,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ComponentModel;
-using dRz.Loader.Cad.Infrastructure.Info;
+
 
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
 #elif NC
-using HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 #endif
 
@@ -58,7 +58,7 @@ namespace dRz.Loader.Cad
             //если нет библиотек или еще какой косяк
             try
             {
-                //понаблюдать, возможно тормозит нану
+                //регистрируемся
                 TryRegisterAssemblyResolver();
 
                 //nlog
@@ -67,8 +67,8 @@ namespace dRz.Loader.Cad
                 // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
                 if (!LogBootstrap.Init())
                 {
-                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger." +
-                        $"\nЗагрузка {InfoAdOn.ProductName} будет продолжена");
+                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
+                        + $"\nЗагрузка {InfoAdOn.ProductName} будет продолжена");
                 }
 
 
@@ -84,8 +84,6 @@ namespace dRz.Loader.Cad
                 string message = $"{InfoAdOn.ProductName} не загружен!!!" +
                                     $"\nСкопируйте это сообщение и отправьте разработчику";
 
-                System.Diagnostics.Trace.WriteLine($"{message}:{ex}");
-
                 msg.ExceptionMessage(message, ex);
             }
 
@@ -100,19 +98,6 @@ namespace dRz.Loader.Cad
                 }
                 catch { }
             }
-
-        }
-
-        private void CleanBackups()
-        {
-            try
-            {
-                string directoryPath = InfoAdOn.AssemblyDirectory;
-
-                CleaningBackups.Cleaning(directoryPath);
-            }
-
-            catch { }
 
         }
 
@@ -133,14 +118,11 @@ namespace dRz.Loader.Cad
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
                 // Version, полученного из Application.Version.
-                Version version = Application.Version;
+                Version version = InfoCad.ProductVersion;// Version;
 
-                //получаем информацию о хосте для лога
-                InfoCad infoCad = InfoCad.Current;
+                string fileDescription = InfoCad.FileDescription;
 
-                string fileDescription = infoCad.FileDescription;
-
-                log.Info($"CAD detected: {fileDescription}.{version.ToString()}");
+                log.Info($"Обнаружен: {fileDescription} v{version}");
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -150,7 +132,7 @@ namespace dRz.Loader.Cad
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {fileDescription}.{version.ToString()}";
+                    string mesag = $"Не найден подходящий адаптер для {fileDescription} v{version.ToString()}";
 
                     log.Error($"{mesag}");
 
@@ -159,7 +141,7 @@ namespace dRz.Loader.Cad
                     return false;
                 }
 
-                log.Debug($"CadLoading CAD adapter: {targetDllFullName}");//найден адаптер
+                log.Info($"Адаптер найден в: {targetDllFullName}");//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то 
                 // загружаем его.
@@ -168,11 +150,9 @@ namespace dRz.Loader.Cad
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        string mesag = $"Загружается адаптер для {fileDescription}.{version.ToString()}: {targetDllFullName.FullName}";
+                        string mesag = $"Загружается адаптер для: {fileDescription} v{version.ToString()}, целевая сборка: {targetDllFullName.FullName}";
 
-                        msg.ConsoleMessage(mesag);
-
-                        log.Debug(mesag);
+                        log.Info(mesag);
 
                         asm = Assembly.LoadFrom(targetDllFullName.FullName);
                     }
@@ -186,7 +166,7 @@ namespace dRz.Loader.Cad
                         throw exception;
                     }
 
-                    log.Debug("Adapter CAD initialized successfully");
+                    log.Info($"Адаптер для {fileDescription} v{version.ToString()} загружен");
 
                 }
                 catch (Exception ex)
@@ -284,7 +264,6 @@ namespace dRz.Loader.Cad
         }
 
 
-
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
         /// <param name="withSubfolders">Учитывать поддиректории</param>
@@ -349,7 +328,7 @@ namespace dRz.Loader.Cad
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+                msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -383,6 +362,24 @@ namespace dRz.Loader.Cad
         #endregion
 
         /// <summary>
+        /// Cleans the backups.
+        /// </summary>
+        private void CleanBackups()
+        {
+            try
+            {
+                string directoryPath = InfoAdOn.AssemblyDirectory;
+
+                CleaningBackups.Cleaning(directoryPath);
+            }
+
+            catch { }
+
+        }
+
+        #region Terminate
+
+        /// <summary>
         /// Код данного метода выполняется при завершении работы AutoCAD.
         /// </summary>
         public void Terminate()
@@ -404,11 +401,10 @@ namespace dRz.Loader.Cad
                 log.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-            }
+            catch { } // смысла нет что то показывать при закрытии наны
 
         }
+
+        #endregion
     }
 }
