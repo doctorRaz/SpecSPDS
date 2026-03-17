@@ -4,40 +4,32 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
-
-
-using NLog;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.ComponentModel;
-using dRz.Loader.Cad.Infrastructure;
-using System.Linq;
 using dRz.Loader.Cad.Interfaces;
 using dRz.Loader.Cad.Infrastructure.Logging;
 using dRz.Loader.Cad;
 using dRz.Loader.Cad.Services;
+using dRz.Loader.Cad.Infrastructure;
 
-
+using NLog;
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.ComponentModel;
+using dRz.Loader.Cad.Infrastructure.Info;
 
 
 #if AC
-
 using Rtm = Autodesk.AutoCAD.Runtime;
-
 #elif NC
-
 using HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
-
 #endif
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
 namespace dRz.Loader.Cad
 {
-
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
@@ -45,14 +37,12 @@ namespace dRz.Loader.Cad
     internal sealed class EntryPoint : Rtm.IExtensionApplication
     {
         private const string netPluginExtension = ".dll";
-        private static readonly string[] extensions = new string[] { ".arx", ".dvb" };
-        private static readonly string[] methodNames = new string[] { "LoadArx", "LoadDVB" };
 
-        //возможен вызов до инициализации??
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         private IMessageService msg = new MessageService();
 
+        private bool _registered;
 
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
@@ -68,74 +58,73 @@ namespace dRz.Loader.Cad
             //если нет библиотек или еще какой косяк
             try
             {
-                //todo понаблюдать, возможно тормозит нану
+                //понаблюдать, возможно тормозит нану
                 TryRegisterAssemblyResolver();
 
                 //nlog
-                //todo если false return и message
-                TryInitLoger();
-
-                //load adapter
-                if (!TryCadLoading())
+                // если ехception, поднимаем его сюда, стоп работа
+                // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
+                // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
+                if (!LogBootstrap.Init())
                 {
-                    //todo messagg  Error
-                    msg.ConsoleMessage($"\n-= [{nameof(Initialize)}] сбой загрузки. {LoaderEnvironment.ProductName} не загружен =-\n");
+                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger." +
+                        $"\nЗагрузка {InfoAdOn.ProductName} будет продолжена");
                 }
+
+
+                //стартуем очистку копий и bak
+                CleanBackups();
+
+                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
+                CadLoading();
+
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                msg.ExceptionMessage(ex);
+                string message = $"{InfoAdOn.ProductName} не загружен!!!" +
+                                    $"\nСкопируйте это сообщение и отправьте разработчику";
+
+                System.Diagnostics.Trace.WriteLine($"{message}:{ex}");
+
+                msg.ExceptionMessage(message, ex);
             }
+
+            //отписываемся независимо от результата этому аддону подписка  больше не нужен
+            finally
+            {
+                try
+                {
+
+                    TryUnregisterAssemblyResolver();
+
+                }
+                catch { }
+            }
+
         }
 
-        private void TryRegisterAssemblyResolver()
+        private void CleanBackups()
         {
-            //https://adn-cis.org/forum/index.php?topic=10332.msg47741#msg47741
-            //https://autolisp.ru/2025/01/27/loading-another-assemblies/
             try
             {
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+                string directoryPath = InfoAdOn.AssemblyDirectory;
+
+                CleaningBackups.Cleaning(directoryPath);
             }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex, "AssemblyResolver registration failed");
-            }
+
+            catch { }
+
         }
 
-        private bool TryInitLoger()
-        {
-            try
-            {
-                    LogBootstrap.Initialize();
-                return true;
-                 
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-                return false;
-            }
-        }
 
         /// <summary>
-        /// Загрузка адаптера
+        /// Cads the loading.
         /// </summary>
-        /// <returns>успех</returns>
-        private bool TryCadLoading()
-        {
-            try
-            {
-                return CadLoading();
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-                log.Error(ex.Message, ex);
-                return false;
-            }
-        }
+        /// <returns></returns>
         private bool CadLoading()
         {
+            //todo в лог пишем инфу о системе и каде
+
             try
             {
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
@@ -146,65 +135,70 @@ namespace dRz.Loader.Cad
                 // Version, полученного из Application.Version.
                 Version version = Application.Version;
 
-                log.Info($"CAD detected: {version.ToString()}");
+                //получаем информацию о хосте для лога
+                InfoCad infoCad = InfoCad.GetInfo;
+
+                string fileDescription = infoCad.FileDescription;
+
+                log.Info($"CAD detected: {fileDescription}.{version.ToString()}");
 
                 string fileFullName = GetType().Assembly.Location;
 
                 Version minVersion = new Version(23, 0);
 
-                FileInfo targetDllFullName = FindFile(fileFullName, version, minVersion);
+                FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для CAD {version.ToString()}";
+                    string mesag = $"Не найден подходящий адаптер для {fileDescription}.{version.ToString()}";
 
                     log.Error($"{mesag}");
 
-                    msg.ConsoleMessage($"{mesag}");
+                    msg.ExceptionMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
 
-                log.Info($"CadLoading CAD adapter: {targetDllFullName}");
+                log.Debug($"CadLoading CAD adapter: {targetDllFullName}");//найден адаптер
 
-                // Если найден файл, соответствующий нашей версии AutoCAD, то 
+                // Если найден файл, соответствующий нашей версии CAD, то 
                 // загружаем его.
                 Assembly? asm = null;
                 try
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
                     {
+                        string mesag = $"Загружается адаптер для {fileDescription}.{version.ToString()}: {targetDllFullName.FullName}";
+
+                        msg.ConsoleMessage(mesag);
+
+                        log.Debug(mesag);
+
                         asm = Assembly.LoadFrom(targetDllFullName.FullName);
                     }
                     else
                     {
-                        int index = Array.IndexOf(extensions, targetDllFullName.Extension);
+                        //на случай, если в будущем будет поддержка других типов плагинов, например ARX или VBA
+                        NotSupportedException exception = new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
 
-                        if (index >= 0)
-                        {
-                            object application = Application.AcadApplication;
+                        log.Error(exception, "Plugin type validation failed");
 
-                            application.GetType().InvokeMember(methodNames[index], BindingFlags
-                              .InvokeMethod, null, application, new object[] {
-                            targetDllFullName.FullName });
-                        }
+                        throw exception;
                     }
 
-                    log.Info("Adapter CAD initialized successfully");
+                    log.Debug("Adapter CAD initialized successfully");
 
                 }
                 catch (Exception ex)
                 {
-                    msg.ExceptionMessage(ex);
-                    log.Error(ex.Message, ex);
-                    return false;
+                    log.Error(ex, ex.Message);
+                    throw;
                 }
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex);
                 log.Error(ex, ex.Message);
-                return false;
+                throw;
             }
 
             return true;
@@ -223,144 +217,80 @@ namespace dRz.Loader.Cad
         /// <returns>Возвращается FileInfo наиболее подходящего файла, для его 
         /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то 
         /// возвращается null.</returns>
-        private FileInfo FindFile(string fileFullName, Version expectedVersion,
-          Version minVersion)
+        private FileInfo? FindFile(string fileFullName,
+                                   Version expectedVersion,
+                                   Version minVersion)
         {
 
             if (fileFullName == null)
-                throw new ArgumentNullException("fileFullName");
+            {
+                throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
+            }
 
             if (fileFullName.Trim() == string.Empty)
-                throw new ArgumentException("fileFullName.Trim() == String.Empty");
+            {
+                throw new ArgumentException("The fileFullName parameter cannot be an empty string.", nameof(fileFullName));
+            }
 
             if (expectedVersion < minVersion)
-                throw new ArgumentException("expectedVersion < minVersion");
-
-            int major = expectedVersion.Major;
-
-            int minor = expectedVersion.Minor;
+            {
+                throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
+            }
 
             string? directory = Path.GetDirectoryName(fileFullName);
+            if (directory == null)
+            {
+                throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
+            }
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-            string coreString = string.Format("{0}.{1}", major.ToString(), minor.ToString());
+            int major = expectedVersion.Major;
+            int minor = expectedVersion.Minor;
 
-            string subDirectoryName = "R" + coreString;
-            string subDirectoryName_xPlatform = subDirectoryName + (IntPtr.Size == 4 ? "x86" : "x64");
-
-            string targetFileName = string.Empty;
-            string targetFileName_xPlatform = string.Empty;
-            string targetFileFullName = string.Empty;
-            string targetFileFullName_xPlatform = string.Empty;
-
-            List<string> items = new List<string>(extensions);
-            items.Insert(0, netPluginExtension);
-
-            string name = string.Empty;
-
-            foreach (string extension in items)
+            while (true)
             {
+                string coreString_ = $"{major}.{minor}";
+                string targetFileName_ = $"{fileName}.{coreString_}{netPluginExtension}";
 
-                targetFileName = string.Format("{0}.{1}{2}", fileName, coreString, extension);
-                targetFileName_xPlatform = string.Format("{0}.{1}{2}{3}", fileName, coreString, IntPtr.Size == 4 ? "x86" : "x64", extension);
+                string foundPath = GetFileOfDir(directory, true, targetFileName_);
 
-                // Сначала выполняем поиск в текущем каталоге
-                targetFileFullName = Path.Combine(directory, targetFileName);
-                if (File.Exists(targetFileFullName))
+                if (!string.IsNullOrEmpty(foundPath) && File.Exists(foundPath))
                 {
-                    name = targetFileFullName;
-                    break;
-                }
-                targetFileFullName_xPlatform = Path.Combine(directory, targetFileName_xPlatform);
-
-                if (File.Exists(targetFileFullName_xPlatform))
-                {
-                    name = targetFileFullName_xPlatform;
-                    break;
+                    return new FileInfo(foundPath);
                 }
 
-                // Если в текущем каталоге подходящий файл не найден, то продолжаем
-                // поиск по соответствующим подкаталогам
-                targetFileFullName = directory + "\\" + subDirectoryName + "\\" + targetFileName;
-                if (File.Exists(targetFileFullName))
-                {
-                    name = targetFileFullName;
-                    break;
-                }
-
-                targetFileFullName_xPlatform = directory + "\\" + subDirectoryName_xPlatform + "\\" + targetFileName_xPlatform;
-
-                if (File.Exists(targetFileFullName_xPlatform))
-                {
-                    name = targetFileFullName_xPlatform;
-                    break;
-                }
-            }
-
-            // Если найден файл, соответствующий нашей версии AutoCAD, то возвращаем 
-            // соответствующий ему объект FileInfo.
-            if (File.Exists(name))
-            {
-                return new FileInfo(name);
-            }
-            // Если соответствия не найдено, то продолжаем поиск, последовательно 
-            // проверяя наличие подходящего файла для более ранних версий AutoCAD
-            else
-            {
+                // Понижение версии
                 if (minor == 0)
                 {
-                    minor = 3;
-                    --major;
+                    minor = 5;
+                    major--;
                 }
                 else
                 {
-                    --minor;
+                    minor--;
                 }
 
-                Version version = new Version(major, minor);
+                Version currentVersion = new Version(major, minor);
 
-                if (version < minVersion)
-                    return null;
-
-                FileInfo file = FindFile(fileFullName, new Version(major, minor), minVersion);
-                return file;
-            }
-        }
-
-        /// <summary>
-        /// Обработчик события AssemblyResolve
-        /// </summary>
-        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            try
-            {
-                string dllName = $"{args.Name.Split(',')[0]}.dll";
-
-                // Полный путь к текущей сборке
-                string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
-
-                string fullPath  = GetFilesOfDir(_assemblyDirectory, true, dllName);
-                
-                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                if (currentVersion < minVersion)
                 {
-                    return Assembly.LoadFile(fullPath);
+                    break;
                 }
-            }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex,"Failed to resolve assembly");
             }
 
             return null;
+
         }
+
+
 
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
         /// <param name="withSubfolders">Учитывать поддиректории</param>
         /// <param name="serchPatern">Маска поиска</param>
         /// <returns>Пути к файлам</returns>
-        private string GetFilesOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
+        private string GetFileOfDir(string path, bool withSubfolders, string serchPatern = "*.dll")
         {
             try
             {
@@ -376,6 +306,82 @@ namespace dRz.Loader.Cad
             }
         }
 
+        #region AssemblyResolver
+
+        /// <summary>
+        /// Tries the register assembly resolver.
+        /// </summary>
+        private void TryRegisterAssemblyResolver()
+        {
+            try
+            {
+                if (_registered)
+                {
+                    return;
+                }
+
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+                _registered = true;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// Tries the unregister assembly resolver.
+        /// </summary>
+        private void TryUnregisterAssemblyResolver()
+        {
+            try
+            {
+                if (!_registered)
+                {
+                    return;
+                }
+
+                AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
+
+                _registered = false;
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик события AssemblyResolve
+        /// </summary>
+        private Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            try
+            {
+                string dllName = $"{args.Name.Split(',')[0]}.dll";
+
+                // Полный путь к текущей сборке
+                string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
+
+                string fullPath = GetFileOfDir(_assemblyDirectory, true, dllName);
+
+                if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
+                {
+                    return Assembly.LoadFile(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage("Failed to resolve assembly", ex);
+            }
+
+            return null;
+        }
+
+        #endregion
+
         /// <summary>
         /// Код данного метода выполняется при завершении работы AutoCAD.
         /// </summary>
@@ -383,10 +389,26 @@ namespace dRz.Loader.Cad
         {
             try
             {
-                log.Info("LogManager.Shutdown");
+                TryTerminate();
+            }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex);
+            }
+        }
+
+        private void TryTerminate()
+        {
+            try
+            {
+                log.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                msg.ExceptionMessage(ex);
+            }
+
         }
     }
 }

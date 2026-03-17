@@ -2,19 +2,18 @@
 using System.IO;
 using System.Reflection;
 
-namespace dRz.Loader.Cad.Infrastructure
+namespace dRz.Loader.Cad.Infrastructure.Info
 {
     /// <summary>
     /// Runtime environment for loader assembly.
     /// Immutable static context.
     /// </summary>
-    public static class LoaderEnvironment
+    public static class InfoAdOn
     {
 
-
-        static LoaderEnvironment()
+        static InfoAdOn()
         {
-            Assembly assembly = typeof(LoaderEnvironment).Assembly;
+            Assembly assembly = typeof(InfoAdOn).Assembly;
 
             AssemblyPath = assembly.Location;
             AssemblyDirectory = Path.GetDirectoryName(AssemblyPath)!;
@@ -110,6 +109,11 @@ namespace dRz.Loader.Cad.Infrastructure
 
         // -------------------- Helpers --------------------
 
+        /// <summary>
+        /// Первая часть имени сборки до точки
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         private static string ExtractProductPrefix(string fileName)
         {
             int dotIndex = fileName.IndexOf('.');

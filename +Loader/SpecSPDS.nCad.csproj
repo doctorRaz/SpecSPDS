@@ -20,11 +20,6 @@
 		<None Remove="_Draft\**" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Include="..\+Test.Console\Tests\CadHostInfo.cs" Link="Infrastructure\CadHostInfo.cs" />
-	  <Compile Include="..\+Test.Console\Tests\CadHostExePath.cs" Link="Infrastructure\CadHostExePath.cs" />
-	  <Compile Include="..\+Test.Console\Tests\OsInfo.cs" Link="Infrastructure\OsInfo.cs" />
-	</ItemGroup>
-	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
 		<!--<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />-->

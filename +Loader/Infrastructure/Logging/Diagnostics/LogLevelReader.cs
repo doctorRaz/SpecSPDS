@@ -1,7 +1,8 @@
-﻿using NLog;
+﻿using dRz.Loader.Cad.Infrastructure.Info;
+using NLog;
 using System.IO;
 
-namespace dRz.Loader.Cad.Infrastructure.Logging
+namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
 {
     internal static class LogLevelReader
     {
@@ -18,7 +19,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         {
             try
             {
-                string path = Path.Combine(LoaderEnvironment.AssemblyDirectory, fileName);
+                string path = Path.Combine(InfoAdOn.AssemblyDirectory, fileName);
                 if (!File.Exists(path))
                 {
                     return defaultLevel;

@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using dRz.Loader.Cad.Infrastructure.Info;
+using NLog;
 using NLog.Common;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
                 return;
             }
 
-            string logDir = LoaderEnvironment.AppDataProductLogPath;
+            string logDir = InfoAdOn.AppDataProductLogPath;
 
             // 1. Сначала удаляем 6-й и далее файлы
             RotateOldLogs(logDir);
@@ -51,7 +52,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
             //ошибки конфига
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.Info($"{LoaderEnvironment.FileName}: InternalLogger Initialize Level={level}");
+            InternalLogger.Info($"{InfoAdOn.FileName}: InternalLogger Initialize Level={level}");
 
         }
 
@@ -92,7 +93,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
                 List<FileInfo> files = new DirectoryInfo(logDir)
-                 .GetFiles($"*_{LoaderEnvironment.FileName}_internal*.log")
+                 .GetFiles($"*_{InfoAdOn.FileName}_internal*.log")
                  .OrderByDescending(f => f.LastWriteTime)
                  .ToList();
 
@@ -116,7 +117,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
         }
 
         private static string GetInternalLogPath(string logDir) =>
-           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{LoaderEnvironment.FileName}_internal.log");
+           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{InfoAdOn.FileName}_internal.log");
 
 
     }

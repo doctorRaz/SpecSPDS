@@ -6,6 +6,8 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System.IO;
 using System;
+using dRz.Loader.Cad.Infrastructure.Info;
+
 
 
 #if NC
@@ -67,7 +69,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     {
                         string mode = isProgrammatic ? "Programm" : "External";
 
-                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}", mode, LoaderEnvironment.ProductTitle);
+                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}", mode, InfoAdOn.ProductTitle);
                         //todo здесь пишем информацию о системе
                     }
 
@@ -94,8 +96,8 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
             LogLevel currentLevel = ReadLogLevelOnce();
 
             GlobalDiagnosticsContext.Set("LevelMay", currentLevel.ToString());
-            GlobalDiagnosticsContext.Set("AppTitle", LoaderEnvironment.ProductTitle);
-            GlobalDiagnosticsContext.Set("LogsDir", LoaderEnvironment.AppDataProductLogPath);
+            GlobalDiagnosticsContext.Set("AppTitle", InfoAdOn.ProductTitle);
+            GlobalDiagnosticsContext.Set("LogsDir", InfoAdOn.AppDataProductLogPath);
 
             //возможно, стоит вызвать, что бы все обновилось, если конфиг уже был, но может и не нужно, так как мы не меняем правила и шаблоны, а только переменные. Надо протестировать.
             //LogManager.ReconfigExistingLoggers();
@@ -113,8 +115,8 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("xmlFile")
             {
-                FileName = Path.Combine(LoaderEnvironment.AppDataProductLogPath, $"${{shortdate}}_{LoaderEnvironment.ProductTitle}.log"),
-                ArchiveFileName = Path.Combine(LoaderEnvironment.AppDataProductLogPath, $"${{shortdate}}_{LoaderEnvironment.ProductTitle}.{{#}}.log"),
+                FileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.ProductTitle}.log"),
+                ArchiveFileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.ProductTitle}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveAboveSize = 5 * 1024 * 1024,
