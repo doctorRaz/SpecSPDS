@@ -10,7 +10,7 @@ namespace dRz.SpecSpds.Test.Tests
     public sealed class CadHostInfo
     {
 
-        public static CadHostInfo Current { get; } = new CadHostInfo();
+        public static CadHostInfo GetInfo { get; } = new CadHostInfo();
 
         public string ExePath { get; } = string.Empty;
 
@@ -60,7 +60,7 @@ namespace dRz.SpecSpds.Test.Tests
                     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(ExePath);
 
                     #region Version
-                    
+
                     FileVersion = fvi.FileVersion!;
 
                     int major = fvi.ProductMajorPart;
@@ -84,13 +84,25 @@ namespace dRz.SpecSpds.Test.Tests
 
                     Is64BitProcess = Environment.Is64BitProcess;
 
-                    ArchitectureName = Is64BitProcess==true?"x64":"x32" ;
+                    ArchitectureName = Is64BitProcess == true ? "x64" : "x32";
                 }
             }
             catch
             {
                 // intentionally ignore
             }
+        }
+
+        public override string ToString()
+        {
+            return
+            $@"CAD
+            InstallDir:     {InstallDirectory}
+            ProgramData:    {ProductName}
+            UserAppData:    {CompanyName}
+            PluginData:     {OriginalFilename}
+            Logs:           {Copyright}
+            Temp:           {ArchitectureName}";
         }
     }
 }
