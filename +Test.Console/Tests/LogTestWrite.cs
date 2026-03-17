@@ -1,7 +1,7 @@
 ﻿using NLog;
 using System;
 
-namespace dRz.SpecSpds.Test.nLogTest
+namespace dRz.SpecSpds.Test.Tests
 {
     internal class LogTestWrite
     {

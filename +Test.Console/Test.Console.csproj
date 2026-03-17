@@ -26,11 +26,20 @@
 		<Page Remove="_experimental\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="..\+Loader\Infrastructure\LoaderEnvironment.cs" Link="Loader\Infrastructure\LoaderEnvironment.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Info\InfoAdOn.cs" Link="Loader\Infrastructure\Info\InfoAdOn.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Info\CadPath.cs" Link="Loader\Infrastructure\Info\CadPath.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Info\InfoCad.cs" Link="Loader\Infrastructure\Info\InfoCad.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Info\InfoHosts.cs" Link="Loader\Infrastructure\Info\InfoHosts.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Info\InfoOs.cs" Link="Loader\Infrastructure\Info\InfoOs.cs" />
+		
+		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" />
+		
+		
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\LogLevelReader.cs" />
+		
+		<Compile Include="..\+Loader\Infrastructure\CleaningBackups.cs" Link="Loader\Infrastructure\CleaningBackups.cs" />
 		
 		
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />

@@ -5,6 +5,7 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 using dRz.Loader.Cad.Infrastructure;
+using dRz.Loader.Cad.Infrastructure.Info;
 using dRz.Loader.Cad.Infrastructure.Logging;
 using dRz.Loader.Cad.Interfaces;
 using dRz.SpecSpds.Test.Services;
@@ -24,8 +25,6 @@ namespace dRz.SpecSpds.Test.Loader
     {
         private const string netPluginExtension = ".dll";
 
-        //todo В боевом коде логер включать в методе??? возможен вызов до инициализации
-
         private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         private IMessageService msg = new MessageService();
@@ -44,7 +43,7 @@ namespace dRz.SpecSpds.Test.Loader
             //если нет библиотек или еще какой косяк
             try
             {
-                //todo понаблюдать, возможно тормозит нану
+                //понаблюдать, возможно тормозит нану
                 //выключать если точно не понадобится
                 //если ех оставляем там, продолжаем работу
                 TryRegisterAssemblyResolver();//теоретически упасть не может
@@ -53,9 +52,11 @@ namespace dRz.SpecSpds.Test.Loader
                 // если ехception, поднимаем его сюда, стоп работа
                 // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
                 // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
-           
+
                 if (!LogBootstrap.Init())
-                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(Initialize)}]: Ошибка в конфигурации Logger. Загрузка {LoaderEnvironment.ProductName} будет продолжена");
+                {
+                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(Initialize)}]: Ошибка в конфигурации Logger. Загрузка {InfoAdOn.ProductName} будет продолжена");
+                }
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
@@ -63,7 +64,7 @@ namespace dRz.SpecSpds.Test.Loader
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                string message = $"{LoaderEnvironment.ProductName} не загружен!!!" +
+                string message = $"{InfoAdOn.ProductName} не загружен!!!" +
                     $"\nСкопируйте это сообщение и отправьте разработчику";
 
                 System.Diagnostics.Trace.WriteLine($"{message}:{ex}");
@@ -102,9 +103,11 @@ namespace dRz.SpecSpds.Test.Loader
 
                 Version minVersion = new Version(23, 0);
 
-                Version version = _version;// Application.Version;
+                Version? version = _version;// Application.Version;
 
-                log.Debug($"CAD detected: {version.ToString()}");
+                log.Debug($"CAD detected: {version?.ToString()}");
+
+                //todo детектить имя хоста для лога???
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -128,7 +131,6 @@ namespace dRz.SpecSpds.Test.Loader
                     {
                         string mesag = $"Загружается адаптер для CAD {version.ToString()}: {targetDllFullName.FullName}";
 
-                        msg.ConsoleMessage(mesag);
                         log.Debug(mesag);
 
                         //asm = Assembly.LoadFrom(targetDllFullName.FullName);
@@ -170,22 +172,31 @@ namespace dRz.SpecSpds.Test.Loader
         /// <returns>Возвращается FileInfo наиболее подходящего файла, для его 
         /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то 
         /// возвращается null.</returns>
-        private FileInfo? FindFile(string fileFullName, Version expectedVersion,
-          Version minVersion)
+        private FileInfo? FindFile(string fileFullName,
+                                   Version expectedVersion,
+                                   Version minVersion)
         {
 
             if (fileFullName == null)
+            {
                 throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
+            }
 
             if (fileFullName.Trim() == string.Empty)
+            {
                 throw new ArgumentException("The fileFullName parameter cannot be an empty string.", nameof(fileFullName));
+            }
 
             if (expectedVersion < minVersion)
+            {
                 throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
+            }
 
             string? directory = Path.GetDirectoryName(fileFullName);
             if (directory == null)
+            {
                 throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
+            }
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
@@ -218,12 +229,15 @@ namespace dRz.SpecSpds.Test.Loader
                 Version currentVersion = new Version(major, minor);
 
                 if (currentVersion < minVersion)
+                {
                     break;
+                }
             }
 
             return null;
-
         }
+
+
 
 
         /// <summary>Получить список путей фалов в директории</summary>
@@ -261,7 +275,10 @@ namespace dRz.SpecSpds.Test.Loader
         {
             try
             {
-                if (_registered) return;
+                if (_registered)
+                {
+                    return;
+                }
 
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
@@ -280,7 +297,11 @@ namespace dRz.SpecSpds.Test.Loader
         {
             try
             {
-                if (!_registered) return;
+                if (!_registered)
+                {
+                    return;
+                }
+
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
 
                 _registered = false;
@@ -336,7 +357,7 @@ namespace dRz.SpecSpds.Test.Loader
         {
             try
             {
-                log.Trace("LogManager.Shutdown");
+                log.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
             catch (Exception ex)
