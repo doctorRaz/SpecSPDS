@@ -29,7 +29,7 @@
 		<Compile Include="..\+Loader\Infrastructure\Info\InfoAdOn.cs" Link="Loader\Infrastructure\Info\InfoAdOn.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Info\CadPath.cs" Link="Loader\Infrastructure\Info\CadPath.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Info\InfoCad.cs" Link="Loader\Infrastructure\Info\InfoCad.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Info\InfoHosts.cs" Link="Loader\Infrastructure\Info\InfoHosts.cs" />
+		
 		<Compile Include="..\+Loader\Infrastructure\Info\InfoOs.cs" Link="Loader\Infrastructure\Info\InfoOs.cs" />
 		
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" />

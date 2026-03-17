@@ -2,19 +2,19 @@
 
 namespace dRz.Loader.Cad.Infrastructure.Info
 {
-    public sealed class InfoOs
+    public static class InfoOs
     {
-        public static InfoOs Current { get; } = new InfoOs();
+        //public static InfoOs Current { get; } = new InfoOs();
 
-        public bool Is64BitOS { get; }
+        public static bool Is64BitOS { get; }
 
-        public string OsDescription { get; } = string.Empty;
+        public static string OsDescription { get; } = string.Empty;
 
-        public Version OsVersion { get; } = new Version();
+        public static Version OsVersion { get; } = new Version();
 
-        public string OsArchitecture { get; } = string.Empty;
+        public static string OsArchitecture { get; } = string.Empty;
 
-        private InfoOs()
+        static InfoOs()
         {
             Is64BitOS = Environment.Is64BitOperatingSystem;
 
@@ -25,7 +25,7 @@ namespace dRz.Loader.Cad.Infrastructure.Info
             OsVersion = Environment.OSVersion.Version;
         }
 
-        public override string ToString()
+        public static string GetEnvironmentInfo()
         {
             return
             $@"     OS

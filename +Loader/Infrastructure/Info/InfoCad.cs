@@ -10,34 +10,34 @@ namespace dRz.Loader.Cad.Infrastructure.Info
     public sealed class InfoCad
     {
 
-        public static InfoCad Current { get; } = new InfoCad();
+        //public static InfoCad Current { get; } = new InfoCad();
 
-        public string ExePath { get; } = string.Empty;
+        public static string ExePath { get; } = string.Empty;
 
-        public string InstallDirectory { get; } = string.Empty;
+        public static string InstallDirectory { get; } = string.Empty;
 
-        public string FileName { get; } = string.Empty;
+        public static string FileName { get; } = string.Empty;
 
-        public Version ProductVersion { get; } = new Version();
+        public static Version ProductVersion { get; } = new Version();
 
-        public string FileVersion { get; } = string.Empty;
+        public static string FileVersion { get; } = string.Empty;
 
-        public string ProductName { get; } = string.Empty;
+        public static string ProductName { get; } = string.Empty;
 
-        public string CompanyName { get; } = string.Empty;
+        public static string CompanyName { get; } = string.Empty;
 
-        public string FileDescription { get; } = string.Empty;
+        public static string FileDescription { get; } = string.Empty;
 
-        public string OriginalFilename { get; } = string.Empty;
+        public static string OriginalFilename { get; } = string.Empty;
 
-        public string Copyright { get; } = string.Empty;
+        public static string Copyright { get; } = string.Empty;
 
-        public bool Is64BitProcess { get; }
+        public static bool Is64BitProcess { get; }
 
-        public string HostArchitecture { get; } = string.Empty;
+        public static string HostArchitecture { get; } = string.Empty;
 
 
-        private InfoCad()
+        static InfoCad()
         {
             try
             {
@@ -92,7 +92,7 @@ namespace dRz.Loader.Cad.Infrastructure.Info
             }
         }
 
-        public override string ToString()
+        public static string GetEnvironmentInfo()
         {
             return
             $@"     CAD
