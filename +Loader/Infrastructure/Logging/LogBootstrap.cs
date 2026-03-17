@@ -78,7 +78,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                 //исключения поднимаем наверх,
                 //без Nlog продолжить работу невозможно,
                 //логгер используется везде
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                     throw;
@@ -153,9 +153,19 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         /// <returns></returns>
         private static LogLevel ReadLogLevelOnce()
         {
+
+#if DEBUG
+
+            // Если файла нет — Debug. 
+            // Если файл есть, но пустой — тоже Debug
+            return LogLevelReader.GetLevelFromFile("log.level", LogLevel.Debug, LogLevel.Debug);
+
+#else
             // Если файла нет — Info. 
             // Если файл есть, но пустой — тоже Info
             return LogLevelReader.GetLevelFromFile("log.level", LogLevel.Info, LogLevel.Info);
+#endif
+
         }
 
         /// <summary>
