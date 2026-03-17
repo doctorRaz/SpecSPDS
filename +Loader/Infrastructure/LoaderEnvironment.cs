@@ -20,6 +20,8 @@ namespace dRz.Loader.Cad.Infrastructure
             AssemblyDirectory = Path.GetDirectoryName(AssemblyPath)!;
             FileName = Path.GetFileNameWithoutExtension(AssemblyPath);
 
+            AssemblyVersion = assembly.GetName().Version!;
+
             ProductName =
                 assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
                 ?? ExtractProductPrefix(FileName);
@@ -103,6 +105,8 @@ namespace dRz.Loader.Cad.Infrastructure
         /// The n log configuration path.
         /// </value>
         public static string NLogConfigPath { get; }
+
+        public static Version AssemblyVersion { get; }
 
         // -------------------- Helpers --------------------
 

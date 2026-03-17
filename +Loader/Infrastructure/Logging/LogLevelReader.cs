@@ -19,13 +19,21 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
             try
             {
                 string path = Path.Combine(LoaderEnvironment.AssemblyDirectory, fileName);
-                if (!File.Exists(path)) return defaultLevel;
+                if (!File.Exists(path))
+                {
+                    return defaultLevel;
+                }
 
-                using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var sr = new StreamReader(fs);
+                using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                using StreamReader sr = new StreamReader(fs);
+
                 string? text = sr.ReadLine()?.Trim();
 
-                if (string.IsNullOrWhiteSpace(text)) return fallbackIfEmpty;
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    return fallbackIfEmpty;
+                }
 
                 return LogLevel.FromString(text) ?? fallbackIfEmpty;
             }

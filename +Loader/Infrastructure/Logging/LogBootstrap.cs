@@ -6,7 +6,6 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System.IO;
 using System;
-using System.Linq;
 
 
 #if NC
@@ -29,17 +28,23 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         internal static bool Init()
         {
 
-            if (_initialized) return true;
+            if (_initialized)
+            {
+                return true;
+            }
 
             // лочим, что бы никто нее влез
             lock (_sync)
             {
-                if (_initialized) return true;
+                if (_initialized)
+                {
+                    return true;
+                }
 
                 bool isProgrammatic = false; // Флаг
 
                 try
-                 {
+                {
                     //диагностика
                     InternalLoggerHelpers.ConfigureInternalLogger();
 
@@ -53,7 +58,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     {
                         // Конфиг уже есть (nlog.config), просто прокидываем в него 
                         // наши пути через переменные
-                        ApplyCommonVariables(LogManager.Configuration);
+                        ApplyCommonVariables();
                     }
 
                     _initialized = LogManager.Configuration != null;
@@ -62,7 +67,8 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     {
                         string mode = isProgrammatic ? "Programm" : "External";
 
-                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}",mode, LoaderEnvironment.ProductTitle);
+                        LogManager.GetCurrentClassLogger().Info("Logger started. Mode={0}. App={1}", mode, LoaderEnvironment.ProductTitle);
+                        //todo здесь пишем информацию о системе
                     }
 
                 }
@@ -81,11 +87,11 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         }
 
 
-        private static void ApplyCommonVariables(LoggingConfiguration? config)
+        private static void ApplyCommonVariables()
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
 
-            var currentLevel = ReadLogLevelOnce();
+            LogLevel currentLevel = ReadLogLevelOnce();
 
             GlobalDiagnosticsContext.Set("LevelMay", currentLevel.ToString());
             GlobalDiagnosticsContext.Set("AppTitle", LoaderEnvironment.ProductTitle);

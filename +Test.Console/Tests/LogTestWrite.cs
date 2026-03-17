@@ -28,18 +28,23 @@ namespace dRz.SpecSpds.Test.nLogTest
             b = calcs();
 
             if (log.IsDebugEnabled)
+            {
                 log.Warn("This is a message from {Calc}", calcs());
+            }
+
             tt t = new tt();
 
             try
             {
 
                 if (log.IsDebugEnabled)
+                {
                     log.ForTraceEvent()
                        .Message("Начало работы")
                        .Property("prop1", calcs())
                        .Property("prop2", 123)
                        .Log();
+                }
 
                 log.ForTraceEvent()
                        .Message("Класс Продолжение работы")

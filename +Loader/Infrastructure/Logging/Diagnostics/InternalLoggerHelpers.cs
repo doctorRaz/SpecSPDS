@@ -1,7 +1,6 @@
 ﻿using NLog;
 using NLog.Common;
 using System;
-using dRz.Loader.Cad.Infrastructure.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,7 +21,10 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
             // Если файл создан, но пустой — Trace (максимум инфы).
             LogLevel level = LogLevelReader.GetLevelFromFile("diagnostic.mode", LogLevel.Off, LogLevel.Trace);
 
-            if (level == LogLevel.Off) return;
+            if (level == LogLevel.Off)
+            {
+                return;
+            }
 
             string logDir = LoaderEnvironment.AppDataProductLogPath;
 
@@ -82,7 +84,10 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
         {
             try
             {
-                if (!Directory.Exists(logDir)) return;
+                if (!Directory.Exists(logDir))
+                {
+                    return;
+                }
 
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
@@ -97,7 +102,10 @@ namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
                 if (files.Count > arhivedFilesCount)
                 {
 
-                    foreach (FileInfo? file in files.Skip(arhivedFilesCount)) file.Delete();
+                    foreach (FileInfo? file in files.Skip(arhivedFilesCount))
+                    {
+                        file.Delete();
+                    }
                 }
             }
             catch (Exception ex)
