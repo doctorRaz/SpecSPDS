@@ -23,7 +23,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
     /// </summary>
     internal static class LogBootstrap
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        
         /// <summary>
         /// Initializes
         /// </summary>
@@ -50,7 +50,20 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     //диагностика
                     InternalLoggerHelpers.ConfigureInternalLogger();
 
-                    if (LogManager.Configuration == null)
+                    LoggingConfiguration config = null;
+                    try
+                    {
+                        // Пытаемся использовать внешний конфиг
+                        config=LogManager.Configuration;
+                    }
+                    catch(NLogConfigurationException)
+                    {
+                        // Конфиг битый
+                        config = null;
+                    }
+
+
+                    if (config == null)
                     {
                         // Создаем с нуля и сразу заполняем всем необходимым
                         LoadConfiguration();
@@ -67,6 +80,8 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
 
                     if (_initialized)
                     {
+                        /*private static readonly*/ ILogger log = LogManager.GetCurrentClassLogger();
+
                         string mode = isProgrammatic ? "Programm" : "External";
                         //инфа про ос и кад
                         log.Info("Logger started. Mode={0}. App={1}", mode, InfoAdOn.ProductTitle);
