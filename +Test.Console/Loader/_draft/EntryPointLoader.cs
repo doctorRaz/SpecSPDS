@@ -4,7 +4,6 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
-using dRz.Loader.Cad.Infrastructure;
 using dRz.Loader.Cad.Infrastructure.Info;
 using dRz.Loader.Cad.Infrastructure.Logging;
 using dRz.Loader.Cad.Interfaces;
@@ -14,6 +13,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using dRz.Loader.Cad.Infrastructure;
 
 namespace dRz.SpecSpds.Test.Loader
 {
@@ -24,14 +24,12 @@ namespace dRz.SpecSpds.Test.Loader
     internal sealed class EntryPoint
     {
         private const string netPluginExtension = ".dll";
-
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
-
+        
         private IMessageService msg = new MessageService();
 
         private Version? _version;
 
-        private bool _registered;
+        private bool _registered=true;
 
         public EntryPoint(Version version)
         {
@@ -43,20 +41,22 @@ namespace dRz.SpecSpds.Test.Loader
             //если нет библиотек или еще какой косяк
             try
             {
-                //понаблюдать, возможно тормозит нану
-                //выключать если точно не понадобится
-                //если ех оставляем там, продолжаем работу
-                TryRegisterAssemblyResolver();//теоретически упасть не может
+                //регистрируемся
+                TryRegisterAssemblyResolver();
 
                 //nlog
                 // если ехception, поднимаем его сюда, стоп работа
                 // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
                 // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
-
                 if (!LogBootstrap.Init())
                 {
-                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(Initialize)}]: Ошибка в конфигурации Logger. Загрузка {InfoAdOn.ProductName} будет продолжена");
+                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
+                        + $"\nЗагрузка {InfoAdOn.ProductName} будет продолжена");
                 }
+
+
+                //стартуем очистку копий и bak
+                CleanBackups();
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
@@ -65,9 +65,7 @@ namespace dRz.SpecSpds.Test.Loader
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
                 string message = $"{InfoAdOn.ProductName} не загружен!!!" +
-                    $"\nСкопируйте это сообщение и отправьте разработчику";
-
-                System.Diagnostics.Trace.WriteLine($"{message}:{ex}");
+                                    $"\nСкопируйте это сообщение и отправьте разработчику";
 
                 msg.ExceptionMessage(message, ex);
             }
@@ -79,6 +77,7 @@ namespace dRz.SpecSpds.Test.Loader
                 {
 
                     TryUnregisterAssemblyResolver();
+
                 }
                 catch { }
             }
@@ -92,6 +91,9 @@ namespace dRz.SpecSpds.Test.Loader
         /// <returns></returns>
         private bool CadLoading()
         {
+            /*private static readonly*/
+            ILogger log = LogManager.GetCurrentClassLogger();
+
             try
             {
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
@@ -100,22 +102,21 @@ namespace dRz.SpecSpds.Test.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
                 // Version, полученного из Application.Version.
+                Version version = InfoCad.ProductVersion;// Version;
 
-                Version minVersion = new Version(23, 0);
+                string fileDescription = InfoCad.FileDescription;
 
-                Version? version = _version;// Application.Version;
-
-                log.Debug($"CAD detected: {version?.ToString()}");
-
-                //todo детектить имя хоста для лога???
+                log.Info($"Обнаружен: {fileDescription} v{version}");
 
                 string fileFullName = GetType().Assembly.Location;
+
+                Version minVersion = new Version(23, 0);
 
                 FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для CAD {version.ToString()}";
+                    string mesag = $"Не найден подходящий адаптер для {fileDescription} v{version.ToString()}";
 
                     log.Error($"{mesag}");
 
@@ -124,24 +125,32 @@ namespace dRz.SpecSpds.Test.Loader
                     return false;
                 }
 
-                log.Debug($"CadLoading CAD adapter: {targetDllFullName}");
+                log.Info($"Адаптер найден в: {targetDllFullName}");//найден адаптер
+
+                // Если найден файл, соответствующий нашей версии CAD, то 
+                // загружаем его.
+                Assembly? asm = null;
                 try
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        string mesag = $"Загружается адаптер для CAD {version.ToString()}: {targetDllFullName.FullName}";
+                        string mesag = $"Загружается адаптер для: {fileDescription} v{version.ToString()}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Debug(mesag);
+                        log.Info(mesag);
 
-                        //asm = Assembly.LoadFrom(targetDllFullName.FullName);
+                        asm = Assembly.LoadFrom(targetDllFullName.FullName);
                     }
                     else
                     {
                         //на случай, если в будущем будет поддержка других типов плагинов, например ARX или VBA
-                        throw new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
+                        NotSupportedException exception = new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
+
+                        log.Error(exception, "Plugin type validation failed");
+
+                        throw exception;
                     }
 
-                    log.Debug("Adapter CAD initialized successfully");
+                    log.Info($"Адаптер для {fileDescription} v{version.ToString()} загружен");
 
                 }
                 catch (Exception ex)
@@ -158,7 +167,6 @@ namespace dRz.SpecSpds.Test.Loader
 
             return true;
         }
-
         /// <summary>
         /// Получить имя наиболее подходящего файла, для его последующей загрузки в
         /// AutoCAD. Если такой файл не будет найден, то возвращается null.
@@ -235,9 +243,8 @@ namespace dRz.SpecSpds.Test.Loader
             }
 
             return null;
+
         }
-
-
 
 
         /// <summary>Получить список путей фалов в директории</summary>
@@ -252,19 +259,14 @@ namespace dRz.SpecSpds.Test.Loader
                 string[] files = Directory.GetFiles(path,
                                           serchPatern,
                                           withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-
                 return files.FirstOrDefault() ?? string.Empty;
             }
             catch (Exception ex)
             {
-                string messag = $"Error searching files in {path}";
-
-                msg.ExceptionMessage(messag, ex);
-
+                msg.ExceptionMessage(ex, $"Error searching files in {path}");
                 return string.Empty;
             }
         }
-
 
         #region AssemblyResolver
 
@@ -290,6 +292,7 @@ namespace dRz.SpecSpds.Test.Loader
             }
         }
 
+
         /// <summary>
         /// Tries the unregister assembly resolver.
         /// </summary>
@@ -308,7 +311,7 @@ namespace dRz.SpecSpds.Test.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+                msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -341,6 +344,27 @@ namespace dRz.SpecSpds.Test.Loader
 
         #endregion
 
+        /// <summary>
+        /// Cleans the backups.
+        /// </summary>
+        private void CleanBackups()
+        {
+            try
+            {
+                string directoryPath = InfoAdOn.AssemblyDirectory;
+
+                CleaningBackups.Cleaning(directoryPath);
+            }
+
+            catch { }
+
+        }
+
+        #region Terminate
+
+        /// <summary>
+        /// Код данного метода выполняется при завершении работы AutoCAD.
+        /// </summary>
         public void Terminate()
         {
             try
@@ -356,15 +380,16 @@ namespace dRz.SpecSpds.Test.Loader
         private void TryTerminate()
         {
             try
-            {
-                log.Debug("LogManager.Shutdown");
+            {/*private static readonly */
+                ILogger log = LogManager.GetCurrentClassLogger();
+
+                LogManager.GetCurrentClassLogger()  /*log*/.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-            }
+            catch { } // смысла нет что то показывать при закрытии наны
 
         }
+
+        #endregion
     }
 }

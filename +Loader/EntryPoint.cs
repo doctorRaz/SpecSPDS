@@ -9,7 +9,6 @@ using dRz.Loader.Cad.Interfaces;
 using dRz.Loader.Cad.Infrastructure;
 using dRz.Loader.Cad.Infrastructure.Info;
 using dRz.Loader.Cad.Infrastructure.Logging;
-using dRz.Loader.Cad.Services;
 
 using NLog;
 using System;
@@ -19,6 +18,11 @@ using System.Reflection;
 using System.ComponentModel;
 
 
+#if CMD
+using dRz.SpecSpds.Test.Services;
+#else
+using dRz.Loader.Cad.Services;
+#endif
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
@@ -26,7 +30,9 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 using Rtm = Teigha.Runtime;
 #endif
 
+#if !CMD
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
+#endif
 
 namespace dRz.Loader.Cad
 {
@@ -34,7 +40,11 @@ namespace dRz.Loader.Cad
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
     /// подходящей для него версии плагина.
     /// </summary>
+#if CMD
+    internal sealed class EntryPoint
+#else
     internal sealed class EntryPoint : Rtm.IExtensionApplication
+#endif
     {
         private const string netPluginExtension = ".dll";
 
@@ -47,7 +57,7 @@ namespace dRz.Loader.Cad
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
-#if DEBUG
+#if DEBUG && NC
         [Rtm.CommandMethod("инитЛД")]
         [Description("ручной инит загрузчика")]
 #endif

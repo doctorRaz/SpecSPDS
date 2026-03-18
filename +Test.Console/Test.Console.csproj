@@ -15,13 +15,20 @@
 		<AssemblyTitle>Test.Cmd</AssemblyTitle>
 		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
 	</PropertyGroup>
+		<PropertyGroup>
+		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
+	</PropertyGroup>
 	<ItemGroup>
+		<Compile Remove="Loader\_draft\**" />
 		<Compile Remove="_draft\**" />
 		<Compile Remove="_experimental\**" />
+		<EmbeddedResource Remove="Loader\_draft\**" />
 		<EmbeddedResource Remove="_draft\**" />
 		<EmbeddedResource Remove="_experimental\**" />
+		<None Remove="Loader\_draft\**" />
 		<None Remove="_draft\**" />
 		<None Remove="_experimental\**" />
+		<Page Remove="Loader\_draft\**" />
 		<Page Remove="_draft\**" />
 		<Page Remove="_experimental\**" />
 	</ItemGroup>
@@ -43,6 +50,7 @@
 		
 		
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
+		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="drzNLog" Version="6.1.0-drz" />

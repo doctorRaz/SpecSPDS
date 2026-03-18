@@ -44,8 +44,8 @@ namespace dRz.Loader.Cad.Infrastructure.Info
                 //ExePath = HostExePath.GetExePath();
                 ExePath = CadPath.GetExePathProcess();
 
-#if !(NC || NC26)
-                ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCad.exe";
+#if CMD
+                ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";
 #endif
 
                 if (!string.IsNullOrEmpty(ExePath))
