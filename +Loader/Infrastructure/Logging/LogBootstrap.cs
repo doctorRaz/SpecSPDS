@@ -23,7 +23,7 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
     /// </summary>
     internal static class LogBootstrap
     {
-        
+
         /// <summary>
         /// Initializes
         /// </summary>
@@ -54,9 +54,9 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
                     try
                     {
                         // Пытаемся использовать внешний конфиг
-                        config=LogManager.Configuration;
+                        config = LogManager.Configuration;
                     }
-                    catch(NLogConfigurationException)
+                    catch (NLogConfigurationException)
                     {
                         // Конфиг битый
                         config = null;
@@ -80,12 +80,15 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
 
                     if (_initialized)
                     {
-                        /*private static readonly*/ ILogger log = LogManager.GetCurrentClassLogger();
+                        ILogger log = LogManager.GetCurrentClassLogger();
 
-                        string mode = isProgrammatic ? "Programm" : "External";
+                        string mode = isProgrammatic ? "Program" : "Config";
+
                         //инфа про ос и кад
-                        log.Info("Logger started. Mode={0}. App={1}", mode, InfoAdOn.ProductTitle);
-                        log.Info("OS={0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
+
+                        log.Debug("nLog Mode: {0}, App: {1}", mode, InfoAdOn.ProductTitle);
+
+                        log.Info("OS: {0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
 
                     }
                 }
@@ -168,17 +171,17 @@ namespace dRz.Loader.Cad.Infrastructure.Logging
         /// <returns></returns>
         private static LogLevel ReadLogLevelOnce()
         {
-
+            string logLevel = "log.level";
 #if DEBUG
 
             // Если файла нет — Debug. 
             // Если файл есть, но пустой — тоже Debug
-            return LogLevelReader.GetLevelFromFile("log.level", LogLevel.Debug, LogLevel.Debug);
+            return LogLevelReader.GetLevelFromFile(logLevel, LogLevel.Debug, LogLevel.Debug);
 
 #else
             // Если файла нет — Info. 
             // Если файл есть, но пустой — тоже Info
-            return LogLevelReader.GetLevelFromFile("log.level", LogLevel.Info, LogLevel.Info);
+            return LogLevelReader.GetLevelFromFile(logLevel, LogLevel.Info, LogLevel.Info);
 #endif
 
         }

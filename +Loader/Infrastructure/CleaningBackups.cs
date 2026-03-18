@@ -29,18 +29,12 @@ namespace dRz.Loader.Cad.Infrastructure
                             File.Delete(filePath);
 
                         }
-                        catch/* (Exception ex)*/
-                        {
-
-                        }
+                        catch { }
                     }
                 }
 
             }
-            catch /*(Exception ex)*/
-            {
-
-            }
+            catch { }
 
         }
     }

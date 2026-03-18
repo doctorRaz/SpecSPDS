@@ -22,7 +22,5 @@
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
-		<!--<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />-->
-		<!--<PackageReference Include="NLog" Version="6.0.7" />-->
 	</ItemGroup>
 </Project>

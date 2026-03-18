@@ -116,7 +116,6 @@ namespace dRz.Loader.Cad
         /// <returns></returns>
         private bool CadLoading()
         {
-            /*private static readonly*/
             ILogger log = LogManager.GetCurrentClassLogger();
 
             try
@@ -233,7 +232,9 @@ namespace dRz.Loader.Cad
             }
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
-
+#if CMD
+            fileName = "SpecSPDS.nCad";
+#endif
             int major = expectedVersion.Major;
             int minor = expectedVersion.Minor;
 
@@ -406,10 +407,8 @@ namespace dRz.Loader.Cad
         private void TryTerminate()
         {
             try
-            {/*private static readonly */
-                ILogger log = LogManager.GetCurrentClassLogger();
-
-                LogManager.GetCurrentClassLogger()  /*log*/.Debug("LogManager.Shutdown");
+            {
+                LogManager.GetCurrentClassLogger().Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
             catch { } // смысла нет что то показывать при закрытии наны
