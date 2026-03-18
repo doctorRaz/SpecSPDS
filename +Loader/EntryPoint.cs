@@ -38,8 +38,6 @@ namespace dRz.Loader.Cad
     {
         private const string netPluginExtension = ".dll";
 
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
-
         private IMessageService msg = new MessageService();
 
         private bool _registered;
@@ -108,7 +106,8 @@ namespace dRz.Loader.Cad
         /// <returns></returns>
         private bool CadLoading()
         {
-            //todo в лог пишем инфу о системе и каде
+            /*private static readonly*/
+            ILogger log = LogManager.GetCurrentClassLogger();
 
             try
             {
@@ -397,8 +396,10 @@ namespace dRz.Loader.Cad
         private void TryTerminate()
         {
             try
-            {
-                log.Debug("LogManager.Shutdown");
+            {/*private static readonly */
+                ILogger log = LogManager.GetCurrentClassLogger();
+
+                LogManager.GetCurrentClassLogger()  /*log*/.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
             catch { } // смысла нет что то показывать при закрытии наны
