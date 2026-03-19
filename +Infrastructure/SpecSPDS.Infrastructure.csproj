@@ -4,21 +4,24 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
+
 		<UseWindowForms>true</UseWindowForms>
-		  <RootNamespace>dRz.SpecSPDS.Infrastructure</RootNamespace>
+		<RootNamespace>dRz.SpecSPDS.Infrastructure</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
-				<Description>SpecSPDS сервисы инфроструктура</Description>
+		<Description>SpecSPDS сервисы инфроструктура</Description>
 		<AssemblyTitle>SpecSPDS.+Infrastructure</AssemblyTitle>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-
-	<ItemGroup>	
-	  <PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
-	  <PackageReference Include="SimpleInjector" Version="5.5.0" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
+		<PackageReference Include="SimpleInjector" Version="5.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\+Abstractions\SpecSPDS.Abstractions.csproj" />
+		<ProjectReference Include="..\+Abstractions\SpecSPDS.Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>

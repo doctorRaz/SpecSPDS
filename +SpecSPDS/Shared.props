@@ -1,11 +1,15 @@
 ﻿<Project>
 	<PropertyGroup>
-
+ 
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj"/>
+		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
-		<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+	<ItemGroup>
+		<PackageReference Include="drzNLog" Version="6.1.0-drz"/>
 	</ItemGroup>
 </Project>

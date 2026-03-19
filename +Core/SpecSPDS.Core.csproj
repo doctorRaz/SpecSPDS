@@ -14,6 +14,9 @@
 		<Description>SpecSPDS ядро</Description>
 		<AssemblyTitle>SpecSPDS.Core</AssemblyTitle>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 	<ItemGroup>
 		<!--<PackageReference Include="NLog" Version="6.0.7">-->
 		<!--<Private>true</Private>-->
