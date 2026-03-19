@@ -9,7 +9,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.ComponentModel;
 using dRz.Loader.Interfaces;
 using dRz.Loader.Infrastructure;
 using dRz.Loader.Infrastructure.Info;
@@ -30,6 +29,8 @@ using Rtm = Teigha.Runtime;
 #endif
 
 #if !CMD
+using System.ComponentModel;
+
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
