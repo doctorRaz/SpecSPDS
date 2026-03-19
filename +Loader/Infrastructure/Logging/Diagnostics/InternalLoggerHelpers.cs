@@ -19,8 +19,9 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
         internal static void ConfigureInternalLogger()
         {
             // Если файла нет — Off (ничего не делаем). 
-            // Если файл создан, но пустой — Trace (максимум инфы).
-            LogLevel level = LogLevelReader.GetLevelFromFile("diagnostic.mode", LogLevel.Off, LogLevel.Trace);
+            // Если файл создан, но пустой — Trace (максимум инфы)
+            // иначе уровень из файла.
+            LogLevel level = LogLevelReader.GetLevelFromFile(LogKeys.DiagnosticMode);
 
             if (level == LogLevel.Off)
             {

@@ -12,16 +12,25 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
         /// Если файл пустой или текст некорректный — возвращает fallbackIfEmpty.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="defaultLevel">The default level.</param>
-        /// <param name="fallbackIfEmpty">The fallback if empty.</param>
+        /// <param name="fallbackLevelName">The default level.</param>
         /// <returns></returns>
-        public static LogLevel GetLevelFromFile(string fileName, LogLevel defaultLevel, LogLevel fallbackIfEmpty)
+        public static LogLevel GetLevelFromFile(string fileName, string fallbackLevelName = "Trace")
         {
+            //если файла настроек нет
+            LogLevel defaultLevel = LogLevel.Off;
+
+            //файл настроек есть, но уровень определить не удалось
+            LogLevel fallbackIfEmpty = TryFromString(fallbackLevelName, LogLevel.Trace);
+
             try
             {
+                //путь к файлу настроек
                 string path = Path.Combine(InfoAdOn.AssemblyDirectory, fileName);
+
+
                 if (!File.Exists(path))
                 {
+                    //файла нет
                     return defaultLevel;
                 }
 
@@ -33,10 +42,25 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 
                 if (string.IsNullOrWhiteSpace(text))
                 {
+                    //файл есть, но пустой
                     return fallbackIfEmpty;
                 }
 
-                return LogLevel.FromString(text) ?? fallbackIfEmpty;
+                // пытаемся конвертнуть в LogLevel, если не вышло вернем умолчание
+                return TryFromString(text!, fallbackIfEmpty);
+            }
+            catch
+            {
+                //хз что за ошибка , на всякий случай офф
+                return defaultLevel;
+            }
+        }
+
+        static LogLevel TryFromString(string levelName, LogLevel defaultLevel)
+        {
+            try
+            {
+                return LogLevel.FromString(levelName);
             }
             catch
             {
