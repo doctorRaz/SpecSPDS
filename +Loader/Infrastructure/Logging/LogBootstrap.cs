@@ -9,12 +9,6 @@ using dRz.Loader.Infrastructure.Info;
 using dRz.Loader.Infrastructure.Logging.Diagnostics;
 
 
-
-
-
-//todo привести программную настройку в соответствие с xml!!!
-//в дебаг реализована запись из нескольких процессов
-
 #if NC
 using dRz.Loader.Services;
 #else
@@ -116,11 +110,44 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
 
-            LogLevel currentLevel = ReadLogLevelOnce();
+            GlobalDiagnosticsContext.Set(LogVar.AppTitle, InfoAdOn.ProductTitle);
+            GlobalDiagnosticsContext.Set(LogVar.LogsDir, InfoAdOn.AppDataProductLogPath);
 
-            GlobalDiagnosticsContext.Set("LevelMay", currentLevel.ToString());
-            GlobalDiagnosticsContext.Set("AppTitle", InfoAdOn.ProductTitle);
-            GlobalDiagnosticsContext.Set("LogsDir", InfoAdOn.AppDataProductLogPath);
+            // Если файла нет — Off (ничего не делаем). 
+            // Если файл создан, но пустой — Trace (максимум инфы)
+            // иначе уровень из файла.
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel);
+
+            //если офф, то не меняем уровень
+            if (currentLevel != LogLevel.Off)
+            {
+                GlobalDiagnosticsContext.Set(LogVar.LevelMay, currentLevel.ToString());
+            }
+
+#if DEBUG || CMD
+            //проверка значений  var
+            LoggingConfiguration? config = LogManager.Configuration;
+
+            if (config.Variables.ContainsKey(LogVar.FinalLevel))
+            {
+                Layout layot = config.Variables[LogVar.FinalLevel];
+
+                string finalLevel = layot.Render(LogEventInfo.CreateNullEvent());
+            }
+            if (config.Variables.ContainsKey(LogVar.FinalAppTitle))
+            {
+                Layout layot = config.Variables[LogVar.FinalAppTitle];
+
+                string finalAppTitle = layot.Render(LogEventInfo.CreateNullEvent());
+            }
+            if (config.Variables.ContainsKey(LogVar.FinalLogsDir))
+            {
+                Layout layot = config.Variables[LogVar.FinalLogsDir];
+
+                string finalLogsDir = layot.Render(LogEventInfo.CreateNullEvent());
+            }
+
+#endif
 
             //возможно, стоит вызвать, что бы все обновилось, если конфиг уже был, но может и не нужно, так как мы не меняем правила и шаблоны, а только переменные. Надо протестировать.
             //LogManager.ReconfigExistingLoggers();
@@ -133,7 +160,27 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
-            LogLevel level = ReadLogLevelOnce();
+#if DEBUG
+            // Если файла уровня нет — Debug. 
+            LogLevel level = LogLevel.Debug;
+            // Если файл есть, но пустой —Debug
+            string fallbackLevelName="Trace";
+#else
+            // Если файла нет — Info. 
+            LogLevel level = LogLevel.Info;
+            // Если файл есть, но пустой —Trace
+            string fallbackLevelName = "Trace";
+#endif
+
+            // Если файла уровня нет — Off (ничего не делаем). 
+            // Если файл создан, но пустой — Trace (максимум инфы)
+            // иначе уровень из файла.
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel, fallbackLevelName);
+
+            if (currentLevel != LogLevel.Off)
+            {
+                level = currentLevel;
+            }
 
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("xmlFile")
@@ -172,27 +219,6 @@ namespace dRz.Loader.Infrastructure.Logging
         }
 
         /// <summary>
-        /// Reads the log level once.
-        /// </summary>
-        /// <returns></returns>
-        private static LogLevel ReadLogLevelOnce()
-        {
-            string logLevel = "log.level";
-#if DEBUG
-
-            // Если файла нет — Debug. 
-            // Если файл есть, но пустой — тоже Debug
-            return LogLevelReader.GetLevelFromFile(logLevel, LogLevel.Debug, LogLevel.Debug);
-
-#else
-            // Если файла нет — Info. 
-            // Если файл есть, но пустой — тоже Info
-            return LogLevelReader.GetLevelFromFile(logLevel, LogLevel.Info, LogLevel.Info);
-#endif
-
-        }
-
-        /// <summary>
         /// XML layout
         /// </summary>
         /// <returns></returns>
@@ -211,6 +237,7 @@ namespace dRz.Loader.Infrastructure.Logging
                     new XmlAttribute("time", "${longdate}"),
                     new XmlAttribute("level", "${level:uppercase=true}"),
                     new XmlAttribute("logger", "${logger}"),
+                    new XmlAttribute("pid", "${processid}"),
                 },
 
                 Elements =
@@ -230,6 +257,7 @@ namespace dRz.Loader.Infrastructure.Logging
         /// The synchronize
         /// </summary>
         private static readonly object _sync = new();
+
 
     }
 }
