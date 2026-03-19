@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
-		<RootNamespace>dRz.Loader.Cad</RootNamespace>
+		<RootNamespace>dRz.Loader</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>

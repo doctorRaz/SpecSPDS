@@ -1,11 +1,11 @@
-﻿using dRz.Loader.Cad.Interfaces;
+﻿using dRz.Loader.Interfaces;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace dRz.Loader.Cad.Services
+namespace dRz.Loader.Services
 {
     internal class MessageService : IMessageService
     {

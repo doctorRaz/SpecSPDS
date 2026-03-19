@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace dRz.Loader.Cad.Interfaces
+namespace dRz.Loader.Interfaces
 {
     /// <summary> Сервис сообщений </summary>
     public interface IMessageService

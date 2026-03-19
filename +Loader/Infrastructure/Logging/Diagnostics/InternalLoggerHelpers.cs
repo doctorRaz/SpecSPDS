@@ -1,4 +1,4 @@
-﻿using dRz.Loader.Cad.Infrastructure.Info;
+﻿using dRz.Loader.Infrastructure.Info;
 using NLog;
 using NLog.Common;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
+namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 {
     internal static class InternalLoggerHelpers
     {

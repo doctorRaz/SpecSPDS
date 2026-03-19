@@ -4,24 +4,23 @@
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
-using dRz.Loader.Cad;
-using dRz.Loader.Cad.Interfaces;
-using dRz.Loader.Cad.Infrastructure;
-using dRz.Loader.Cad.Infrastructure.Info;
-using dRz.Loader.Cad.Infrastructure.Logging;
-
 using NLog;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ComponentModel;
+using dRz.Loader.Interfaces;
+using dRz.Loader.Infrastructure;
+using dRz.Loader.Infrastructure.Info;
+using dRz.Loader.Infrastructure.Logging;
+using dRz.Loader;
 
 
 #if CMD
 using dRz.SpecSpds.Test.Services;
 #else
-using dRz.Loader.Cad.Services;
+using dRz.Loader.Services;
 #endif
 
 #if AC
@@ -34,7 +33,7 @@ using Rtm = Teigha.Runtime;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
-namespace dRz.Loader.Cad
+namespace dRz.Loader
 {
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 

@@ -1,22 +1,27 @@
-﻿using dRz.Loader.Cad.Infrastructure.Info;
-using dRz.Loader.Cad.Infrastructure.Logging.Diagnostics;
-
-using NLog;
+﻿using NLog;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
+using dRz.Loader.Infrastructure.Info;
+using dRz.Loader.Infrastructure.Logging.Diagnostics;
 
+
+
+
+
+//todo привести программную настройку в соответствие с xml!!!
+//в дебаг реализована запись из нескольких процессов
 
 #if NC
-using dRz.Loader.Cad.Services;
+using dRz.Loader.Services;
 #else
 using dRz.SpecSpds.Test.Services;
 #endif
 
-namespace dRz.Loader.Cad.Infrastructure.Logging
+namespace dRz.Loader.Infrastructure.Logging
 {
     /// <summary>
     /// Конфигурация Nlog

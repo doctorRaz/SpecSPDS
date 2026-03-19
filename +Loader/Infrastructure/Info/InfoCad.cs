@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace dRz.Loader.Cad.Infrastructure.Info
+namespace dRz.Loader.Infrastructure.Info
 {
     /// <summary>
     /// Максимально полная информация о процессе-хосте (nanoCAD)

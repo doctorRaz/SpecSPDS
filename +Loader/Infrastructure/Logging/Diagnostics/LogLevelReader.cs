@@ -1,8 +1,8 @@
-﻿using dRz.Loader.Cad.Infrastructure.Info;
+﻿using dRz.Loader.Infrastructure.Info;
 using NLog;
 using System.IO;
 
-namespace dRz.Loader.Cad.Infrastructure.Logging.Diagnostics
+namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 {
     internal static class LogLevelReader
     {

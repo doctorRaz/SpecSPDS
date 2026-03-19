@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace dRz.Loader.Cad.Infrastructure
+namespace dRz.Loader.Infrastructure
 {
     public class CleaningBackups
 

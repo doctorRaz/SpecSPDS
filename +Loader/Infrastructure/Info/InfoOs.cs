@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dRz.Loader.Cad.Infrastructure.Info
+namespace dRz.Loader.Infrastructure.Info
 {
     public static class InfoOs
     {

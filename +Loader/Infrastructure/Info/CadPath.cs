@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace dRz.Loader.Cad.Infrastructure.Info
+namespace dRz.Loader.Infrastructure.Info
 {
     /// <summary>
     /// Класс для получения пути к исполняемому файлу хоста (exe)

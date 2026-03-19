@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace dRz.Loader.Cad.Infrastructure.Info
+namespace dRz.Loader.Infrastructure.Info
 {
     /// <summary>
     /// Runtime environment for loader assembly.
