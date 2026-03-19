@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<TargetFramework>net472</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
 		<RootNamespace>dRz.Loader</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
+
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей SpecSPDS под версию CAD</Description>
 		<AssemblyTitle>SpecSPDS.Loader</AssemblyTitle>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);NC</DefineConstants>
@@ -22,5 +26,8 @@
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
 </Project>
