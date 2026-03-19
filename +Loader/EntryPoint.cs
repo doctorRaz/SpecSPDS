@@ -10,17 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using dRz.Loader.Interfaces;
-using dRz.Loader.Infrastructure;
 using dRz.Loader.Infrastructure.Info;
 using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
-
-
-#if CMD
-using dRz.SpecSpds.Test.Services;
-#else
-using dRz.Loader.Services;
-#endif
+using dRz.Cleaner.Infrastructure;
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
@@ -28,9 +21,11 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 using Rtm = Teigha.Runtime;
 #endif
 
-#if !CMD
+#if CMD
+using dRz.SpecSpds.Test.Services;
+#else
 using System.ComponentModel;
-
+using dRz.Loader.Services;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
@@ -51,6 +46,8 @@ namespace dRz.Loader
         private IMessageService msg = new MessageService();
 
         private bool _registered;
+
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
@@ -81,7 +78,7 @@ namespace dRz.Loader
 
 
                 //стартуем очистку копий и bak
-                CleanBackups();
+                TryCleanBackups();
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
@@ -116,7 +113,7 @@ namespace dRz.Loader
         /// <returns></returns>
         private bool CadLoading()
         {
-            ILogger log = LogManager.GetCurrentClassLogger();
+            //ILogger log = LogManager.GetCurrentClassLogger();
 
             try
             {
@@ -174,7 +171,7 @@ namespace dRz.Loader
                         throw exception;
                     }
 
-                    log.Info($"Адаптер для {fileDescription} v{version.ToString()} загружен");
+                    log.Info($"Адаптер для {fileDescription} v{version} загружен");
 
                 }
                 catch (Exception ex)
@@ -232,8 +229,9 @@ namespace dRz.Loader
             }
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
+
 #if CMD
-            fileName = "SpecSPDS.nCad";
+            fileName = "SpecSPDSn";
 #endif
             int major = expectedVersion.Major;
             int minor = expectedVersion.Minor;
@@ -374,13 +372,28 @@ namespace dRz.Loader
         /// <summary>
         /// Cleans the backups.
         /// </summary>
-        private void CleanBackups()
+        private void TryCleanBackups()
+        {
+            try
+            {
+                CleanBackups();
+            }
+
+            catch (Exception ex)
+            {
+                log.Error(ex, $"CleanBackups: {ex.Message}");
+            }
+
+        }
+
+        void CleanBackups()
         {
             try
             {
                 string directoryPath = InfoAdOn.AssemblyDirectory;
 
-                CleaningBackups.Cleaning(directoryPath);
+                CleaningBackups.Cleaning(directoryPath);//x отключить после тестов
+                                                        //чистка это задача основных адаптеров а не загрузчика
             }
 
             catch { }
@@ -398,17 +411,14 @@ namespace dRz.Loader
             {
                 TryTerminate();
             }
-            catch (Exception ex)
-            {
-                msg.ExceptionMessage(ex);
-            }
+            catch { } // смысла нет что то показывать при закрытии наны
         }
 
         private void TryTerminate()
         {
             try
             {
-                LogManager.GetCurrentClassLogger().Debug("LogManager.Shutdown");
+                log.Debug("LogManager.Shutdown");
                 LogManager.Shutdown();
             }
             catch { } // смысла нет что то показывать при закрытии наны

@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDS.Infrastructure", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{7CCE4940-DFE5-40C3-B602-431E5B71DEAF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cleaner", "+Cleaner\Cleaner.csproj", "{F95A7A0F-287F-4F76-8F83-F324346D7358}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F95A7A0F-287F-4F76-8F83-F324346D7358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F95A7A0F-287F-4F76-8F83-F324346D7358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F95A7A0F-287F-4F76-8F83-F324346D7358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F95A7A0F-287F-4F76-8F83-F324346D7358}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,6 +119,7 @@ Global
 		{4CF981E2-4ECD-4BAC-9E16-338AFDE10A51} = {9E0ED28F-095F-4CFA-8174-E6155B1992C4}
 		{70AA779C-D1C6-41C4-9CF5-77789BBF664A} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
+		{F95A7A0F-287F-4F76-8F83-F324346D7358} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}

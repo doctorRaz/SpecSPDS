@@ -39,6 +39,8 @@
 		
 		<Compile Include="..\+Loader\Infrastructure\Info\InfoOs.cs" Link="Loader\Infrastructure\Info\InfoOs.cs" />
 		
+		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" />
+		
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" />
 		
 		
@@ -46,13 +48,16 @@
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
 		
-		<Compile Include="..\+Loader\Infrastructure\CleaningBackups.cs" Link="Loader\Infrastructure\CleaningBackups.cs" />
-		
 		
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="drzNLog" Version="6.1.0-drz" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\+Cleaner\Cleaner.csproj">
+	    <Private>True</Private>
+	  </ProjectReference>
 	</ItemGroup>
 </Project>
