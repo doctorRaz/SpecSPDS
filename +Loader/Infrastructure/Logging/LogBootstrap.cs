@@ -142,12 +142,12 @@ namespace dRz.Loader.Infrastructure.Logging
                 ArchiveFileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.ProductTitle}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
-                ArchiveAboveSize = 5 * 1024 * 1024,
+                //ArchiveAboveSize = 5 * 1024 * 1024,
                 MaxArchiveFiles = 10,
 
-                KeepFileOpen = true,
-                OpenFileCacheTimeout = 30,
-
+                KeepFileOpen = false,
+                OpenFileCacheTimeout = 10,
+                
                 Layout = CreateXmlLayout(),
 
             };
@@ -158,9 +158,10 @@ namespace dRz.Loader.Infrastructure.Logging
             AsyncTargetWrapper asyncTarget = new AsyncTargetWrapper(fileTarget)
             {
                 QueueLimit = 10000,              // размер очереди
-                OverflowAction = AsyncTargetWrapperOverflowAction.Discard,
+                OverflowAction = AsyncTargetWrapperOverflowAction.Block,
                 BatchSize = 500,
-                TimeToSleepBetweenBatches = 10,
+                TimeToSleepBetweenBatches = 50,
+                
             };
 
             config.AddTarget("asyncFile", asyncTarget);
