@@ -51,13 +51,13 @@ namespace dRz.Loader.Infrastructure.Logging
 
                     LoggingConfiguration config = null;
                     try
-                    {                     
+                    {
                         // Пытаемся использовать внешний конфиг
                         config = LogManager.Configuration;
                     }
                     catch (NLogConfigurationException ex)
                     {
-                        exNlog=ex;
+                        exNlog = ex;
                         // Конфиг битый
                         config = null;
                     }
@@ -85,9 +85,9 @@ namespace dRz.Loader.Infrastructure.Logging
 
                         string mode = isProgrammatic ? "Program" : "Config";
 
-                        if(exNlog != null) log.Error(exNlog,exNlog.ToString);
+                        if (exNlog != null) log.Error(exNlog, exNlog.ToString);
                         //инфа про ос и кад
-                                             
+
                         log.Debug("Mode: {0}, App: {1}", mode, InfoAdOn.FileName);
 
                         log.Info("OS: {0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
@@ -167,7 +167,7 @@ namespace dRz.Loader.Infrastructure.Logging
             // Если файла уровня нет — Debug. 
             LogLevel level = LogLevel.Debug;
             // Если файл есть, но пустой —Debug
-            string fallbackLevelName="Trace";
+            string fallbackLevelName = "Trace";
 #else
             // Если файла нет — Info. 
             LogLevel level = LogLevel.Info;
@@ -197,7 +197,7 @@ namespace dRz.Loader.Infrastructure.Logging
 
                 KeepFileOpen = false,
                 OpenFileCacheTimeout = 10,
-                
+
                 Layout = CreateXmlLayout(),
 
             };
@@ -211,7 +211,7 @@ namespace dRz.Loader.Infrastructure.Logging
                 OverflowAction = AsyncTargetWrapperOverflowAction.Block,
                 BatchSize = 500,
                 TimeToSleepBetweenBatches = 50,
-                
+
             };
 
             config.AddTarget("asyncFile", asyncTarget);
@@ -241,6 +241,7 @@ namespace dRz.Loader.Infrastructure.Logging
                     new XmlAttribute("level", "${level:uppercase=true}"),
                     new XmlAttribute("logger", "${logger}"),
                     new XmlAttribute("pid", "${processid}"),
+                    new XmlAttribute("fullName", "${processname:fullName=true}"),
                 },
 
                 Elements =
