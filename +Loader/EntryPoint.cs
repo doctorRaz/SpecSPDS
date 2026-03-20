@@ -159,7 +159,8 @@ namespace dRz.Loader
 
                         log.Info(mesag);
 
-                        asm = Assembly.LoadFrom(targetDllFullName.FullName);
+                        asm = Assembly.LoadFile(targetDllFullName.FullName);
+
                     }
                     else
                     {
