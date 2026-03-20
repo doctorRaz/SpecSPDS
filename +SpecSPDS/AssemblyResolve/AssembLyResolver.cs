@@ -1,11 +1,11 @@
-﻿using dRz.SpecSPDS.nCad.Interfaces;
-using dRz.SpecSPDS.nCad.Services;
+﻿using dRz.SpecSPDS.Interfaces;
+using dRz.SpecSPDS.Services;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace dRz.SpecSPDS.nCad.AssemblyResolve
+namespace dRz.SpecSPDS.AssemblyResolve
 {
     internal class AssemblyResolver
     {
@@ -126,7 +126,7 @@ namespace dRz.SpecSPDS.nCad.AssemblyResolve
             {
                 return Directory.GetFiles(path,
                                         serchPatern,
-                                        (withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                                        withSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
                                         );
             }
             catch (Exception ex)

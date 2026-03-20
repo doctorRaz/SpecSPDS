@@ -3,9 +3,14 @@ using dRz.SpecSPDS.Core.InternalDiagnostic;
 using System;
 using dRz.SpecSPDS.Core.Bootstrap;
 using System.ComponentModel;
-using dRz.SpecSPDS.nCad.AssemblyResolve;
-using dRz.SpecSPDS.nCad.Interfaces;
-using dRz.SpecSPDS.nCad.Services;
+using dRz.SpecSPDS.Services;
+using dRz.SpecSPDS.Interfaces;
+using dRz.SpecSPDS.AssemblyResolve;
+using dRz.SpecSPDS;
+
+
+
+
 
 
 
@@ -21,9 +26,9 @@ using App = HostMgd.ApplicationServices.Application;
 using Rtm = Teigha.Runtime;
 #endif
 
-[assembly: Rtm.ExtensionApplication(typeof(dRz.SpecSPDS.nCad.EntryPoint))]
+[assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.SpecSPDS.nCad
+namespace dRz.SpecSPDS
 {
     public /*partial*/ class EntryPoint : Rtm.IExtensionApplication
     {

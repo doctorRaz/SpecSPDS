@@ -8,7 +8,7 @@ using System.Drawing;
 using Teigha.DatabaseServices;
 using Teigha.Runtime;
 
-namespace dRz.SpecSPDS.nCad.Commands.Test
+namespace dRz.SpecSPDS.Commands._experimental
 {
     /// <summary>
     /// мультикад чтение и редактирование файла в скрытом режиме

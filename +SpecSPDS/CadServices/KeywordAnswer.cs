@@ -3,7 +3,7 @@ using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
 
-namespace dRz.SpecSPDS.nCad.CadServices
+namespace dRz.SpecSPDS.CadServices
 {
     public class CadService
     { /// <summary>

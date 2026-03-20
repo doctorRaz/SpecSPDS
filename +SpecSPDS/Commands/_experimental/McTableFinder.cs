@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.SpecSPDS.nCad.Commands.Test
+namespace dRz.SpecSPDS.Commands._experimental
 {
 
     //tests finds McTable
@@ -24,7 +24,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
         [CommandMethod("ффт")]
         static public void FFindTblF()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -45,7 +45,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
         [CommandMethod("дфт")]
         static public void DocFindTblF()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -65,7 +65,7 @@ namespace dRz.SpecSPDS.nCad.Commands.Test
         [CommandMethod("фт")]
         static public void FindTblF()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;

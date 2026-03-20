@@ -6,6 +6,7 @@ using NLog;
 using dRz.SpecSPDS.Core._experimental;
 
 
+
 #if NC || NC26
 using Teigha.Runtime;
 
@@ -21,7 +22,7 @@ using Autodesk.AutoCAD.EditorInput;
 #endif
 
 
-namespace dRz.SpecSPDS.nCad.Commands.Test
+namespace dRz.SpecSPDS.Commands._experimental
 {
     public class NlogTest
     {

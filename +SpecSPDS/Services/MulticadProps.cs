@@ -13,7 +13,7 @@ using System.Linq;
 //using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace dRz.SpecSPDS.nCad.Services;
+namespace dRz.SpecSPDS.Services;
 
 /// <summary>
 /// получаем универсальный маркер
@@ -35,7 +35,7 @@ public partial class MultiCadProps
     public MultiCadProps(ApplicationSettings settings)
     {
 
-        _guid = (new Guid(settings.Guid));//какой объект работаем
+        _guid = new Guid(settings.Guid);//какой объект работаем
 
         _fieldName = settings.FieldNames;//имена полей
 
