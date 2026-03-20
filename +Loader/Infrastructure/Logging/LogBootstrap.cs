@@ -28,7 +28,7 @@ namespace dRz.Loader.Infrastructure.Logging
         /// </summary>
         internal static bool Init()
         {
-
+            Exception exNlog = null;
             if (_initialized)
             {
                 return true;
@@ -51,12 +51,13 @@ namespace dRz.Loader.Infrastructure.Logging
 
                     LoggingConfiguration config = null;
                     try
-                    {
+                    {                     
                         // Пытаемся использовать внешний конфиг
                         config = LogManager.Configuration;
                     }
-                    catch (NLogConfigurationException)
+                    catch (NLogConfigurationException ex)
                     {
+                        exNlog=ex;
                         // Конфиг битый
                         config = null;
                     }
@@ -66,6 +67,7 @@ namespace dRz.Loader.Infrastructure.Logging
                     {
                         // Создаем с нуля и сразу заполняем всем необходимым
                         LoadConfiguration();
+
                         isProgrammatic = true;
                     }
                     else
@@ -83,9 +85,10 @@ namespace dRz.Loader.Infrastructure.Logging
 
                         string mode = isProgrammatic ? "Program" : "Config";
 
+                        if(exNlog != null) log.Error(exNlog,exNlog.ToString);
                         //инфа про ос и кад
-
-                        log.Debug("nLog Mode: {0}, App: {1}", mode, InfoAdOn.ProductTitle);
+                                             
+                        log.Debug("Mode: {0}, App: {1}", mode, InfoAdOn.FileName);
 
                         log.Info("OS: {0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
 
@@ -110,7 +113,7 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
 
-            GlobalDiagnosticsContext.Set(LogVar.AppTitle, InfoAdOn.ProductTitle);
+            GlobalDiagnosticsContext.Set(LogVar.AppTitle, InfoAdOn.FileName/*ProductTitle*/);
             GlobalDiagnosticsContext.Set(LogVar.LogsDir, InfoAdOn.AppDataProductLogPath);
 
             // Если файла нет — Off (ничего не делаем). 
@@ -185,8 +188,8 @@ namespace dRz.Loader.Infrastructure.Logging
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("xmlFile")
             {
-                FileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.ProductTitle}.log"),
-                ArchiveFileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.ProductTitle}.{{#}}.log"),
+                FileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.FileName/*ProductTitle*/}.log"),
+                ArchiveFileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.FileName}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
                 //ArchiveAboveSize = 5 * 1024 * 1024,
