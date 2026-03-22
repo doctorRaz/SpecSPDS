@@ -90,7 +90,7 @@ namespace dRz.Loader.Infrastructure.Logging
 
                         log.Debug("Mode: {0}, App: {1}", mode, InfoAdOn.FileName);
 
-                        log.Info("OS: {0} {1}", InfoOs.OsDescription, InfoOs.OsArchitecture);
+                        log.Info("OS: {0}",InfoOs.Current /*InfoOs_.OsDescription, InfoOs_.OsArchitecture*/);
 
                     }
                 }
