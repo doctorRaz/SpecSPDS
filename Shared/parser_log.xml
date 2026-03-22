@@ -1,0 +1,8 @@
+<logevent time="%d{yyyy-MM-dd %H:mm:ss.ffff}" 
+level="%p" 
+logger="%c" 
+pid="%t" 
+fullName="%S{fullName}" >
+<message>%m</message>
+<exception>%S{exception}</exception>
+</logevent>
