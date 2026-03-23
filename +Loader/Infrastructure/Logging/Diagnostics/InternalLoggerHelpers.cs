@@ -28,6 +28,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
                 return;
             }
 
+            //think может лучше в appdata/dRzTools/logs?? если общий лог для всех аддонов пойдет туда
             string logDir = Path.GetTempPath();
 
             // 1. Сначала удаляем 6-й и далее файлы
