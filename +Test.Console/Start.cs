@@ -20,6 +20,7 @@ AppSettings я б засунул именно в то, что работает �
 */
 
 using dRz.Loader;
+using dRz.Loader.Infrastructure.Info;
 using dRz.SpecSpds.Test.Tests;
 using Microsoft.Win32;
 using NLog;
@@ -36,77 +37,7 @@ namespace dRz.SpecSpds.Test
 
     public class Start
     {
-        #region TESTS
-
-
-        public string HKLM_GetString(string path, string key)
-        {
-            try
-            {
-                RegistryKey rk = Registry.LocalMachine.OpenSubKey(path);
-                if (rk == null)
-                {
-                    return "";
-                }
-
-                return (string)rk.GetValue(key);
-            }
-            catch { return ""; }
-        }
-
-        public string FriendlyName()
-        {
-            string ProductName = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName");
-            string CSDVersion = HKLM_GetString(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "CSDVersion");
-            if (ProductName != "")
-            {
-                return (ProductName.StartsWith("Microsoft") ? "" : "Microsoft ") + ProductName +
-                            (CSDVersion != "" ? " " + CSDVersion : "");
-            }
-            return "";
-        }
-
-        public int OStype()
-        {
-            int os = 0;
-            IEnumerable<string> list64 = Directory.GetDirectories(Environment.GetEnvironmentVariable("SystemRoot")).Where(s => s.Equals(@"C:\Windows\SysWOW64"));
-            IEnumerable<string> list32 = Directory.GetDirectories(Environment.GetEnvironmentVariable("SystemRoot")).Where(s => s.Equals(@"C:\Windows\System32"));
-            if (list32.Count() > 0)
-            {
-                os = 32;
-                if (list64.Count() > 0)
-                {
-                    os = 64;
-                }
-            }
-            return os;
-        }
-
-        // Source - https://stackoverflow.com/a/56051955
-        // Posted by IceCreamBoi23
-        // Retrieved 2026-03-18, License - CC BY-SA 4.0
-
-        [DllImport("ntdll.dll", SetLastError = true)]
-        internal static extern uint RtlGetVersion(out OsVersionInfo versionInformation); // return type should be the NtStatus enum
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct OsVersionInfo
-        {
-            private readonly uint OsVersionInfoSize;
-
-            internal readonly uint MajorVersion;
-            internal readonly uint MinorVersion;
-
-            private readonly uint BuildNumber;
-
-            private readonly uint PlatformId;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
-            private readonly string CSDVersion;
-        }
-
-        #endregion
-
+      
         /// <summary>
         /// общий логгер
         /// </summary>
@@ -115,8 +46,9 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
-
-
+             var os = InfoOs.Current;
+             var os2 = InfoOs.Current.ToString();
+            Console.WriteLine(os2);
             Console.WriteLine("-=Start=-");
             //Console.ReadKey();
 
