@@ -7,6 +7,7 @@ using dRz.SpecSPDS.Core.Settings;
 using dRz.SpecSPDS.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace dRz.SpecSPDS.Commands
 
     public class SpecSpdsCmd
     {
-
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// спека с маркеров
         /// </summary>
@@ -176,10 +177,15 @@ namespace dRz.SpecSPDS.Commands
         }
 
 
+
+
+        [CommandMethod("drz_logS")]
+        public static void test()
+        {
+            log.Debug("Проверка в какой лог пойдет");
+        }
+
+
+
     }
-
-
-
-
-
 }
