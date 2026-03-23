@@ -102,7 +102,7 @@ namespace dRz.SpecSPDS
         {
             log.Info("LogManager.Shutdown");
 
-            LogManager.Shutdown();
+            //LogManager.Shutdown();
         }
     }
 

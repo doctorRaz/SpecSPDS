@@ -52,7 +52,7 @@ namespace dRz.Loader.Infrastructure.Info
         }
     }
 
-    //todo прибить?
+    //x прибить?
     public static class InfoOs_
     {
         //public static InfoOs Current { get; } = new InfoOs();
