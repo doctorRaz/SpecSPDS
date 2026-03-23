@@ -28,7 +28,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
                 return;
             }
 
-            string logDir = InfoAdOn.AppDataProductLogPath;
+            string logDir = Path.GetTempPath();
 
             // 1. Сначала удаляем 6-й и далее файлы
             RotateOldLogs(logDir);
@@ -94,7 +94,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
                 List<FileInfo> files = new DirectoryInfo(logDir)
-                 .GetFiles($"*_{InfoAdOn.FileName}_internal*.log")
+                 .GetFiles($"*_nlog-drzTools-internal*.log")
                  .OrderByDescending(f => f.LastWriteTime)
                  .ToList();
 
@@ -118,7 +118,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
         }
 
         private static string GetInternalLogPath(string logDir) =>
-           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{InfoAdOn.FileName}_internal.log");
+           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_nlog-drzTools-internal.log");
 
 
     }
