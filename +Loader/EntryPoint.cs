@@ -133,7 +133,11 @@ namespace dRz.Loader
 
                 string fileFullName = GetType().Assembly.Location;
 
-                Version minVersion = new Version(23, 0);
+                int minMajor = VersionInfo.MinVersion;//из Directory.Build.props проекта
+
+                Version minVersion = new Version(minMajor, 0);
+                
+                log.Debug($"minVersion {minVersion}");
 
                 FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
