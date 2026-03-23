@@ -8,6 +8,8 @@ using dRz.SpecSPDS.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using NLog;
+using NLog.Config;
+using NLog.Layouts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +31,7 @@ namespace dRz.SpecSPDS.Commands
         /// спека с маркеров
         /// </summary>
 #if DEBUG
+
         [CommandMethod("тсс")]
 #endif
         [CommandMethod("drz_SpecSpds")]
@@ -178,14 +181,94 @@ namespace dRz.SpecSPDS.Commands
 
 
 
-
+        #if DEBUG
         [CommandMethod("drz_logS")]
-        public static void test()
+        [Description("отладка лог")]
+        public static void dRz_log()
         {
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+            if (doc == null)
+            {
+                return;
+            }
+              Editor ed = doc.Editor;
+
+
+
             log.Debug("Проверка в какой лог пойдет");
+
+
+            //проверка значений  var
+            LoggingConfiguration? config = LogManager.Configuration;
+
+            if (config.Variables.ContainsKey(LogVar.FinalLevel))
+            {
+                Layout layot = config.Variables[LogVar.FinalLevel];
+
+                string finalLevel = layot.Render(LogEventInfo.CreateNullEvent());
+                ed.WriteMessage($"finalLevel: {finalLevel}");
+            }
+            if (config.Variables.ContainsKey(LogVar.FinalAppTitle))
+            {
+                Layout layot = config.Variables[LogVar.FinalAppTitle];
+
+                string finalAppTitle = layot.Render(LogEventInfo.CreateNullEvent());
+                ed.WriteMessage($"finalAppTitle: {finalAppTitle}");
+            }
+            if (config.Variables.ContainsKey(LogVar.FinalLogsDir))
+            {
+                Layout layot = config.Variables[LogVar.FinalLogsDir];
+
+                string finalLogsDir = layot.Render(LogEventInfo.CreateNullEvent());
+                ed.WriteMessage($"finalLogsDir: {finalLogsDir}");
+            }
+
+#endif
         }
 
 
+
+    }
+
+    internal static class LogVar
+    {
+        #region GDC
+
+        /// <summary>
+        /// префикс имени файла лога GDC
+        /// </summary>
+        public const string AppTitle = "AppTitle";
+
+        /// <summary>
+        /// каталог логов GDC
+        /// </summary>
+        public const string LogsDir = "LogsDir";
+
+        /// <summary>
+        /// level для GDC
+        /// </summary>
+        public const string LevelMay = "LevelMay";
+
+        #endregion
+
+        #region var        
+
+        /// <summary>
+        /// level для Var
+        /// </summary>
+        public const string FinalLevel = "FinalLevel";
+
+        /// <summary>
+        /// каталог логов var
+        /// </summary>
+        public const string FinalLogsDir = "FinalLogsDir";
+
+        /// <summary>
+        /// имя лога var
+        /// </summary>
+        public const string FinalAppTitle = "FinalAppTitle";
+
+        #endregion
 
     }
 }
