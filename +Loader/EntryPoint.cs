@@ -80,7 +80,7 @@ namespace dRz.Loader
 
 
                 //стартуем очистку копий и bak
-                TryCleanBackups();
+                //TryCleanBackups();
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
