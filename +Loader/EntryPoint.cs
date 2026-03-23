@@ -64,7 +64,9 @@ namespace dRz.Loader
             try
             {
                 //регистрируемся
-                TryRegisterAssemblyResolver();
+                //todo пока нет нужды в принудительной загрузке
+                //каждая регистрация вызыввается во всех модулях
+                //TryRegisterAssemblyResolver();
 
                 //nlog
                 // если ехception, поднимаем его сюда, стоп работа
@@ -98,7 +100,7 @@ namespace dRz.Loader
                 try
                 {
 
-                    TryUnregisterAssemblyResolver();
+                    //TryUnregisterAssemblyResolver();
 
                 }
                 catch { }
@@ -353,6 +355,13 @@ namespace dRz.Loader
                 // Полный путь к текущей сборке
                 string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
 
+                //think проверять путь от запросившей сборки с проверкой на нул, если нул тогда от _resolverBaseDir или тупо вернуть нулл
+                string _resolverBaseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                
+                //d:\@Developers\В работе\Reminder\VS\GPT-Assembly Resolver в другом модуле.md
+                /*
+                string assemblyDirectory = args.RequestingAssembly.Location;
+                */
                 string fullPath = GetFileOfDir(_assemblyDirectory, true, dllName);
 
                 if (!string.IsNullOrEmpty(fullPath) && File.Exists(fullPath))
