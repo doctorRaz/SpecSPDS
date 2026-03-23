@@ -7,6 +7,7 @@ namespace dRz.Loader.Infrastructure.Info
     public sealed class InfoOs
     {
         public string ProductName { get; }
+        public string DisplayVersion { get; }
         public string Version { get; }
         public string Architecture { get; }
 
@@ -33,6 +34,7 @@ namespace dRz.Loader.Infrastructure.Info
 
             int build = int.TryParse(key?.GetValue("CurrentBuild")?.ToString(), out var b) ? b : 0;
             int rev = key?.GetValue("UBR") is int ubr ? ubr : 0;
+            DisplayVersion = key?.GetValue("DisplayVersion")?.ToString() ?? "Unknown";
 
             Version = $"{major}.{minor}.{build}.{rev}";
 
@@ -40,15 +42,13 @@ namespace dRz.Loader.Infrastructure.Info
 
             Architecture = Is64BitOS ? "64-bit" : "32-bit";
 
-
         }
 
         public static InfoOs Current { get; } = new InfoOs();
 
         public override string ToString()
         {
-            return
-                    $@"{ProductName} Version: {Version} Architecture: {Architecture}";
+            return $@"{ProductName}, {DisplayVersion}, {Version}, {Architecture}";
         }
     }
 
