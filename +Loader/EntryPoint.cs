@@ -429,7 +429,7 @@ namespace dRz.Loader
             try
             {
                 log.Debug("LogManager.Shutdown");
-                LogManager.Shutdown();
+                //LogManager.Shutdown();
             }
             catch { } // смысла нет что то показывать при закрытии наны
 
