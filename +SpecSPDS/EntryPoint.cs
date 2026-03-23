@@ -46,12 +46,12 @@ namespace dRz.SpecSPDS
             try
             {
 
-                AssemblyResolver resolver = new AssemblyResolver();
+              //todo прибить класс               AssemblyResolver resolver = new AssemblyResolver();
 
                 //add  event Assembly resolve  
-                resolver.Register();
+             //todo прибить класс      //resolver.Register();
 
-                InitLoger();
+              //todo прибить класс     InitLoger();
 
                 InitAdapter();
             }
