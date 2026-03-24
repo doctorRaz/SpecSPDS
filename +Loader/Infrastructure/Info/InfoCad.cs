@@ -2,14 +2,23 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace dRz.Loader.Infrastructure.Info
+namespace dRz.CAD.Runtime.Info
 {
     /// <summary>
     /// Максимально полная информация о процессе-хосте (nanoCAD)
     /// </summary>
     public sealed class InfoCad
     {
-
+        /// <summary>
+        /// Converts to string.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion}; {HostArchitecture}";
+        }
         //public static InfoCad Current { get; } = new InfoCad();
 
         public static string ExePath { get; } = string.Empty;
@@ -91,24 +100,7 @@ namespace dRz.Loader.Infrastructure.Info
                 // intentionally ignore
             }
         }
-
-        public static string GetEnvironmentInfo()
-        {
-            return
-            $@"     CAD
-            ExePath: {ExePath}
-            InstallDirectory: {InstallDirectory}
-            FileName: {FileName}
-            ProductVersion: {ProductVersion}
-            FileVersion: {FileVersion}
-            ProductName: {ProductName}
-            CompanyName: {CompanyName}
-            FileDescription: {FileDescription}
-            OriginalFilename: {OriginalFilename}
-            Copyright: {Copyright}
-            HostArchitecture: {HostArchitecture}
-            Is64BitProcess: {(Is64BitProcess ? "64-bit" : "32-bit")}";
-        }
+         
     }
 }
 

@@ -2,14 +2,29 @@
 using System.IO;
 using System.Reflection;
 
-namespace dRz.Loader.Infrastructure.Info
+namespace dRz.CAD.Runtime.Info
 {
     /// <summary>
     /// Runtime environment for loader assembly.
     /// Immutable static context.
     /// </summary>
-    public static class InfoAdOn
+    public class InfoAdOn
     {
+        /// <summary>
+        /// Converts to string.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return $@"{ProductName} v{AssemblyVersion}; Module: {ProductTitle}; {InformationalVersion}";
+        }
+
+        public string LongString()
+        {
+            return $@"{ProductName} v{AssemblyVersion}; Title: {ProductTitle}; {InformationalVersion}; File: {AssemblyPath}";
+        }
 
         static InfoAdOn()
         {
@@ -21,6 +36,9 @@ namespace dRz.Loader.Infrastructure.Info
 
             AssemblyVersion = assembly.GetName().Version!;
 
+            InformationalVersion =
+                        assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                        ?? "Unknow";
             ProductName =
                 assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
                 ?? ExtractProductPrefix(FileName);
@@ -74,6 +92,14 @@ namespace dRz.Loader.Infrastructure.Info
         public static string ProductName { get; }
 
         /// <summary>
+        /// Gets the informational version attribute.
+        /// </summary>
+        /// <value>
+        /// The informational version attribute.
+        /// </value>
+        public static string InformationalVersion { get; }
+
+        /// <summary>
         /// Gets the product title.
         /// </summary>
         /// <value>
@@ -122,6 +148,6 @@ namespace dRz.Loader.Infrastructure.Info
                 : fileName;
         }
 
-        private const string _nLogConfigFileName = "NLog.dll.test.nlog";
+        private const string _nLogConfigFileName = "drzNLog.dll.nlog";
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace dRz.Loader.Infrastructure.Info
+namespace dRz.CAD.Runtime.Info
 {
-
+    /// <summary>
+    /// Информация о системме
+    /// </summary>
     public sealed class InfoOs
     {
         public string ProductName { get; }
@@ -44,47 +46,25 @@ namespace dRz.Loader.Infrastructure.Info
 
         }
 
+        /// <summary>
+        /// Gets the current OS.
+        /// </summary>
+        /// <value>
+        /// The current.
+        /// </value>
         public static InfoOs Current { get; } = new InfoOs();
 
+        /// <summary>
+        /// Converts to string.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" /> that represents this instance.
+        /// </returns>
         public override string ToString()
         {
-            return $@"{ProductName}, {DisplayVersion}, {Version}, {Architecture}";
+            return $@"{ProductName}, {DisplayVersion}, {Version}; {Architecture}";
         }
     }
 
-    //x прибить?
-    public static class InfoOs_
-    {
-        //public static InfoOs Current { get; } = new InfoOs();
-
-        public static bool Is64BitOS { get; }
-
-        public static string OsDescription { get; } = string.Empty;
-
-        public static Version OsVersion { get; } = new Version();
-
-        public static string OsArchitecture { get; } = string.Empty;
-
-        static InfoOs_()
-        {
-            Is64BitOS = Environment.Is64BitOperatingSystem;
-
-            OsArchitecture = Is64BitOS ? "64-bit" : "32-bit";
-
-            OsDescription = Environment.OSVersion.VersionString;
-
-            OsVersion = Environment.OSVersion.Version;
-        }
-
-        public static string GetEnvironmentInfo()
-        {
-            return
-            $@"     OS
-            OsDescription: {OsDescription}
-            OsVersion: {OsVersion}
-            OsArchitecture: {OsArchitecture} 
-            Is64BitOS {(Is64BitOS ? "64-bit" : "32-bit")}";
-        }
-    }
 }
 
