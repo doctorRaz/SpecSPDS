@@ -62,7 +62,7 @@ namespace dRz.CAD.Runtime.Info
         /// </returns>
         public override string ToString()
         {
-            return $@"{ProductName}, {DisplayVersion}, {Version}; {Architecture}";
+            return $@"{ProductName}, {DisplayVersion}, {Version} - {Architecture}";
         }
     }
 

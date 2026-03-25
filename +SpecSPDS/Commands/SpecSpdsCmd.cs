@@ -223,8 +223,8 @@ namespace dRz.SpecSPDS.Commands
                 ed.WriteMessage($"finalLogsDir: {finalLogsDir}");
             }
 
-#endif
         }
+#endif
 
 
 

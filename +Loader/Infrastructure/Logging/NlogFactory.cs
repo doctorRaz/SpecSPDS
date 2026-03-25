@@ -1,5 +1,5 @@
-﻿using dRz.CAD.Runtime.Info;
-using NLog;
+﻿using NLog;
+using static dRz.Loader.Infrastructure.AddonContext;
 
 namespace dRz.Loader.Infrastructure.Logging
 {
@@ -12,7 +12,7 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             Factory = new LogFactory();
 
-         //x прибить, конфиг из метода
+            //x прибить, конфиг из метода
             /*
             var config = new LoggingConfiguration();
 
@@ -27,9 +27,9 @@ namespace dRz.Loader.Infrastructure.Logging
 
             config.AddRule(LogLevel.Trace, LogLevel.Fatal, fileTarget);
             */
-         //todo грузить конфиг из файла
-         // если нет, то программно,
-         // сделать как в глобальном логере
+            //todo грузить конфиг из файла
+            // если нет, то программно,
+            // сделать как в глобальном логере
             Factory.Configuration = LogBootstrap.CreateConfiguration();// config;
 
             //todo фабрику в контейнер
@@ -38,7 +38,7 @@ namespace dRz.Loader.Infrastructure.Logging
 
         public static Logger GetLogger<T>()
         {
-            string loggerName = $"{InfoAdOn.ProductName}.{typeof(T).FullName}";
+            string loggerName = $"{InfoDll.ProductName}.{typeof(T).FullName}";
             return Factory.GetLogger(loggerName);
         }
 

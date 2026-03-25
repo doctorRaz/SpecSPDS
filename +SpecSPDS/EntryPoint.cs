@@ -5,9 +5,9 @@ using dRz.SpecSPDS.Core.Bootstrap;
 using System.ComponentModel;
 using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
-using dRz.SpecSPDS.AssemblyResolve;
 using dRz.SpecSPDS;
 using dRz.CAD.Runtime.Info;
+using static dRz.SpecSPDS.Infrastructure.AddonContext;
 
 
 
@@ -55,7 +55,7 @@ namespace dRz.SpecSPDS
 
                 //todo прибить класс     InitLoger();
 
-                log.Debug("AdOn: {0}", new InfoAdOn());
+                log.Debug("AdOn: {0}", InfoDll);
 
                 log.Debug("CAD: {0}", new InfoCad());
 
@@ -108,7 +108,7 @@ namespace dRz.SpecSPDS
 
         public void Terminate()
         {
-            log.Info("LogManager.Shutdown");
+            log.Debug("LogManager.Shutdown");
 
             //LogManager.Shutdown();
         }

@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-<Import Project="Shared.props" Condition="Exists('Shared.props')"/>
+<Import Project="Shared.props" Condition="Exists('Shared.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>

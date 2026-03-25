@@ -1,19 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--<TargetFramework>netstandard2.0</TargetFramework>-->		
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>dRz.CAD.Runtime</RootNamespace>
 		<Description>Среда окружения аддона</Description>
 		<AssemblyTitle>CAD.Runtime</AssemblyTitle>
 		<Product>CAD.Runtime</Product>
 		<InformationalVersion>CAD.Runtime for All</InformationalVersion>
-	
-	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-	
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="Info\_draft\**" />
+		<EmbeddedResource Remove="Info\_draft\**" />
+		<None Remove="Info\_draft\**" />
+	</ItemGroup>
 
 </Project>

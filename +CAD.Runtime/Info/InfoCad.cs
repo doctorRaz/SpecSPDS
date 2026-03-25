@@ -17,7 +17,7 @@ namespace dRz.CAD.Runtime.Info
         /// </returns>
         public override string ToString()
         {
-            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion}; {HostArchitecture}";
+            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion} - {HostArchitecture}";
         }
         //public static InfoCad Current { get; } = new InfoCad();
 
@@ -55,6 +55,7 @@ namespace dRz.CAD.Runtime.Info
 
 #if CMD
                 ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";
+                ExePath = @"c:\Program Files\Autodesk\AutoCAD 2026\acad.exe";
 #endif
 
                 if (!string.IsNullOrEmpty(ExePath))

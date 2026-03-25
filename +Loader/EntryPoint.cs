@@ -14,6 +14,7 @@ using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
 using dRz.Cleaner.Infrastructure;
 using dRz.CAD.Runtime.Info;
+using static dRz.Loader.Infrastructure.AddonContext;
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
@@ -24,6 +25,7 @@ using Rtm = Teigha.Runtime;
 #if CMD
 
 using dRz.SpecSpds.Test.Services;
+
 #else
 using System.ComponentModel;
 using dRz.Loader.Services;
@@ -71,12 +73,6 @@ namespace dRz.Loader
             entryPoint.Initialize();
         }
 
-
-
-#if DEBUG && NC
-        //    [Rtm.CommandMethod("инитС")]
-        //[Description("ручной инит загрузчика")]
-#endif
         public void Initialize()
         {
 
@@ -85,7 +81,7 @@ namespace dRz.Loader
             {
                 /* регистрируемся
                     каждая регистрация вызыввается во всех модулях
-                */ 
+                */
                 //TryRegisterAssemblyResolver();
 
                 //nlog
@@ -96,7 +92,7 @@ namespace dRz.Loader
                 if (!LogBootstrap.Init())
                 {
                     msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
-                        + $"\nЗагрузка {InfoAdOn.ProductName} будет продолжена");
+                        + $"\nЗагрузка приложения будет продолжена");//{InfoDll.ProductName}
                 }
 
 
@@ -109,8 +105,8 @@ namespace dRz.Loader
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                string message = $"{InfoAdOn.ProductName} не загружен!!!" +
-                                    $"\nСкопируйте это сообщение и отправьте разработчику";
+                string message = $"Приложение не загружено!!!" +
+                                    $"\nСкопируйте это сообщение и отправьте разработчику";//{InfoDll.ProductName}
 
                 msg.ExceptionMessage(message, ex);
             }
@@ -151,7 +147,7 @@ namespace dRz.Loader
 
                 string fileDescription = InfoCad.FileDescription;
 
-                log.Info("Обнаружен: {0}",new InfoCad());
+                log.Info("Обнаружен: {0}", new InfoCad());
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -421,11 +417,11 @@ namespace dRz.Loader
 
         }
 
-        void CleanBackups()
+        private void CleanBackups()
         {
             try
             {
-                string directoryPath = InfoAdOn.AssemblyDirectory;
+                string directoryPath = InfoDll.AssemblyDirectory;
 
                 CleaningBackups.Cleaning(directoryPath);//x отключить после тестов
                                                         //чистка это задача основных адаптеров а не загрузчика

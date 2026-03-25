@@ -1,11 +1,11 @@
-﻿using dRz.CAD.Runtime.Info;
-using NLog;
+﻿using NLog;
 using NLog.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using static dRz.Loader.Infrastructure.AddonContext;
 
 namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 {
@@ -54,7 +54,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
             //ошибки конфига
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.Info($"{InfoAdOn.FileName}: InternalLogger Initialize Level={level}");
+            InternalLogger.Info($"{InfoDll.FileName}: InternalLogger Initialize Level={level}");
 
         }
 

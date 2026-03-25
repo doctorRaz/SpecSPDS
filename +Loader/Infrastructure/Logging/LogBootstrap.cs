@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using dRz.Loader.Infrastructure.Logging.Diagnostics;
 using dRz.CAD.Runtime.Info;
-
+using static dRz.Loader.Infrastructure.AddonContext;
 
 
 #if NC
@@ -85,12 +85,15 @@ namespace dRz.Loader.Infrastructure.Logging
                         //ILogger log = LogManager.GetCurrentClassLogger();
                         ILogger log = NlogFactory.GetLogger<LogBootstrap>();
 
-                        string mode = isProgrammatic ? "Program" : "Config";
+                        string mode = isProgrammatic ? "Code" : "File";
 
-                        if (exNlog != null) log.Error(exNlog, exNlog.ToString);
+                        if (exNlog != null)
+                        {
+                            log.Error(exNlog, exNlog.ToString);
+                        }
 
                         //инфа про адон
-                        log.Debug("Mode: {0}, AdOn: {1}", mode, new InfoAdOn());
+                        log.Debug("Config: {0}, AdOn: {1}", mode, InfoDll);
 
                         //инфа про ос
                         log.Debug("OS: {0}", InfoOs.Current);
@@ -115,8 +118,8 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
 
-            GlobalDiagnosticsContext.Set(LogVar.AppTitle, InfoAdOn.FileName/*ProductTitle*/);
-            GlobalDiagnosticsContext.Set(LogVar.LogsDir, InfoAdOn.AppDataProductLogPath);
+            GlobalDiagnosticsContext.Set(LogVar.AppTitle, InfoDll.FilePrefix);
+            GlobalDiagnosticsContext.Set(LogVar.LogsDir, InfoDll.AppDataProductLogPath);
 
             // Если файла нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)
@@ -191,8 +194,8 @@ namespace dRz.Loader.Infrastructure.Logging
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("xmlFile")
             {
-                FileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.FileName/*ProductTitle*/}.log"),
-                ArchiveFileName = Path.Combine(InfoAdOn.AppDataProductLogPath, $"${{shortdate}}_{InfoAdOn.FileName}.{{#}}.log"),
+                FileName = Path.Combine(InfoDll.AppDataProductLogPath, $"${{shortdate}}_{InfoDll.FilePrefix}.log"),
+                ArchiveFileName = Path.Combine(InfoDll.AppDataProductLogPath, $"${{shortdate}}_{InfoDll.FilePrefix}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
                 //ArchiveAboveSize = 5 * 1024 * 1024,

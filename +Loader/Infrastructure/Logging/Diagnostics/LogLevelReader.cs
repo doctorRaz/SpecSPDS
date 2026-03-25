@@ -1,6 +1,6 @@
-﻿using dRz.CAD.Runtime.Info;
-using NLog;
+﻿using NLog;
 using System.IO;
+using static dRz.Loader.Infrastructure.AddonContext;
 
 namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 {
@@ -25,7 +25,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
             try
             {
                 //путь к файлу настроек
-                string path = Path.Combine(InfoAdOn.AssemblyDirectory, fileName);
+                string path = Path.Combine(InfoDll.AssemblyDirectory, fileName);
 
 
                 if (!File.Exists(path))
@@ -56,7 +56,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
             }
         }
 
-        static LogLevel TryFromString(string levelName, LogLevel defaultLevel)
+        private static LogLevel TryFromString(string levelName, LogLevel defaultLevel)
         {
             try
             {
