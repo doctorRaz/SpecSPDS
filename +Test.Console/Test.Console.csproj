@@ -37,11 +37,6 @@
 		<Page Remove="_experimental\**" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Include="..\+Loader\Infrastructure\Info\InfoAdOn.cs" Link="Loader\Infrastructure\Info\InfoAdOn.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Info\CadPath.cs" Link="Loader\Infrastructure\Info\CadPath.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Info\InfoCad.cs" Link="Loader\Infrastructure\Info\InfoCad.cs" />
-
-		<Compile Include="..\+Loader\Infrastructure\Info\InfoOs.cs" Link="Loader\Infrastructure\Info\InfoOs.cs" />
 
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" />
 
@@ -51,6 +46,7 @@
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
+		<Compile Include="..\+Loader\Infrastructure\Logging\NlogFactory.cs" Link="Loader\Infrastructure\Logging\NlogFactory.cs" />
 
 
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
@@ -63,15 +59,13 @@
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
+		<ProjectReference Include="..\+CAD.Runtime\CAD.Runtime.csproj" />
 	</ItemGroup>
 
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
 	<Target Name="GenerateMinVersion" BeforeTargets="CoreCompile">
-		<WriteLinesToFile
-			File="$(IntermediateOutputPath)GeneratedMinVersion.cs"
-			Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }"
-			Overwrite="true" />
+		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedMinVersion.cs" Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }" Overwrite="true" />
 
 		<ItemGroup>
 			<Compile Include="$(IntermediateOutputPath)GeneratedMinVersion.cs" />
