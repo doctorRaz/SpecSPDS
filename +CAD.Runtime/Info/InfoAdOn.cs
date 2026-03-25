@@ -28,7 +28,7 @@ namespace dRz.CAD.Runtime.Info
 
         static InfoAdOn()
         {
-            Assembly assembly = typeof(InfoAdOn).Assembly;
+            Assembly assembly = typeof(InfoAdOn).Assembly;//todo надо обрабатывать выполняемый модуль
 
             AssemblyPath = assembly.Location;
             AssemblyDirectory = Path.GetDirectoryName(AssemblyPath)!;

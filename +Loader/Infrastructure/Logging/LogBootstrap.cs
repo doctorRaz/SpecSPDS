@@ -23,6 +23,7 @@ namespace dRz.Loader.Infrastructure.Logging
     /// </summary>
     internal /*static*/ class LogBootstrap
     {
+        //todo переделать на фабрику
 
         /// <summary>
         /// Initializes
@@ -58,8 +59,7 @@ namespace dRz.Loader.Infrastructure.Logging
                     }
                     catch (NLogConfigurationException ex)
                     {
-                        exNlog = ex;
-                        // Конфиг битый
+                        exNlog = ex; // Конфиг битый
                         config = null;
                     }
 
@@ -67,7 +67,7 @@ namespace dRz.Loader.Infrastructure.Logging
                     if (config == null)
                     {
                         // Создаем с нуля и сразу заполняем всем необходимым
-                        LoadConfiguration();
+                        LogManager.Configuration = CreateConfiguration();
 
                         isProgrammatic = true;
                     }
@@ -83,16 +83,17 @@ namespace dRz.Loader.Infrastructure.Logging
                     if (_initialized)
                     {
                         //ILogger log = LogManager.GetCurrentClassLogger();
-                        Logger log =NlogFactory.GetLogger<LogBootstrap>();
-                                               
+                        ILogger log = NlogFactory.GetLogger<LogBootstrap>();
+
                         string mode = isProgrammatic ? "Program" : "Config";
 
                         if (exNlog != null) log.Error(exNlog, exNlog.ToString);
-                        //инфа про ос и кад
 
+                        //инфа про адон
                         log.Debug("Mode: {0}, AdOn: {1}", mode, new InfoAdOn());
 
-                        log.Debug("OS: {0}",InfoOs.Current);
+                        //инфа про ос
+                        log.Debug("OS: {0}", InfoOs.Current);
                     }
                 }
 
@@ -160,7 +161,8 @@ namespace dRz.Loader.Infrastructure.Logging
         /// <summary>
         /// Loads the configuration.
         /// </summary>
-        private static void LoadConfiguration()//think переделать на LoggingConfiguration, возврат config, что бы можно было использовать в фабрике
+        internal static LoggingConfiguration CreateConfiguration()//think переделать на LoggingConfiguration, возврат config, что бы можно было использовать в фабрике
+                                                                  //todo возможно статик тут не надо?
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
@@ -218,7 +220,8 @@ namespace dRz.Loader.Infrastructure.Logging
             config.AddTarget("asyncFile", asyncTarget);
             config.LoggingRules.Add(new LoggingRule("*", level, asyncTarget));
 
-            LogManager.Configuration = config;
+            //LogManager.Configuration 
+            return config;
 
         }
 

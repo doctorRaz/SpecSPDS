@@ -1,8 +1,5 @@
 ﻿using dRz.CAD.Runtime.Info;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
-using System.IO;
 
 namespace dRz.Loader.Infrastructure.Logging
 {
@@ -15,19 +12,27 @@ namespace dRz.Loader.Infrastructure.Logging
         {
             Factory = new LogFactory();
 
+         //x прибить, конфиг из метода
+            /*
             var config = new LoggingConfiguration();
 
             var fileTarget = new FileTarget("file")
             {
                 FileName = Path.Combine(InfoAdOn.AppDataProductLogPath, InfoAdOn.FileName + ".log"),
 
-                Layout = "${longdate}|${level}|${logger}|${message}|${exception}"
+                KeepFileOpen = false,
+
+                Layout = "${longdate}|${level}|${logger}|${processid}|${message}|${exception}"
             };
 
             config.AddRule(LogLevel.Trace, LogLevel.Fatal, fileTarget);
+            */
+         //todo грузить конфиг из файла
+         // если нет, то программно,
+         // сделать как в глобальном логере
+            Factory.Configuration = LogBootstrap.CreateConfiguration();// config;
 
-            Factory.Configuration = config;
-
+            //todo фабрику в контейнер
             //Logger = Factory.GetLogger(InfoAdOn.ProductName);
         }
 
