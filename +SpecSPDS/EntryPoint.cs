@@ -7,6 +7,8 @@ using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
 using dRz.SpecSPDS.AssemblyResolve;
 using dRz.SpecSPDS;
+using dRz.CAD.Runtime.Info;
+
 
 
 
@@ -46,12 +48,18 @@ namespace dRz.SpecSPDS
             try
             {
 
-              //todo прибить класс               AssemblyResolver resolver = new AssemblyResolver();
+                //todo прибить класс               AssemblyResolver resolver = new AssemblyResolver();
 
                 //add  event Assembly resolve  
-             //todo прибить класс      //resolver.Register();
+                //todo прибить класс      //resolver.Register();
 
-              //todo прибить класс     InitLoger();
+                //todo прибить класс     InitLoger();
+
+                log.Debug("AdOn: {0}", new InfoAdOn());
+
+                log.Debug("CAD: {0}", new InfoCad());
+
+                log.Debug("OS: {0}", InfoOs.Current);
 
                 InitAdapter();
             }

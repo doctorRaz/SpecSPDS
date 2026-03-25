@@ -5,8 +5,9 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
-using dRz.Loader.Infrastructure.Info;
 using dRz.Loader.Infrastructure.Logging.Diagnostics;
+using dRz.CAD.Runtime.Info;
+
 
 
 #if NC
@@ -20,7 +21,7 @@ namespace dRz.Loader.Infrastructure.Logging
     /// <summary>
     /// Конфигурация Nlog
     /// </summary>
-    internal static class LogBootstrap
+    internal /*static*/ class LogBootstrap
     {
 
         /// <summary>
@@ -81,17 +82,17 @@ namespace dRz.Loader.Infrastructure.Logging
 
                     if (_initialized)
                     {
-                        ILogger log = LogManager.GetCurrentClassLogger();
-
+                        //ILogger log = LogManager.GetCurrentClassLogger();
+                        Logger log =NlogFactory.GetLogger<LogBootstrap>();
+                                               
                         string mode = isProgrammatic ? "Program" : "Config";
 
                         if (exNlog != null) log.Error(exNlog, exNlog.ToString);
                         //инфа про ос и кад
 
-                        log.Debug("Mode: {0}, App: {1}", mode, InfoAdOn.FileName);
+                        log.Debug("Mode: {0}, AdOn: {1}", mode, new InfoAdOn());
 
-                        log.Info("OS: {0}",InfoOs.Current /*InfoOs_.OsDescription, InfoOs_.OsArchitecture*/);
-
+                        log.Debug("OS: {0}",InfoOs.Current);
                     }
                 }
 
@@ -159,7 +160,7 @@ namespace dRz.Loader.Infrastructure.Logging
         /// <summary>
         /// Loads the configuration.
         /// </summary>
-        private static void LoadConfiguration()
+        private static void LoadConfiguration()//think переделать на LoggingConfiguration, возврат config, что бы можно было использовать в фабрике
         {
             LoggingConfiguration config = new LoggingConfiguration();
 

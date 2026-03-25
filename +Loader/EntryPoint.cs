@@ -10,18 +10,19 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using dRz.Loader.Interfaces;
-using dRz.Loader.Infrastructure.Info;
 using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
 using dRz.Cleaner.Infrastructure;
+using dRz.CAD.Runtime.Info;
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
+
 #elif NC
 using Rtm = Teigha.Runtime;
 #endif
-
 #if CMD
+
 using dRz.SpecSpds.Test.Services;
 #else
 using System.ComponentModel;
@@ -47,19 +48,38 @@ namespace dRz.Loader
 
         private bool _registered;
 
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+
+        private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
+
 
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
+
 #if DEBUG && NC
-        [Rtm.CommandMethod("инитЛД")]
+        [Rtm.CommandMethod("инитП")]
         [Description("ручной инит загрузчика")]
+#endif
+        public static void test()
+        {
+            IMessageService msg = new MessageService();
+            msg.ConsoleMessage("инитП");
+            EntryPoint entryPoint = new EntryPoint();
+            entryPoint.Initialize();
+        }
+
+
+
+#if DEBUG && NC
+        //    [Rtm.CommandMethod("инитС")]
+        //[Description("ручной инит загрузчика")]
 #endif
         public void Initialize()
         {
+
             //если нет библиотек или еще какой косяк
             try
             {
@@ -116,6 +136,7 @@ namespace dRz.Loader
         /// <returns></returns>
         private bool CadLoading()
         {
+            //var  nlogFactory=NlogFactory.Logger;
             //ILogger log = LogManager.GetCurrentClassLogger();
 
             try
@@ -130,21 +151,21 @@ namespace dRz.Loader
 
                 string fileDescription = InfoCad.FileDescription;
 
-                log.Info($"Обнаружен: {fileDescription} v{version}");
+                log.Info("Обнаружен: {0}",new InfoCad());
 
                 string fileFullName = GetType().Assembly.Location;
 
                 int minMajor = VersionInfo.MinVersion;//из Directory.Build.props проекта
 
                 Version minVersion = new Version(minMajor, 0);
-                
-                log.Debug($"minVersion {minVersion}");
+
+                log.Debug("minVersion {0}", minVersion);
 
                 FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {fileDescription} v{version.ToString()}";
+                    string mesag = $"Не найден подходящий адаптер для {new InfoCad()}";
 
                     log.Error($"{mesag}");
 
@@ -153,7 +174,7 @@ namespace dRz.Loader
                     return false;
                 }
 
-                log.Info($"Адаптер найден в: {targetDllFullName}");//найден адаптер
+                log.Info("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то 
                 // загружаем его.
@@ -162,12 +183,11 @@ namespace dRz.Loader
                 {
                     if (targetDllFullName.Extension.Equals(netPluginExtension, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        string mesag = $"Загружается адаптер для: {fileDescription} v{version.ToString()}, целевая сборка: {targetDllFullName.FullName}";
+                        //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Info(mesag);
+                        log.Info("Загружается адаптер для: {0}, целевая сборка: {1}", new InfoCad(), targetDllFullName.FullName);
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
-
                     }
                     else
                     {
@@ -179,7 +199,7 @@ namespace dRz.Loader
                         throw exception;
                     }
 
-                    log.Info($"Адаптер для {fileDescription} v{version} загружен");
+                    log.Info("Адаптер для {0} загружен", new InfoCad());
 
                 }
                 catch (Exception ex)
@@ -362,7 +382,7 @@ namespace dRz.Loader
 
                 //think проверять путь от запросившей сборки с проверкой на нул, если нул тогда от _resolverBaseDir или тупо вернуть нулл
                 string _resolverBaseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                
+
                 //d:\@Developers\В работе\Reminder\VS\GPT-Assembly Resolver в другом модуле.md
                 /*
                 string assemblyDirectory = args.RequestingAssembly.Location;
@@ -441,5 +461,8 @@ namespace dRz.Loader
         }
 
         #endregion
+
+
+
     }
 }

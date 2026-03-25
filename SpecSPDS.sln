@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cleaner", "+Cleaner\Cleaner
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "+Loader\Loader.csproj", "{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAD.Runtime", "+CAD.Runtime\CAD.Runtime.csproj", "{1838B971-373A-0C62-0F73-FA519F012E44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1838B971-373A-0C62-0F73-FA519F012E44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1838B971-373A-0C62-0F73-FA519F012E44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1838B971-373A-0C62-0F73-FA519F012E44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1838B971-373A-0C62-0F73-FA519F012E44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{F95A7A0F-287F-4F76-8F83-F324346D7358} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{AF4385F8-4DD1-203E-3313-26D3C42AB6A6} = {9E0ED28F-095F-4CFA-8174-E6155B1992C4}
+		{1838B971-373A-0C62-0F73-FA519F012E44} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}

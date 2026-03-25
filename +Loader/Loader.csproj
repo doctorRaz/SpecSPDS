@@ -33,16 +33,14 @@
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\+Cleaner\Cleaner.csproj" />
+		<ProjectReference Include="..\+CAD.Runtime\CAD.Runtime.csproj"/>
+		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
 
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
 	<Target Name="GenerateMinVersion" BeforeTargets="CoreCompile">
-		<WriteLinesToFile
-			File="$(IntermediateOutputPath)GeneratedMinVersion.cs"
-			Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }"
-			Overwrite="true" />
+		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedMinVersion.cs" Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }" Overwrite="true" />
 
 		<ItemGroup>
 			<Compile Include="$(IntermediateOutputPath)GeneratedMinVersion.cs" />

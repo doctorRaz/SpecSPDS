@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->		
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>dRz.CAD.Runtime</RootNamespace>
+		<Description>Среда окружения аддона</Description>
+		<AssemblyTitle>CAD.Runtime</AssemblyTitle>
+		<Product>CAD.Runtime</Product>
+		<InformationalVersion>CAD.Runtime for All</InformationalVersion>
+	
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	
+
+</Project>

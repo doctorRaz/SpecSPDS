@@ -1,6 +1,6 @@
 ﻿<Project>
 	<PropertyGroup>
- 
+
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -8,8 +8,14 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj"/>
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
+		<ProjectReference Include="..\+CAD.Runtime\CAD.Runtime.csproj"/>
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz"/>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="_Draft\**" />
+		<EmbeddedResource Remove="_Draft\**" />
+		<None Remove="_Draft\**" />
 	</ItemGroup>
 </Project>

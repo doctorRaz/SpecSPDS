@@ -1,4 +1,4 @@
-﻿using dRz.Loader.Infrastructure.Info;
+﻿using dRz.CAD.Runtime.Info;
 using NLog;
 using NLog.Common;
 using System;
