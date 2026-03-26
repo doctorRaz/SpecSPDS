@@ -17,7 +17,7 @@ namespace dRz.Cad.Diagnostics.Cad
         /// </returns>
         public override string ToString()
         {
-            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion} {HostArchitecture}";
+            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion}[{FileVersion}] [{HostArchitecture}]";
         }
         //public static InfoCad Current { get; } = new InfoCad();
 
@@ -54,8 +54,8 @@ namespace dRz.Cad.Diagnostics.Cad
                 ExePath = CadPath.GetExePathProcess();
 
 #if CMD
-                ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";
-                ExePath = @"c:\Program Files\Autodesk\AutoCAD 2026\acad.exe";
+                //ExePath = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";
+                //ExePath = @"c:\Program Files\Autodesk\AutoCAD 2026\acad.exe";
 #endif
 
                 if (!string.IsNullOrEmpty(ExePath))
@@ -93,7 +93,7 @@ namespace dRz.Cad.Diagnostics.Cad
 
                     Is64BitProcess = Environment.Is64BitProcess;
 
-                    HostArchitecture = Is64BitProcess ? "- 64-bit" : "- 32-bit";
+                    HostArchitecture = Is64BitProcess ? "64-bit" : "32-bit";
                 }
             }
             catch

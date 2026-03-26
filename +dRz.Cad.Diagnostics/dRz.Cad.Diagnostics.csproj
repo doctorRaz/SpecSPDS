@@ -17,8 +17,11 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
+		<Compile Remove="Os\_draft\**" />
 		<Compile Remove="_draft\**" />
+		<EmbeddedResource Remove="Os\_draft\**" />
 		<EmbeddedResource Remove="_draft\**" />
+		<None Remove="Os\_draft\**" />
 		<None Remove="_draft\**" />
 	</ItemGroup>
 
