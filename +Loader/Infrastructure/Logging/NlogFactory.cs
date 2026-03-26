@@ -38,7 +38,8 @@ namespace dRz.Loader.Infrastructure.Logging
 
         public static Logger GetLogger<T>()
         {
-            string loggerName = $"{InfoDll.ProductName}.{typeof(T).FullName}";
+            //string loggerName = $"{InfoDll.ProductName}.{typeof(T).FullName}";
+            string loggerName = $"{typeof(T).FullName}";
             return Factory.GetLogger(loggerName);
         }
 
