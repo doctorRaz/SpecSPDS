@@ -4,6 +4,6 @@ namespace dRz.SpecSPDS.Infrastructure
 {
     internal static class AddonContext
     {
-        public static readonly InfoAdOn InfoDll = InfoAdOn.Get(typeof(AddonContext));
+        public static readonly InfoAddOn InfoDll = InfoAddOn.Get(typeof(AddonContext));
     }
 }

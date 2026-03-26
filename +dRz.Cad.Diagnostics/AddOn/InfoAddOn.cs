@@ -9,28 +9,28 @@ namespace dRz.Cad.Diagnostics.AddOn
     /// Runtime environment for specific assembly (addon/module).
     /// Immutable per-assembly context.
     /// </summary>
-    public sealed class InfoAdOn
+    public sealed class InfoAddOn
     {
         private const string _nLogConfigFileName = "drzNLog.dll.nlog";
 
-        private static readonly ConcurrentDictionary<Assembly, InfoAdOn> _cache = new();
+        private static readonly ConcurrentDictionary<Assembly, InfoAddOn> _cache = new();
 
         /// <summary>
         /// Gets the specified assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <returns></returns>
-        public static InfoAdOn Get(Assembly assembly)
+        public static InfoAddOn Get(Assembly assembly)
         {
-            return _cache.GetOrAdd(assembly, asm => new InfoAdOn(asm));
+            return _cache.GetOrAdd(assembly, asm => new InfoAddOn(asm));
         }
 
-        public static InfoAdOn Get(Type type)
+        public static InfoAddOn Get(Type type)
         {
             return Get(type.Assembly);
         }
 
-        private InfoAdOn(Assembly assembly)
+        private InfoAddOn(Assembly assembly)
         {
 
 
@@ -101,14 +101,14 @@ namespace dRz.Cad.Diagnostics.AddOn
         /// <param name="assembly">The assembly.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException">assembly</exception>
-        public static InfoAdOn FromAssembly(Assembly assembly)
+        public static InfoAddOn FromAssembly(Assembly assembly)
         {
             if (assembly == null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return new InfoAdOn(assembly);
+            return new InfoAddOn(assembly);
         }
 
         /// <summary>
@@ -116,14 +116,14 @@ namespace dRz.Cad.Diagnostics.AddOn
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        public static InfoAdOn FromType(Type type)
-            => new InfoAdOn(type.Assembly);
+        public static InfoAddOn FromType(Type type)
+            => new InfoAddOn(type.Assembly);
 
         /// <summary>
         /// НЕ рекомендуется для production (может вернуть не ту сборку)
         /// </summary>
-        public static InfoAdOn FromCallingAssembly()
-            => new InfoAdOn(Assembly.GetCallingAssembly());
+        public static InfoAddOn FromCallingAssembly()
+            => new InfoAddOn(Assembly.GetCallingAssembly());
 
         // -------------------- Public API --------------------
 

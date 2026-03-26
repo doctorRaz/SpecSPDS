@@ -95,7 +95,7 @@ namespace dRz.Loader.Infrastructure.Logging
                         }
 
                         //инфа про адон
-                        log.Debug("Config: {0}, AdOn: {1}", mode, InfoDll);
+                        log.Debug("Config = {0}, AddOn: {1}", mode, InfoDll);
 
                         //инфа про ос
                         log.Debug("OS: {0}", InfoOs.Current);
