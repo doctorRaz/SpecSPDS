@@ -56,6 +56,10 @@ namespace dRz.Cad.Diagnostics.AddOn
 
             AssemblyVersion = assembly.GetName().Version ?? new Version(0, 0, 0, 0);
 
+            BuildDate = ComputeBuildDate(assembly, out bool isAuto);
+
+            IsAutoVersion = isAuto;
+
             InformationalVersion =
                 assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
                 ?? "Unknown";
@@ -81,7 +85,9 @@ namespace dRz.Cad.Diagnostics.AddOn
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             if (string.IsNullOrEmpty(appData))
+            {
                 appData = Path.GetTempPath(); // fallback
+            }
 
             AppDataProductPath = Path.Combine(appData, ProductName);
 
@@ -200,6 +206,22 @@ namespace dRz.Cad.Diagnostics.AddOn
         public Version AssemblyVersion { get; }
 
         /// <summary>
+        /// Gets the build date.
+        /// </summary>
+        /// <value>
+        /// The build date.
+        /// </value>
+        public DateTime BuildDate { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is automatic version.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is automatic version; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsAutoVersion { get; }
+
+        /// <summary>
         /// Gets the application data product path.
         /// </summary>
         /// <value>
@@ -246,14 +268,14 @@ namespace dRz.Cad.Diagnostics.AddOn
         /// </returns>
         public override string ToString()
         {
-            return $"{ProductName} v{AssemblyVersion}; Module: {ProductTitle}; {InformationalVersion}";
+            return $"{ProductName} ({AssemblyVersion}) Module [{ProductTitle}] {InformationalVersion}";
         }
 
         /// <summary>
         /// Converts Longs the string.
         /// </summary>
         /// <returns></returns>
-        public string LongString()
+        public string ToStringLong()
         {
             return @$"LongString
     {ProductName} v{AssemblyVersion}
@@ -270,6 +292,74 @@ namespace dRz.Cad.Diagnostics.AddOn
 
         // -------------------- Helpers --------------------
 
+
+        /// <summary>
+        /// Computes the build date.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns></returns>
+        private DateTime ComputeBuildDate(Assembly assembly, out bool isAuto)
+        {
+            Version version = assembly.GetName().Version;
+
+            // 1. Попробуем вычислить из Build/Revision
+            DateTime? dt = TryGetBuildDate(version);
+            if (dt.HasValue)
+            {
+                isAuto = true;
+                return dt.Value;
+            }
+
+            // 2. Файл сборки (fallback)
+            try
+            {
+                if (!string.IsNullOrEmpty(assembly.Location) && File.Exists(assembly.Location))
+                {
+                    isAuto = false;
+                    return File.GetLastWriteTimeUtc(assembly.Location);
+                }
+            }
+            catch
+            {
+                // ignore
+            }
+
+            // 3. Последний fallback
+            isAuto = false;
+            return DateTime.UtcNow;
+        }
+
+        /// <summary>
+        /// Tries the get build date.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        private static DateTime? TryGetBuildDate(Version version)
+        {
+            if (version == null || version.Build < 0 || version.Revision < 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
+                DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                return baseDate
+                    .AddDays(version.Build)
+                    .AddSeconds(version.Revision * 2);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Extracts the product prefix.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
         private static string ExtractProductPrefix(string fileName)
         {
             int dotIndex = fileName.IndexOf('.');
