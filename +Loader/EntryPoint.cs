@@ -12,9 +12,6 @@ using System.Reflection;
 using dRz.Loader.Interfaces;
 using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
-using dRz.Cleaner.Infrastructure;
-using dRz.Cad.Diagnostics.AddOn;
-using static dRz.Loader.Infrastructure.AddonContext;
 using dRz.Cad.Diagnostics.Cad;
 
 
@@ -31,7 +28,6 @@ using dRz.SpecSpds.Test.Services;
 #else
 using System.ComponentModel;
 using dRz.Loader.Services;
-using dRz.Cad.Diagnostics.Cad;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
@@ -85,8 +81,8 @@ namespace dRz.Loader
             {
                 /* регистрируемся
                     каждая регистрация вызыввается во всех модулях
+                            TryRegisterAssemblyResolver();
                 */
-                //TryRegisterAssemblyResolver();
 
                 //nlog
                 // если ехception, поднимаем его сюда, стоп работа
@@ -99,23 +95,20 @@ namespace dRz.Loader
                         + $"\nЗагрузка приложения будет продолжена");//{InfoDll.ProductName}
                 }
 
-
-                //стартуем очистку копий и bak
-                //TryCleanBackups();
-
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
 
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
+                //в лог тут не пишем, возможно не поднялся логер
                 string message = $"Приложение не загружено!!!" +
-                                    $"\nСкопируйте это сообщение и отправьте разработчику";//{InfoDll.ProductName}
+                     $"\nСкопируйте это сообщение и отправьте разработчику";
 
                 msg.ExceptionMessage(message, ex);
             }
 
-            //отписываемся независимо от результата этому аддону подписка  больше не нужен
+            /*отписываемся независимо от результата этому аддону подписка  больше не нужен
             finally
             {
                 try
@@ -126,9 +119,9 @@ namespace dRz.Loader
                 }
                 catch { }
             }
+            */
 
         }
-
 
         /// <summary>
         /// Cads the loading.
@@ -380,7 +373,10 @@ namespace dRz.Loader
                 // Полный путь к текущей сборке
                 string _assemblyDirectory = Path.GetDirectoryName(typeof(EntryPoint).Assembly.Location) ?? string.Empty;
 
-                //think проверять путь от запросившей сборки с проверкой на нул, если нул тогда от _resolverBaseDir или тупо вернуть нулл
+                //think переделать класс на статик как у жопите,
+                //проверять путь от запросившей сборки с проверкой на нул,
+                //если нул тогда от _resolverBaseDir или тупо вернуть нулл
+
                 string _resolverBaseDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 //d:\@Developers\В работе\Reminder\VS\GPT-Assembly Resolver в другом модуле.md
@@ -404,37 +400,6 @@ namespace dRz.Loader
 
         #endregion
 
-        /// <summary>
-        /// Cleans the backups.
-        /// </summary>
-        private void TryCleanBackups()
-        {
-            try
-            {
-                CleanBackups();
-            }
-
-            catch (Exception ex)
-            {
-                log.Error(ex, $"CleanBackups: {ex.Message}");
-            }
-
-        }
-
-        private void CleanBackups()
-        {
-            try
-            {
-                string directoryPath = InfoDll.AssemblyDirectory;
-
-                CleaningBackups.Cleaning(directoryPath);//x отключить после тестов
-                                                        //чистка это задача основных адаптеров а не загрузчика
-            }
-
-            catch { }
-
-        }
-
         #region Terminate
 
         /// <summary>
@@ -453,8 +418,7 @@ namespace dRz.Loader
         {
             try
             {
-                log.Debug("LogManager.Shutdown");
-                //LogManager.Shutdown();
+                log.Debug("Terminate");
             }
             catch { } // смысла нет что то показывать при закрытии наны
 
