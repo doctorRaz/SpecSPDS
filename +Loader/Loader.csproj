@@ -10,6 +10,8 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>
+		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
+		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей $(SolutionName) под версию CAD</Description>
@@ -37,7 +39,7 @@
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj"/>
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
-	<!--CoreCompile BeforeBuild-->
+	<!--CoreCompile BeforeBuild PrepareForBuild-->
 	<!--Генерация класса с константой MinVersion перед сборкой-->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
 	<!-- <Target Name="GenerateMinVersion" -->
@@ -60,19 +62,23 @@
 	<!-- </Target> -->
 	<Target Name="GeneratedCompile"
 	        BeforeTargets="PrepareForBuild">
-		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs"
-		                  Lines=
-"namespace dRz.Loader
+		<WriteLinesToFile
+		  File="$(IntermediateOutputPath)GeneratedCompile.cs"
+		  Overwrite="true"
+		  Lines="
+namespace dRz.Loader
 {
-	public static class GeneratedCompile
-	{
-		public const int MinVersion = $(MinVersion)%3B	
-		public const string CommandSuf = &quot;$(SolutionName)&quot;%3B
-	}
-}"
-		                  Overwrite="true"/>
-		<ItemGroup>
-			<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs"/>
-		</ItemGroup>
+    public static class GeneratedCompile
+    {
+        public const int MinVersion = $(MinVersion)%3B
+        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B
+    }
+}" />
+
 	</Target>
+
+	<ItemGroup>
+		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs"
+				 Visible="false" />
+	</ItemGroup>
 </Project>

@@ -58,24 +58,25 @@ namespace dRz.Loader
         private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
 
 
+
+
+#if DEBUG && NC
+        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}")]
+        [Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
+        public static void test()
+        {
+            IMessageService msg = new MessageService();
+            msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
+            EntryPoint entryPoint = new EntryPoint();
+            entryPoint.Initialize();
+        }
+#endif
+
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в 
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
-
-#if DEBUG && NC
-        [Rtm.CommandMethod("инитП")]
-        [Description("ручной инит загрузчика")]
-#endif
-        public static void test()
-        {
-            IMessageService msg = new MessageService();
-            msg.ConsoleMessage("инитП");
-            EntryPoint entryPoint = new EntryPoint();
-            entryPoint.Initialize();
-        }
-
         public void Initialize()
         {
 
@@ -154,7 +155,7 @@ namespace dRz.Loader
 
                 string fileFullName = GetType().Assembly.Location;
 
-                int minMajor = VersionInfo.MinVersion;//из Directory.Build.props проекта
+                int minMajor = GeneratedCompile.MinVersion;//из Directory.Build.props проекта
 
                 Version minVersion = new Version(minMajor, 0);
 
