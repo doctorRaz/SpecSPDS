@@ -5,7 +5,7 @@
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>dRz.Cleaner</RootNamespace>
 		<Description>Cleaner чистилка bak и копий</Description>
-		<AssemblyTitle>Cleaner</AssemblyTitle>
+		<AssemblyTitle>dRz.Cleaner</AssemblyTitle>
 		<Product>Cleaner</Product>
 		<InformationalVersion>Cleaner for All</InformationalVersion>
 	
