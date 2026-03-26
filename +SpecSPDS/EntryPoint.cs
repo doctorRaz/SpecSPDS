@@ -6,16 +6,9 @@ using System.ComponentModel;
 using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
 using dRz.SpecSPDS;
-using dRz.CAD.Runtime.Info;
+using dRz.Cad.Diagnostics.Os;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
-
-
-
-
-
-
-
-
+using dRz.Cad.Diagnostics.Cad;
 
 
 #if AC

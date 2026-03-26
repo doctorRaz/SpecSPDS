@@ -3,11 +3,11 @@
 	<PropertyGroup>
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>dRz.CAD.Runtime</RootNamespace>
+		<RootNamespace>dRz.Cad.Diagnostics</RootNamespace>
 		<Description>Среда окружения аддона</Description>
-		<AssemblyTitle>CAD.Runtime</AssemblyTitle>
-		<Product>CAD.Runtime</Product>
-		<InformationalVersion>CAD.Runtime for All</InformationalVersion>
+		<AssemblyTitle>dRz.Cad.Diagnostics</AssemblyTitle>
+		<Product>dRz.Cad.Diagnostics</Product>
+		<InformationalVersion>dRz.Cad.Diagnostics for All</InformationalVersion>
 
 	</PropertyGroup>
 	<PropertyGroup>
@@ -17,9 +17,9 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Remove="Info\_draft\**" />
-		<EmbeddedResource Remove="Info\_draft\**" />
-		<None Remove="Info\_draft\**" />
+		<Compile Remove="_draft\**" />
+		<EmbeddedResource Remove="_draft\**" />
+		<None Remove="_draft\**" />
 	</ItemGroup>
 
 </Project>

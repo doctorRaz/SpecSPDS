@@ -33,7 +33,7 @@
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\+CAD.Runtime\CAD.Runtime.csproj"/>
+		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj"/>
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
 

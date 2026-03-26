@@ -6,8 +6,10 @@ using NLog.Targets.Wrappers;
 using System;
 using System.IO;
 using dRz.Loader.Infrastructure.Logging.Diagnostics;
-using dRz.CAD.Runtime.Info;
+using dRz.Cad.Diagnostics.AddOn;
 using static dRz.Loader.Infrastructure.AddonContext;
+using dRz.Cad.Diagnostics.Os;
+
 
 
 #if NC

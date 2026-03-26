@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace dRz.CAD.Runtime.Info
+namespace dRz.Cad.Diagnostics.Cad
 {
     /// <summary>
     /// Максимально полная информация о процессе-хосте (nanoCAD)
@@ -101,7 +101,7 @@ namespace dRz.CAD.Runtime.Info
                 // intentionally ignore
             }
         }
-         
+
     }
 }
 

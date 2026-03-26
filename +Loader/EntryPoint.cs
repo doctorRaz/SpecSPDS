@@ -13,8 +13,10 @@ using dRz.Loader.Interfaces;
 using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
 using dRz.Cleaner.Infrastructure;
-using dRz.CAD.Runtime.Info;
+using dRz.Cad.Diagnostics.AddOn;
 using static dRz.Loader.Infrastructure.AddonContext;
+using dRz.Cad.Diagnostics.Cad;
+
 
 #if AC
 using Rtm = Autodesk.AutoCAD.Runtime;
@@ -29,6 +31,7 @@ using dRz.SpecSpds.Test.Services;
 #else
 using System.ComponentModel;
 using dRz.Loader.Services;
+using dRz.Cad.Diagnostics.Cad;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 

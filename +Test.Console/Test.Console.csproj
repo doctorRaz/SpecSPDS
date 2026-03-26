@@ -47,6 +47,7 @@
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\NlogFactory.cs" Link="Loader\Infrastructure\Logging\NlogFactory.cs" />
+		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="Loader\Infrastructure\AddonContext.cs" />
 
 
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
@@ -59,7 +60,7 @@
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
-		<ProjectReference Include="..\+CAD.Runtime\CAD.Runtime.csproj" />
+		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
 	</ItemGroup>
 
 	<!-- Генерация класса с константой MinVersion перед сборкой -->

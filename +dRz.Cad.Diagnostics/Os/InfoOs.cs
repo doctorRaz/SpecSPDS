@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace dRz.CAD.Runtime.Info
+namespace dRz.Cad.Diagnostics.Os
 {
     /// <summary>
     /// Информация о системме

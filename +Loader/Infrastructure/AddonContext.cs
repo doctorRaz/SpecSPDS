@@ -1,4 +1,4 @@
-﻿using dRz.CAD.Runtime.Info;
+﻿using dRz.Cad.Diagnostics.AddOn;
 
 namespace dRz.Loader.Infrastructure
 {

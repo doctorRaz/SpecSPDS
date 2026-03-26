@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 
-namespace dRz.CAD.Runtime.Info
+namespace dRz.Cad.Diagnostics.AddOn
 {
     /// <summary>
     /// Runtime environment for specific assembly (addon/module).
@@ -78,7 +78,7 @@ namespace dRz.CAD.Runtime.Info
                 ?? "Unknown";
 
             // ---AppData ---
-            string appData =  Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             if (string.IsNullOrEmpty(appData))
                 appData = Path.GetTempPath(); // fallback
