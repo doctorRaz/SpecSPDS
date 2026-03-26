@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿
+using NLog;
 using dRz.SpecSPDS.Core.InternalDiagnostic;
 using System;
 using dRz.SpecSPDS.Core.Bootstrap;
@@ -9,6 +10,9 @@ using dRz.SpecSPDS;
 using dRz.Cad.Diagnostics.Os;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
 using dRz.Cad.Diagnostics.Cad;
+using dRz.Cleaner.Infrastructure;
+
+
 
 
 #if AC
@@ -40,13 +44,59 @@ namespace dRz.SpecSPDS
             //если нет библиотек или еще какой косяк
             try
             {
+                //стартуем очистку копий и bak
+                TryCleanBackups(); //независимо от результата чистки, работа аддона будет продолжена
+                                   //ошибку сюда не поднимаем
 
-                //todo прибить класс               AssemblyResolver resolver = new AssemblyResolver();
+                //  
+                TryInit();
 
-                //add  event Assembly resolve  
-                //todo прибить класс      //resolver.Register();
+            }
+            catch (Exception ex)
+            {
+                string message = $"Приложение не загружено!!!" +
+                                $"\nСкопируйте это сообщение и отправьте разработчику";
+                msg.ExceptionMessage(message, ex);
+                log.Fatal(ex,ex.Message);
+            }
+        }
 
-                //todo прибить класс     InitLoger();
+        #region CleaningBackups
+
+        /// <summary>
+        /// Cleans the backups.
+        /// </summary>
+        private void TryCleanBackups()
+        {
+            try //если ех на входе в библиотеку, то мы поймаем это исключение
+                //запишем и работаем дальше
+            {
+                CleanBackups();
+            }
+
+            catch (Exception ex)
+            {
+                log.Error(ex, $"CleanBackups: {ex.Message}");
+            }
+
+        }
+
+        private void CleanBackups()
+        {
+            try//игнорим ошибки
+            {
+                CleaningBackups.Cleaning(InfoDll.AssemblyDirectory);
+            }
+            catch { }
+        }
+
+        #endregion
+
+
+        private void TryInit()
+        {
+            try
+            {
 
                 log.Debug("AdOn: {0}", InfoDll);
 
@@ -54,68 +104,60 @@ namespace dRz.SpecSPDS
 
                 log.Debug("OS: {0}", InfoOs.Current);
 
-                InitAdapter();
+                msg.ConsoleMessage($"Hello SpecSPDS for {new InfoCad()}");
+
+
+                TryListCMD();
+
+                TryUpdater();
             }
             catch (Exception ex)
             {
-
-                msg.ExceptionMessage(ex);
+                log.Error(ex, ex.Message);
             }
         }
 
-        private void InitLoger()
+        /// <summary>
+        /// Tries the list command.<br/>
+        /// Вывод списка зарегистрированных команд и инфы о аддоне
+        /// </summary>
+        private void TryListCMD()
         {
             try
             {
 
-                //если лог конфиг не загрузился сам грузим руками
-                if (LogManager.Configuration is null)
-                {
-                    //пытаемся грузить принудительно
-                    new LogBootstrap();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, ex.Message);
+            }
+        }
 
-                    //если конфиг не нашелся и не загрузился
-                    if (LogManager.Configuration is null)
-                    {
-                        //включим диагностику eсли выключена
-                        new InternalLoggerDiagnostic("LogManager empty Configuration");
-
-                        //дальше пишем внутренний лог
-                    }
-                }
-
-                log.Info("Logger Started");
+        /// <summary>
+        /// Tries the updater.<br/>
+        /// Задел для обновлятора
+        /// </summary>
+        private void TryUpdater()
+        {
+            try
+            {
 
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex);
+                log.Error(ex, ex.Message);
             }
-        }
-
-        private void InitAdapter()
-        {
-            Loader loader = new Loader();
-            loader.HelloSpec();
         }
 
         public void Terminate()
         {
-            log.Debug("LogManager.Shutdown");
-
-            //LogManager.Shutdown();
+            try
+            {
+                log.Debug("Terminate");
+            }
+            catch { }// смысла нет что то показывать при закрытии наны     
         }
+
     }
-
-    class Loader
-    {
-        private IMessageService msg = new MessageService();
-        internal void HelloSpec()
-        {
-            msg.ConsoleMessage($"Hello SpecSPDS for nanoCAD v{App.Version.Major}.{App.Version.Minor}");
-        }
-    }
-
-
 
 }
