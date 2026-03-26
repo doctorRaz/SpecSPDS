@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props"
+	        Condition="Exists('$(SolutionDir)Directory.Build.props')"/>
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
@@ -7,10 +8,8 @@
 		<RootNamespace>dRz.Loader</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>
-
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей $(SolutionName) под версию CAD</Description>
@@ -24,27 +23,56 @@
 		<!--<BaseOutputPath>$(SolutionDir)bin\</BaseOutputPath>-->
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Remove="_Draft\**" />
-		<EmbeddedResource Remove="_Draft\**" />
-		<None Remove="_Draft\**" />
+		<Compile Remove="_Draft\**"/>
+		<EmbeddedResource Remove="_Draft\**"/>
+		<None Remove="_Draft\**"/>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
-		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
+		<PackageReference Include="drzNLog"
+		                  Version="6.1.0-drz"/>
+		<PackageReference Include="nanoCAD.Platform.NET"
+		                  Version="21.0.5699.3427"/>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj"/>
 		<ProjectReference Include="..\+Cleaner\Cleaner.csproj"/>
 	</ItemGroup>
-
-	<!-- Генерация класса с константой MinVersion перед сборкой -->
+	<!--CoreCompile BeforeBuild-->
+	<!--Генерация класса с константой MinVersion перед сборкой-->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
-	<Target Name="GenerateMinVersion" BeforeTargets="CoreCompile">
-		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedMinVersion.cs" Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }" Overwrite="true" />
-
+	<!-- <Target Name="GenerateMinVersion" -->
+	<!-- BeforeTargets="PrepareForBuild"> -->
+	<!-- <WriteLinesToFile File="$(IntermediateOutputPath)GeneratedMinVersion.cs" -->
+	<!-- Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }" -->
+	<!-- Overwrite="true"/> -->
+	<!-- <ItemGroup> -->
+	<!-- <Compile Include="$(IntermediateOutputPath)GeneratedMinVersion.cs"/> -->
+	<!-- </ItemGroup> -->
+	<!-- </Target> -->
+	<!-- <Target Name="GenerateCommandName" -->
+	<!-- BeforeTargets="PrepareForBuild"> -->
+	<!-- <WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCommandName.cs" -->
+	<!-- Lines="public static class CommandSuf { public const string suf = &quot;$(SolutionName)&quot;%3B }" -->
+	<!-- Overwrite="true"/> -->
+	<!-- <ItemGroup> -->
+	<!-- <Compile Include="$(IntermediateOutputPath)GeneratedCommandName.cs"/> -->
+	<!-- </ItemGroup> -->
+	<!-- </Target> -->
+	<Target Name="GeneratedCompile"
+	        BeforeTargets="PrepareForBuild">
+		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs"
+		                  Lines=
+"namespace dRz.Loader
+{
+	public static class GeneratedCompile
+	{
+		public const int MinVersion = $(MinVersion)%3B	
+		public const string CommandSuf = &quot;$(SolutionName)&quot;%3B
+	}
+}"
+		                  Overwrite="true"/>
 		<ItemGroup>
-			<Compile Include="$(IntermediateOutputPath)GeneratedMinVersion.cs" />
+			<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs"/>
 		</ItemGroup>
 	</Target>
-
 </Project>
