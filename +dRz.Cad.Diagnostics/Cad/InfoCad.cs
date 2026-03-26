@@ -17,7 +17,7 @@ namespace dRz.Cad.Diagnostics.Cad
         /// </returns>
         public override string ToString()
         {
-            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion} - {HostArchitecture}";
+            return $@"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)} v{ProductVersion} {HostArchitecture}";
         }
         //public static InfoCad Current { get; } = new InfoCad();
 
@@ -93,7 +93,7 @@ namespace dRz.Cad.Diagnostics.Cad
 
                     Is64BitProcess = Environment.Is64BitProcess;
 
-                    HostArchitecture = Is64BitProcess ? "64-bit" : "32-bit";
+                    HostArchitecture = Is64BitProcess ? "- 64-bit" : "- 32-bit";
                 }
             }
             catch
