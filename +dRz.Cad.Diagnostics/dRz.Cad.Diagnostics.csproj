@@ -17,12 +17,21 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
+		<Compile Remove="AddOn\_draft\**" />
+		<Compile Remove="Cad\_draft\**" />
 		<Compile Remove="Os\_draft\**" />
 		<Compile Remove="_draft\**" />
+		<EmbeddedResource Remove="AddOn\_draft\**" />
+		<EmbeddedResource Remove="Cad\_draft\**" />
 		<EmbeddedResource Remove="Os\_draft\**" />
 		<EmbeddedResource Remove="_draft\**" />
+		<None Remove="AddOn\_draft\**" />
+		<None Remove="Cad\_draft\**" />
 		<None Remove="Os\_draft\**" />
 		<None Remove="_draft\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
 	</ItemGroup>
 
 </Project>

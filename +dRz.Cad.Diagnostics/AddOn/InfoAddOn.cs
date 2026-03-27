@@ -268,7 +268,7 @@ namespace dRz.Cad.Diagnostics.AddOn
         /// </returns>
         public override string ToString()
         {
-            return $"{ProductName} ({AssemblyVersion}) Module [{ProductTitle}] {InformationalVersion}";
+            return $"{ProductName} v{AssemblyVersion}; Assembly: {FileName}; [{InformationalVersion}]";
         }
 
         /// <summary>
