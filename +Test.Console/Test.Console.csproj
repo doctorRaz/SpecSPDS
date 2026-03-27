@@ -30,8 +30,6 @@
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\NlogFactory.cs" Link="Loader\Infrastructure\Logging\NlogFactory.cs" />
 		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="Loader\Infrastructure\AddonContext.cs" />
-
-
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
@@ -39,7 +37,7 @@
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\+Cleaner\Cleaner.csproj">
+		<ProjectReference Include="..\+dRz.Cleaner\dRz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
@@ -47,13 +45,27 @@
 
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
-	<Target Name="GenerateMinVersion" BeforeTargets="CoreCompile">
-		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedMinVersion.cs" Lines="public static class VersionInfo { public const int MinVersion = $(MinVersion)%3B }" Overwrite="true" />
+	<Target Name="GeneratedCompile"
+	        BeforeTargets="PrepareForBuild">
+		<WriteLinesToFile
+		  File="$(IntermediateOutputPath)GeneratedCompile.cs"
+		  Overwrite="true"
+		  Lines="
+namespace dRz.Loader
+{
+    public static class GeneratedCompile
+    {
+        public const int MinVersion = $(MinVersion)%3B
+        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B
+    }
+}" />
 
-		<ItemGroup>
-			<Compile Include="$(IntermediateOutputPath)GeneratedMinVersion.cs" />
-		</ItemGroup>
 	</Target>
+
+	<ItemGroup>
+		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs"
+				 Visible="false" />
+	</ItemGroup>
 
 
 

@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--<TargetFramework>netstandard2.0</TargetFramework>-->		
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>dRz.Cleaner</RootNamespace>
 		<Description>Cleaner чистилка bak и копий</Description>
 		<AssemblyTitle>dRz.Cleaner</AssemblyTitle>
 		<Product>Cleaner</Product>
 		<InformationalVersion>Cleaner for All</InformationalVersion>
-	
+
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-	
+
 
 </Project>

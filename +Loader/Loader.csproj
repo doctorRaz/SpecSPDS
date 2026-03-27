@@ -51,12 +51,25 @@
 	<!-- <Compile Include="$(IntermediateOutputPath)GeneratedCommandName.cs"/> -->
 	<!-- </ItemGroup> -->
 	<!-- </Target> -->
-	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
-		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs" Overwrite="true" Lines="&#xD;&#xA;namespace dRz.Loader&#xD;&#xA;{&#xD;&#xA;    public static class GeneratedCompile&#xD;&#xA;    {&#xD;&#xA;        public const int MinVersion = $(MinVersion)%3B&#xD;&#xA;        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B&#xD;&#xA;    }&#xD;&#xA;}" />
+	<Target Name="GeneratedCompile"
+	        BeforeTargets="PrepareForBuild">
+		<WriteLinesToFile
+		  File="$(IntermediateOutputPath)GeneratedCompile.cs"
+		  Overwrite="true"
+		  Lines="
+namespace dRz.Loader
+{
+    public static class GeneratedCompile
+    {
+        public const int MinVersion = $(MinVersion)%3B
+        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B
+    }
+}" />
 
 	</Target>
 
 	<ItemGroup>
-		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
+		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs"
+				 Visible="false" />
 	</ItemGroup>
 </Project>
