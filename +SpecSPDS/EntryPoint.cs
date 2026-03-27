@@ -11,6 +11,8 @@ using dRz.Cad.Diagnostics.Os;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
 using dRz.Cad.Diagnostics.Cad;
 using dRz.Cleaner.Infrastructure;
+using dRz.Cad.Diagnostics;
+
 
 
 
@@ -57,7 +59,7 @@ namespace dRz.SpecSPDS
                 string message = $"Приложение не загружено!!!" +
                                 $"\nСкопируйте это сообщение и отправьте разработчику";
                 msg.ExceptionMessage(message, ex);
-                log.Fatal(ex,ex.Message);
+                log.Fatal(ex, ex.Message);
             }
         }
 
@@ -100,11 +102,11 @@ namespace dRz.SpecSPDS
 
                 log.Debug("AdOn: {0}", InfoDll);
 
-                log.Debug("CAD: {0}", new InfoCad());
+                log.Debug("CAD: {0}", RT.Cad);
 
                 log.Debug("OS: {0}", InfoOs.Current);
 
-                msg.ConsoleMessage($"Hello SpecSPDS for {new InfoCad()}");
+                msg.ConsoleMessage($"Hello SpecSPDS for {RT.Cad}");
 
 
                 TryListCMD();

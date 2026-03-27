@@ -13,6 +13,8 @@ using dRz.Loader.Interfaces;
 using dRz.Loader.Infrastructure.Logging;
 using dRz.Loader;
 using dRz.Cad.Diagnostics.Cad;
+using dRz.Cad.Diagnostics;
+
 
 
 #if AC
@@ -140,11 +142,11 @@ namespace dRz.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
                 // Version, полученного из Application.Version.
-                Version version = InfoCad.ProductVersion;// Version;
+                Version version = RT.Cad.ProductVersion;// Version;
 
-                string fileDescription = InfoCad.FileDescription;
+                string fileDescription = RT.Cad.FileDescription;
 
-                log.Info("Обнаружен: {0}", new InfoCad());
+                log.Info("Обнаружен: {0}", RT.Cad);
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -158,7 +160,7 @@ namespace dRz.Loader
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {new InfoCad()}";
+                    string mesag = $"Не найден подходящий адаптер для {RT.Cad}";
 
                     log.Error($"{mesag}");
 
@@ -178,7 +180,7 @@ namespace dRz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Info("Загружается адаптер для: {0}, целевая сборка: {1}", new InfoCad(), targetDllFullName.FullName);
+                        log.Info("Загружается адаптер для: {0}, целевая сборка: {1}", RT.Cad, targetDllFullName.FullName);
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -192,7 +194,7 @@ namespace dRz.Loader
                         throw exception;
                     }
 
-                    log.Info("Адаптер для {0} загружен", new InfoCad());
+                    log.Info("Адаптер для {0} загружен", RT.Cad);
 
                 }
                 catch (Exception ex)

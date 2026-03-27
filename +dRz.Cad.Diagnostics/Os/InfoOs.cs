@@ -64,7 +64,7 @@ namespace dRz.Cad.Diagnostics.Os
                     OsVersion = new Version(major, minor, build, rev);
                     VersionString = OsVersion.ToString();
 
-                    Architecture = Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit";
+                    Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
 
                     EditionId = GetString(key, "EditionID", "Unknown");
                     InstallationType = GetString(key, "InstallationType", "Unknown");
@@ -92,7 +92,7 @@ namespace dRz.Cad.Diagnostics.Os
                 OsVersion = new Version(v.Major, v.Minor, v.Build, v.Revision);
                 VersionString = OsVersion.ToString();
 
-                Architecture = Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit";
+                Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
 
                 EditionId = "Unknown";
                 InstallationType = "Unknown";

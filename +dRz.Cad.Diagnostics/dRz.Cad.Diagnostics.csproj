@@ -10,9 +10,6 @@
 		<InformationalVersion>dRz.Cad.Diagnostics for All</InformationalVersion>
 
 	</PropertyGroup>
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
-	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
