@@ -23,26 +23,8 @@
 		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Remove="Loader\_draft\**" />
-		<Compile Remove="_draft\**" />
-		<Compile Remove="_experimental\**" />
-		<EmbeddedResource Remove="Loader\_draft\**" />
-		<EmbeddedResource Remove="_draft\**" />
-		<EmbeddedResource Remove="_experimental\**" />
-		<None Remove="Loader\_draft\**" />
-		<None Remove="_draft\**" />
-		<None Remove="_experimental\**" />
-		<Page Remove="Loader\_draft\**" />
-		<Page Remove="_draft\**" />
-		<Page Remove="_experimental\**" />
-	</ItemGroup>
-	<ItemGroup>
-
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" />
-
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" />
-
-
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
 		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
