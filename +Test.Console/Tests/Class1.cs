@@ -11,14 +11,14 @@ namespace dRz.SpecSpds.Test.Tests
         public void test()
         {
 
-            var path = InfoDll.AppDataProductLogPath;
-
-
-            Console.WriteLine(new InfoCad());
-
             var os = InfoOs.Current;
             
             Console.WriteLine(os);
+
+            var path = InfoDll.AppDataProductLogPath;
+
+
+            Console.WriteLine(InfoCad.Current);
 
         }
     }

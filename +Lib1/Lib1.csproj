@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFramework>net462</TargetFramework>
+		<!--<RootNamespace>dRz.Cleaner</RootNamespace>-->
+		<Description>1 чистилка bak и копий</Description>
+		<AssemblyTitle>dRz.Cleaner</AssemblyTitle>
+		<Product>1 Cleaner</Product>
+		<InformationalVersion>Cleaner for 1</InformationalVersion>
+
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="AddonContext.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
+	</ItemGroup>
+
+
+</Project>
