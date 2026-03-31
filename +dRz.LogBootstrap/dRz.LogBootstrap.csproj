@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>dRz.Cad.Diagnostics</RootNamespace>
+		<Description>Среда окружения аддона</Description>
+		<AssemblyTitle>dRz.Cad.Diagnostics</AssemblyTitle>
+		<Product>dRz.Cad.Diagnostics</Product>
+		<InformationalVersion>dRz.Cad.Diagnostics for All</InformationalVersion>
+
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+	</ItemGroup>
+
+</Project>

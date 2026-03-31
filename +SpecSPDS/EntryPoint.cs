@@ -1,15 +1,12 @@
 ﻿
 using NLog;
-using dRz.SpecSPDS.Core.InternalDiagnostic;
 using System;
-using dRz.SpecSPDS.Core.Bootstrap;
 using System.ComponentModel;
 using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
 using dRz.SpecSPDS;
 using dRz.Cad.Diagnostics.Os;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
-using dRz.Cad.Diagnostics.Cad;
 using dRz.Cleaner.Infrastructure;
 using dRz.Cad.Diagnostics;
 
@@ -23,7 +20,6 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 #elif NC
 
-using App = HostMgd.ApplicationServices.Application;
 using Rtm = Teigha.Runtime;
 #endif
 
