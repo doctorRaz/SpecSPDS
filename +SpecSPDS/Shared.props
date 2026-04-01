@@ -9,6 +9,7 @@
 		<ProjectReference Include="..\+Core\SpecSPDS.Core.csproj"/>
 		<ProjectReference Include="..\+dRz.Cleaner\dRz.Cleaner.csproj"/>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj"/>
+		<ProjectReference Include="..\+dRz.LogBootstrap\dRz.LogBootstrap.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz"/>

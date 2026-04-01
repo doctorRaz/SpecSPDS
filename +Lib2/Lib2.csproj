@@ -14,12 +14,14 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-		<ItemGroup>
-	  <Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="AddonContext.cs" />
+	<ItemGroup>
+		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="AddonContext.cs" />
+		<Compile Include="..\+Test.Console\Loader\LoggerProvider.cs" Link="LoggerProvider.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
+		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
+		<ProjectReference Include="..\+dRz.LogBootstrap\dRz.LogBootstrap.csproj" />
 	</ItemGroup>
 
 

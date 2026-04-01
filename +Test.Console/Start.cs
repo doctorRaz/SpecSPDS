@@ -26,6 +26,7 @@ using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using dRz.Loader;
 using dRz.Loader.Infrastructure;
+using dRz.SpecSpds.Test.Loader;
 using dRz.SpecSpds.Test.Tests;
 using NLog;
 using System;
@@ -46,11 +47,28 @@ namespace dRz.SpecSpds.Test
         /// <summary>
         /// общий логгер
         /// </summary>
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+         
 
         [STAThread]
         private static void Main(string[] args)
         {
+            var lt = new LogTests();
+
+            var cmdA = new CommandA();
+     
+            var cmdB = new CommandB();
+
+
+            cmdA.LogTest();
+
+            cmdB.LogTest();
+
+            lt.LogTest();
+
+
+
+
             var rt = RT.Info;
             var id = InfoDll;
 
@@ -62,10 +80,8 @@ namespace dRz.SpecSpds.Test
 
             Console.WriteLine($"InfoDll {InfoDll}");
 
-            var cmdA = new CommandA();
             Console.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
 
-            var cmdB = new CommandB();
             Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
 
 

@@ -1,8 +1,7 @@
 ﻿using NLog;
 using System.IO;
-using static dRz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.Loader.Infrastructure.Logging.Diagnostics
+namespace dRz.Cad.Diagnostics.Diagnostics
 {
     internal static class LogLevelReader
     {
@@ -38,7 +37,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
 
                 using StreamReader sr = new StreamReader(fs);
 
-                string? text = sr.ReadLine()?.Trim();
+                string text = sr.ReadLine()?.Trim();
 
                 if (string.IsNullOrWhiteSpace(text))
                 {

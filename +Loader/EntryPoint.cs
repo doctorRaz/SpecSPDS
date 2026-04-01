@@ -10,10 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using dRz.Loader.Interfaces;
-using dRz.Loader.Infrastructure.Logging;
-using dRz.Loader;
-using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics;
+using dRz.SpecSpds;
+using dRz.SpecSpds.Test.Loader;
+
+
 
 
 
@@ -53,7 +54,8 @@ namespace dRz.Loader
 
         //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
-        private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
+        //private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
+        Logger  log = LoggerProvider.For<EntryPoint>();
 
 
 
@@ -91,11 +93,11 @@ namespace dRz.Loader
                 //BUG аддоны валят в последний настроенный лог, переделать на фабрики
                 // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
                 // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
-                if (!LogBootstrap.Init())
-                {
-                    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
-                        + $"\nЗагрузка приложения будет продолжена");//{InfoDll.ProductName}
-                }
+                //if (!LogBootstrap.Init())
+                //{
+                //    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
+                //        + $"\nЗагрузка приложения будет продолжена");//{InfoDll.ProductName}
+                //}
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();

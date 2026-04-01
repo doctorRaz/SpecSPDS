@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace dRz.Loader.Infrastructure.Logging.Diagnostics
+namespace dRz.Cad.Diagnostics.Diagnostics
 {
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!
@@ -12,12 +12,12 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
     {
         public override Encoding Encoding => Encoding.UTF8;
 
-        public override void WriteLine(string? value)
+        public override void WriteLine(string value)
         {
             Debug.WriteLine("[NLog] " + value);
         }
 
-        public override void Write(string? value)
+        public override void Write(string value)
         {
             Debug.Write("[NLog] " + value);
         }

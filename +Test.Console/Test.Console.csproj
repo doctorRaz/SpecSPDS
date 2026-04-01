@@ -23,12 +23,6 @@
 		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogKeys.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" Link="Loader\Infrastructure\Logging\Diagnostics\LogLevelReader.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" Link="Loader\Infrastructure\Logging\Diagnostics\InternalLoggerHelpers.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" Link="Loader\Infrastructure\Logging\Diagnostics\OutputDebugTextWriter.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\LogBootstrap.cs" Link="Loader\Infrastructure\Logging\LogBootstrap.cs" />
-		<Compile Include="..\+Loader\Infrastructure\Logging\NlogFactory.cs" Link="Loader\Infrastructure\Logging\NlogFactory.cs" />
 		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="Loader\Infrastructure\AddonContext.cs" />
 		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
@@ -41,7 +35,8 @@
 			<Private>True</Private>
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj" />
-		<ProjectReference Include="..\+Lib1\Lib1.csproj" />
+		<ProjectReference Include="..\+dRz.LogBootstrap\dRz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+Lib1\Test.Lib1.csproj" />
 		<ProjectReference Include="..\+Lib2\Lib2.csproj" />
 	</ItemGroup>
 

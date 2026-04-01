@@ -1,7 +1,6 @@
 ﻿using NLog;
-using static dRz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.Loader.Infrastructure.Logging
+namespace dRz.Cad.Diagnostics
 {
     public static class NlogFactory
     {

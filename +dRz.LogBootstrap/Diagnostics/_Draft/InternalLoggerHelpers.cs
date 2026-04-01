@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using static dRz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.Loader.Infrastructure.Logging.Diagnostics
+namespace dRz.Cad.Diagnostics.Diagnostics
 {
     internal static class InternalLoggerHelpers
     {
@@ -70,7 +69,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
                 FileInfo file = new FileInfo(filePath);
                 if (file.Exists && file.Length > 10 * 1024 * 1024)
                 {
-                    string? dir = Path.GetDirectoryName(filePath);
+                    string dir = Path.GetDirectoryName(filePath);
                     string newName = $"{Path.GetFileNameWithoutExtension(filePath)}_{DateTime.Now:HHmmss}.log";
                     file.MoveTo(Path.Combine(dir, newName));
                 }
@@ -105,7 +104,7 @@ namespace dRz.Loader.Infrastructure.Logging.Diagnostics
                 if (files.Count > arhivedFilesCount)
                 {
 
-                    foreach (FileInfo? file in files.Skip(arhivedFilesCount))
+                    foreach (FileInfo file in files.Skip(arhivedFilesCount))
                     {
                         file.Delete();
                     }

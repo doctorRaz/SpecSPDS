@@ -5,25 +5,16 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
-using dRz.Loader.Infrastructure.Logging.Diagnostics;
-using dRz.Cad.Diagnostics.AddOn;
-using static dRz.Loader.Infrastructure.AddonContext;
-using dRz.Cad.Diagnostics.Os;
 
 
 
-#if NC
-using dRz.Loader.Services;
-#else
-using dRz.SpecSpds.Test.Services;
-#endif
 
-namespace dRz.Loader.Infrastructure.Logging
+namespace dRz.Cad.Diagnostics
 {
     /// <summary>
     /// Конфигурация Nlog
     /// </summary>
-    internal /*static*/ class LogBootstrap
+    public /*static*/ class LogBootstrap
     {
         //todo переделать на фабрику
 
@@ -136,7 +127,7 @@ namespace dRz.Loader.Infrastructure.Logging
 
 #if DEBUG || CMD
             //проверка значений  var
-            LoggingConfiguration? config = LogManager.Configuration;
+            LoggingConfiguration config = LogManager.Configuration;
 
             if (config.Variables.ContainsKey(LogVar.FinalLevel))
             {
