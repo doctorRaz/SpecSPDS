@@ -1,5 +1,6 @@
 ﻿using dRz.Cad.Diagnostics;
-using dRz.Log.Interfaces;
+using dRz.LogServices;
+using dRz.LogServices.Interfaces;
 using NLog;
 using System;
 using static dRz.Loader.Infrastructure.AddonContext;
@@ -11,7 +12,9 @@ namespace dRz.SpecSpds.Test.Loader
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                configPathProvider: () => InfoDll.NLogConfigPath
+                configPathProvider: () => InfoDll.NLogConfigPath,
+                appDataProductLogPathProvider: () => InfoDll.AppDataProductLogPath,
+                filePrefixProvider: () => InfoDll.FilePrefix
             ));
 
         public static Logger For<T>() => _service.Value.GetLogger<T>();

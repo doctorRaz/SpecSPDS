@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>dRz.Log</RootNamespace>
+		<RootNamespace>dRz.LogServices</RootNamespace>
 		<Description>Настройка логирования nLog</Description>
 		<AssemblyTitle>dRz.LogBootstrap</AssemblyTitle>
 		<Product>dRz.LogBootstrap</Product>

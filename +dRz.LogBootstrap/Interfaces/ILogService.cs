@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dRz.Log.Interfaces
+namespace dRz.LogServices.Interfaces
 {
     public interface ILogService
     {

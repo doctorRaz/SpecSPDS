@@ -1,7 +1,8 @@
 ﻿using NLog;
 using System.IO;
+using System.Reflection;
 
-namespace dRz.Cad.Diagnostics.Diagnostics
+namespace dRz.LogServices.Diagnostics
 {
     internal static class LogLevelReader
     {
@@ -10,7 +11,7 @@ namespace dRz.Cad.Diagnostics.Diagnostics
         /// Если файла нет — возвращает defaultLevel.
         /// Если файл пустой или текст некорректный — возвращает fallbackIfEmpty.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
+        /// <param name="fileName">Name of the file.</param>`
         /// <param name="fallbackLevelName">The default level.</param>
         /// <returns></returns>
         public static LogLevel GetLevelFromFile(string fileName, string fallbackLevelName = "Trace")
@@ -24,7 +25,10 @@ namespace dRz.Cad.Diagnostics.Diagnostics
             try
             {
                 //путь к файлу настроек
-                string path = Path.Combine(InfoDll.AssemblyDirectory, fileName);
+
+                string pp=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+                string path = Path.Combine(pp /*InfoDll.AssemblyDirectory*/, fileName);
 
 
                 if (!File.Exists(path))

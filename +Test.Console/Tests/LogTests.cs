@@ -12,9 +12,9 @@ namespace dRz.SpecSpds.Test.Tests
     {
           ILogger  log = LoggerProvider.For<LogTests>();
 
-        internal void LogTest()
+        internal void LogTest(string msg)
         {
-            log.Info("LogTests");
+            log.Info(msg);
 
         }
 

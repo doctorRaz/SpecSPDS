@@ -1,4 +1,4 @@
-﻿namespace dRz.Cad.Diagnostics.Diagnostics
+﻿namespace dRz.LogServices.Diagnostics
 {
     /// <summary>
     /// константы названий variable лога

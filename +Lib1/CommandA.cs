@@ -3,7 +3,7 @@ using dRz.SpecSpds.Test.Loader;
 using NLog;
 using static dRz.Loader.Infrastructure.AddonContext;
 
-namespace AddonA
+namespace dRz.SpecSPDS
 {
     public class CommandA
     {
@@ -21,10 +21,10 @@ namespace AddonA
         }
 
 
-        public void LogTest()
+        public void LogTest(string msg)
         {
 
-            log.Info("CommandA");
+            log.Info(msg);
 
         }
     }
