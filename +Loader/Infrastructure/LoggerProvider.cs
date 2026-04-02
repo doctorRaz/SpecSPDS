@@ -5,15 +5,16 @@ using NLog;
 using System;
 using static dRz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.SpecSpds.Test.Loader
+namespace dRz.Loader.Infrastructure
 {
     public static class LoggerProvider
     {
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
-                productNameProvider: () => InfoDll.ProductName,
+                productNameProvider: () => InfoDll.ProductName
+                /*,
                 appDataProductLogPathProvider: () => InfoDll.AppDataProductLogPath,
-                filePrefixProvider: () => InfoDll.FilePrefix
+                filePrefixProvider: () => InfoDll.FilePrefix*/
             ));
 
         public static Logger For<T>() => _service.Value.GetLogger<T>();

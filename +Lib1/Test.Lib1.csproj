@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="AddonContext.cs" />
-		<Compile Include="..\+Test.Console\Loader\LoggerProvider.cs" Link="LoggerProvider.cs" />
+		<Compile Include="..\+Loader\Infrastructure\LoggerProvider.cs" Link="Infrastructure\LoggerProvider.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

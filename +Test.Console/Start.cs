@@ -23,6 +23,7 @@ using dRz.Cad.Diagnostics;
 using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using dRz.Loader;
+using dRz.LogServices.Diagnostics;
 using dRz.SpecSpds.Test.Tests;
 using dRz.SpecSPDS;
 using System;
@@ -44,24 +45,33 @@ namespace dRz.SpecSpds.Test
         /// общий логгер
         /// </summary>
         //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
-         
+
 
         [STAThread]
         private static void Main(string[] args)
         {
+            InternalLoggerHelpers.ConfigureInternalLogger();
+
             var lt = new LogTests();
 
             var cmdA = new CommandA();
-     
-            var cmdB = new CommandB();
+
+            //var cmdB = new CommandB();
 
 
             cmdA.LogTest("A0ttrrt");
 
-            cmdB.LogTest("B0trte");
+            //cmdB.LogTest("B0trte");
 
             lt.LogTest("Test0tet");
 
+            cmdA.LogTest("2");
+
+            //cmdB.LogTest("2");
+
+            cmdA.LogTest("20");
+
+            //cmdB.LogTest("20");
 
             return;
 
@@ -78,16 +88,16 @@ namespace dRz.SpecSpds.Test
 
             Console.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
 
-            Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
+            //Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
 
 
             RuntimeInfo runtime = RuntimeInfo.Current;
             Console.WriteLine(runtime);
 
-          
+
             Console.WriteLine(InfoOs.Current);
             Console.WriteLine(InfoCad.Current);
-                   
+
 
             EntryPoint entryPoint = new EntryPoint();
 

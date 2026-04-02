@@ -11,28 +11,38 @@ using System.Linq;
 using System.Reflection;
 using dRz.Loader.Interfaces;
 using dRz.Cad.Diagnostics;
+
+
+
+
+ 
+using System.ComponentModel;
+using dRz.Loader.Infrastructure;
+
+
+
+
+
+
+
+
+#if CMD
+using dRz.SpecSpds.Test.Services;
 using dRz.SpecSpds;
-using dRz.SpecSpds.Test.Loader;
+//using dRz.SpecSpds.Test.Loader;
+//using dRz.Loader.Services;
 
-
-
-
-
-#if AC
-using Rtm = Autodesk.AutoCAD.Runtime;
 
 #elif NC
+using dRz.Loader;
 using Rtm = Teigha.Runtime;
-#endif
-#if CMD
-
-using dRz.SpecSpds.Test.Services;
-
-#else
-using System.ComponentModel;
 using dRz.Loader.Services;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
+
+
+
+ 
 
 namespace dRz.Loader
 {
@@ -55,7 +65,7 @@ namespace dRz.Loader
         //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
         //private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
-        Logger  log = LoggerProvider.For<EntryPoint>();
+        Logger log = LoggerProvider.For<EntryPoint>();
 
 
 

@@ -17,19 +17,20 @@ namespace dRz.LogServices
 
         private readonly Func<string> _productNameProvider;
 
-        private readonly Func<string> _filePrefixProvider;
-        private readonly Func<string> _appDataProductLogPathProvider;
+        //private readonly Func<string> _filePrefixProvider;
+        //private readonly Func<string> _appDataProductLogPathProvider;
 
         public LogService(
-            Func<string> productNameProvider,
+            Func<string> productNameProvider
+            /*,
             Func<string> filePrefixProvider,
-            Func<string> appDataProductLogPathProvider
+            Func<string> appDataProductLogPathProvider*/
             )
         {
             _productNameProvider = productNameProvider ?? throw new ArgumentNullException(nameof(productNameProvider));
 
-            _filePrefixProvider = filePrefixProvider ?? (() => null);
-            _appDataProductLogPathProvider = appDataProductLogPathProvider ?? (() => null);
+            //_filePrefixProvider = filePrefixProvider ?? (() => null);
+            //_appDataProductLogPathProvider = appDataProductLogPathProvider ?? (() => null);
         }
 
         public Logger GetLogger<T>() => GetLogger(typeof(T));
@@ -49,9 +50,10 @@ namespace dRz.LogServices
 
         private LogFactory CreateFactory(string productName)
         {
-            string filePrefix = _filePrefixProvider();
+            string filePrefix = productName;// _filePrefixProvider();
 
-            string appDataProductLogPath = _appDataProductLogPathProvider();
+            string appDataProductLogPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), productName, "logs"); ;// _appDataProductLogPathProvider();
 
             Exception exNlog = null;
 
@@ -67,7 +69,7 @@ namespace dRz.LogServices
                 config = factory.Configuration;
             }
             catch (NLogConfigurationException ex)
-            {               
+            {
                 exNlog = ex; //todo писать в интернал если Конфиг битый
                 config = null;
             }
@@ -84,7 +86,7 @@ namespace dRz.LogServices
             {
                 // Конфиг уже есть (nlog.config), просто прокидываем в него 
                 // наши пути через переменные
-                ApplyCommonVariables(factory,filePrefix, appDataProductLogPath);//todo передавать фабрику
+                ApplyCommonVariables(factory, filePrefix, appDataProductLogPath);//todo передавать фабрику
                 return factory;
             }
 
@@ -204,7 +206,7 @@ namespace dRz.LogServices
         }
 
 
-        private void ApplyCommonVariables(LogFactory factory, string filePrefix,string appDataProductLogPath)
+        private void ApplyCommonVariables(LogFactory factory, string filePrefix, string appDataProductLogPath)
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
             //todo переделать на variables?? 

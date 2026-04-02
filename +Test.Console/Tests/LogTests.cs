@@ -1,10 +1,5 @@
-﻿using dRz.SpecSpds.Test.Loader;
+﻿using dRz.Loader.Infrastructure;
 using NLog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.SpecSpds.Test.Tests
 {
