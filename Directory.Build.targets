@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- <SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir> -->
 		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
-		<ConfigNameIn>Single_gdc</ConfigNameIn>
+		<ConfigNameIn>Single_var</ConfigNameIn>
 		<!-- <ConfigNameOut>$(AssemblyName).dll.nlog</ConfigNameOut> -->
 		<ConfigNameOut>drzNLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>

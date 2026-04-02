@@ -6,7 +6,7 @@
 		<!--<RootNamespace>dRz.Cleaner</RootNamespace>-->
 		<Description>2 чистилка bak и копий</Description>
 		<AssemblyTitle>dRz.Cleaner</AssemblyTitle>
-		<Product>2 Cleaner</Product>
+		<Product>SpecSPDS_</Product>
 		<InformationalVersion>Cleaner for 2</InformationalVersion>
 
 	</PropertyGroup>

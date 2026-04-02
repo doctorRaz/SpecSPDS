@@ -44,16 +44,18 @@ namespace dRz.LogServices
 
             string productName = SafeGetProductName();
             LogFactory factory = _factories.GetOrAdd(productName, CreateFactory);
+
+            //todo писать в лог о системе о каде как этот лог сделан
             factory.GetLogger(type.FullName).Info(productName);
+
             return factory.GetLogger(type.FullName);
         }
 
         private LogFactory CreateFactory(string productName)
         {
-            string filePrefix = productName;// _filePrefixProvider();
+            string logName = productName;// ${shortdate}_{logName}.log;
 
-            string appDataProductLogPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), productName, "logs"); ;// _appDataProductLogPathProvider();
+            string logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), productName, "logs"); // _appDataProductLogPathProvider();
 
             Exception exNlog = null;
 
@@ -70,7 +72,7 @@ namespace dRz.LogServices
             }
             catch (NLogConfigurationException ex)
             {
-                exNlog = ex; //todo писать в интернал если Конфиг битый
+                exNlog = ex; //todo писать в интернал если Конфиг битый или в этот лог
                 config = null;
             }
 
@@ -78,7 +80,7 @@ namespace dRz.LogServices
             if (config == null/*!string.IsNullOrWhiteSpace(configPath) && File.Exists(configPath)*/)//тут проверка конфига на нулл, конфиг если есть подгружается сам
             {//конфг из файла не подтянулся или битый
              //
-                factory.Configuration /* LogManager.Configuration*/ = CreateConfiguration(filePrefix, appDataProductLogPath);
+                factory.Configuration /* LogManager.Configuration*/ = CreateConfiguration(logName, logsDir);
 
                 return factory;
             }
@@ -86,7 +88,7 @@ namespace dRz.LogServices
             {
                 // Конфиг уже есть (nlog.config), просто прокидываем в него 
                 // наши пути через переменные
-                ApplyCommonVariables(factory, filePrefix, appDataProductLogPath);//todo передавать фабрику
+                ApplyCommonVariables(factory, logName, logsDir);
                 return factory;
             }
 
@@ -206,13 +208,18 @@ namespace dRz.LogServices
         }
 
 
-        private void ApplyCommonVariables(LogFactory factory, string filePrefix, string appDataProductLogPath)
+        private void ApplyCommonVariables(LogFactory factory, string appTitle, string logsDir)
         {
+            if (factory.Configuration == null) return;
+
+
+            factory.Configuration.Variables["AppTitle"] = appTitle;
+            factory.Configuration.Variables["LogsDir"] = logsDir;
+
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
             //todo переделать на variables?? 
-            //todo значения стринг а не функц
-            GlobalDiagnosticsContext.Set(LogVar.AppTitle, filePrefix);
-            GlobalDiagnosticsContext.Set(LogVar.LogsDir, appDataProductLogPath);
+            //GlobalDiagnosticsContext.Set(LogVar.AppTitle, appTitle);
+            //GlobalDiagnosticsContext.Set(LogVar.LogsDir, logsDir);
 
             // Если файла нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)
@@ -222,28 +229,33 @@ namespace dRz.LogServices
             //если офф, то не меняем уровень
             if (currentLevel != LogLevel.Off)
             {
-                GlobalDiagnosticsContext.Set(LogVar.LevelMay, currentLevel.ToString());
+                factory.Configuration.Variables["LevelMay"] = currentLevel.ToString();
+
+                //GlobalDiagnosticsContext.Set(LogVar.LevelMay, currentLevel.ToString());
             }
+
+            factory.ReconfigExistingLoggers();
+
 
 #if DEBUG || CMD
             //проверка значений  var
-            LoggingConfiguration config = LogManager.Configuration;
+            LoggingConfiguration config = factory.Configuration;
 
-            if (config.Variables.ContainsKey(LogVar.FinalLevel))
+            if (config.Variables.ContainsKey(LogVar.LevelMay))
             {
-                Layout layot = config.Variables[LogVar.FinalLevel];
+                Layout layot = config.Variables[LogVar.LevelMay];
 
                 string finalLevel = layot.Render(LogEventInfo.CreateNullEvent());
             }
-            if (config.Variables.ContainsKey(LogVar.FinalAppTitle))
+            if (config.Variables.ContainsKey(LogVar.AppTitle))
             {
-                Layout layot = config.Variables[LogVar.FinalAppTitle];
+                Layout layot = config.Variables[LogVar.AppTitle];
 
                 string finalAppTitle = layot.Render(LogEventInfo.CreateNullEvent());
             }
-            if (config.Variables.ContainsKey(LogVar.FinalLogsDir))
+            if (config.Variables.ContainsKey(LogVar.LogsDir))
             {
-                Layout layot = config.Variables[LogVar.FinalLogsDir];
+                Layout layot = config.Variables[LogVar.LogsDir];
 
                 string finalLogsDir = layot.Render(LogEventInfo.CreateNullEvent());
             }

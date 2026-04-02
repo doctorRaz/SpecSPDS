@@ -56,22 +56,26 @@ namespace dRz.SpecSpds.Test
 
             var cmdA = new CommandA();
 
-            //var cmdB = new CommandB();
+            var cmdB = new CommandB();
 
 
             cmdA.LogTest("A0ttrrt");
 
-            //cmdB.LogTest("B0trte");
+            cmdB.LogTest("B0trte");
 
             lt.LogTest("Test0tet");
 
             cmdA.LogTest("2");
 
-            //cmdB.LogTest("2");
+            cmdB.LogTest("2");
 
             cmdA.LogTest("20");
 
-            //cmdB.LogTest("20");
+            cmdB.LogTest("20");
+
+
+            Console.WriteLine("-=End=-");
+            Console.ReadKey();
 
             return;
 
@@ -115,7 +119,7 @@ namespace dRz.SpecSpds.Test
 
 
             Console.WriteLine("-=End=-");
-            //Console.ReadKey();
+            Console.ReadKey();
 
 
 
