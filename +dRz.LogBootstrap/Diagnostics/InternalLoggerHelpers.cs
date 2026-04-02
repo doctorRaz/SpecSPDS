@@ -6,16 +6,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace dRz.Cad.Diagnostics.Diagnostics
+namespace dRz.LogServices.Diagnostics
 {
-    internal static class InternalLoggerHelpers
+    public static class InternalLoggerHelpers
     {
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
         /// </summary>
-        internal static void ConfigureInternalLogger()
+        public static void ConfigureInternalLogger()
         {
             // Если файла нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)
@@ -53,7 +53,8 @@ namespace dRz.Cad.Diagnostics.Diagnostics
             //ошибки конфига
             LogManager.ThrowConfigExceptions = true;
 
-            InternalLogger.Info($"{InfoDll.FileName}: InternalLogger Initialize Level={level}");
+            InternalLogger.Info($"InternalLogger Initialize Level={level}");
+            //InternalLogger.Info($"{InfoDll.FileName}: InternalLogger Initialize Level={level}");
 
         }
 
