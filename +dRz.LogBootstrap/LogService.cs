@@ -16,23 +16,17 @@ namespace dRz.LogServices
         private static readonly ConcurrentDictionary<string, LogFactory> _factories = new();
 
         private readonly Func<string> _productNameProvider;
-        private readonly Func<string> _configPathProvider;//x прибить
 
         private readonly Func<string> _filePrefixProvider;
         private readonly Func<string> _appDataProductLogPathProvider;
 
-
-
-
         public LogService(
             Func<string> productNameProvider,
-            Func<string> configPathProvider,
             Func<string> filePrefixProvider,
             Func<string> appDataProductLogPathProvider
             )
         {
             _productNameProvider = productNameProvider ?? throw new ArgumentNullException(nameof(productNameProvider));
-            _configPathProvider = configPathProvider ?? (() => null);
 
             _filePrefixProvider = filePrefixProvider ?? (() => null);
             _appDataProductLogPathProvider = appDataProductLogPathProvider ?? (() => null);
@@ -49,7 +43,7 @@ namespace dRz.LogServices
 
             string productName = SafeGetProductName();
             LogFactory factory = _factories.GetOrAdd(productName, CreateFactory);
-
+            factory.GetLogger(type.FullName).Info(productName);
             return factory.GetLogger(type.FullName);
         }
 
@@ -58,8 +52,6 @@ namespace dRz.LogServices
             string filePrefix = _filePrefixProvider();
 
             string appDataProductLogPath = _appDataProductLogPathProvider();
-
-            string configPath = _configPathProvider();//x прибить
 
             Exception exNlog = null;
 
@@ -75,28 +67,24 @@ namespace dRz.LogServices
                 config = factory.Configuration;
             }
             catch (NLogConfigurationException ex)
-            {
-                exNlog = ex; // Конфиг битый
+            {               
+                exNlog = ex; //todo писать в интернал если Конфиг битый
                 config = null;
             }
 
 
-            if (config == null/*!string.IsNullOrWhiteSpace(configPath) && File.Exists(configPath)*/)//todo тут проверка конфига на нулл, конфиг если есть подгружается сам
+            if (config == null/*!string.IsNullOrWhiteSpace(configPath) && File.Exists(configPath)*/)//тут проверка конфига на нулл, конфиг если есть подгружается сам
             {//конфг из файла не подтянулся или битый
-
-                //factory.Configuration = CreateFallbackConfig(productName);// Создаем с нуля и сразу заполняем всем необходимым
-                                                                          //
-                factory.Configuration /* LogManager.Configuration*/ = CreateConfiguration();
+             //
+                factory.Configuration /* LogManager.Configuration*/ = CreateConfiguration(filePrefix, appDataProductLogPath);
 
                 return factory;
             }
             else
             {
-                //factory.Configuration = new XmlLoggingConfiguration(configPath);
-
                 // Конфиг уже есть (nlog.config), просто прокидываем в него 
                 // наши пути через переменные
-                ApplyCommonVariables();
+                ApplyCommonVariables(factory,filePrefix, appDataProductLogPath);//todo передавать фабрику
                 return factory;
             }
 
@@ -106,8 +94,7 @@ namespace dRz.LogServices
         /// <summary>
         /// Loads the configuration.
         /// </summary>
-        private LoggingConfiguration CreateConfiguration()//think переделать на LoggingConfiguration, возврат config, что бы можно было использовать в фабрике
-                                                          //todo возможно статик тут не надо?
+        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath)
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
@@ -140,8 +127,8 @@ namespace dRz.LogServices
             {
 
 
-                FileName = Path.Combine(_appDataProductLogPathProvider(), $"${{shortdate}}_{_filePrefixProvider()}.log"),
-                ArchiveFileName = Path.Combine(_appDataProductLogPathProvider(), $"${{shortdate}}_{_filePrefixProvider()}.{{#}}.log"),
+                FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
+                ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
                 //ArchiveAboveSize = 5 * 1024 * 1024,
@@ -169,7 +156,6 @@ namespace dRz.LogServices
             config.AddTarget("asyncFile", asyncTarget);
             config.LoggingRules.Add(new LoggingRule("*", level, asyncTarget));
 
-            //LogManager.Configuration 
             return config;
 
         }
@@ -178,7 +164,6 @@ namespace dRz.LogServices
         /// XML layout
         /// </summary>
         /// <returns></returns>
-
         private static XmlLayout CreateXmlLayout()
         {
             return new XmlLayout
@@ -205,34 +190,6 @@ namespace dRz.LogServices
             };
         }
 
-        private LoggingConfiguration CreateFallbackConfig(string productName)
-        {
-            LoggingConfiguration config = new LoggingConfiguration();
-
-            string logDir = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                productName,
-                "logs");
-
-            Directory.CreateDirectory(logDir);
-
-            FileTarget fileTarget = new FileTarget("file")
-            {
-                FileName = Path.Combine(logDir, "${shortdate}.log"),
-                Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}|${exception:format=toString}"
-            };
-
-            DebugTarget debugTarget = new DebugTarget("debug");
-
-            config.AddTarget(fileTarget);
-            config.AddTarget(debugTarget);
-
-            config.AddRule(LogLevel.Info, LogLevel.Fatal, fileTarget);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, debugTarget);
-
-            return config;
-        }
-
         private string SafeGetProductName()
         {
             try
@@ -247,12 +204,13 @@ namespace dRz.LogServices
         }
 
 
-        private void ApplyCommonVariables()
+        private void ApplyCommonVariables(LogFactory factory, string filePrefix,string appDataProductLogPath)
         {
             //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
-
-            GlobalDiagnosticsContext.Set(LogVar.AppTitle, _filePrefixProvider);
-            GlobalDiagnosticsContext.Set(LogVar.LogsDir, _appDataProductLogPathProvider);
+            //todo переделать на variables?? 
+            //todo значения стринг а не функц
+            GlobalDiagnosticsContext.Set(LogVar.AppTitle, filePrefix);
+            GlobalDiagnosticsContext.Set(LogVar.LogsDir, appDataProductLogPath);
 
             // Если файла нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)

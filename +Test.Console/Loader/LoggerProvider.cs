@@ -12,7 +12,6 @@ namespace dRz.SpecSpds.Test.Loader
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                configPathProvider: () => InfoDll.NLogConfigPath,
                 appDataProductLogPathProvider: () => InfoDll.AppDataProductLogPath,
                 filePrefixProvider: () => InfoDll.FilePrefix
             ));
