@@ -10,52 +10,76 @@ namespace dRz.LogServices.Diagnostics
 {
     public static class InternalLoggerHelpers
     {
+
+        private static bool _initialized = false;
+        private static readonly object _lock = new();
+
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
-        /// </summary>
-        public static void ConfigureInternalLogger()
+        /// </summary>        
+        public static void ConfigureInternalLogger(string typeCaller, string? logDir = null)
         {
-            // Если файла нет — Off (ничего не делаем). 
-            // Если файл создан, но пустой — Trace (максимум инфы)
-            // иначе уровень из файла.
-            LogLevel level = LogLevelReader.GetLevelFromFile(LogKeys.DiagnosticMode);
-
-            if (level == LogLevel.Off)
+            lock (_lock)
             {
-                return;
+                // 1. Всегда читаем желаемый уровень
+                // Если файла нет — Off (ничего не делаем). 
+                // Если файл создан, но пустой — Trace (максимум инфы)
+                // иначе уровень из файла.
+                LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(LogKeys.DiagnosticMode);
+
+                // 2. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
+                if (!_initialized)
+                {
+
+                    //think может лучше в appdata/dRzTools/logs?? если общий лог для всех аддонов пойдет туда
+                    logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools");
+
+                    // 1. Сначала удаляем 6-й и далее файлы
+                    RotateOldLogs(logDir);
+
+                    // 2. Проверяем размер текущего. Если > 10МБ — переименовываем в архивный
+                    string currentLogPath = GetInternalLogPath(logDir);
+                    CheckCurrentFileSize(currentLogPath);
+
+                    //пишем в файл
+                    InternalLogger.LogFile = currentLogPath;
+
+                    // пишем в output debuger
+                    InternalLogger.LogWriter = new OutputDebugTextWriter();
+
+                    InternalLogger.LogToConsole = true;
+
+                    // Стартовый уровень — ставим как в DiagnosticMode
+                    InternalLogger.LogLevel = requestedLevel;
+
+                    //все исключения
+                    LogManager.ThrowExceptions = false;
+
+                    //ошибки конфига
+                    LogManager.ThrowConfigExceptions = true;
+
+                    InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
+
+                    _initialized = true;
+                }
+
+                // 3. Управление уровнем (runtime)
+                if (requestedLevel == LogLevel.Off)
+                {
+                    // принципиально: НЕ понижаем и НЕ выключаем
+                    return;
+                }
+
+                if (requestedLevel < InternalLogger.LogLevel)
+                {
+                    InternalLogger.Info($"{typeCaller} InternalLogger Level changed {InternalLogger.LogLevel} → {requestedLevel}");
+
+                    InternalLogger.LogLevel = requestedLevel;
+                }
+
             }
-
-            //think может лучше в appdata/dRzTools/logs?? если общий лог для всех аддонов пойдет туда
-            string logDir = Path.GetTempPath();
-
-            // 1. Сначала удаляем 6-й и далее файлы
-            RotateOldLogs(logDir);
-
-            // 2. Проверяем размер текущего. Если > 10МБ — переименовываем в архивный
-            string currentLogPath = GetInternalLogPath(logDir);
-            CheckCurrentFileSize(currentLogPath);
-
-            InternalLogger.LogLevel = level;
-
-            //пишем в файл
-            InternalLogger.LogFile = currentLogPath;
-
-            // пишем в output debuger
-            InternalLogger.LogWriter = new OutputDebugTextWriter();
-
-            InternalLogger.LogToConsole = true;
-
-            //все исключения
-            LogManager.ThrowExceptions = false;
-
-            //ошибки конфига
-            LogManager.ThrowConfigExceptions = true;
-
-            InternalLogger.Info($"InternalLogger Initialize Level={level}");
-            //InternalLogger.Info($"{InfoDll.FileName}: InternalLogger Initialize Level={level}");
-
         }
 
         /// <summary>
@@ -122,5 +146,7 @@ namespace dRz.LogServices.Diagnostics
            Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_nlog-drzTools-internal.log");
 
 
+
+        private const string logName = "nlog-drzTools-internal";
     }
 }
