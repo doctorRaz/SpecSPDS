@@ -6,9 +6,11 @@ using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
 using dRz.SpecSPDS;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
+using dRz.SpecSPDS.Infrastructure;
 using dRz.Cleaner.Infrastructure;
 using dRz.Cad.Diagnostics;
-using dRz.SpecSPDS.Infrastructure;
+
+
 
 
 #if AC
@@ -31,7 +33,7 @@ namespace dRz.SpecSPDS
         private IMessageService msg;
 
 #if DEBUG
-        [Rtm.CommandMethod("инитАд")]
+        [Rtm.CommandMethod("инитСП")]
         [Description("ручной инит адаптера")]
         public static void test()
         {

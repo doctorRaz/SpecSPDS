@@ -157,7 +157,7 @@ namespace dRz.Loader
 
                 string fileDescription = RT.Cad.FileDescription;
 
-                log.Info("Обнаружен: {0}", RT.Cad);
+                log.Debug("Обнаружен: {0}", RT.Cad);
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -180,7 +180,7 @@ namespace dRz.Loader
                     return false;
                 }
 
-                log.Info("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
+                log.Debug("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то 
                 // загружаем его.
@@ -191,7 +191,7 @@ namespace dRz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Info("Загружается адаптер для: {0}, целевая сборка: {1}", RT.Cad, targetDllFullName.FullName);
+                        log.Debug("Загружается адаптер для: {0}, целевая сборка: {1}", RT.Cad, targetDllFullName.FullName);
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -205,7 +205,7 @@ namespace dRz.Loader
                         throw exception;
                     }
 
-                    log.Info("Адаптер для {0} загружен", RT.Cad);
+                    log.Debug("Адаптер для {0} загружен", RT.Cad);
 
                 }
                 catch (Exception ex)
