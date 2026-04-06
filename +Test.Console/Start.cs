@@ -23,11 +23,17 @@ using dRz.Cad.Diagnostics;
 using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using dRz.Loader;
+using dRz.Loader.Infrastructure;
 using dRz.LogServices.Diagnostics;
 using dRz.SpecSpds.Test.Tests;
 using dRz.SpecSPDS;
+using NLog;
+using NLog.Common;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using static dRz.Loader.Infrastructure.AddonContext;
 
 namespace dRz.SpecSpds.Test
@@ -50,79 +56,121 @@ namespace dRz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
-            InternalLoggerHelpers.ConfigureInternalLogger();
+            string assemblyDirectory = string.Empty;
+            
+            string baseDir = Path.Combine(assemblyDirectory, "rrr.ffs");
 
             var lt = new LogTests();
-
             var cmdA = new CommandA();
-
             var cmdB = new CommandB();
 
 
-            cmdA.LogTest("A0ttrrt");
 
-            cmdB.LogTest("B0trte");
+            CadEnvironmentInfoProvider ff=new CadEnvironmentInfoProvider();
+            Console.WriteLine($"{ff.GetSummary()}");
+            Console.WriteLine( );
+            
+            Console.WriteLine($"{lt.Execute()}");
+            Console.WriteLine( );
 
-            lt.LogTest("Test0tet");
+            Console.WriteLine($"{cmdA.Execute()}");
+            Console.WriteLine( );
 
-            cmdA.LogTest("2");
-
-            cmdB.LogTest("2");
-
-            cmdA.LogTest("20");
-
-            cmdB.LogTest("20");
+            Console.WriteLine($"{cmdB.Execute()}");
+            Console.WriteLine( );
 
 
-            Console.WriteLine("-=End=-");
-            Console.ReadKey();
 
-            return;
 
-            var rt = RT.Info;
-            var id = InfoDll;
 
+
+
+            Console.WriteLine($"{InfoDll.ToStringLong()}");
+            rr();
             Console.WriteLine($"{RT.Info}");
             Console.WriteLine($"{RT.Os}");
             Console.WriteLine($"{RT.Cad}");
 
-            Console.WriteLine("---------");
-
-            Console.WriteLine($"InfoDll {InfoDll}");
-
-            Console.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
-
-            //Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
+             Console.WriteLine(typeof(Start).FullName);
 
 
-            RuntimeInfo runtime = RuntimeInfo.Current;
-            Console.WriteLine(runtime);
 
 
-            Console.WriteLine(InfoOs.Current);
-            Console.WriteLine(InfoCad.Current);
+            //for (int i = 0; i < 10000; i++)
+            //{
+
+                cmdA.LogTest("A0ttrrt");
+
+                cmdB.LogTest("B0trte");
+
+                lt.LogTest("Test0tet");
+
+                cmdA.LogTest("2");
+
+                cmdB.LogTest("2");
+
+                cmdA.LogTest("20");
+
+                cmdB.LogTest("20");
+            //}
+
+        
+
+            //var rt = RT.Info;
+            //var id = InfoDll;
+
+            //Console.WriteLine($"{RT.Info}");
+            //Console.WriteLine($"{RT.Os}");
+            //Console.WriteLine($"{RT.Cad}");
+
+            //Console.WriteLine("---------");
+
+            //Console.WriteLine($"InfoDll {InfoDll}");
+
+            //Console.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
+
+            ////Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
 
 
-            EntryPoint entryPoint = new EntryPoint();
+            //RuntimeInfo runtime = RuntimeInfo.Current;
+            //Console.WriteLine(runtime);
 
-            entryPoint.Initialize();
+
+            //Console.WriteLine(InfoOs.Current);
+            //Console.WriteLine(InfoCad.Current);
+
+
+            //EntryPoint entryPoint = new EntryPoint();
+
+            //entryPoint.Initialize();
 
             Stopwatch stopwatch = Stopwatch.StartNew();
             //NlogDebug test = new NlogDebug();
             //xxx test.Test();
 
 
-            entryPoint.Terminate();
+            //entryPoint.Terminate();
 
             stopwatch.Stop();
             Console.WriteLine($"Total time: {stopwatch.Elapsed}");
 
 
             Console.WriteLine("-=End=-");
-            Console.ReadKey();
+
+            //LogManager.Shutdown();
+
+            Thread.Sleep(new TimeSpan(0,0,10));
+            //Console.ReadKey();
 
 
 
+
+        }
+
+     static   void rr([CallerMemberName] string? caller = null)
+        {
+
+            Console.WriteLine(caller);
 
         }
     }

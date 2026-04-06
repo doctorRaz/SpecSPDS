@@ -3,16 +3,19 @@ using dRz.LogServices;
 using dRz.LogServices.Interfaces;
 using NLog;
 using System;
-using static dRz.Loader.Infrastructure.AddonContext;
+using static dRz.SpecSPDS.Infrastructure.AddonContext;
 
-namespace dRz.Loader.Infrastructure
+namespace dRz.SpecSPDS.Infrastructure
 {
+    /// <summary>
+    /// проброс в фабрику ProductName и получение логера для продукта
+    /// </summary>
     public static class LoggerProvider
     {
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                assemblyDirectoryProvider: () =>null, /*InfoDll.AssemblyDirectory,*/
+                assemblyDirectoryProvider:()=>InfoDll.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
@@ -22,7 +25,10 @@ namespace dRz.Loader.Infrastructure
     }
 
 
-
+    /// <summary>
+    /// Проброс в фабрику инфы о ОС КАД и аддоне
+    /// </summary>
+    /// <seealso cref="dRz.LogServices.Interfaces.IEnvironmentInfoProvider" />
     public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
     {
         public string GetSummary()

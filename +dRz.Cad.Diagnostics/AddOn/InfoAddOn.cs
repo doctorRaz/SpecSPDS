@@ -268,9 +268,13 @@ namespace dRz.Cad.Diagnostics.AddOn
         /// </returns>
         public override string ToString()
         {
-            return $"{ProductName} v{AssemblyVersion}; Assembly: {FileName}; [{InformationalVersion}]";
+            return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); Assembly: {FileName}; [{InformationalVersion}]";
         }
 
+        public string ToShortString()
+        {
+            return $"{ProductTitle} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")})";
+        }
         /// <summary>
         /// Converts Longs the string.
         /// </summary>
@@ -287,6 +291,7 @@ namespace dRz.Cad.Diagnostics.AddOn
     Copyright:{Copyright}
     Description: {Description}
     FileVersion: {FileVersion}
+    BuildDate: {BuildDate}
 ";
         }
 

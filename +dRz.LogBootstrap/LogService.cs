@@ -1,6 +1,7 @@
 ﻿using dRz.LogServices.Diagnostics;
 using dRz.LogServices.Interfaces;
 using NLog;
+using NLog.Common;
 using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
@@ -17,20 +18,24 @@ namespace dRz.LogServices
 
         private readonly Func<string> _productNameProvider;
 
-        //private readonly Func<string> _filePrefixProvider;
-        //private readonly Func<string> _appDataProductLogPathProvider;
+        private readonly Func<string> _assemblyDirectoryProvider;
+
+        private readonly string _assemblyDirectory;
+
+        private readonly IEnvironmentInfoProvider _envInfoProvider;
 
         public LogService(
-            Func<string> productNameProvider
-            /*,
-            Func<string> filePrefixProvider,
-            Func<string> appDataProductLogPathProvider*/
-            )
+            Func<string> productNameProvider,
+            Func<string> assemblyDirectoryProvider,
+            IEnvironmentInfoProvider envInfoProvider = null)
+
         {
             _productNameProvider = productNameProvider ?? throw new ArgumentNullException(nameof(productNameProvider));
 
-            //_filePrefixProvider = filePrefixProvider ?? (() => null);
-            //_appDataProductLogPathProvider = appDataProductLogPathProvider ?? (() => null);
+            _assemblyDirectoryProvider = assemblyDirectoryProvider ?? throw new ArgumentNullException(nameof(assemblyDirectoryProvider));
+
+            _envInfoProvider = envInfoProvider;
+
         }
 
         public Logger GetLogger<T>() => GetLogger(typeof(T));
@@ -45,60 +50,175 @@ namespace dRz.LogServices
             string productName = SafeGetProductName();
             LogFactory factory = _factories.GetOrAdd(productName, CreateFactory);
 
-            //todo писать в лог о системе о каде как этот лог сделан
-            factory.GetLogger(type.FullName).Info(productName);
-
             return factory.GetLogger(type.FullName);
         }
 
+        /// <summary>
+        /// Creates the factory.
+        /// </summary>
+        /// <param name="productName">Name of the product.</param>
+        /// <returns></returns>
         private LogFactory CreateFactory(string productName)
         {
+
+            string assemblyDirectory = SafeGetAssemblyDirectory();                      
+
+            //путь к Diagnostic.Mode
+            string baseDirDiagnostyc = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
+
+            LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostyc);
+
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(LogService).FullName}.{productName}", requestedLevel);
+
             string logName = productName;// ${shortdate}_{logName}.log;
 
             string logsDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), productName, "logs"); // _appDataProductLogPathProvider();
 
-            Exception exNlog = null;
+            Exception configException = null;
 
             LogFactory factory = null;
 
             LoggingConfiguration config = null;
 
+            bool isFallback = false;
+
             try
             {
-                /*LogFactory*/
+
                 factory = new LogFactory();// Пытаемся использовать внешний конфиг
 
                 config = factory.Configuration;
+
             }
             catch (NLogConfigurationException ex)
             {
-                exNlog = ex; //todo писать в интернал если Конфиг битый или в этот лог
+                configException = ex; //потом запишем в  лог этой фабрики
+
                 config = null;
             }
 
+            //todo получить Level тут!!!
 
-            if (config == null/*!string.IsNullOrWhiteSpace(configPath) && File.Exists(configPath)*/)//тут проверка конфига на нулл, конфиг если есть подгружается сам
-            {//конфг из файла не подтянулся или битый
-             //
-                factory.Configuration /* LogManager.Configuration*/ = CreateConfiguration(logName, logsDir);
+            //путь к Log.Level
+            string baseDirLogLevel = Path.Combine(assemblyDirectory, LogKeys.LogLevel);
 
-                return factory;
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel);
+
+            if (config == null)//тут проверка конфига на нулл, конфиг если есть подгружается сам
+            {
+                //конфг из файла не подтянулся или битый
+                isFallback = true;
+
+                factory.Configuration = CreateConfiguration(logName, logsDir,currentLevel);
+
             }
             else
             {
                 // Конфиг уже есть (nlog.config), просто прокидываем в него 
                 // наши пути через переменные
-                ApplyCommonVariables(factory, logName, logsDir);
-                return factory;
+                ApplyCommonVariables(factory, logName, logsDir,currentLevel);
             }
 
+            // писать в лог о системе о каде как этот лог сделан
+            // 🔴 ВАЖНО: после того как конфиг установлен
+            WriteFactoryDiagnostics(factory, productName, isFallback, configException);
+
+            return factory;
+        }
+
+        private string SafeGetAssemblyDirectory()
+        {
+            try
+            {
+
+                string assemblyDirectory = _assemblyDirectoryProvider();
+                return string.IsNullOrWhiteSpace(assemblyDirectory) ? string.Empty : assemblyDirectory;
+
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
 
 
         /// <summary>
-        /// Loads the configuration.
+        /// Writes the factory diagnostics.
         /// </summary>
-        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath)
+        /// <param name="factory">The factory.</param>
+        /// <param name="productName">Name of the product.</param>
+        /// <param name="isFallback">if set to <c>true</c> [is fallback].</param>
+        /// <param name="configException">The configuration exception.</param>
+        private void WriteFactoryDiagnostics(LogFactory factory,
+                                             string productName,
+                                             bool isFallback,
+                                             Exception configException)
+        {
+            try
+            {
+                Logger log = factory.GetLogger(typeof(LogService).FullName);
+
+                // Internal log level
+                LogLevel internalLevel = InternalLogger.LogLevel;
+
+                // Factory min level
+                LogLevel effectiveLevel = GetEffectiveMinLevel(log);
+
+                string msg = $"LogFactory initialized: {productName};\n" +
+                                $"ConfigSource: {(isFallback ? "Fallback (programmatic)" : "External (nlog.config)")};\n" +
+                                $"EffectiveMinLevel: {effectiveLevel};\n" +
+                                $"InternalLoggerLevel: {internalLevel}";
+
+                if (isFallback)
+                {
+                    log.Warn(msg);
+                }
+                else
+                {
+
+                    log.Debug(msg);
+                }
+
+
+
+                if (_envInfoProvider != null)
+                {
+                    log.Debug($"{_envInfoProvider.GetSummary()}");
+                }
+
+
+                if (configException != null)
+                {
+                    log.Error(configException, configException.Message);
+                }
+            }
+            catch { }// Никогда не роняем приложение из-за диагностики логгера
+        }
+
+        /// <summary>
+        /// Gets the effective minimum level.
+        /// </summary>
+        /// <param name="logger">The log.</param>
+        /// <returns></returns>
+        private static LogLevel GetEffectiveMinLevel(Logger logger)
+        {
+            foreach (var level in LogLevel.AllLevels) // Trace → Fatal
+            {
+                if (logger.IsEnabled(level))
+                    return level;
+            }
+
+            return LogLevel.Off;
+        }
+
+
+        /// <summary>
+        /// Creates the configuration.
+        /// </summary>
+        /// <param name="filePrefix">The file prefix.</param>
+        /// <param name="appDataProductLogPath">The application data product log path.</param>
+        /// <returns></returns>
+        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath, LogLevel currentLevel)
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
@@ -112,26 +232,24 @@ namespace dRz.LogServices
             LogLevel level = LogLevel.Info;
             // Если файл есть, но пустой —Trace
             string fallbackLevelName = "Trace";
-#endif
+#endif            
 
             // Если файла уровня нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)
             // иначе уровень из файла.
-            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel, fallbackLevelName);
+            //LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel, fallbackLevelName);
 
             if (currentLevel != LogLevel.Off)
             {
                 level = currentLevel;
             }
 
-
-
             // Настройка целевого файла
-            FileTarget fileTarget = new FileTarget("xmlFile")
+            FileTarget fileTarget = new FileTarget("file")
             {
 
-
                 FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
+
                 ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
@@ -139,6 +257,7 @@ namespace dRz.LogServices
                 MaxArchiveFiles = 10,
 
                 KeepFileOpen = false,
+
                 OpenFileCacheTimeout = 10,
 
                 Layout = CreateXmlLayout(),
@@ -157,7 +276,7 @@ namespace dRz.LogServices
 
             };
 
-            config.AddTarget("asyncFile", asyncTarget);
+            config.AddTarget("async", asyncTarget);
             config.LoggingRules.Add(new LoggingRule("*", level, asyncTarget));
 
             return config;
@@ -194,6 +313,10 @@ namespace dRz.LogServices
             };
         }
 
+        /// <summary>
+        /// Safes the name of the get product.
+        /// </summary>
+        /// <returns></returns>
         private string SafeGetProductName()
         {
             try
@@ -207,31 +330,37 @@ namespace dRz.LogServices
             }
         }
 
-
-        private void ApplyCommonVariables(LogFactory factory, string appTitle, string logsDir)
+        /// <summary>
+        /// Applies the common variables.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        /// <param name="appTitle">The application title.</param>
+        /// <param name="logsDir">The logs dir.</param>
+        private void ApplyCommonVariables(LogFactory factory, string appTitle, string logsDir, LogLevel currentLevel)
         {
-            if (factory.Configuration == null) return;
+            LoggingConfiguration config = factory.Configuration;
 
+            if (factory.Configuration == null)
+            {
+                return;
+            }
 
-            factory.Configuration.Variables["AppTitle"] = appTitle;
-            factory.Configuration.Variables["LogsDir"] = logsDir;
-
-            //GDC работает быстрее всего, так что используем его для хранения переменных, которые могут понадобиться в шаблонах и правилах.
-            //todo переделать на variables?? 
-            //GlobalDiagnosticsContext.Set(LogVar.AppTitle, appTitle);
-            //GlobalDiagnosticsContext.Set(LogVar.LogsDir, logsDir);
+            /*factory.Configuration*/
+            config.Variables["AppTitle"] = appTitle;
+            /*factory.Configuration*/
+            config.Variables["LogsDir"] = logsDir;
 
             // Если файла нет — Off (ничего не делаем). 
             // Если файл создан, но пустой — Trace (максимум инфы)
             // иначе уровень из файла.
-            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel);
+            //LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel);
 
             //если офф, то не меняем уровень
             if (currentLevel != LogLevel.Off)
             {
-                factory.Configuration.Variables["LevelMay"] = currentLevel.ToString();
+                /*factory.Configuration*/
+                config.Variables["LevelMay"] = currentLevel.ToString();
 
-                //GlobalDiagnosticsContext.Set(LogVar.LevelMay, currentLevel.ToString());
             }
 
             factory.ReconfigExistingLoggers();
@@ -239,7 +368,6 @@ namespace dRz.LogServices
 
 #if DEBUG || CMD
             //проверка значений  var
-            LoggingConfiguration config = factory.Configuration;
 
             if (config.Variables.ContainsKey(LogVar.LevelMay))
             {
@@ -262,8 +390,6 @@ namespace dRz.LogServices
 
 #endif
 
-            //возможно, стоит вызвать, что бы все обновилось, если конфиг уже был, но может и не нужно, так как мы не меняем правила и шаблоны, а только переменные. Надо протестировать.
-            //LogManager.ReconfigExistingLoggers();
         }
     }
 }

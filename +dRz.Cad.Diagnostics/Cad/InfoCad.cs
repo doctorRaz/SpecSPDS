@@ -67,7 +67,7 @@ namespace dRz.Cad.Diagnostics.Cad
                 Copyright = fvi?.LegalCopyright ?? string.Empty;
 
                 Is64BitProcess = Environment.Is64BitProcess;
-                HostArchitecture = RuntimeInformation.ProcessArchitecture.ToString();
+                HostArchitecture =Environment.Is64BitProcess ? "X64" : "X32";// RuntimeInformation.ProcessArchitecture.ToString();
 
                 IsFallback = false;
             }
@@ -111,7 +111,7 @@ namespace dRz.Cad.Diagnostics.Cad
                 {
                     string path = Process.GetCurrentProcess().MainModule?.FileName;
 
-                    path = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";//todo заглушка
+                    //path = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";//todo заглушка
                     //path = @"c:\Program Files\Autodesk\AutoCAD 2026\acad.exe";//todo заглушка
 
                     if (!string.IsNullOrEmpty(path))

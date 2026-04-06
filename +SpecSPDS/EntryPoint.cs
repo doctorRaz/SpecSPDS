@@ -5,13 +5,10 @@ using System.ComponentModel;
 using dRz.SpecSPDS.Services;
 using dRz.SpecSPDS.Interfaces;
 using dRz.SpecSPDS;
-using dRz.Cad.Diagnostics.Os;
 using static dRz.SpecSPDS.Infrastructure.AddonContext;
 using dRz.Cleaner.Infrastructure;
 using dRz.Cad.Diagnostics;
-
-
-
+using dRz.SpecSPDS.Infrastructure;
 
 
 #if AC
@@ -27,21 +24,38 @@ using Rtm = Teigha.Runtime;
 
 namespace dRz.SpecSPDS
 {
-    public /*partial*/ class EntryPoint : Rtm.IExtensionApplication
+    public class EntryPoint : Rtm.IExtensionApplication
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private Logger log;
 
-        private IMessageService msg = new MessageService();
+        private IMessageService msg;
 
 #if DEBUG
         [Rtm.CommandMethod("инитАд")]
         [Description("ручной инит адаптера")]
+        public static void test()
+        {
+            IMessageService msg = new MessageService();
+            msg.ConsoleMessage($"инит адаптера");
+            EntryPoint entryPoint = new EntryPoint();
+            entryPoint.Initialize();
+        }
 #endif
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public void Initialize()
         {
             //если нет библиотек или еще какой косяк
             try
             {
+                //если ех тут то все
+                TryMessageService();
+
+                //обертка инит логера, если ех на старте, то отловим и напишем в месадж
+                TryLogger();
+
                 //стартуем очистку копий и bak
                 TryCleanBackups(); //независимо от результата чистки, работа аддона будет продолжена
                                    //ошибку сюда не поднимаем
@@ -55,8 +69,32 @@ namespace dRz.SpecSPDS
                 string message = $"Приложение не загружено!!!" +
                                 $"\nСкопируйте это сообщение и отправьте разработчику";
                 msg.ExceptionMessage(message, ex);
-                log.Fatal(ex, ex.Message);
+                //log.Fatal(ex, ex.Message); здесь нельзя писать в лог
             }
+        }
+
+        /// <summary>
+        /// Tries the message service.
+        /// </summary>
+        void TryMessageService()
+        {
+            try
+            {
+                msg = new MessageService();
+            }
+            catch { throw; }//роняем аддон
+        }
+
+        /// <summary>
+        /// Tries the logger.
+        /// </summary>
+        void TryLogger()
+        {
+            try
+            {
+                log = LoggerProvider.For<EntryPoint>();
+            }
+            catch { throw; }//роняем аддон
         }
 
         #region CleaningBackups
@@ -96,14 +134,11 @@ namespace dRz.SpecSPDS
             try
             {
 
-                log.Debug("AdOn: {0}", InfoDll);
+                log.Debug("{0}", RT.Info);
 
-                log.Debug("CAD: {0}", RT.Cad);
+                log.Debug("{0}", InfoDll.ToString());
 
-                log.Debug("OS: {0}", InfoOs.Current);
-
-                msg.ConsoleMessage($"Hello SpecSPDS for {RT.Cad}");
-
+                msg.ConsoleMessage($"Hello {InfoDll.ToShortString()} for {RT.Cad}");
 
                 TryListCMD();
 

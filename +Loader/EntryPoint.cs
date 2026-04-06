@@ -12,18 +12,8 @@ using System.Reflection;
 using dRz.Loader.Interfaces;
 using dRz.Cad.Diagnostics;
 
-
-
-
- 
 using System.ComponentModel;
 using dRz.Loader.Infrastructure;
-
-
-
-
-
-
 
 
 #if CMD
@@ -41,9 +31,6 @@ using dRz.Loader.Services;
 #endif
 
 
-
- 
-
 namespace dRz.Loader
 {
     /// <summary>
@@ -58,16 +45,11 @@ namespace dRz.Loader
     {
         private const string netPluginExtension = ".dll";
 
-        private IMessageService msg = new MessageService();
+        private IMessageService msg;
 
         private bool _registered;
 
-        //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
-
-        //private static readonly ILogger log = NlogFactory.GetLogger<EntryPoint>();
-        Logger log = LoggerProvider.For<EntryPoint>();
-
-
+        private Logger log;
 
 
 #if DEBUG && NC
@@ -98,9 +80,14 @@ namespace dRz.Loader
                             TryRegisterAssemblyResolver();
                 */
 
+                  TryMessageService();
+
                 //nlog
                 // если ехception, поднимаем его сюда, стоп работа
-                //BUG аддоны валят в последний настроенный лог, переделать на фабрики
+
+                //обертка инит логера, если ех на старте, то отловим в месадж
+                TryLogger();
+
                 // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
                 // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
                 //if (!LogBootstrap.Init())
@@ -135,6 +122,30 @@ namespace dRz.Loader
             }
             */
 
+        }
+
+        /// <summary>
+        /// Tries the message service.
+        /// </summary>
+        void TryMessageService()
+        {
+            try
+            {
+                msg = new MessageService();
+            }
+            catch { throw; }//роняем аддон
+        }
+
+        /// <summary>
+        /// Tries the logger.
+        /// </summary>
+        void TryLogger()
+        {
+            try
+            {
+                log = LoggerProvider.For<EntryPoint>();
+            }
+            catch { throw; }//роняем аддон
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using dRz.Cad.Diagnostics.Cad;
+﻿using dRz.Cad.Diagnostics.AddOn;
+using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using System;
 
@@ -13,16 +14,18 @@ namespace dRz.Cad.Diagnostics
 
         public InfoOs Os { get; }
         public InfoCad Cad { get; }
+        //public InfoAddOn AddOn { get; }
 
         private RuntimeInfo()
         {
             Os = InfoOs.Current;
             Cad = InfoCad.Current;
+            //AddOn = InfoAddOn.Get();
         }
 
         public override string ToString()
         {
-            return $"{Cad}\n{Os}";
+            return $"{Os}\n{Cad}";
         }
     }
 
@@ -33,5 +36,8 @@ namespace dRz.Cad.Diagnostics
         public static InfoCad Cad => Info.Cad;
 
         public static InfoOs Os => Info.Os;
+
+
+        //public static InfoAddOn AddOn => Info.AddOn;
     }
 }

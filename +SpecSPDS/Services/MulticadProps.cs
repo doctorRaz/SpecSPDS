@@ -67,7 +67,7 @@ public partial class MultiCadProps
 
         List<McObjectId> mcObjectIds = new List<McObjectId>();
 
-        ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр долльше чем его сбросить
+        ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр дольше чем его сбросить
 
         _countFilesTotal = filenames.Count;
 

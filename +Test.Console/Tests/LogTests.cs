@@ -13,5 +13,12 @@ namespace dRz.SpecSpds.Test.Tests
 
         }
 
+        internal string Execute()
+        {
+             CadEnvironmentInfoProvider ff=new CadEnvironmentInfoProvider();
+
+            return ff.GetSummary();
+        }
+
     }
 }

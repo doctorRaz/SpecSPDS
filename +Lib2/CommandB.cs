@@ -9,12 +9,11 @@ namespace dRz.SpecSPDS
     {
         ILogger  log = LoggerProvider.For<CommandB>();
       
-        public InfoAddOn Execute()
+        public string Execute()
         {
-            return InfoDll;
-            //Console.WriteLine(AddonContext.InfoDll);
+            CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
 
-            //Console.WriteLine($"AddonB: {RT.Info}");
+            return ff.GetSummary();
         }
 
         public void LogTest(string msg)

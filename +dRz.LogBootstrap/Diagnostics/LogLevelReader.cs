@@ -1,6 +1,5 @@
 ﻿using NLog;
 using System.IO;
-using System.Reflection;
 
 namespace dRz.LogServices.Diagnostics
 {
@@ -14,8 +13,11 @@ namespace dRz.LogServices.Diagnostics
         /// <param name="fileName">Name of the file.</param>`
         /// <param name="fallbackLevelName">The default level.</param>
         /// <returns></returns>
-        public static LogLevel GetLevelFromFile(string fileName, string fallbackLevelName = "Trace")
+        public static LogLevel GetLevelFromFile(string path /*fileName*/, string fallbackLevelName = "Trace")
         {
+            //передавать каталог ассембле сборки
+            //получать уровни для диагностики и для логера
+
             //если файла настроек нет
             LogLevel defaultLevel = LogLevel.Off;
 
@@ -26,11 +28,10 @@ namespace dRz.LogServices.Diagnostics
             {
                 //путь к файлу настроек
 
-                string pp=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                //string pp=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-                string path = Path.Combine(pp /*InfoDll.AssemblyDirectory*/, fileName);
-
-
+                //string path = Path.Combine(pp /*InfoDll.AssemblyDirectory*/, fileName);
+                
                 if (!File.Exists(path))
                 {
                     //файла нет

@@ -2,7 +2,6 @@
 using NLog.Common;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -14,33 +13,43 @@ namespace dRz.LogServices.Diagnostics
         private static bool _initialized = false;
         private static readonly object _lock = new();
 
+        private const string logName = "nlog-drzTools-internal";
+
+        private const int MaxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
+        private const int MaxArchiveFiles = 5;
+
+
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
         /// </summary>        
-        public static void ConfigureInternalLogger(string typeCaller, string? logDir = null)
+        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string? logDir = null)
         {
             lock (_lock)
             {
-                // 1. Всегда читаем желаемый уровень
-                // Если файла нет — Off (ничего не делаем). 
-                // Если файл создан, но пустой — Trace (максимум инфы)
-                // иначе уровень из файла.
-                LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(LogKeys.DiagnosticMode);
+                /* Получаем уровень из файла DiagnosticMode
+                    Если файла нет — Off (ничего не делаем). 
+                        Если файл создан, но пустой — Trace (максимум инфы)
+                        иначе уровень из файла.
+                */
+
+                //string baseDir = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
+
+                //LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDir);
 
                 // 2. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
                 if (!_initialized)
                 {
 
-                    //think может лучше в appdata/dRzTools/logs?? если общий лог для всех аддонов пойдет туда
                     logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools");
+
+                    string currentLogPath = GetInternalLogPath(logDir);
 
                     // 1. Сначала удаляем 6-й и далее файлы
                     RotateOldLogs(logDir);
 
                     // 2. Проверяем размер текущего. Если > 10МБ — переименовываем в архивный
-                    string currentLogPath = GetInternalLogPath(logDir);
                     CheckCurrentFileSize(currentLogPath);
 
                     //пишем в файл
@@ -63,16 +72,12 @@ namespace dRz.LogServices.Diagnostics
                     InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
 
                     _initialized = true;
+
+                    return; // уровень уже установлен, дальше ничего не меняем
                 }
 
-                // 3. Управление уровнем (runtime)
-                if (requestedLevel == LogLevel.Off)
-                {
-                    // принципиально: НЕ понижаем и НЕ выключаем
-                    return;
-                }
-
-                if (requestedLevel < InternalLogger.LogLevel)
+                // Runtime — понижение уровня для увеличения детализации
+                if (requestedLevel != LogLevel.Off && requestedLevel < InternalLogger.LogLevel)
                 {
                     InternalLogger.Info($"{typeCaller} InternalLogger Level changed {InternalLogger.LogLevel} → {requestedLevel}");
 
@@ -92,7 +97,7 @@ namespace dRz.LogServices.Diagnostics
             {
 
                 FileInfo file = new FileInfo(filePath);
-                if (file.Exists && file.Length > 10 * 1024 * 1024)
+                if (file.Exists && file.Length > MaxFileSizeBytes)
                 {
                     string dir = Path.GetDirectoryName(filePath);
                     string newName = $"{Path.GetFileNameWithoutExtension(filePath)}_{DateTime.Now:HHmmss}.log";
@@ -119,34 +124,29 @@ namespace dRz.LogServices.Diagnostics
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
                 List<FileInfo> files = new DirectoryInfo(logDir)
-                 .GetFiles($"*_nlog-drzTools-internal*.log")
+                 .GetFiles($"*_{logName}*.log")
                  .OrderByDescending(f => f.LastWriteTime)
                  .ToList();
 
-                int arhivedFilesCount = 5;
 
                 // Если файлов больше 5, удаляем лишние
-                if (files.Count > arhivedFilesCount)
-                {
+                //if (files.Count > arhivedFilesCount)
+                //{
 
-                    foreach (FileInfo file in files.Skip(arhivedFilesCount))
-                    {
-                        file.Delete();
-                    }
+                foreach (FileInfo file in files.Skip(MaxArchiveFiles))
+                {
+                    file.Delete();
                 }
+                //}
             }
-            catch (Exception ex)
-            {
-                // Если не удалось почистить, просто выводим в трассировку
-                Trace.WriteLine($"Failed to rotate internal logs: {ex.Message}");
-            }
+            catch { }
         }
 
         private static string GetInternalLogPath(string logDir) =>
-           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_nlog-drzTools-internal.log");
+           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}.log");
 
 
 
-        private const string logName = "nlog-drzTools-internal";
+
     }
 }
