@@ -22,7 +22,10 @@ namespace dRz.SpecSPDS.Core.Services
             {
                 string description = "Выберите папку";
 
-                if (space == Space.SubFolder) description += " (обработаются файлы в подпапках)";
+                if (space == Space.SubFolder)
+                {
+                    description += " (обработаются файлы в подпапках)";
+                }
 
                 //собрать файлы из каталога
                 return GetFilesOfDir(Browser(description), space == Space.SubFolder);
@@ -40,7 +43,7 @@ namespace dRz.SpecSPDS.Core.Services
         /// </summary>
         /// <param name="description">The description.</param>
         /// <returns>путь к папке</returns>
-        static string Browser(string description)
+        private static string Browser(string description)
         {
             //https://autolisp.ru/2024/05/23/nanocad-net-select-folder/
             using (FolderBrowserDialog dlg = new FolderBrowserDialog())
@@ -74,7 +77,7 @@ namespace dRz.SpecSPDS.Core.Services
         /// Выбор файлов чертежей.
         /// </summary>
         /// <returns>Список путей к файлам</returns>
-        static List<string> Files()
+        private static List<string> Files()
         {
             //todo обернуть try canch???
 
@@ -91,8 +94,10 @@ namespace dRz.SpecSPDS.Core.Services
                         .Where(file => Path.GetExtension(file).Equals(".dwg", StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
 
-                    if (validFiles.Count > 0) return validFiles;
-
+                    if (validFiles.Count > 0)
+                    {
+                        return validFiles;
+                    }
                 }
 
                 System.Windows.MessageBox.Show("Ничего не выбрано!",

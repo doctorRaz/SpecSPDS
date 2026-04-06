@@ -8,7 +8,9 @@ namespace dRz.SpecSPDS.Core.Settings
         public static void Initialize(string product)
         {
             if (string.IsNullOrWhiteSpace(product))
+            {
                 throw new ArgumentException(nameof(product));
+            }
 
             _product = product;
         }

@@ -46,7 +46,7 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
         }
 
 
-        void Init()
+        private void Init()
         {
             #region InternalLogger configure
 
@@ -71,21 +71,21 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
 
         #region Log Diagnostic что б посмотреть в отладке
 
-        LogLevel logLevel => InternalLogger.LogLevel;
+        private LogLevel logLevel => InternalLogger.LogLevel;
 
-        string? logFile => InternalLogger.LogFile;
+        private string? logFile => InternalLogger.LogFile;
 
-        bool throwExceptions => LogManager.ThrowExceptions;
+        private bool throwExceptions => LogManager.ThrowExceptions;
 
-        bool? throwConfigExceptions => LogManager.ThrowConfigExceptions;
+        private bool? throwConfigExceptions => LogManager.ThrowConfigExceptions;
 
         #endregion
 
-        Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
+        private Assembly assembly => Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
 
-        string? moduleName => assembly.GetName().Name;
+        private string? moduleName => assembly.GetName().Name;
 
-        string LogFile()
+        private string LogFile()
         {
             #region FilePathInternalLogger
 

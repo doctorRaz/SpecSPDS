@@ -25,7 +25,7 @@ namespace dRz.SpecSPDS.Core.Settings
                 return;
             }
 
-            using var stream = File.OpenRead(ConfigPath);
+            using FileStream stream = File.OpenRead(ConfigPath);
             _settings = (ApplicationSettings)_serializer.Deserialize(stream);
         }
 
@@ -33,7 +33,7 @@ namespace dRz.SpecSPDS.Core.Settings
         {
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);
 
-            using var stream = File.Create(ConfigPath);
+            using FileStream stream = File.Create(ConfigPath);
             _serializer.Serialize(stream, Settings);
         }
     }

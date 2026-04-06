@@ -274,7 +274,10 @@ public partial class MultiCadProps
             log.Trace($"\t\told props");
 
             //после обработки закрываем
-            if (mcDocument.IsHidden) mcDocument.Close();//если не открывали не закрывать
+            if (mcDocument.IsHidden)
+            {
+                mcDocument.Close();//если не открывали не закрывать
+            }
 
             log.Trace($"{count} CLOSE {filename}");
             log.Trace($"-----------");
@@ -360,7 +363,7 @@ public partial class MultiCadProps
 
         return markerProps;
     }
-    void ExtractNamedProps(List<McObjectId> mcObjectIds, ref List<DefinitionMarkerProps> markerProps)
+    private void ExtractNamedProps(List<McObjectId> mcObjectIds, ref List<DefinitionMarkerProps> markerProps)
     {
         /*
         tempUmark. DbEntity.Document тут IsModel, Name - имя листа, Path - путь документа
@@ -438,17 +441,17 @@ public partial class MultiCadProps
     /// <summary>
     ////таймер получения ID
     /// </summary>
-    Stopwatch _stwID { get; set; } = new Stopwatch();
+    private Stopwatch _stwID { get; set; } = new Stopwatch();
 
     /// <summary>
     /// таймер получения свойств
     /// </summary>
-    Stopwatch _stwProp { get; set; } = new Stopwatch();
+    private Stopwatch _stwProp { get; set; } = new Stopwatch();
 
     /// <summary>
     /// общее время
     /// </summary>
-    Stopwatch _stwTotal { get; set; } = new Stopwatch();
+    private Stopwatch _stwTotal { get; set; } = new Stopwatch();
 
     /// <summary>
     /// Gets or sets the result string.
@@ -466,8 +469,8 @@ public partial class MultiCadProps
     /// <value>
     /// The name of the field.
     /// </value>
-    FieldNameSettings _fieldName { get; set; }
-    string _mcUmarkerName { get; set; }
+    private FieldNameSettings _fieldName { get; set; }
+    private string _mcUmarkerName { get; set; }
 
     /// <summary>
     /// ОБрабатывать маркеры с флагом включения в спеку
@@ -475,41 +478,41 @@ public partial class MultiCadProps
     /// <value>
     ///   <c>true</c> обрабатывать маркеры только с флагом включения в спеку; otherwise, <c>false</c>.
     /// </value>
-    bool _isSpec { get; set; }
+    private bool _isSpec { get; set; }
 
-    Guid guid => _guid;
-    Guid _guid;
+    private Guid guid => _guid;
+    private Guid _guid;
 
 
     #region Statistics
 
 
     public int CountIncorrectData => _countIncorrectData;//маркеры с отрицательной суммой, некорректными данными
-    int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
+    private int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
 
     public int CountNotFlag => _countNotFlag;//маркеров без признака включения в спеку
-    int _countNotFlag = 0;//маркеров без признака включения в спеку
+    private int _countNotFlag = 0;//маркеров без признака включения в спеку
 
     public int CountFalseName => _countFalseName;//маркеров с не тем именем
-    int _countFalseName = 0;//маркеров с не тем именем
+    private int _countFalseName = 0;//маркеров с не тем именем
 
     public int CountAdded => _countAdded;//маркеров добавлено
-    int _countAdded = 0;//маркеров добавлено
+    private int _countAdded = 0;//маркеров добавлено
 
     public int CountTotal => _countTotal;//маркеров всего
-    int _countTotal = 0;//маркеров всего
+    private int _countTotal = 0;//маркеров всего
 
     /// <summary>
     /// файлов всего обработано
     /// </summary>
     public int CountFilesTotal => _countFilesTotal;//
-    int _countFilesTotal = 0;//файлов всего
+    private int _countFilesTotal = 0;//файлов всего
 
     /// <summary>
     /// успешно файлов прочитано
     /// </summary>
     public int CountFilesRead => _countFilesRead;// 
-    int _countFilesRead = 0;//файлов всего
+    private int _countFilesRead = 0;//файлов всего
 
 
     /// <summary>
@@ -519,7 +522,7 @@ public partial class MultiCadProps
     /// The TMR identifier.
     /// </value>
     public string ElapsedID => _elapsedID;
-    string _elapsedID = "";
+    private string _elapsedID = "";
 
 
 
@@ -530,10 +533,10 @@ public partial class MultiCadProps
     /// The TMR property.
     /// </value>
     public string ElapsedProp => _elapsedProp;
-    string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
+    private string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
 
     public List<string> BadFilePatchs => _badFilePatchs;
-    List<string> _badFilePatchs = new List<string>();
+    private List<string> _badFilePatchs = new List<string>();
 
 
     /// <summary>

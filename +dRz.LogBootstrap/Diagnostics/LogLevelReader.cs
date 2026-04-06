@@ -31,7 +31,7 @@ namespace dRz.LogServices.Diagnostics
                 //string pp=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
                 //string path = Path.Combine(pp /*InfoDll.AssemblyDirectory*/, fileName);
-                
+
                 if (!File.Exists(path))
                 {
                     //файла нет

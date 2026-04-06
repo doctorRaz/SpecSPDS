@@ -1,5 +1,4 @@
-﻿using dRz.Cad.Diagnostics.AddOn;
-using dRz.Cad.Diagnostics.Cad;
+﻿using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using System;
 

@@ -168,15 +168,15 @@ namespace dRz.SpecSPDS.Core.Services
             set => _answer = value;
         }
 
-        Enum _answer;
+        private Enum _answer;
 
-        string _globalName;
-        string _localName;
-        string _displayName;
+        private string _globalName;
+        private string _localName;
+        private string _displayName;
 
-        bool _isVisible;
-        bool _isEnabled;
-        bool _isDefault;
+        private bool _isVisible;
+        private bool _isEnabled;
+        private bool _isDefault;
     }
 
 

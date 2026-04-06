@@ -18,11 +18,11 @@ namespace dRz.SpecSPDS.Core.Extensions
         /// <returns></returns>
         public static string DisplayName(this Enum value)
         {
-            var key = $"{value.GetType().FullName}.{value}";
+            string key = $"{value.GetType().FullName}.{value}";
 
-            var displayName = DisplayNameCache.GetOrAdd(key, x =>
+            string displayName = DisplayNameCache.GetOrAdd(key, x =>
             {
-                var name = (DescriptionAttribute[])value
+                DescriptionAttribute[] name = (DescriptionAttribute[])value
                     .GetType()
                     .GetTypeInfo()
                     .GetField(value.ToString())

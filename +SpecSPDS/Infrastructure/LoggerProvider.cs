@@ -15,7 +15,7 @@ namespace dRz.SpecSPDS.Infrastructure
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                assemblyDirectoryProvider:()=>InfoDll.AssemblyDirectory,
+                assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 

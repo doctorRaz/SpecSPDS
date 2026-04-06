@@ -80,7 +80,7 @@ namespace dRz.Loader
                             TryRegisterAssemblyResolver();
                 */
 
-                  TryMessageService();
+                TryMessageService();
 
                 //nlog
                 // если ехception, поднимаем его сюда, стоп работа
@@ -127,7 +127,7 @@ namespace dRz.Loader
         /// <summary>
         /// Tries the message service.
         /// </summary>
-        void TryMessageService()
+        private void TryMessageService()
         {
             try
             {
@@ -139,7 +139,7 @@ namespace dRz.Loader
         /// <summary>
         /// Tries the logger.
         /// </summary>
-        void TryLogger()
+        private void TryLogger()
         {
             try
             {

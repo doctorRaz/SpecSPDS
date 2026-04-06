@@ -13,7 +13,7 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
     /// отладочная информация из nLog в output VS только для отладки!!!
     /// </summary>
     /// <seealso cref="TextWriter" />
-    sealed class DebugTextWriter : TextWriter
+    internal sealed class DebugTextWriter : TextWriter
     {
         public override Encoding Encoding => Encoding.UTF8;
 

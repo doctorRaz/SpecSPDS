@@ -12,7 +12,7 @@ namespace dRz.Loader.Infrastructure
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                assemblyDirectoryProvider: () =>null, /*InfoDll.AssemblyDirectory,*/
+                assemblyDirectoryProvider: () => null, /*InfoDll.AssemblyDirectory,*/
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 

@@ -10,7 +10,7 @@ namespace dRz.SpecSPDS.Core.Services
 {
     public class FolderSelectDialog
     {
-        OpenFileDialog ofd = null;
+        private OpenFileDialog ofd = null;
         public FolderSelectDialog()
         {
             ofd = new OpenFileDialog();
@@ -57,7 +57,7 @@ namespace dRz.SpecSPDS.Core.Services
 
             if (Environment.OSVersion.Version.Major >= 6)
             {
-                var r = new Reflector("System.Windows.Forms");
+                Reflector r = new Reflector("System.Windows.Forms");
                 uint num = 0;
                 Type typeIFileDialog = r.GetType("FileDialogNative.IFileDialog");
                 object dialog = r.Call(ofd, "CreateVistaDialog");
@@ -82,11 +82,15 @@ namespace dRz.SpecSPDS.Core.Services
             }
             else
             {
-                var fbd = new FolderBrowserDialog();
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
                 fbd.Description = Title;
                 fbd.SelectedPath = InitialDirectory;
                 fbd.ShowNewFolderButton = false;
-                if (fbd.ShowDialog(new WindowWrapper(hWndOwner)) != DialogResult.OK) return false;
+                if (fbd.ShowDialog(new WindowWrapper(hWndOwner)) != DialogResult.OK)
+                {
+                    return false;
+                }
+
                 ofd.FileName = fbd.SelectedPath;
                 flag = true;
             }
@@ -109,8 +113,8 @@ namespace dRz.SpecSPDS.Core.Services
 
         public class Reflector
         {
-            string m_ns;
-            Assembly m_asmb;
+            private string m_ns;
+            private Assembly m_asmb;
             public Reflector(string ns)
                 : this(ns, ns)
             { }
@@ -133,7 +137,9 @@ namespace dRz.SpecSPDS.Core.Services
                 string[] names = typeName.Split('.');
 
                 if (names.Length > 0)
+                {
                     type = m_asmb.GetType(m_ns + "." + names[0]);
+                }
 
                 for (int i = 1; i < names.Length; ++i)
                 {

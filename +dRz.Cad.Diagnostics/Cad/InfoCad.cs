@@ -67,7 +67,7 @@ namespace dRz.Cad.Diagnostics.Cad
                 Copyright = fvi?.LegalCopyright ?? string.Empty;
 
                 Is64BitProcess = Environment.Is64BitProcess;
-                HostArchitecture =Environment.Is64BitProcess ? "X64" : "X32";// RuntimeInformation.ProcessArchitecture.ToString();
+                HostArchitecture = Environment.Is64BitProcess ? "X64" : "X32";// RuntimeInformation.ProcessArchitecture.ToString();
 
                 IsFallback = false;
             }

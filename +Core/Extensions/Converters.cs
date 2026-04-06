@@ -15,7 +15,10 @@ namespace dRz.SpecSPDS.Core.Extensions
         /// <returns></returns>
         public static bool ToBoolean(this string s)
         {
-            if (string.IsNullOrWhiteSpace(s)) return false;
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return false;
+            }
 
             s = s.Trim();
             string[] trueStrings = { "1", "y", "yes", "true", "д", "да" };//все что не в наборе false
@@ -40,12 +43,18 @@ namespace dRz.SpecSPDS.Core.Extensions
             try
             {
                 if (s != null && !string.IsNullOrWhiteSpace(s))
+                {
                     if (!s.Contains(','))
+                    {
                         result = double.Parse(s, CultureInfo.InvariantCulture);
+                    }
                     else
+                    {
                         result = Convert.ToDouble(s.Replace(".", systemSeparator.ToString()).Replace(",", systemSeparator.ToString()));
+                    }
+                }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 try
                 {

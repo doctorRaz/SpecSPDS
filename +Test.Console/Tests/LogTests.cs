@@ -5,7 +5,7 @@ namespace dRz.SpecSpds.Test.Tests
 {
     internal class LogTests
     {
-          ILogger  log = LoggerProvider.For<LogTests>();
+        private ILogger log = LoggerProvider.For<LogTests>();
 
         internal void LogTest(string msg)
         {
@@ -15,7 +15,7 @@ namespace dRz.SpecSpds.Test.Tests
 
         internal string Execute()
         {
-             CadEnvironmentInfoProvider ff=new CadEnvironmentInfoProvider();
+            CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
 
             return ff.GetSummary();
         }

@@ -61,7 +61,7 @@ namespace dRz.LogServices
         private LogFactory CreateFactory(string productName)
         {
 
-            string assemblyDirectory = SafeGetAssemblyDirectory();                      
+            string assemblyDirectory = SafeGetAssemblyDirectory();
 
             //путь к Diagnostic.Mode
             string baseDirDiagnostyc = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
@@ -109,14 +109,14 @@ namespace dRz.LogServices
                 //конфг из файла не подтянулся или битый
                 isFallback = true;
 
-                factory.Configuration = CreateConfiguration(logName, logsDir,currentLevel);
+                factory.Configuration = CreateConfiguration(logName, logsDir, currentLevel);
 
             }
             else
             {
                 // Конфиг уже есть (nlog.config), просто прокидываем в него 
                 // наши пути через переменные
-                ApplyCommonVariables(factory, logName, logsDir,currentLevel);
+                ApplyCommonVariables(factory, logName, logsDir, currentLevel);
             }
 
             // писать в лог о системе о каде как этот лог сделан
@@ -202,10 +202,12 @@ namespace dRz.LogServices
         /// <returns></returns>
         private static LogLevel GetEffectiveMinLevel(Logger logger)
         {
-            foreach (var level in LogLevel.AllLevels) // Trace → Fatal
+            foreach (LogLevel level in LogLevel.AllLevels) // Trace → Fatal
             {
                 if (logger.IsEnabled(level))
+                {
                     return level;
+                }
             }
 
             return LogLevel.Off;
@@ -225,8 +227,6 @@ namespace dRz.LogServices
 #if DEBUG
             // Если файла уровня нет — Debug. 
             LogLevel level = LogLevel.Debug;
-            // Если файл есть, но пустой —Debug
-            string fallbackLevelName = "Trace";
 #else
             // Если файла нет — Info. 
             LogLevel level = LogLevel.Info;

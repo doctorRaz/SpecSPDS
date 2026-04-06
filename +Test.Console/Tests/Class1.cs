@@ -1,5 +1,4 @@
-﻿using dRz.Cad.Diagnostics.AddOn;
-using dRz.Cad.Diagnostics.Cad;
+﻿using dRz.Cad.Diagnostics.Cad;
 using dRz.Cad.Diagnostics.Os;
 using System;
 using static dRz.Loader.Infrastructure.AddonContext;
@@ -11,11 +10,11 @@ namespace dRz.SpecSpds.Test.Tests
         public void test()
         {
 
-            var os = InfoOs.Current;
-            
+            InfoOs os = InfoOs.Current;
+
             Console.WriteLine(os);
 
-            var path = InfoDll.AppDataProductLogPath;
+            string path = InfoDll.AppDataProductLogPath;
 
 
             Console.WriteLine(InfoCad.Current);

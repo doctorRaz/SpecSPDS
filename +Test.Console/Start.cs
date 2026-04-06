@@ -20,15 +20,9 @@ AppSettings я б засунул именно в то, что работает �
 */
 
 using dRz.Cad.Diagnostics;
-using dRz.Cad.Diagnostics.Cad;
-using dRz.Cad.Diagnostics.Os;
-using dRz.Loader;
 using dRz.Loader.Infrastructure;
-using dRz.LogServices.Diagnostics;
 using dRz.SpecSpds.Test.Tests;
 using dRz.SpecSPDS;
-using NLog;
-using NLog.Common;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -57,27 +51,27 @@ namespace dRz.SpecSpds.Test
         private static void Main(string[] args)
         {
             string assemblyDirectory = string.Empty;
-            
+
             string baseDir = Path.Combine(assemblyDirectory, "rrr.ffs");
 
-            var lt = new LogTests();
-            var cmdA = new CommandA();
-            var cmdB = new CommandB();
+            LogTests lt = new LogTests();
+            CommandA cmdA = new CommandA();
+            CommandB cmdB = new CommandB();
 
 
 
-            CadEnvironmentInfoProvider ff=new CadEnvironmentInfoProvider();
+            CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
             Console.WriteLine($"{ff.GetSummary()}");
-            Console.WriteLine( );
-            
+            Console.WriteLine();
+
             Console.WriteLine($"{lt.Execute()}");
-            Console.WriteLine( );
+            Console.WriteLine();
 
             Console.WriteLine($"{cmdA.Execute()}");
-            Console.WriteLine( );
+            Console.WriteLine();
 
             Console.WriteLine($"{cmdB.Execute()}");
-            Console.WriteLine( );
+            Console.WriteLine();
 
 
 
@@ -91,7 +85,7 @@ namespace dRz.SpecSpds.Test
             Console.WriteLine($"{RT.Os}");
             Console.WriteLine($"{RT.Cad}");
 
-             Console.WriteLine(typeof(Start).FullName);
+            Console.WriteLine(typeof(Start).FullName);
 
 
 
@@ -99,22 +93,22 @@ namespace dRz.SpecSpds.Test
             //for (int i = 0; i < 10000; i++)
             //{
 
-                cmdA.LogTest("A0ttrrt");
+            cmdA.LogTest("A0ttrrt");
 
-                cmdB.LogTest("B0trte");
+            cmdB.LogTest("B0trte");
 
-                lt.LogTest("Test0tet");
+            lt.LogTest("Test0tet");
 
-                cmdA.LogTest("2");
+            cmdA.LogTest("2");
 
-                cmdB.LogTest("2");
+            cmdB.LogTest("2");
 
-                cmdA.LogTest("20");
+            cmdA.LogTest("20");
 
-                cmdB.LogTest("20");
+            cmdB.LogTest("20");
             //}
 
-        
+
 
             //var rt = RT.Info;
             //var id = InfoDll;
@@ -159,7 +153,7 @@ namespace dRz.SpecSpds.Test
 
             //LogManager.Shutdown();
 
-            Thread.Sleep(new TimeSpan(0,0,10));
+            Thread.Sleep(new TimeSpan(0, 0, 10));
             //Console.ReadKey();
 
 
@@ -167,7 +161,7 @@ namespace dRz.SpecSpds.Test
 
         }
 
-     static   void rr([CallerMemberName] string? caller = null)
+        private static void rr([CallerMemberName] string? caller = null)
         {
 
             Console.WriteLine(caller);

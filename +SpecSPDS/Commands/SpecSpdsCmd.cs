@@ -73,7 +73,10 @@ namespace dRz.SpecSPDS.Commands
             };
             Enum propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
-            if (propMod == null) return;//смысла продолжать нет
+            if (propMod == null)
+            {
+                return;//смысла продолжать нет
+            }
 
             #endregion
 
@@ -95,7 +98,10 @@ namespace dRz.SpecSPDS.Commands
 
                 ed.WriteMessage($"\nНайдено {filenames.Count} подходящих {wordFiles.Declens(filenames.Count)}");//todo вынести в интерфейс, волшебные слова через енум и словарик?
 
-                if (filenames.Count > 0) props = mcUmarkerProps.GetPropsTG(filenames);
+                if (filenames.Count > 0)
+                {
+                    props = mcUmarkerProps.GetPropsTG(filenames);
+                }
                 //if (filenames.Count > 0) props = mcUmarkerProps.GetPropsMC(filenames);
             }
             //собираем с открытых чертежей
@@ -181,7 +187,7 @@ namespace dRz.SpecSPDS.Commands
 
 
 
-        #if DEBUG
+#if DEBUG
         [CommandMethod("drz_logS")]
         [Description("отладка лог")]
         public static void dRz_log()
@@ -191,7 +197,7 @@ namespace dRz.SpecSPDS.Commands
             {
                 return;
             }
-              Editor ed = doc.Editor;
+            Editor ed = doc.Editor;
 
 
 

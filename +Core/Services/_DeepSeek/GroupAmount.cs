@@ -90,7 +90,7 @@ namespace dRz.SpecSPDS.Core.Services._DeepSeek
                 string nameGroup = section.Key;
                 IEnumerable<IGrouping<string, DefinitionMarkerProps>> devise = section.GroupBy(p => p.DeviceName);
 
-                foreach (var dev in devise)
+                foreach (IGrouping<string, DefinitionMarkerProps> dev in devise)
                 {
                     string namedev = dev.Key;
                     double amount = dev.Sum(p => p.Amount);
@@ -107,6 +107,6 @@ namespace dRz.SpecSPDS.Core.Services._DeepSeek
 
         public List<DefinitionMarkerProps> Props => _props;
 
-        List<DefinitionMarkerProps> _props;
+        private List<DefinitionMarkerProps> _props;
     }
 }

@@ -23,7 +23,7 @@ namespace dRz.SpecSPDS.Core.Bootstrap
 
         }
 
-        string configPath()
+        private string configPath()
         {
             //путь получать из сборки
             string dllDir = Path.GetDirectoryName(typeof(LogBootstrap).Assembly.Location);
@@ -32,6 +32,6 @@ namespace dRz.SpecSPDS.Core.Bootstrap
 
         }
 
-        const string nLogConfigFileName = "NLog.dll.test.nlog";
+        private const string nLogConfigFileName = "NLog.dll.test.nlog";
     }
 }
