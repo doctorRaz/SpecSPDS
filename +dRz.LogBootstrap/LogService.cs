@@ -104,7 +104,7 @@ namespace dRz.LogServices
 
             LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel);
 
-            if (config == null)//тут проверка конфига на нулл, конфиг если есть подгружается сам
+            if (config == null || config.AllTargets.Count == 0)//тут проверка конфига на нулл, конфиг если есть подгружается сам
             {
                 //конфг из файла не подтянулся или битый
                 isFallback = true;

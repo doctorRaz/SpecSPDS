@@ -19,8 +19,6 @@ using dRz.Loader.Infrastructure;
 #if CMD
 using dRz.SpecSpds.Test.Services;
 using dRz.SpecSpds;
-//using dRz.SpecSpds.Test.Loader;
-//using dRz.Loader.Services;
 
 
 #elif NC
@@ -83,18 +81,8 @@ namespace dRz.Loader
                 TryMessageService();
 
                 //nlog
-                // если ехception, поднимаем его сюда, стоп работа
-
                 //обертка инит логера, если ех на старте, то отловим в месадж
-                TryLogger();
-
-                // пока не сделаю подмену интерфейсов (хотя нужда под вопросом, сборка drzNlog своя!!!!
-                // если ех нет хоть и с битым конфигом, работу продолжим, но юзеру о битом конфиге сообщим в msg
-                //if (!LogBootstrap.Init())
-                //{
-                //    msg.ConsoleMessage($"[{nameof(LogBootstrap)}.{nameof(LogBootstrap.Init)}]: Ошибка в конфигурации Logger."
-                //        + $"\nЗагрузка приложения будет продолжена");//{InfoDll.ProductName}
-                //}
+                TryLoggerProvider();
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
                 CadLoading();
@@ -102,7 +90,7 @@ namespace dRz.Loader
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                //в лог тут не пишем, возможно не поднялся логер
+                //в лог тут писать нельзя, возможно не поднялся логгер
                 string message = $"Приложение не загружено!!!" +
                      $"\nСкопируйте это сообщение и отправьте разработчику";
 
@@ -133,19 +121,19 @@ namespace dRz.Loader
             {
                 msg = new MessageService();
             }
-            catch { throw; }//роняем аддон
+            catch { throw; }//роняем загрузчик
         }
 
         /// <summary>
         /// Tries the logger.
         /// </summary>
-        private void TryLogger()
+        private void TryLoggerProvider()
         {
             try
             {
                 log = LoggerProvider.For<EntryPoint>();
             }
-            catch { throw; }//роняем аддон
+            catch { throw; }//роняем загрузчик
         }
 
         /// <summary>

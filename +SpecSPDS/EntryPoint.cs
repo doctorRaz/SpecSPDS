@@ -50,11 +50,11 @@ namespace dRz.SpecSPDS
             //если нет библиотек или еще какой косяк
             try
             {
-                //если ех тут то все
+                //если ех тут то все пропало
                 TryMessageService();
 
                 //обертка инит логера, если ех на старте, то отловим и напишем в месадж
-                TryLogger();
+                TryLoggerProvider();
 
                 //стартуем очистку копий и bak
                 TryCleanBackups(); //независимо от результата чистки, работа аддона будет продолжена
@@ -88,7 +88,7 @@ namespace dRz.SpecSPDS
         /// <summary>
         /// Tries the logger.
         /// </summary>
-        private void TryLogger()
+        private void TryLoggerProvider()
         {
             try
             {

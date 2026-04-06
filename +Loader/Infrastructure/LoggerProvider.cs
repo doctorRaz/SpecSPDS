@@ -12,7 +12,7 @@ namespace dRz.Loader.Infrastructure
         private static readonly Lazy<ILogService> _service = new(() =>
             new LogService(
                 productNameProvider: () => InfoDll.ProductName,
-                assemblyDirectoryProvider: () => null, /*InfoDll.AssemblyDirectory,*/
+                assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
@@ -22,7 +22,10 @@ namespace dRz.Loader.Infrastructure
     }
 
 
-
+    /// <summary>
+    /// Проброс в фабрику инфы о ОС КАД и аддоне
+    /// </summary>
+    /// <seealso cref="dRz.LogServices.Interfaces.IEnvironmentInfoProvider" />
     public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
     {
         public string GetSummary()
