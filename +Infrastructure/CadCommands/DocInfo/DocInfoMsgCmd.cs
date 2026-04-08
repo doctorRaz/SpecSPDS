@@ -1,7 +1,7 @@
-﻿using dRz.SpecSPDS.Abstractions.Services;
+﻿using drz.SpecSPDS.Abstractions.Services;
 using Teigha.Runtime;
 
-namespace dRz.SpecSPDS.Infrastructure.CadCommands.DocInfo
+namespace drz.SpecSPDS.Infrastructure.CadCommands.DocInfo
 {
     public class DocInfoMsgCmd
     {

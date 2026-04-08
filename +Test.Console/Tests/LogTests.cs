@@ -1,7 +1,7 @@
-﻿using dRz.Loader.Infrastructure;
+﻿using drz.Loader.Infrastructure;
 using NLog;
 
-namespace dRz.SpecSpds.Test.Tests
+namespace drz.SpecSpds.Test.Tests
 {
     internal class LogTests
     {

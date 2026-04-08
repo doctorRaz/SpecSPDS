@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 
-namespace dRz.SpecSPDS.Core.Extensions
+namespace drz.SpecSPDS.Core.Extensions
 {
     public static class Converters
     {

@@ -35,11 +35,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDS.Infrastructure", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{7CCE4940-DFE5-40C3-B602-431E5B71DEAF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dRz.Cleaner", "+dRz.Cleaner\dRz.Cleaner.csproj", "{F95A7A0F-287F-4F76-8F83-F324346D7358}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "drz.Cleaner", "+dRz.Cleaner\drz.Cleaner.csproj", "{F95A7A0F-287F-4F76-8F83-F324346D7358}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "+Loader\Loader.csproj", "{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dRz.Cad.Diagnostics", "+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj", "{1838B971-373A-0C62-0F73-FA519F012E44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.Cad.Diagnostics", "+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj", "{1838B971-373A-0C62-0F73-FA519F012E44}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AF1AD432-E96F-4209-B9D6-A1C82AE212CC}"
 EndProject
@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Lib1", "+Lib1\Test.Lib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib2", "+Lib2\Lib2.csproj", "{2E94BBA3-7ECA-3174-18F3-41B8E05C8744}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dRz.LogBootstrap", "+dRz.LogBootstrap\dRz.LogBootstrap.csproj", "{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.LogBootstrap", "+dRz.LogBootstrap\drz.LogBootstrap.csproj", "{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

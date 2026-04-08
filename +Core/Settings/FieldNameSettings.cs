@@ -1,4 +1,4 @@
-﻿namespace dRz.SpecSPDS.Core.Settings
+﻿namespace drz.SpecSPDS.Core.Settings
 {
     /// <summary>
     /// имена полей свойств маркера

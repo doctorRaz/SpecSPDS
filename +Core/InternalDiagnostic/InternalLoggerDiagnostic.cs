@@ -8,15 +8,15 @@ using System.Reflection;
 //todo только для отладки загрузки nlog конфигурации
 // скопировать в drz.Cad.Cad.InternalDiagnostic
 
-namespace dRz.SpecSPDS.Core.InternalDiagnostic
+namespace drz.SpecSPDS.Core.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {
         /// <summary>
         /// внутренняя инициализация логгера NLog, только для отладки самого NLog
         /// </summary>
-        /// <param name="OnlyDebugTextWriter">только вывод в отладку</param>
-        public InternalLoggerDiagnostic(string? message = null)
+        /// <param name="message"></param>
+        public InternalLoggerDiagnostic(string message = null)
         {
             if (logLevel == LogLevel.Off)//диагностика не включена
             {
@@ -73,7 +73,7 @@ namespace dRz.SpecSPDS.Core.InternalDiagnostic
 
         private LogLevel logLevel => InternalLogger.LogLevel;
 
-        private string? logFile => InternalLogger.LogFile;
+        private string logFile => InternalLogger.LogFile;
 
         private bool throwExceptions => LogManager.ThrowExceptions;
 

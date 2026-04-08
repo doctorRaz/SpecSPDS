@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace dRz.SpecSPDS.Core.Enums
+namespace drz.SpecSPDS.Core.Enums
 {
     public enum PropName
     {

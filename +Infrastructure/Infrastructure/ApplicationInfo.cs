@@ -1,9 +1,9 @@
-﻿using dRz.SpecSPDS.Abstractions.Infrastructure;
+﻿using drz.SpecSPDS.Abstractions.Infrastructure;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 
-namespace dRz.SpecSPDS.Infrastructure.Infrastructure
+namespace drz.SpecSPDS.Infrastructure.Infrastructure
 {
     internal class ApplicationInfo : IApplicationInfo
     {

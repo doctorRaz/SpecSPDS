@@ -1,9 +1,9 @@
-﻿using dRz.SpecSPDS.Core.Models;
+﻿using drz.SpecSPDS.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace dRz.SpecSPDS.Core.Services._DeepSeek
+namespace drz.SpecSPDS.Core.Services._DeepSeek
 {
     public class GroupedDefinitionMarkerProps
     {

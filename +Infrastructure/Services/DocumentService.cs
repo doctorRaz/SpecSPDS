@@ -1,9 +1,9 @@
-﻿using dRz.SpecSPDS.Abstractions.Services;
+﻿using drz.SpecSPDS.Abstractions.Services;
 using HostMgd.ApplicationServices;
 using System;
 using System.IO;
 
-namespace dRz.SpecSPDS.Infrastructure.Services
+namespace drz.SpecSPDS.Infrastructure.Services
 {
     internal class DocumentService : IDocumentService
     {

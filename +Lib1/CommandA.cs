@@ -1,7 +1,7 @@
-﻿using dRz.Loader.Infrastructure;
+﻿using drz.Loader.Infrastructure;
 using NLog;
 
-namespace dRz.SpecSPDS
+namespace drz.SpecSPDS
 {
     public class CommandA
     {

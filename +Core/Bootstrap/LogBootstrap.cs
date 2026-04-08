@@ -6,7 +6,7 @@ using System.IO;
 //скопировать в dRz.Cad.Cad.Bootstrap
 // скопировать в dRz.SpecSPDS.Cad.Bootstrap
 
-namespace dRz.SpecSPDS.Core.Bootstrap
+namespace drz.SpecSPDS.Core.Bootstrap
 {
     //todo добавить установку пути в %appdata%\product\logs
     /// <summary>

@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace dRz.LogServices.Diagnostics
+namespace drz.LogServices.Diagnostics
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class InternalLoggerHelpers
     {
 
@@ -24,7 +27,7 @@ namespace dRz.LogServices.Diagnostics
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
         /// </summary>        
-        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string? logDir = null)
+        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logDir = null)
         {
             lock (_lock)
             {

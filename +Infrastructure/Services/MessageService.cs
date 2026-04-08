@@ -1,5 +1,5 @@
-﻿using dRz.SpecSPDS.Abstractions.Infrastructure;
-using dRz.SpecSPDS.Abstractions.Services;
+﻿using drz.SpecSPDS.Abstractions.Infrastructure;
+using drz.SpecSPDS.Abstractions.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace dRz.SpecSPDS.Infrastructure.Services
+namespace drz.SpecSPDS.Infrastructure.Services
 {
     internal class MessageService : IMessageService
     {

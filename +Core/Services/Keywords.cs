@@ -1,7 +1,7 @@
-﻿using dRz.SpecSPDS.Core.Extensions;
+﻿using drz.SpecSPDS.Core.Extensions;
 using System;
 
-namespace dRz.SpecSPDS.Core.Services
+namespace drz.SpecSPDS.Core.Services
 {
     public class Keywords
     {

@@ -1,14 +1,14 @@
-﻿using dRz.SpecSPDS.Abstractions.Infrastructure;
-using dRz.SpecSPDS.Abstractions.Services;
-using dRz.SpecSPDS.Infrastructure.Infrastructure;
-using dRz.SpecSPDS.Infrastructure.Services;
+﻿using drz.SpecSPDS.Abstractions.Infrastructure;
+using drz.SpecSPDS.Abstractions.Services;
+using drz.SpecSPDS.Infrastructure.Infrastructure;
+using drz.SpecSPDS.Infrastructure.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using SimpleInjector;
 using System;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.SpecSPDS.Infrastructure
+namespace drz.SpecSPDS.Infrastructure
 {
     public class CadPlugin : Rtm.IExtensionApplication
     {

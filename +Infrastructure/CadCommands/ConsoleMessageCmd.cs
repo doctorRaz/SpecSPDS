@@ -1,7 +1,7 @@
-﻿using dRz.SpecSPDS.Abstractions.Services;
+﻿using drz.SpecSPDS.Abstractions.Services;
 using Teigha.Runtime;
 
-namespace dRz.SpecSPDS.Infrastructure.CadCommands
+namespace drz.SpecSPDS.Infrastructure.CadCommands
 {
     public class ConsoleMessageCmd
     {

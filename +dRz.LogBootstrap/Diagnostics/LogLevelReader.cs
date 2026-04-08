@@ -1,7 +1,7 @@
 ﻿using NLog;
 using System.IO;
 
-namespace dRz.LogServices.Diagnostics
+namespace drz.LogServices.Diagnostics
 {
     internal static class LogLevelReader
     {
@@ -10,7 +10,7 @@ namespace dRz.LogServices.Diagnostics
         /// Если файла нет — возвращает defaultLevel.
         /// Если файл пустой или текст некорректный — возвращает fallbackIfEmpty.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>`
+        /// <param name="path">Name of the file.</param>`
         /// <param name="fallbackLevelName">The default level.</param>
         /// <returns></returns>
         public static LogLevel GetLevelFromFile(string path /*fileName*/, string fallbackLevelName = "Trace")

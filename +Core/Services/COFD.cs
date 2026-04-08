@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace dRz.SpecSPDS.Core.Services
+namespace drz.SpecSPDS.Core.Services
 {
     /// <summary>
     /// Обертка над Microsoft.WindowsAPICodePack.Dialogs

@@ -1,11 +1,11 @@
-﻿using dRz.Cad.Diagnostics;
-using dRz.LogServices;
-using dRz.LogServices.Interfaces;
+﻿using drz.Cad.Diagnostics;
+using drz.LogServices;
+using drz.LogServices.Interfaces;
 using NLog;
 using System;
-using static dRz.Loader.Infrastructure.AddonContext;
+using static drz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.Loader.Infrastructure
+namespace drz.Loader.Infrastructure
 {
     public static class LoggerProvider
     {
@@ -25,7 +25,7 @@ namespace dRz.Loader.Infrastructure
     /// <summary>
     /// Проброс в фабрику инфы о ОС КАД и аддоне
     /// </summary>
-    /// <seealso cref="dRz.LogServices.Interfaces.IEnvironmentInfoProvider" />
+    /// <seealso cref="drz.LogServices.Interfaces.IEnvironmentInfoProvider" />
     public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
     {
         public string GetSummary()

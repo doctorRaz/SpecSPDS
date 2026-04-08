@@ -1,7 +1,16 @@
-﻿namespace dRz.SpecSPDS.Core.Settings
+﻿namespace drz.SpecSPDS.Core.Settings
 {
+    /// <summary>
+    /// ApplicationSettings
+    /// </summary>
     public class ApplicationSettings
     {
+        /// <summary>
+        /// Gets or sets the name of the application.
+        /// </summary>
+        /// <value>
+        /// The name of the application.
+        /// </value>
         public string ApplicationName { get; set; } = string.Empty;
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿<Project>
 	<Import Project="d:\@Developers\Programmers\!NET\Shared\Directory.Build\Directory.Build.props"/>
 	<PropertyGroup>
-		<RootNamespace>dRz.SpecSPDS</RootNamespace>
+		<RootNamespace>drz.SpecSPDS</RootNamespace>
 		<AssemblyVersion>0.1.*</AssemblyVersion>
 		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
 		<RepositoryUrl>https://github.com/doctorRaz/SpecSPDS</RepositoryUrl>

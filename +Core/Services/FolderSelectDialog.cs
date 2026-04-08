@@ -6,7 +6,7 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace dRz.SpecSPDS.Core.Services
+namespace drz.SpecSPDS.Core.Services
 {
     public class FolderSelectDialog
     {

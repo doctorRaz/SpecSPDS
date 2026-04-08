@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace dRz.SpecSpds.Test.Tests
+namespace drz.SpecSpds.Test.Tests
 {
     internal class NlogDebug
     {

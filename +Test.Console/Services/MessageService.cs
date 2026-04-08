@@ -1,11 +1,11 @@
-﻿using dRz.Loader.Interfaces;
+﻿using drz.Loader.Interfaces;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 
 
-namespace dRz.SpecSpds.Test.Services
+namespace drz.SpecSpds.Test.Services
 {
     internal class MessageService : IMessageService
     {

@@ -1,4 +1,4 @@
-﻿namespace dRz.SpecSPDS.Abstractions.Services
+﻿namespace drz.SpecSPDS.Abstractions.Services
 {
     /// <summary>
     /// Сервис документа

@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>dRz.Cleaner</RootNamespace>
+		<RootNamespace>drz.Cleaner</RootNamespace>
 		<Description>Cleaner чистилка bak и копий</Description>
 		<AssemblyTitle>dRz.Cleaner</AssemblyTitle>
 		<Product>Cleaner</Product>

@@ -1,10 +1,18 @@
 ﻿using System;
 using System.IO;
 
-namespace dRz.SpecSPDS.Core.Settings
+namespace drz.SpecSPDS.Core.Settings
 {
+    /// <summary>
+    /// AppPaths
+    /// </summary>
     public static class AppPaths
     {
+        /// <summary>
+        /// Initializes the specified product.
+        /// </summary>
+        /// <param name="product">The product.</param>
+        /// <exception cref="System.ArgumentException">product</exception>
         public static void Initialize(string product)
         {
             if (string.IsNullOrWhiteSpace(product))
@@ -18,6 +26,13 @@ namespace dRz.SpecSPDS.Core.Settings
         private static string _product;
         private static string Product =>
                 _product ?? throw new InvalidOperationException("AppPaths not initialized");
+
+        /// <summary>
+        /// Gets the application root.
+        /// </summary>
+        /// <value>
+        /// The application root.
+        /// </value>
         public static string AppRoot =>
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

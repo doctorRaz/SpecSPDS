@@ -1,9 +1,9 @@
-﻿using dRz.Cad.Diagnostics.Cad;
-using dRz.Cad.Diagnostics.Os;
+﻿using drz.Cad.Diagnostics.Cad;
+using drz.Cad.Diagnostics.Os;
 using System;
-using static dRz.Loader.Infrastructure.AddonContext;
+using static drz.Loader.Infrastructure.AddonContext;
 
-namespace dRz.SpecSpds.Test.Tests
+namespace drz.SpecSpds.Test.Tests
 {
     internal class Class1
     {

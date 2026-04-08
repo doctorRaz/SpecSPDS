@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace dRz.SpecSPDS.Core.Extensions
+namespace drz.SpecSPDS.Core.Extensions
 {
     public static class Declension
     {

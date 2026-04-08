@@ -1,6 +1,6 @@
-﻿using dRz.Cad.Diagnostics.AddOn;
+﻿using drz.Cad.Diagnostics.AddOn;
 
-namespace dRz.Loader.Infrastructure
+namespace drz.Loader.Infrastructure
 {
     internal static class AddonContext
     {

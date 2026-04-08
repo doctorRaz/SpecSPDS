@@ -9,27 +9,27 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using dRz.Loader.Interfaces;
-using dRz.Cad.Diagnostics;
+using drz.Loader.Interfaces;
+using drz.Cad.Diagnostics;
 
 using System.ComponentModel;
-using dRz.Loader.Infrastructure;
+using drz.Loader.Infrastructure;
 
 
 #if CMD
-using dRz.SpecSpds.Test.Services;
-using dRz.SpecSpds;
+using drz.SpecSpds.Test.Services;
+using drz.SpecSpds;
 
 
 #elif NC
-using dRz.Loader;
+using drz.Loader;
 using Rtm = Teigha.Runtime;
-using dRz.Loader.Services;
+using drz.Loader.Services;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
 
-namespace dRz.Loader
+namespace drz.Loader
 {
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 

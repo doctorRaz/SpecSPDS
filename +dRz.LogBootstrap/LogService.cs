@@ -1,5 +1,5 @@
-﻿using dRz.LogServices.Diagnostics;
-using dRz.LogServices.Interfaces;
+﻿using drz.LogServices.Diagnostics;
+using drz.LogServices.Interfaces;
 using NLog;
 using NLog.Common;
 using NLog.Config;
@@ -10,8 +10,12 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 
-namespace dRz.LogServices
+namespace drz.LogServices
 {
+    /// <summary>
+    /// Log Service
+    /// </summary>
+    /// <seealso cref="drz.LogServices.Interfaces.ILogService" />
     public sealed class LogService : ILogService
     {
         private static readonly ConcurrentDictionary<string, LogFactory> _factories = new();
@@ -20,10 +24,21 @@ namespace dRz.LogServices
 
         private readonly Func<string> _assemblyDirectoryProvider;
 
-        private readonly string _assemblyDirectory;
+        //private readonly string _assemblyDirectory;
 
         private readonly IEnvironmentInfoProvider _envInfoProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogService"/> class.
+        /// </summary>
+        /// <param name="productNameProvider">The product name provider.</param>
+        /// <param name="assemblyDirectoryProvider">The assembly directory provider.</param>
+        /// <param name="envInfoProvider">The env information provider.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// productNameProvider
+        /// or
+        /// assemblyDirectoryProvider
+        /// </exception>
         public LogService(
             Func<string> productNameProvider,
             Func<string> assemblyDirectoryProvider,
@@ -38,8 +53,19 @@ namespace dRz.LogServices
 
         }
 
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public Logger GetLogger<T>() => GetLogger(typeof(T));
 
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">type</exception>
         public Logger GetLogger(Type type)
         {
             if (type == null)
@@ -219,6 +245,7 @@ namespace dRz.LogServices
         /// </summary>
         /// <param name="filePrefix">The file prefix.</param>
         /// <param name="appDataProductLogPath">The application data product log path.</param>
+        /// <param name="currentLevel">The current level.</param>
         /// <returns></returns>
         private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath, LogLevel currentLevel)
         {
@@ -231,7 +258,7 @@ namespace dRz.LogServices
             // Если файла нет — Info. 
             LogLevel level = LogLevel.Info;
             // Если файл есть, но пустой —Trace
-            string fallbackLevelName = "Trace";
+            //string fallbackLevelName = "Trace";
 #endif            
 
             // Если файла уровня нет — Off (ничего не делаем). 
@@ -336,6 +363,7 @@ namespace dRz.LogServices
         /// <param name="factory">The factory.</param>
         /// <param name="appTitle">The application title.</param>
         /// <param name="logsDir">The logs dir.</param>
+        /// <param name="currentLevel">The current level.</param>
         private void ApplyCommonVariables(LogFactory factory, string appTitle, string logsDir, LogLevel currentLevel)
         {
             LoggingConfiguration config = factory.Configuration;

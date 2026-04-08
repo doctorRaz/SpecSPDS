@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace dRz.Cleaner.Infrastructure
+namespace drz.Cleaner.Infrastructure
 {
     /// <summary>
     /// чистка архивных файлов
