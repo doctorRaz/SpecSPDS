@@ -16,9 +16,9 @@ namespace drz.Loader.Infrastructure
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
-        public static Logger For<T>() => _service.Value.GetLogger<T>();
+        /*public*/ internal static Logger For<T>() => _service.Value.GetLogger<T>();
 
-        public static Logger For(Type type) => _service.Value.GetLogger(type);
+        /*public*/internal static Logger For(Type type) => _service.Value.GetLogger(type);
     }
 
 
@@ -28,9 +28,13 @@ namespace drz.Loader.Infrastructure
     /// <seealso cref="drz.LogServices.Interfaces.IEnvironmentInfoProvider" />
     public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
     {
+        /// <summary>
+        /// Gets the summary.
+        /// </summary>
+        /// <returns></returns>
         public string GetSummary()
         {
-            //порнография конечно(
+            //порнография конечно( /InfoDll/
             return $"{RT.Info.ToString()}\n{InfoDll.ToString()}";
         }
     }

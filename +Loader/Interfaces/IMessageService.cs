@@ -1,4 +1,6 @@
-﻿using System;
+﻿//todo вынести в сборку
+
+using System;
 using System.Runtime.CompilerServices;
 
 namespace drz.Loader.Interfaces
