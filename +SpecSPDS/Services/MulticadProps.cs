@@ -1,6 +1,6 @@
-﻿using dRz.SpecSPDS.Core.Enums;
-using dRz.SpecSPDS.Core.Models;
-using dRz.SpecSPDS.Core.Settings;
+﻿using drz.SpecSPDS.Core.Enums;
+using drz.SpecSPDS.Core.Models;
+using drz.SpecSPDS.Core.Settings;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
@@ -13,7 +13,7 @@ using System.Linq;
 //using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace dRz.SpecSPDS.Services;
+namespace drz.SpecSPDS.Services;
 
 /// <summary>
 /// получаем универсальный маркер

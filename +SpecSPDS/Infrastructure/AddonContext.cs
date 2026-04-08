@@ -1,6 +1,6 @@
-﻿using dRz.Cad.Diagnostics.AddOn;
+﻿using drz.Cad.Diagnostics.AddOn;
 
-namespace dRz.SpecSPDS.Infrastructure
+namespace drz.SpecSPDS.Infrastructure
 {
     internal static class AddonContext
     {

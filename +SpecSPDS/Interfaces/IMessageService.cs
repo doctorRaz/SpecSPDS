@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace dRz.SpecSPDS.Interfaces
+namespace drz.SpecSPDS.Interfaces
 {
     /// <summary> Сервис сообщений </summary>
     public interface IMessageService

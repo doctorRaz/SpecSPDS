@@ -2,13 +2,13 @@
 using NLog;
 using System;
 using System.ComponentModel;
-using dRz.SpecSPDS.Services;
-using dRz.SpecSPDS.Interfaces;
-using dRz.SpecSPDS;
-using static dRz.SpecSPDS.Infrastructure.AddonContext;
-using dRz.SpecSPDS.Infrastructure;
-using dRz.Cleaner.Infrastructure;
-using dRz.Cad.Diagnostics;
+using drz.SpecSPDS.Services;
+using drz.SpecSPDS.Interfaces;
+using drz.SpecSPDS;
+using static drz.SpecSPDS.Infrastructure.AddonContext;
+using drz.SpecSPDS.Infrastructure;
+using drz.Cleaner.Infrastructure;
+using drz.Cad.Diagnostics;
 
 
 
@@ -24,7 +24,7 @@ using Rtm = Teigha.Runtime;
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 
-namespace dRz.SpecSPDS
+namespace drz.SpecSPDS
 {
     public class EntryPoint : Rtm.IExtensionApplication
     {

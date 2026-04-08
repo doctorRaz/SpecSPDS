@@ -1,10 +1,10 @@
-﻿using dRz.SpecSPDS.CadServices;
-using dRz.SpecSPDS.Core.Enums;
-using dRz.SpecSPDS.Core.Extensions;
-using dRz.SpecSPDS.Core.Models;
-using dRz.SpecSPDS.Core.Services;
-using dRz.SpecSPDS.Core.Settings;
-using dRz.SpecSPDS.Services;
+﻿using drz.SpecSPDS.CadServices;
+using drz.SpecSPDS.Core.Enums;
+using drz.SpecSPDS.Core.Extensions;
+using drz.SpecSPDS.Core.Models;
+using drz.SpecSPDS.Core.Services;
+using drz.SpecSPDS.Core.Settings;
+using drz.SpecSPDS.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using NLog;
@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
 
-namespace dRz.SpecSPDS.Commands
+namespace drz.SpecSPDS.Commands
 {
     /// <summary>
     /// получение маркеров.. выбором с пространства с документа с нескольких документов 
