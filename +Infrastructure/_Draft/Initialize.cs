@@ -22,10 +22,10 @@ namespace Test
             //если нет библиотек или еще какой косяк
             try
             {
-
                 Container = new Container();
                 ConfigureContainer(Container);
                 Container.Verify();
+
             }
             catch { throw; }//падаем, продолжать смысла нет
 
