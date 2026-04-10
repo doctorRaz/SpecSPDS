@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace Test.Infrastructure
 {
-    internal class ApplicationInfo : IApplicationInfo
+    public class ApplicationInfo : IApplicationInfo
     {
         public ApplicationInfo(Assembly assembly)
         {

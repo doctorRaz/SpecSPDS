@@ -7,7 +7,7 @@ using System;
 
 namespace Test.Factories
 {
-    internal class MessageServiceFactory : IMessageServiceFactory
+    public class MessageServiceFactory : IMessageServiceFactory
     {
         public MessageServiceFactory(Container container)
         {

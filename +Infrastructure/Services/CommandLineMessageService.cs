@@ -5,7 +5,7 @@ using System;
 
 namespace Test.Services
 {
-    internal class CommandLineMessageService : IMessageService
+    public class CommandLineMessageService : IMessageService
     {
         public CommandLineMessageService()
         {

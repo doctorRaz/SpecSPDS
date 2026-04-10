@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Test.Services
 {
-    internal class DocumentService : IDocumentService
+    public class DocumentService : IDocumentService
     {
         public bool IsActive
         {

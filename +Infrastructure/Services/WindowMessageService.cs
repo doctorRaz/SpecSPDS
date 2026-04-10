@@ -9,7 +9,7 @@ using Application = HostMgd.ApplicationServices.Application;
 
 namespace Test.Services
 {
-    internal class WindowMessageService : IMessageService
+    public class WindowMessageService : IMessageService
     {
         public WindowMessageService(IApplicationInfo applicationInfo)
         {
