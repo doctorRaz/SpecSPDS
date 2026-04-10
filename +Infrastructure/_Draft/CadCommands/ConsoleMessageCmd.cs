@@ -1,7 +1,7 @@
 ﻿using Abstractions.Services;
 using Teigha.Runtime;
 
-namespace NCad.CadCommands
+namespace Test.CadCommands
 {
     public class ConsoleMessageCmd
     {
@@ -9,7 +9,7 @@ namespace NCad.CadCommands
         public static void ConsoleMessageCommand()
         {
             IMessageService messageService = CadPlugin.Container.GetInstance<IMessageService>();
-            messageService.Console("Console message");
+            messageService.ConsoleMessage("Console message");
         }
     }
 }

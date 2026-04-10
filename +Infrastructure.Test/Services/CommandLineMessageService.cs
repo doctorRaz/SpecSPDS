@@ -1,28 +1,14 @@
 ﻿using Abstractions.Services;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using System;
 
 namespace Test.Services
 {
-    internal class CommandLineMessageService : IMessageService
+    public class CommandLineMessageService : IMessageService
     {
-        public CommandLineMessageService()
-        {
-            Document document = Application.DocumentManager.MdiActiveDocument;
-            if (document == null)
-            {
-                throw new ArgumentNullException("Нет активного документа");
-            }
+        //public CommandLineMessageService()
+        //{
 
-            Editor editor = document.Editor;
-            if (editor == null)
-            {
-                throw new ArgumentNullException("Невозможно использовать редактор");
-            }
-
-            _editor = editor;
-        }
+        //}
 
         public void ConsoleMessage(string message, string caller = null)
         {
@@ -55,17 +41,18 @@ namespace Test.Services
       
              WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
           
-
+           
      
         }
 
 
         private void WriteMessage(string prefix, string message, string caller)
         {
-            _editor.WriteMessage("\n" + (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
+
+            Console.WriteLine("\n" + (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
                           (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
         }
 
-        private Editor _editor;
+
     }
 }

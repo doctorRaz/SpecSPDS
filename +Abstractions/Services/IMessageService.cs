@@ -18,7 +18,7 @@ namespace Abstractions.Services
         /// ]]>
         /// </code></example>
         /// <remarks>В зависимости от основной CAD-системы может понадобиться в реализации обрамлять сообщение символами перевода строки (\n)</remarks>
-        void Console(string message, [CallerMemberName] string caller = null);
+        void ConsoleMessage(string message, [CallerMemberName] string caller = null);
         /// <summary> Информационное сообщение для CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
         /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>

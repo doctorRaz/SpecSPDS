@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
+		<TargetFramework>net462</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<UseWindowForms>true</UseWindowForms>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>		
+		<PackageReference Include="SimpleInjector" Version="5.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	</ItemGroup>
+
+</Project>

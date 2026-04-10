@@ -3,7 +3,7 @@ using Abstractions.Factories;
 using Abstractions.Services;
 using Teigha.Runtime;
 
-namespace NCad.CadCommands.DocInfo
+namespace Test.CadCommands.DocInfo
 {
     public class DocInfoMsgCmd
     {

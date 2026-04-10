@@ -23,7 +23,7 @@ namespace drz.SpecSpds.Test.Tests
             }
 
             //stopwatch.Stop();
-            //Console.WriteLine($"Total time: {stopwatch.Elapsed}");
+            //ConsoleMessage.WriteLine($"Total time: {stopwatch.Elapsed}");
 
         }
     }

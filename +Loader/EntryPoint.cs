@@ -15,17 +15,21 @@ using drz.Cad.Diagnostics;
 using System.ComponentModel;
 using drz.Loader.Infrastructure;
 using Abstractions.Services;
+using Abstractions.Factories;
+using Abstractions.Enums;
+
+
 
 
 
 
 #if CMD
-using drz.SpecSpds.Test.Services;
+
 using drz.SpecSpds;
 
 
 #elif NC
-using NCad;
+using Test;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
@@ -58,17 +62,17 @@ namespace drz.Loader
         [Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
         public static void test()
         {
-            //IMessageService msg = new MessageService();
-            //msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
+            IMessageService msg = CadPlugin.Container.GetInstance<IMessageService>();
+            msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
             EntryPoint entryPoint = new EntryPoint();
             entryPoint.Initialize();
         }
 
-        [Rtm. CommandMethod("console-message")]
+        [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}")]
         public static void ConsoleMessageCommand()
         {
             IMessageService msg = CadPlugin.Container.GetInstance<IMessageService>();
-            msg.Console("Console message");
+            msg.ConsoleMessage("Console message");
         }
 
 
@@ -124,6 +128,9 @@ namespace drz.Loader
 
         }
 
+
+
+
         /// <summary>
         /// Tries the message service.
         /// </summary>
@@ -132,11 +139,9 @@ namespace drz.Loader
             try
             {
 #if NC
-                CadPlugin cadPlugin=new CadPlugin();
-
-                cadPlugin.Initialize();
-
-                msg = CadPlugin.Container.GetInstance<IMessageService>();
+                CadPlugin cadPlugin = new CadPlugin(Assembly.GetExecutingAssembly());
+                             
+                             
 
 #endif
 

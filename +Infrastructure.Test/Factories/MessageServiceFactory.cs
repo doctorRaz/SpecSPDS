@@ -1,13 +1,15 @@
 ﻿using Abstractions.Enums;
 using Abstractions.Factories;
 using Abstractions.Services;
-using Test.Services;
+
 using SimpleInjector;
 using System;
 
+using Test.Services;
+
 namespace Test.Factories
 {
-    internal class MessageServiceFactory : IMessageServiceFactory
+    public class MessageServiceFactory : IMessageServiceFactory
     {
         public MessageServiceFactory(Container container)
         {

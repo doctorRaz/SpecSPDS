@@ -35,6 +35,7 @@ namespace drz.SpecSpds.Test
 
     public class Start
     {
+
         //internal static class AddonContext
         //{
         //    public static readonly InfoAdOn Info = InfoAdOn.Get(typeof(Start));
@@ -50,6 +51,17 @@ namespace drz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
+            Simple simpl = new Simple();
+
+            simpl.Init();
+
+            Class1 class1 = new Class1();
+
+            class1.msg();
+
+
+
+
             string assemblyDirectory = string.Empty;
 
             string baseDir = Path.Combine(assemblyDirectory, "rrr.ffs");
@@ -113,25 +125,25 @@ namespace drz.SpecSpds.Test
             //var rt = RT.Info;
             //var id = InfoDll;
 
-            //Console.WriteLine($"{RT.Info}");
-            //Console.WriteLine($"{RT.Os}");
-            //Console.WriteLine($"{RT.Cad}");
+            //ConsoleMessage.WriteLine($"{RT.Info}");
+            //ConsoleMessage.WriteLine($"{RT.Os}");
+            //ConsoleMessage.WriteLine($"{RT.Cad}");
 
-            //Console.WriteLine("---------");
+            //ConsoleMessage.WriteLine("---------");
 
-            //Console.WriteLine($"InfoDll {InfoDll}");
+            //ConsoleMessage.WriteLine($"InfoDll {InfoDll}");
 
-            //Console.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
+            //ConsoleMessage.WriteLine($"cmdA.Execute() {cmdA.Execute()}");
 
-            ////Console.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
+            ////ConsoleMessage.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
 
 
             //RuntimeInfo runtime = RuntimeInfo.Current;
-            //Console.WriteLine(runtime);
+            //ConsoleMessage.WriteLine(runtime);
 
 
-            //Console.WriteLine(InfoOs.Current);
-            //Console.WriteLine(InfoCad.Current);
+            //ConsoleMessage.WriteLine(InfoOs.Current);
+            //ConsoleMessage.WriteLine(InfoCad.Current);
 
 
             //EntryPoint entryPoint = new EntryPoint();
@@ -154,7 +166,7 @@ namespace drz.SpecSpds.Test
             //LogManager.Shutdown();
 
             Thread.Sleep(new TimeSpan(0, 0, 10));
-            //Console.ReadKey();
+            //ConsoleMessage.ReadKey();
 
 
 

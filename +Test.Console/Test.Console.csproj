@@ -26,18 +26,20 @@
 	<ItemGroup>
 		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="Loader\Infrastructure\AddonContext.cs" />
 		<Compile Include="..\+Loader\Infrastructure\LoggerProvider.cs" Link="Loader\Infrastructure\LoggerProvider.cs" />
-		<Compile Include="..\+Loader\Interfaces\IMessageService.cs" Link="Loader\Interfaces\IMessageService.cs" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<PackageReference Include="SimpleInjector" Version="5.5.0" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+dRz.Cleaner\drz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+Infrastructure.Test\Infrastructure.Test.csproj" />
 		<ProjectReference Include="..\+Lib1\Test.Lib1.csproj" />
 		<ProjectReference Include="..\+Lib2\Lib2.csproj" />
 	</ItemGroup>
@@ -52,7 +54,9 @@
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 	</ItemGroup>
+	<ItemGroup>
 
+	</ItemGroup>
 
 
 </Project>

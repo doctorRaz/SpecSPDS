@@ -3,7 +3,7 @@ using HostMgd.ApplicationServices;
 using System;
 using System.IO;
 
-namespace NCad.Services
+namespace Test.Services
 {
     internal class DocumentService : IDocumentService
     {

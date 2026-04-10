@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib2", "+Lib2\Lib2.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.LogBootstrap", "+dRz.LogBootstrap\drz.LogBootstrap.csproj", "{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Test", "+Infrastructure.Test\Infrastructure.Test.csproj", "{FB4A454F-1ECC-5946-420B-27FD3598613A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,10 @@ Global
 		{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +157,7 @@ Global
 		{956EB4E1-9869-7DE8-DC51-F970C5EE7BF1} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 		{2E94BBA3-7ECA-3174-18F3-41B8E05C8744} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 		{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
+		{FB4A454F-1ECC-5946-420B-27FD3598613A} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}

@@ -1,11 +1,12 @@
 ﻿using Abstractions.Services;
+using drz.Loader;
 using Teigha.Runtime;
 
-namespace NCad.CadCommands
+namespace Test.CadCommands
 {
     public class InfoMessageCmd
     {
-        [CommandMethod("info-message")]
+        [CommandMethod($"info-message-{GeneratedCompile.CommandSuf}")]
         public static void InfoMessageCommand()
         {
             IMessageService messageService = CadPlugin.Container.GetInstance<IMessageService>();

@@ -12,7 +12,7 @@ namespace Abstractions.Enums
         /// </summary>
         CommandLine,
         /// <summary>
-        /// Выводить все сообщения в стандартную Console
+        /// Выводить все сообщения в стандартную ConsoleMessage
         /// </summary>
         Console,
     }

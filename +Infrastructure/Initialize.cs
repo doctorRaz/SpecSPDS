@@ -1,88 +1,51 @@
 ﻿using Abstractions.Factories;
 using Abstractions.Infrastructure;
 using Abstractions.Services;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
-using NCad.Factories;
-using NCad.Infrastructure;
-using NCad.Services;
 using SimpleInjector;
 using System;
-using Rtm = Teigha.Runtime;
+using System.Reflection;
+using Test.Factories;
+using Test.Infrastructure;
+using Test.Services;
 
-namespace NCad
+namespace Test
 {
-    public class CadPlugin /*: Rtm.IExtensionApplication*/
+    public class CadPlugin : IDisposable/*: Rtm.IExtensionApplication*/
     {
-#if DEBUG
-        [Rtm.CommandMethod("инит-сингл")]
-        //[Description("ручной инит загрузчика")]
-#endif
-        public void Initialize()
+
+        private Assembly _asm;
+
+        public CadPlugin(Assembly asm)
         {
+            _asm = asm;
+
             //если нет библиотек или еще какой косяк
             try
             {
-                Init();
+
+                Container = new Container();
+                ConfigureContainer(Container);
+                Container.Verify();
             }
-            catch (Exception ex)
-            {
-                string message = $"Initialize error : {ex.Message}"
-                                 + $"\n{ex.StackTrace}";
+            catch { throw; }//падаем, продолжать смысла нет
 
-                Application.ShowAlertDialog(message);
-
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                if (doc == null)
-                {
-                    return;
-                }
-
-                Editor ed = doc.Editor;
-
-                ed.WriteMessage(message);
-            }
         }
 
-        /// <summary>
-        /// Если этот код будет в Initialize напрямую <br/>
-        /// то при любом сбое, например нет SimpleInjector.dll или не та версия <br/>
-        /// любой вызов может привести к ошибке<br/>
-        /// сложно диагностировать <br/>
-        /// возникнет "неотлавливаемое" исключение <br/>
-        /// try не сработает <br/>
-        /// --------------------<br/>
-        /// убедиться легко, собери свой вариант <br/>
-        /// подключись отладкой, поставь бряк в line 19<br/>
-        /// загрузи сборку <br/>
-        /// бряк не сработает <br/>
-        /// эксепшен то же не будет <br/>
-        /// </summary>
-        private void Init()
-        {
-
-            Container = new Container();
-            ConfigureContainer(Container);
-            Container.Verify();
-        }
-
-        public void Terminate()
-        {
-            Container?.Dispose();
-        }
 
         public static Container Container { get; private set; }
 
         private void ConfigureContainer(Container container)
         {
+            container.RegisterInstance<Assembly>(_asm);
+
             container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
 
-            //container.Register<IMessageService>(() =>
-            //{
-            //    IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
-            //    return new WindowMessageService(applicationInfo);
-            //},
-            //    Lifestyle.Singleton);
+            container.Register<IMessageService>(() =>
+            {
+                IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
+                return new WindowMessageService(applicationInfo);
+            },
+                Lifestyle.Singleton);
 
             container.Register<WindowMessageService>(Lifestyle.Singleton);
 
@@ -91,6 +54,11 @@ namespace NCad
             container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
+        }
+
+        public void Dispose()
+        {
+            Container.Dispose();
         }
     }
 }

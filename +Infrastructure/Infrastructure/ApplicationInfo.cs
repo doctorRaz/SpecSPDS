@@ -3,13 +3,14 @@ using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 
-namespace NCad.Infrastructure
+namespace Test.Infrastructure
 {
     internal class ApplicationInfo : IApplicationInfo
     {
-        public ApplicationInfo()
+        public ApplicationInfo(Assembly assembly)
         {
-            _assembly = Assembly.GetExecutingAssembly();
+            _assembly = assembly;// Assembly.GetExecutingAssembly();
+            //_assembly = Assembly.GetExecutingAssembly();
             _handle = Application.MainWindow.Handle;
         }
 
@@ -25,9 +26,16 @@ namespace NCad.Infrastructure
         {
             get => _assembly.FullName;
         }
+        public string ProductName
+        {
+            get => _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FilePrefix";
+        }
+
+
+ 
 
         public IntPtr CadWindowHandle { get => _handle; }
-        public string TitlePrefix { get => $"CadSimpleInject v.{Version} : "; }
+        public string TitlePrefix { get => $"{ProductName} v.{Version} : "; }
 
         private Assembly _assembly;
         private IntPtr _handle;

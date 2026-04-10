@@ -1,15 +1,12 @@
 ﻿using Abstractions.Infrastructure;
 using Abstractions.Services;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using Application = HostMgd.ApplicationServices.Application;
 
 namespace Test.Services
 {
-    internal class WindowMessageService : IMessageService
+    public class WindowMessageService : IMessageService
     {
         public WindowMessageService(IApplicationInfo applicationInfo)
         {
@@ -18,15 +15,15 @@ namespace Test.Services
 
         public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
+            //Document doc = Application.DocumentManager.MdiActiveDocument;
+            //if (doc == null)
+            //{
                 InfoMessage(message, caller);
                 return;
-            }
+            //}
 
-            Editor ed = doc.Editor;
-            ed.WriteMessage("\n" + (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+            //Editor ed = doc.Editor;
+            //ed.WriteMessage("\n" + (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
         }
 
         public void ErrorMessage(string message, [CallerMemberName] string caller = null)
