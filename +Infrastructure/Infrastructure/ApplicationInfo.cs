@@ -1,9 +1,9 @@
-﻿using drz.SpecSPDS.Abstractions.Infrastructure;
+﻿using Abstractions.Infrastructure;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 
-namespace drz.SpecSPDS.Infrastructure.Infrastructure
+namespace NCad.Infrastructure
 {
     internal class ApplicationInfo : IApplicationInfo
     {
@@ -15,7 +15,7 @@ namespace drz.SpecSPDS.Infrastructure.Infrastructure
 
         public Version Version
         {
-            get => _assembly.GetName().Version!;
+            get => _assembly.GetName().Version;
         }
         public string Path
         {
@@ -23,7 +23,7 @@ namespace drz.SpecSPDS.Infrastructure.Infrastructure
         }
         public string Name
         {
-            get => _assembly.FullName!;
+            get => _assembly.FullName;
         }
 
         public IntPtr CadWindowHandle { get => _handle; }

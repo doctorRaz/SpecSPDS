@@ -1,7 +1,7 @@
-﻿using drz.SpecSPDS.Abstractions.Services;
+﻿using Abstractions.Services;
 using Teigha.Runtime;
 
-namespace drz.SpecSPDS.Infrastructure.CadCommands
+namespace NCad.CadCommands
 {
     public class InfoMessageCmd
     {

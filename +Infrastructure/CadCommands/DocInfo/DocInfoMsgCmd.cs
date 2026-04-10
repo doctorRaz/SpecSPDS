@@ -1,7 +1,9 @@
-﻿using drz.SpecSPDS.Abstractions.Services;
+﻿using Abstractions.Enums;
+using Abstractions.Factories;
+using Abstractions.Services;
 using Teigha.Runtime;
 
-namespace drz.SpecSPDS.Infrastructure.CadCommands.DocInfo
+namespace NCad.CadCommands.DocInfo
 {
     public class DocInfoMsgCmd
     {
@@ -9,7 +11,8 @@ namespace drz.SpecSPDS.Infrastructure.CadCommands.DocInfo
         public static void DocInfoMessageCommand()
         {
             IDocumentService documentService = CadPlugin.Container.GetInstance<IDocumentService>();
-            IMessageService messageService = CadPlugin.Container.GetInstance<IMessageService>();
+            IMessageServiceFactory messageFactory = CadPlugin.Container.GetInstance<IMessageServiceFactory>();
+            IMessageService messageService = messageFactory.GetService(MessageServiceType.Window);
             messageService.InfoMessage(documentService.FullPath);
         }
     }

@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDSn.26.0", "+SpecSPDS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpecSPDS", "SpecSPDS", "{9E0ED28F-095F-4CFA-8174-E6155B1992C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDS.Abstractions", "+Abstractions\SpecSPDS.Abstractions.csproj", "{70AA779C-D1C6-41C4-9CF5-77789BBF664A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "+Abstractions\Abstractions.csproj", "{70AA779C-D1C6-41C4-9CF5-77789BBF664A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDS.Infrastructure", "+Infrastructure\SpecSPDS.Infrastructure.csproj", "{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "+Infrastructure\Infrastructure.csproj", "{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{7CCE4940-DFE5-40C3-B602-431E5B71DEAF}"
 EndProject

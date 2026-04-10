@@ -1,16 +1,18 @@
-﻿using drz.SpecSPDS.Abstractions.Infrastructure;
-using drz.SpecSPDS.Abstractions.Services;
-using drz.SpecSPDS.Infrastructure.Infrastructure;
-using drz.SpecSPDS.Infrastructure.Services;
+﻿using Abstractions.Factories;
+using Abstractions.Infrastructure;
+using Abstractions.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using NCad.Factories;
+using NCad.Infrastructure;
+using NCad.Services;
 using SimpleInjector;
 using System;
 using Rtm = Teigha.Runtime;
 
-namespace drz.SpecSPDS.Infrastructure
+namespace NCad
 {
-    public class CadPlugin : Rtm.IExtensionApplication
+    public class CadPlugin /*: Rtm.IExtensionApplication*/
     {
 #if DEBUG
         [Rtm.CommandMethod("инит-сингл")]
@@ -75,12 +77,18 @@ namespace drz.SpecSPDS.Infrastructure
         {
             container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
 
-            container.Register<IMessageService>(() =>
-            {
-                IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
-                return new MessageService(applicationInfo);
-            },
-                Lifestyle.Singleton);
+            //container.Register<IMessageService>(() =>
+            //{
+            //    IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
+            //    return new WindowMessageService(applicationInfo);
+            //},
+            //    Lifestyle.Singleton);
+
+            container.Register<WindowMessageService>(Lifestyle.Singleton);
+
+            container.Register<CommandLineMessageService>(Lifestyle.Transient);
+
+            container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
         }

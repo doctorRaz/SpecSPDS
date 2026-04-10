@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace drz.SpecSPDS.Abstractions.Infrastructure
+namespace Abstractions.Infrastructure
 {
     /// <summary> Информация о сборке </summary>
     public interface IApplicationInfo

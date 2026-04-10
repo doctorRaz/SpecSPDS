@@ -1,5 +1,5 @@
-﻿using drz.SpecSPDS.Abstractions.Infrastructure;
-using drz.SpecSPDS.Abstractions.Services;
+﻿using Abstractions.Infrastructure;
+using Abstractions.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
@@ -7,12 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace drz.SpecSPDS.Infrastructure.Services
+namespace NCad.Services
 {
-    internal class MessageService : IMessageService
+    internal class WindowMessageService : IMessageService
     {
-
-        public MessageService(IApplicationInfo applicationInfo)
+        public WindowMessageService(IApplicationInfo applicationInfo)
         {
             _applicationInfo = applicationInfo;
         }
@@ -36,6 +35,11 @@ namespace drz.SpecSPDS.Infrastructure.Services
         }
 
         public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExceptionMessage(string messag, Exception ex, [CallerMemberName] string caller = null)
         {
             throw new NotImplementedException();
         }

@@ -28,9 +28,9 @@ namespace drz.SpecSPDS
 {
     public class EntryPoint : Rtm.IExtensionApplication
     {
-        private Logger log;
+        private Logger? log;
 
-        private IMessageService msg;
+        private IMessageService? msg;
 
 #if DEBUG
         [Rtm.CommandMethod("инитСП")]

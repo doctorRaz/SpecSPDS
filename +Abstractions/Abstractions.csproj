@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+	<TargetFramework>net462</TargetFramework>
+
+		<RootNamespace>dRz.SpecSPDS.Abstractions</RootNamespace>
+		<Description>SpecSPDS абстракции, интерфейсы</Description>
+		<AssemblyTitle>SpecSPDS.Abstractions</AssemblyTitle>
+		<ImplicitUsings>disable</ImplicitUsings>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+</Project>
