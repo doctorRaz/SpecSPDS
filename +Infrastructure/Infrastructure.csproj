@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\+Abstractions\SpecSPDS.Abstractions.csproj" />
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>
