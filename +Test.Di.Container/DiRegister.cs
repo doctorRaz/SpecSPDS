@@ -34,14 +34,14 @@ namespace drz.DiContainer
         {
             container.RegisterInstance(addOnAssembly);
 
-            container.Register<IApplicationInfo, ApplicationInfo>(/*Lifestyle.Singleton*/);
+            container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
         }
 
         private void RegisterServices(Container container)
         {
             container.Register<ICommandLineMessageService, CommandLineMessageService>();
 
-            container.Register<IWindowMessageService, WindowMessageService>(/*Lifestyle.Singleton*/);
+            container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
         }

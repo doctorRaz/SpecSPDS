@@ -3,13 +3,14 @@ using drz.Abstractions.Services;
 using drz.DiContainer;
 using drz.Loader.Infrastructure;
 using NLog;
+using SimpleInjector;
 using System.Reflection;
 
 namespace drz.Lib_A
 {
     public class CommandA
     {
-        public static SimpleInjector.Container ContainerIn;
+        public static Container ContainerIn;
 
         private ILogger log = LoggerProvider.For<CommandA>();
 
