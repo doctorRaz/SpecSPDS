@@ -5,7 +5,7 @@ using System;
 
 namespace drz.Infrastructure.Services
 {
-    public class CommandLineMessageService : IMessageService
+    public class CommandLineMessageService : IMessageService, ICommandLineMessageService
     {
         public CommandLineMessageService()
         {

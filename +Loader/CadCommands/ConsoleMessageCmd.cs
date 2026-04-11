@@ -1,8 +1,7 @@
 ﻿using drz.Abstractions.Services;
-using drz.Loader;
 using Teigha.Runtime;
 
-namespace Test.CadCommands
+namespace drz.Loader.CadCommands
 {
     public class ConsoleMessageCmd
     {

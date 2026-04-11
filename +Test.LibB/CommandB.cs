@@ -3,22 +3,32 @@ using drz.Abstractions.Services;
 using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
 using NLog;
-using SimpleInjector;
-using System.Reflection;
+using System;
+
+using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Lib_B
 {
-    public class CommandB
+    public class CommandB:IDisposable
     {
-        public static Container ContainerIn;
+      private static bool _initialized;
 
         private ILogger log = LoggerProvider.For<CommandB>();
 
         public CommandB()
         {
-            var dr = new AddOnCompositionRoot(Assembly.GetExecutingAssembly());
+            if (_initialized) return;
 
-            ContainerIn = dr.ContainerIn;
+            AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(CommandB).Assembly);
+
+            AC.Initialize(root);
+
+            _initialized = true;
+        }
+
+        public void Dispose()
+        {
+            AC.Dispose();
         }
 
         public string Execute()
@@ -35,11 +45,11 @@ namespace drz.Lib_B
 
         public void msgCommandB()
         {
-            IApplicationInfo app = ContainerIn.GetInstance<IApplicationInfo>();
-            IMessageService messageService = ContainerIn.GetInstance<ICommandLineMessageService>();
+            IApplicationInfo app = AC.Get<IApplicationInfo>();
+            IMessageService messageService = AC.Get<ICommandLineMessageService>();
             messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
 
-            messageService = ContainerIn.GetInstance<IWindowMessageService>();
+            messageService = AC.Get<IWindowMessageService>();
             messageService.InfoMessage("Info message");
         }
     }

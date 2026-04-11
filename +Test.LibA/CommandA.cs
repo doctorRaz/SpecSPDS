@@ -2,23 +2,42 @@
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
-using NLog;
-using SimpleInjector;
-using System.Reflection;
 
+using NLog;
+using System;
+using System.Reflection;
+using SimpleInjector;
+
+using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
+
+/// <summary>
+/// 
+/// </summary>
 namespace drz.Lib_A
 {
-    public class CommandA
+    public class CommandA : IDisposable
     {
-        public static Container ContainerIn;
+        private static bool _initialized;
+        //private readonly AddOnCompositionRoot _di;
 
         private ILogger log = LoggerProvider.For<CommandA>();
 
         public CommandA()
         {
-            var dr = new AddOnCompositionRoot(Assembly.GetExecutingAssembly());
+            if (_initialized) return;
 
-            ContainerIn = dr.ContainerIn;
+            AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(CommandA).Assembly);
+
+            AC.Initialize(root);
+
+            _initialized = true;
+
+
+        }
+
+        public void Dispose()
+        {
+            AC.Dispose();
         }
 
         public string Execute()
@@ -35,13 +54,26 @@ namespace drz.Lib_A
 
         public void msgCommandA()
         {
-            IApplicationInfo app = ContainerIn.GetInstance<IApplicationInfo>();
+            // Если нужно Scoped-сервисы, можно обернуть в using
+            using (AC.BeginScope())
+            {
+                var app1 = AC.Get<IApplicationInfo>();
 
-            IMessageService messageService = ContainerIn.GetInstance<ICommandLineMessageService>();
+                IMessageService messageService1 = AC.Get<ICommandLineMessageService>();
+
+                messageService1.ConsoleMessage($"{app1.TitlePrefix} Console message");
+
+                messageService1 = AC.Get<IWindowMessageService>();
+                messageService1.InfoMessage("Info message");
+            }
+
+            IApplicationInfo app =  AC.Get<IApplicationInfo>();
+
+            IMessageService messageService = AC.Get<ICommandLineMessageService>();
 
             messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
 
-            messageService = ContainerIn.GetInstance<IWindowMessageService>();
+            messageService = AC.Get<IWindowMessageService>();
             messageService.InfoMessage("Info message");
         }
     }

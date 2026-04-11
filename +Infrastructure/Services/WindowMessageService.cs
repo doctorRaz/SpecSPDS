@@ -9,7 +9,7 @@ using Application = HostMgd.ApplicationServices.Application;
 
 namespace drz.Infrastructure.Services
 {
-    public class WindowMessageService : IMessageService
+    public class WindowMessageService : IMessageService, IWindowMessageService
     {
         public WindowMessageService(IApplicationInfo applicationInfo)
         {

@@ -30,9 +30,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
-		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 	<!--CoreCompile BeforeBuild PrepareForBuild-->
 	<!--Генерация класса с константой MinVersion перед сборкой-->

@@ -3,7 +3,7 @@ using drz.LogServices;
 using drz.LogServices.Interfaces;
 using NLog;
 using System;
-using static drz.Loader.Infrastructure.AddonContext;
+using static drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Loader.Infrastructure
 {

@@ -1,10 +1,9 @@
 ﻿using drz.Abstractions.Enums;
 using drz.Abstractions.Factories;
 using drz.Abstractions.Services;
-using drz.Loader;
 using Teigha.Runtime;
 
-namespace Test.CadCommands.DocInfo
+namespace drz.Loader.CadCommands.DocInfo
 {
     public class DocInfoLineCmd
     {

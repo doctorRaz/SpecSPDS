@@ -27,7 +27,7 @@ using drz.SpecSpds;
 
 #elif NC
 
-using Test;
+ 
 using drz.Loader;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
