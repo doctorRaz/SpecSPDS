@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Test.Services
 {
-    public class WindowMessageService : IMessageService
+    public class WindowMessageService : IMessageService,IWindowMessageService
     {
         public WindowMessageService(IApplicationInfo applicationInfo)
         {

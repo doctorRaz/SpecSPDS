@@ -3,7 +3,7 @@ using System;
 
 namespace Test.Services
 {
-    public class CommandLineMessageService : IMessageService
+    public class CommandLineMessageService : IMessageService, ICommandLineMessageService
     {
         //public CommandLineMessageService()
         //{
