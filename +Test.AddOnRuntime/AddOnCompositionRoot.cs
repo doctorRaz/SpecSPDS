@@ -6,11 +6,11 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System.Reflection;
 
-namespace drz.DiContainer
+namespace drz.AddOn.Composition
 {
-    public class DiRegister //: IDisposable
+    public class AddOnCompositionRoot //: IDisposable
     {
-        public DiRegister(Assembly addOnAssembly)
+        public AddOnCompositionRoot(Assembly addOnAssembly)
         //public   Container Build(Assembly addOnAssembly)
         {
             Container container = new Container();
@@ -29,6 +29,8 @@ namespace drz.DiContainer
         }
 
         public Container ContainerIn { get; private set; }
+
+         //public T Get<T>() => _container.GetInstance<T>();
 
         private void RegisterInfrastructure(Container container, Assembly addOnAssembly)
         {

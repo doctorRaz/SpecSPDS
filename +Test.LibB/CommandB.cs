@@ -1,21 +1,22 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
-using drz.DiContainer;
+using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
 using NLog;
+using SimpleInjector;
 using System.Reflection;
 
 namespace drz.Lib_B
 {
     public class CommandB
     {
-        public static SimpleInjector.Container ContainerIn;
+        public static Container ContainerIn;
 
         private ILogger log = LoggerProvider.For<CommandB>();
 
         public CommandB()
         {
-            var dr = new DiRegister(Assembly.GetExecutingAssembly());
+            var dr = new AddOnCompositionRoot(Assembly.GetExecutingAssembly());
 
             ContainerIn = dr.ContainerIn;
         }

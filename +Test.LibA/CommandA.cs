@@ -1,6 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
-using drz.DiContainer;
+using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
 using NLog;
 using SimpleInjector;
@@ -16,7 +16,7 @@ namespace drz.Lib_A
 
         public CommandA()
         {
-            var dr = new DiRegister(Assembly.GetExecutingAssembly());
+            var dr = new AddOnCompositionRoot(Assembly.GetExecutingAssembly());
 
             ContainerIn = dr.ContainerIn;
         }

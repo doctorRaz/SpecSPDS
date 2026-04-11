@@ -40,7 +40,7 @@
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
-		<ProjectReference Include="..\+Test.Di.Container\Test.Di.Container.csproj" />
+		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
 		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />
 

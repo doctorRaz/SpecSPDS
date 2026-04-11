@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11626.88 stable
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpecSPDSn.23.0", "+SpecSPDS\SpecSPDSn.23.0.csproj", "{3DFBB0EA-C68B-4199-BBA3-BC283D1E57AB}"
 EndProject
@@ -51,7 +51,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.LogBootstrap", "+dRz.Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Infrastructure", "+Test.Infrastructure\Test.Infrastructure.csproj", "{FB4A454F-1ECC-5946-420B-27FD3598613A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Di.Container", "+Test.Di.Container\Test.Di.Container.csproj", "{B7F18DD8-0C00-E97A-103B-552D528A2722}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.AddOnRuntime", "+Test.AddOnRuntime\Test.AddOnRuntime.csproj", "{B7F18DD8-0C00-E97A-103B-552D528A2722}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
