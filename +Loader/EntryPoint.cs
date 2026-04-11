@@ -65,6 +65,8 @@ namespace drz.Loader
     internal sealed class EntryPoint : Rtm.IExtensionApplication
 #endif
     {
+        public static Container Container { get; private set; }
+
         private const string netPluginExtension = ".dll";
 
         private IMessageService msg;
@@ -76,10 +78,10 @@ namespace drz.Loader
 
 #if DEBUG && NC
         [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}")]
-        [Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
+        [Scm.Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
         public static void test()
         {
-            IMessageService msg = CadPlugin.Container.GetInstance<IMessageService>();
+            IMessageService msg = Container.GetInstance<IMessageService>();
             msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
             EntryPoint entryPoint = new EntryPoint();
             entryPoint.Initialize();
@@ -88,7 +90,7 @@ namespace drz.Loader
         [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}")]
         public static void ConsoleMessageCommand()
         {
-            IMessageService msg = CadPlugin.Container.GetInstance<IMessageService>();
+            IMessageService msg = Container.GetInstance<IMessageService>();
             msg.ConsoleMessage("Console message");
         }
 
@@ -107,9 +109,11 @@ namespace drz.Loader
             try
             {
                 /* регистрируемся
-                    каждая регистрация вызыввается во всех модулях
                             TryRegisterAssemblyResolver();
+                    каждая регистрация вызыввается во всех модулях
                 */
+
+                TryContainer();
 
                 TryMessageService();
 
@@ -117,7 +121,7 @@ namespace drz.Loader
                 //обертка инит логера, если ех на старте, то отловим в месадж
                 TryLoggerProvider();
 
-                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
+                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msgClass1 сообщаем
                 CadLoading();
 
             }
@@ -146,7 +150,43 @@ namespace drz.Loader
         }
 
 
+        private void TryContainer()
+        {
+            try
+            {
+                Container = new Container();
+                ConfigureContainer(Container);
+                Container.Verify();
+            }
+            catch (Exception ex)
+            {
+                // лог (NLog / InternalLogger)
+                throw new InvalidOperationException("DI container initialization failed", ex);
+            }//роняем загрузчик
+        }
 
+
+        private void ConfigureContainer(Container container)
+        {
+            container.RegisterInstance<Assembly>(Assembly.GetExecutingAssembly());
+
+            container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
+
+            container.Register<IMessageService>(() =>
+            {
+                IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
+                return new WindowMessageService(applicationInfo);
+            },
+                Lifestyle.Singleton);
+
+            container.Register<WindowMessageService>(Lifestyle.Singleton);
+
+            container.Register<CommandLineMessageService>(Lifestyle.Transient);
+
+            container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
+
+            container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
+        }
 
         /// <summary>
         /// Tries the message service.
@@ -156,15 +196,19 @@ namespace drz.Loader
             try
             {
 #if NC
-                CadPlugin cadPlugin = new CadPlugin(Assembly.GetExecutingAssembly());
-                             
-                             
+               
+
+
 
 #endif
 
-                //msg = new MessageService();
+                //msgClass1 = new MessageService();
             }
-            catch { throw; }//роняем загрузчик
+            catch (Exception ex)
+            {
+                // лог (NLog / InternalLogger)
+                throw new InvalidOperationException("failed", ex);
+            }//роняем загрузчик
         }
 
         /// <summary>
@@ -176,7 +220,11 @@ namespace drz.Loader
             {
                 log = LoggerProvider.For<EntryPoint>();
             }
-            catch { throw; }//роняем загрузчик
+            catch (Exception ex)
+            {
+                // лог (NLog / InternalLogger)
+                throw new InvalidOperationException("failed", ex);
+            }//роняем загрузчик
         }
 
         /// <summary>
@@ -260,7 +308,8 @@ namespace drz.Loader
             catch (Exception ex)
             {
                 log.Error(ex, ex.Message);
-                throw;
+
+                throw new InvalidOperationException("failed", ex);
             }
 
             return true;
@@ -475,6 +524,9 @@ namespace drz.Loader
             try
             {
                 log.Debug("Terminate");
+
+                Container.Dispose();
+
             }
             catch { } // смысла нет что то показывать при закрытии наны
 
