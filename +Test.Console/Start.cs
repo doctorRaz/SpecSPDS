@@ -38,6 +38,8 @@ namespace drz.SpecSpds.Test
     public class Start
     {
 
+        public static   SimpleInjector.Container ContainerIn;
+
         //internal static class AddonContext
         //{
         //    public static readonly InfoAdOn Info = InfoAdOn.Get(typeof(Start));
@@ -53,15 +55,35 @@ namespace drz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
-            Simple simpl = new Simple();
+            //EntryPoint entryPoint = new EntryPoint();
 
-            simpl.Init();
+            //entryPoint.Initialize();
 
-            Class1 class1 = new Class1();
+            ////Stopwatch stopwatch = Stopwatch.StartNew();
+            ////NlogDebug test = new NlogDebug();
+            ////xxx test.Test();
 
-            class1.msg();
+
+            //entryPoint.Terminate();
 
 
+            var dr = new DiRegister(Assembly.GetExecutingAssembly());
+
+            ContainerIn = dr.ContainerIn;
+            Class1.msgClass1();
+
+            CommandA cmdA = new CommandA();
+            cmdA.msgCommandA();
+
+
+            CommandB cmdB = new CommandB();
+            cmdB.msgCommandB();
+
+            Class1.msgClass1();
+            cmdA.msgCommandA();
+            cmdB.msgCommandB();
+
+            ContainerIn.Dispose();
 
 
             string assemblyDirectory = string.Empty;
@@ -69,8 +91,8 @@ namespace drz.SpecSpds.Test
             string baseDir = Path.Combine(assemblyDirectory, "rrr.ffs");
 
             LogTests lt = new LogTests();
-            CommandA cmdA = new CommandA();
-            CommandB cmdB = new CommandB();
+            //CommandA cmdA = new CommandA();
+
 
 
 

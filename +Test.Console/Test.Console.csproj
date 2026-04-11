@@ -30,16 +30,16 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
-		<PackageReference Include="SimpleInjector" Version="5.5.0" />
+		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Di.Container.Test\Di.Container.Test.csproj" />
 		<ProjectReference Include="..\+dRz.Cleaner\drz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
-		<ProjectReference Include="..\+Infrastructure.Test\Infrastructure.Test.csproj" />
 		<ProjectReference Include="..\+Lib1\Test.Lib1.csproj" />
 		<ProjectReference Include="..\+Lib2\Lib2.csproj" />
 	</ItemGroup>

@@ -10,9 +10,9 @@ namespace Test.Infrastructure
 {
     public class ApplicationInfo : IApplicationInfo
     {
-        public ApplicationInfo()
+        public ApplicationInfo(Assembly assembly)
         {
-            _assembly = Assembly.GetExecutingAssembly();
+            _assembly = assembly;// Assembly.GetExecutingAssembly();
             _handle = IntPtr.Zero;
             // new System.Windows.Interop.WindowInteropHelper(        Application.Current.MainWindow    ).Handle;
         }
@@ -30,8 +30,14 @@ namespace Test.Infrastructure
             get => _assembly.FullName;
         }
 
+        public string ProductName
+        {
+            get => _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FilePrefix";
+        }
+
+
         public IntPtr CadWindowHandle { get => _handle; }
-        public string TitlePrefix { get => $"CadSimpleInject v.{Version} : "; }
+        public string TitlePrefix { get => $"{ProductName} v.{Version} : "; }
 
         private Assembly _assembly;
         private IntPtr _handle;

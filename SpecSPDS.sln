@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.LogBootstrap", "+dRz.Lo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Test", "+Infrastructure.Test\Infrastructure.Test.csproj", "{FB4A454F-1ECC-5946-420B-27FD3598613A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Di.Container.Test", "+Di.Container.Test\Di.Container.Test.csproj", "{B7F18DD8-0C00-E97A-103B-552D528A2722}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB4A454F-1ECC-5946-420B-27FD3598613A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7F18DD8-0C00-E97A-103B-552D528A2722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7F18DD8-0C00-E97A-103B-552D528A2722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7F18DD8-0C00-E97A-103B-552D528A2722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7F18DD8-0C00-E97A-103B-552D528A2722}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +164,7 @@ Global
 		{2E94BBA3-7ECA-3174-18F3-41B8E05C8744} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 		{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{FB4A454F-1ECC-5946-420B-27FD3598613A} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
+		{B7F18DD8-0C00-E97A-103B-552D528A2722} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}

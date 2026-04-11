@@ -12,26 +12,17 @@ namespace drz.SpecSpds.Test.Tests
     internal class Class1
     {
 
-        public void msg()
+        public static void msgClass1()
         {
-            IMessageService messageService = Simple.Container.GetInstance<IMessageService>();
-            messageService.ConsoleMessage("Console message");
 
+            IApplicationInfo app = ContainerIn. GetInstance<IApplicationInfo>();
+            IMessageService messageService = ContainerIn  .GetInstance<ICommandLineMessageService>();
+            messageService.ConsoleMessage($"{app.TitlePrefix}  Console message");
 
-            messageService = Simple.Container.GetInstance<IMessageService>();
+            messageService = ContainerIn.GetInstance<IWindowMessageService>();
             messageService.InfoMessage("Info message");
 
-            //IDocumentService documentService = Simple.Container.GetInstance<IDocumentService>();
-            IMessageServiceFactory messageFactory = Simple.Container.GetInstance<IMessageServiceFactory>();
-            messageService = messageFactory.GetService(MessageServiceType.CommandLine);
-            messageService.InfoMessage("documentService.FullPath");
-
-
-
-            //IDocumentService documentService2 = Simple.Container.GetInstance<IDocumentService>();
-            messageFactory = Simple.Container.GetInstance<IMessageServiceFactory>();
-            messageService = messageFactory.GetService(MessageServiceType.Window);
-            messageService.InfoMessage("documentService.FullPath");
+    
 
 
         }

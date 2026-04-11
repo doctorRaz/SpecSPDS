@@ -10,8 +10,8 @@ namespace Test.Services
         {
             get
             {
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                return doc != null;
+                //Document doc = Application.DocumentManager.MdiActiveDocument;
+                return true;// doc != null;
             }
         }
 
@@ -24,8 +24,8 @@ namespace Test.Services
                     throw new NullReferenceException("Нет активного документа");
                 }
 
-                Document doc = Application.DocumentManager.MdiActiveDocument;
-                return doc.Name;
+                //Document doc = Application.DocumentManager.MdiActiveDocument;
+                return @"d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\_res\сборка маркеров.dwg";
             }
         }
 
