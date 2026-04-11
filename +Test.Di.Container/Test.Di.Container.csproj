@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.DiContainer</RootNamespace>
+		<Description>точка создания контейнера</Description>
+		<AssemblyTitle>Di.Container</AssemblyTitle>
+		<Product>Di.Container</Product>
+		<InformationalVersion>Di.Container for All</InformationalVersion>
+
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	  <ProjectReference Include="..\+Test.Infrastructure\Test.Infrastructure.csproj" />
+	</ItemGroup>
+		<ItemGroup>
+		<PackageReference Include="SimpleInjector" Version="5.5.0" />
+	</ItemGroup>
+
+
+</Project>

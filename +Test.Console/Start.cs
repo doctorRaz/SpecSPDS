@@ -21,40 +21,37 @@ AppSettings я б засунул именно в то, что работает �
 
 using drz.Cad.Diagnostics;
 using drz.DiContainer;
+using drz.Lib_A;
+using drz.Lib_B;
 using drz.Loader.Infrastructure;
 using drz.SpecSpds.Test.Tests;
-using drz.SpecSPDS;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using static drz.Loader.Infrastructure.AddonContext;
 
 namespace drz.SpecSpds.Test
 {
-
     public class Start
     {
-
-        public static   SimpleInjector.Container ContainerIn;
+        public static SimpleInjector.Container ContainerIn;
 
         //internal static class AddonContext
         //{
         //    public static readonly InfoAdOn Info = InfoAdOn.Get(typeof(Start));
         //}
 
-
         /// <summary>
         /// общий логгер
         /// </summary>
         //private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
-
         [STAThread]
         private static void Main(string[] args)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             //EntryPoint entryPoint = new EntryPoint();
 
             //entryPoint.Initialize();
@@ -63,28 +60,24 @@ namespace drz.SpecSpds.Test
             ////NlogDebug test = new NlogDebug();
             ////xxx test.Test();
 
-
             //entryPoint.Terminate();
-
 
             var dr = new DiRegister(Assembly.GetExecutingAssembly());
 
             ContainerIn = dr.ContainerIn;
-            Class1.msgClass1();
+            TestContainer.TestCondole();
 
             CommandA cmdA = new CommandA();
             cmdA.msgCommandA();
 
-
             CommandB cmdB = new CommandB();
             cmdB.msgCommandB();
 
-            Class1.msgClass1();
+            TestContainer.TestCondole();
             cmdA.msgCommandA();
             cmdB.msgCommandB();
 
             ContainerIn.Dispose();
-
 
             string assemblyDirectory = string.Empty;
 
@@ -92,9 +85,6 @@ namespace drz.SpecSpds.Test
 
             LogTests lt = new LogTests();
             //CommandA cmdA = new CommandA();
-
-
-
 
             CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
             Console.WriteLine($"{ff.GetSummary()}");
@@ -109,12 +99,6 @@ namespace drz.SpecSpds.Test
             Console.WriteLine($"{cmdB.Execute()}");
             Console.WriteLine();
 
-
-
-
-
-
-
             Console.WriteLine($"{InfoDll.ToStringLong()}");
             rr();
             Console.WriteLine($"{RT.Info}");
@@ -123,12 +107,8 @@ namespace drz.SpecSpds.Test
 
             Console.WriteLine(typeof(Start).FullName);
 
-
-
-
             //for (int i = 0; i < 10000; i++)
             //{
-
             cmdA.LogTest("A0ttrrt");
 
             cmdB.LogTest("B0trte");
@@ -143,8 +123,6 @@ namespace drz.SpecSpds.Test
 
             cmdB.LogTest("20");
             //}
-
-
 
             //var rt = RT.Info;
             //var id = InfoDll;
@@ -161,50 +139,35 @@ namespace drz.SpecSpds.Test
 
             ////ConsoleMessage.WriteLine($"cmdB.Execute() {cmdB.Execute()}");
 
-
             //RuntimeInfo runtime = RuntimeInfo.Current;
             //ConsoleMessage.WriteLine(runtime);
 
-
             //ConsoleMessage.WriteLine(InfoOs.Current);
             //ConsoleMessage.WriteLine(InfoCad.Current);
-
 
             //EntryPoint entryPoint = new EntryPoint();
 
             //entryPoint.Initialize();
 
-            Stopwatch stopwatch = Stopwatch.StartNew();
             //NlogDebug test = new NlogDebug();
             //xxx test.Test();
-
 
             //entryPoint.Terminate();
 
             stopwatch.Stop();
             Console.WriteLine($"Total time: {stopwatch.Elapsed}");
 
-
             Console.WriteLine("-=End=-");
 
             //LogManager.Shutdown();
 
-            Thread.Sleep(new TimeSpan(0, 0, 10));
-            //ConsoleMessage.ReadKey();
-
-
-
-
+            //Thread.Sleep(new TimeSpan(0, 0, 10));
+            Console.ReadKey();
         }
 
         private static void rr([CallerMemberName] string? caller = null)
         {
-
             Console.WriteLine(caller);
-
         }
     }
-
-
-
 }

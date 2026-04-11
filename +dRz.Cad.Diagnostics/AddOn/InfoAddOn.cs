@@ -32,8 +32,6 @@ public sealed class InfoAddOn
 
     private InfoAddOn(Assembly assembly)
     {
-
-
         Assembly = assembly;
         try
         {
@@ -275,6 +273,7 @@ public sealed class InfoAddOn
     {
         return $"{ProductTitle} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")})";
     }
+
     /// <summary>
     /// Converts Longs the string.
     /// </summary>
@@ -296,7 +295,6 @@ public sealed class InfoAddOn
     }
 
     // -------------------- Helpers --------------------
-
 
     /// <summary>
     /// Computes the build date.

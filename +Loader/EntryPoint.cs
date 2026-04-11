@@ -1,67 +1,51 @@
 ﻿/* EntryPoint.cs
  * © Andrey Bushman, 2014
- * Поиск и загрузка версии плагина .NET, ARX или VBA, наиболее пригодной для 
+ * Поиск и загрузка версии плагина .NET, ARX или VBA, наиболее пригодной для
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+
 using NLog;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
 //using drz.Loader.Interfaces;
 using drz.Cad.Diagnostics;
 
 using drz.Loader.Infrastructure;
 using SimpleInjector;
-using Test.Infrastructure;
-using Test.Services;
-using Test.Factories;
 using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
-using drz.Abstractions.Factories;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+using drz.Infrastructure.Services;
+using drz.Infrastructure.Infrastructure;
 
 #if CMD
 
 using drz.SpecSpds;
 
-
 #elif NC
+
 using Test;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
+
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
-
 
 namespace drz.Loader
 {
     /// <summary>
-    /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
+    /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее
     /// подходящей для него версии плагина.
     /// </summary>
 #if CMD
+
     internal sealed class EntryPoint
 #else
+
     internal sealed class EntryPoint : Rtm.IExtensionApplication
 #endif
     {
@@ -75,8 +59,8 @@ namespace drz.Loader
 
         private Logger log;
 
-
 #if DEBUG && NC
+
         [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}")]
         [Scm.Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
         public static void test()
@@ -94,17 +78,15 @@ namespace drz.Loader
             msg.ConsoleMessage("Console message");
         }
 
-
 #endif
 
         /// <summary>
-        /// Код этого метода будет запущен на исполнение при загрузке сборки в 
+        /// Код этого метода будет запущен на исполнение при загрузке сборки в
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
         public void Initialize()
         {
-
             //если нет библиотек или еще какой косяк
             try
             {
@@ -123,7 +105,6 @@ namespace drz.Loader
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msgClass1 сообщаем
                 CadLoading();
-
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
@@ -139,16 +120,12 @@ namespace drz.Loader
             {
                 try
                 {
-
                     //TryUnregisterAssemblyResolver();
-
                 }
                 catch { }
             }
             */
-
         }
-
 
         private void TryContainer()
         {
@@ -164,7 +141,6 @@ namespace drz.Loader
                 throw new InvalidOperationException("DI container initialization failed", ex);
             }//роняем загрузчик
         }
-
 
         private void ConfigureContainer(Container container)
         {
@@ -183,7 +159,7 @@ namespace drz.Loader
 
             container.Register<CommandLineMessageService>(Lifestyle.Transient);
 
-            container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
+            //container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
         }
@@ -196,9 +172,6 @@ namespace drz.Loader
             try
             {
 #if NC
-               
-
-
 
 #endif
 
@@ -239,10 +212,10 @@ namespace drz.Loader
             try
             {
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
-                // соответствующую ей версию файла. Имя такого файла должно 
-                // формироваться по правилу: 
+                // соответствующую ей версию файла. Имя такого файла должно
+                // формироваться по правилу:
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
-                // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
+                // Где <Major> и <Minor> - это значения одноимённых свойств объекта
                 // Version, полученного из Application.Version.
                 Version version = RT.Cad.ProductVersion;// Version;
 
@@ -273,7 +246,7 @@ namespace drz.Loader
 
                 log.Debug("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
 
-                // Если найден файл, соответствующий нашей версии CAD, то 
+                // Если найден файл, соответствующий нашей версии CAD, то
                 // загружаем его.
                 Assembly? asm = null;
                 try
@@ -297,7 +270,6 @@ namespace drz.Loader
                     }
 
                     log.Debug("Адаптер для {0} загружен", RT.Cad);
-
                 }
                 catch (Exception ex)
                 {
@@ -319,20 +291,19 @@ namespace drz.Loader
         /// Получить имя наиболее подходящего файла, для его последующей загрузки в
         /// AutoCAD. Если такой файл не будет найден, то возвращается null.
         /// </summary>
-        /// <param name="fileFullName">"Базовое" имя файла, т.е. полное имя 
+        /// <param name="fileFullName">"Базовое" имя файла, т.е. полное имя
         /// файла без указания в нём версий ядра и разрядности платформы.</param>
-        /// <param name="expectedVersion">Версия AutoCAD, для которой следует 
+        /// <param name="expectedVersion">Версия AutoCAD, для которой следует
         /// выполнить поиск соответствующей версии файла.</param>
-        /// <param name="minVersion">Наименьшая версия AutoCAD, ниже которой не 
+        /// <param name="minVersion">Наименьшая версия AutoCAD, ниже которой не
         /// следует выполнять поиск.</param>
-        /// <returns>Возвращается FileInfo наиболее подходящего файла, для его 
-        /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то 
+        /// <returns>Возвращается FileInfo наиболее подходящего файла, для его
+        /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то
         /// возвращается null.</returns>
         private FileInfo? FindFile(string fileFullName,
                                    Version expectedVersion,
                                    Version minVersion)
         {
-
             if (fileFullName == null)
             {
                 throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
@@ -394,9 +365,7 @@ namespace drz.Loader
             }
 
             return null;
-
         }
-
 
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
@@ -442,7 +411,6 @@ namespace drz.Loader
                 msg.ExceptionMessage("AssemblyResolver registration failed", ex);
             }
         }
-
 
         /// <summary>
         /// Tries the unregister assembly resolver.
@@ -503,7 +471,7 @@ namespace drz.Loader
             return null;
         }
 
-        #endregion
+        #endregion AssemblyResolver
 
         #region Terminate
 
@@ -526,15 +494,10 @@ namespace drz.Loader
                 log.Debug("Terminate");
 
                 Container.Dispose();
-
             }
             catch { } // смысла нет что то показывать при закрытии наны
-
         }
 
-        #endregion
-
-
-
+        #endregion Terminate
     }
 }

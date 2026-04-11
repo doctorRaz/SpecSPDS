@@ -7,7 +7,6 @@ namespace Test.CadCommands
     public class ConsoleMessageCmd
     {
         [CommandMethod($"console-message-{GeneratedCompile.CommandSuf}")]
-         
         public static void ConsoleMessageCommand()
         {
             IMessageService messageService = EntryPoint.Container.GetInstance<IMessageService>();

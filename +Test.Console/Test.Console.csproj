@@ -34,14 +34,16 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+Di.Container.Test\Di.Container.Test.csproj" />
+
 		<ProjectReference Include="..\+dRz.Cleaner\drz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
 		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
-		<ProjectReference Include="..\+Lib1\Test.Lib1.csproj" />
-		<ProjectReference Include="..\+Lib2\Lib2.csproj" />
+		<ProjectReference Include="..\+Test.Di.Container\Test.Di.Container.csproj" />
+		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
+		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />
+
 	</ItemGroup>
 
 	<!-- Генерация класса с константой MinVersion перед сборкой -->

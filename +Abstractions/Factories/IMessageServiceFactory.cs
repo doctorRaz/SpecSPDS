@@ -5,7 +5,6 @@ namespace drz.Abstractions.Factories
 {
     public interface IMessageServiceFactory
     {
-
         /// <summary>
         /// Получить реализации <see cref="IMessageService"/> в зависимости от запрашиваемого типа
         /// </summary>

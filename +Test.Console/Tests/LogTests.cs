@@ -10,7 +10,6 @@ namespace drz.SpecSpds.Test.Tests
         internal void LogTest(string msg)
         {
             log.Info(msg);
-
         }
 
         internal string Execute()
@@ -19,6 +18,5 @@ namespace drz.SpecSpds.Test.Tests
 
             return ff.GetSummary();
         }
-
     }
 }

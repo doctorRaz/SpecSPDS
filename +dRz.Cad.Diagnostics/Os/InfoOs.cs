@@ -11,8 +11,6 @@ namespace drz.Cad.Diagnostics.Os;
 /// </summary>
 public sealed class InfoOs
 {
-
-
     private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
 
     public string ProductName { get; private set; }
@@ -23,6 +21,7 @@ public sealed class InfoOs
 
     // Дополнительно
     public string EditionId { get; private set; }
+
     public string InstallationType { get; private set; }
     public string BuildLab { get; private set; }
 
@@ -195,7 +194,6 @@ public sealed class InfoOs
 
     private static readonly Lazy<InfoOs> _current = new Lazy<InfoOs>(() => new InfoOs());
 
-
     public static InfoOs Current
     {
         get { return _current.Value; }
@@ -205,7 +203,6 @@ public sealed class InfoOs
     {
         return new InfoOs();
     }
-
 
     public override string ToString()
     {
@@ -218,7 +215,4 @@ public sealed class InfoOs
                DisplayVersion,
                VersionString,
                Architecture);
-
-
-
 }

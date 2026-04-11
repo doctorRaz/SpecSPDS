@@ -36,6 +36,5 @@ public static class RT
 
     public static InfoOs Os => Info.Os;
 
-
     //public static InfoAddOn AddOn => Info.AddOn;
 }

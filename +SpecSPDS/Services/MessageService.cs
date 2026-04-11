@@ -10,6 +10,7 @@ namespace drz.SpecSPDS.Services
     internal class MessageService : IMessageService
     {
         private const string prefix = "\n";
+
         static MessageService()
         {
             Assembly assembly = typeof(MessageService).Assembly;
@@ -67,7 +68,6 @@ namespace drz.SpecSPDS.Services
             if (doc == null)
             {
                 return;
-
             }
 
             doc.Editor.WriteMessage($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
@@ -82,7 +82,6 @@ namespace drz.SpecSPDS.Services
             */
         }
 
-
         /// <summary>
         /// Сообщение об исключении
         /// </summary>
@@ -95,7 +94,6 @@ namespace drz.SpecSPDS.Services
             if (doc == null)
             {
                 return;
-
             }
 
             doc.Editor.WriteMessage($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");

@@ -18,7 +18,7 @@ using Teigha.Runtime;
 namespace drz.SpecSPDS.Commands
 {
     /// <summary>
-    /// получение маркеров.. выбором с пространства с документа с нескольких документов 
+    /// получение маркеров.. выбором с пространства с документа с нескольких документов
     /// <br>
     /// определяем в какую таблицу выводить результат... существующую или из базы, файла созданную на лету (указать точку вставки)
     /// </br>
@@ -51,14 +51,16 @@ namespace drz.SpecSPDS.Commands
             Editor ed = doc.Editor;
 
             #region Убрать в словарик
+
             //todo убрать в коре в словарик
             List<string> wordFiles = new List<string> { "файл", "файла", "файлов" };
             List<string> wordsMark = new List<string> { "маркер", "маркера", "маркеров" };
             List<string> wordsDoc = new List<string> { "документ", "документа", "документов" };
 
-            #endregion
+            #endregion Убрать в словарик
 
             #region Выбор юзера
+
             //получаю маркеры
             List<Keywords> keywordsList = new List<Keywords>
             {
@@ -69,7 +71,6 @@ namespace drz.SpecSPDS.Commands
                 new Keywords(nameof(Space.Document),Space.Document),
                 new Keywords(nameof(Space.Layout),Space.Layout,true),
                 new Keywords(nameof(Space.Select),Space.Select),
-
             };
             Enum propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
@@ -78,9 +79,10 @@ namespace drz.SpecSPDS.Commands
                 return;//смысла продолжать нет
             }
 
-            #endregion
+            #endregion Выбор юзера
 
             #region Свойства маркера
+
             //в конструктор только настройки
             MultiCadProps mcUmarkerProps = new MultiCadProps(settings);
 
@@ -94,7 +96,6 @@ namespace drz.SpecSPDS.Commands
             {
                 //получили список файлов
                 List<string> filenames = FetchingPatchFiles.GetFiles(spase);
-
 
                 ed.WriteMessage($"\nНайдено {filenames.Count} подходящих {wordFiles.Declens(filenames.Count)}");//todo вынести в интерфейс, волшебные слова через енум и словарик?
 
@@ -117,7 +118,6 @@ namespace drz.SpecSPDS.Commands
 
             resultString += $"\nФайлов обработано:";
 
-
             if (mcUmarkerProps.CountFilesTotal > 0)
             {
                 resultString += $"\n\tВсего: {mcUmarkerProps.CountFilesTotal} {wordsDoc.Declens(mcUmarkerProps.CountFilesTotal)}";
@@ -127,7 +127,6 @@ namespace drz.SpecSPDS.Commands
             {
                 resultString += $"\n\tПрочитано: {mcUmarkerProps.CountFilesRead} {wordsDoc.Declens(mcUmarkerProps.CountFilesRead)}";
             }
-
 
             if (mcUmarkerProps.BadFilePatchs.Count > 0)
             {
@@ -139,7 +138,6 @@ namespace drz.SpecSPDS.Commands
             resultString += $"\nМаркеров:";
 
             resultString += $"\n\tНайдено всего: {mcUmarkerProps.CountTotal} {wordsMark.Declens(mcUmarkerProps.CountTotal)} за {mcUmarkerProps.ElapsedID}";
-
 
             if (mcUmarkerProps.CountFalseName > 0)
             {
@@ -159,18 +157,11 @@ namespace drz.SpecSPDS.Commands
 
             ed.WriteMessage($"{resultString}");
 
-            #endregion
+            #endregion Result GetProps
 
-            #endregion
-
-
-
-
-
-
+            #endregion Свойства маркера
 
             //дальше пуляю в сортировку обработку
-
 
             //результат пишу в таблицу
 
@@ -181,13 +172,10 @@ namespace drz.SpecSPDS.Commands
             //props.FlagSpecRaw = "1";
 
             propXml.SaveProps();//для отладки
-
-
         }
 
-
-
 #if DEBUG
+
         [CommandMethod("drz_logS")]
         [Description("отладка лог")]
         public static void dRz_log()
@@ -199,10 +187,7 @@ namespace drz.SpecSPDS.Commands
             }
             Editor ed = doc.Editor;
 
-
-
             log.Debug("Проверка в какой лог пойдет");
-
 
             //проверка значений  var
             LoggingConfiguration? config = LogManager.Configuration;
@@ -228,12 +213,9 @@ namespace drz.SpecSPDS.Commands
                 string finalLogsDir = layot.Render(LogEventInfo.CreateNullEvent());
                 ed.WriteMessage($"finalLogsDir: {finalLogsDir}");
             }
-
         }
+
 #endif
-
-
-
     }
 
     internal static class LogVar
@@ -255,9 +237,9 @@ namespace drz.SpecSPDS.Commands
         /// </summary>
         public const string LevelMay = "LevelMay";
 
-        #endregion
+        #endregion GDC
 
-        #region var        
+        #region var
 
         /// <summary>
         /// level для Var
@@ -274,7 +256,6 @@ namespace drz.SpecSPDS.Commands
         /// </summary>
         public const string FinalAppTitle = "FinalAppTitle";
 
-        #endregion
-
+        #endregion var
     }
 }

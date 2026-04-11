@@ -3,7 +3,7 @@ using HostMgd.ApplicationServices;
 using System;
 using System.IO;
 
-namespace Test.Services
+namespace drz.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {

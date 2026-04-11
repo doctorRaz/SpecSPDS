@@ -24,7 +24,6 @@ namespace drz.SpecSPDS.Infrastructure
         public static Logger For(Type type) => _service.Value.GetLogger(type);
     }
 
-
     /// <summary>
     /// Проброс в фабрику инфы о ОС КАД и аддоне
     /// </summary>

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace Test.Services
+namespace drz.Infrastructure.Services
 {
     public class WindowMessageService : IMessageService
     {

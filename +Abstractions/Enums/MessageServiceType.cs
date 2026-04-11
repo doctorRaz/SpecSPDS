@@ -7,10 +7,12 @@ namespace drz.Abstractions.Enums
     {
         /// <summary> Выводить все сообщения в окна типа MessageBox </summary>
         Window,
+
         /// <summary>
         /// Выводить все сообщения в консоль nanoCAD
         /// </summary>
         CommandLine,
+
         /// <summary>
         /// Выводить все сообщения в стандартную ConsoleMessage
         /// </summary>

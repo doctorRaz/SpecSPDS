@@ -3,6 +3,13 @@
 	<PropertyGroup>
 		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
+
+		<RootNamespace>drz.Infrastructure</RootNamespace>
+		<Description>Infrastructure</Description>
+		<AssemblyTitle>dRz.Infrastructure</AssemblyTitle>
+		<Product>dRz.Infrastructure</Product>
+		<InformationalVersion>Infrastructure for All</InformationalVersion>
+
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
@@ -12,7 +19,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
-		<PackageReference Include="SimpleInjector" Version="5.5.0" />
+		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
 
 	<ItemGroup>

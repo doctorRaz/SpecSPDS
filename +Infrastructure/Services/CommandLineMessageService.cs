@@ -3,7 +3,7 @@ using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
 
-namespace Test.Services
+namespace drz.Infrastructure.Services
 {
     public class CommandLineMessageService : IMessageService
     {
@@ -52,13 +52,8 @@ namespace Test.Services
         /// <param name="caller">Вызывающий метод</param>
         public void ExceptionMessage(string message, Exception ex, string caller = null)
         {
-      
-             WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
-          
-
-     
+            WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
         }
-
 
         private void WriteMessage(string prefix, string message, string caller)
         {

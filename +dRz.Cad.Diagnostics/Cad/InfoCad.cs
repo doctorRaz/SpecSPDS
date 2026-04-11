@@ -145,7 +145,6 @@ public sealed class InfoCad
     /// </returns>
     public override string ToString()
     {
-
         return fullString;
     }
 

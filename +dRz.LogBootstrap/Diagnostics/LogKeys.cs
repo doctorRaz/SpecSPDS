@@ -22,9 +22,9 @@
         /// </summary>
         public const string LevelMay = "LevelMay";
 
-        #endregion
+        #endregion GDC
 
-        #region var        
+        #region var
 
         /// <summary>
         /// level для Var
@@ -41,8 +41,7 @@
         /// </summary>
         public const string FinalAppTitle = "FinalAppTitle";
 
-        #endregion
-
+        #endregion var
     }
 
     /// <summary>
