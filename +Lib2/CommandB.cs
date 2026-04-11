@@ -1,5 +1,10 @@
-﻿using drz.Loader.Infrastructure;
+﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
+using drz.DiContainer;
+using drz.Loader.Infrastructure;
 using NLog;
+using System.Reflection;
+using static drz.DiContainer.DiRegister;
 
 namespace drz.SpecSPDS
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace Abstractions.Services
+namespace drz.Abstractions.Services
 {
     /// <summary> Сервис сообщений для пользователя </summary>
     public interface IMessageService

@@ -1,4 +1,4 @@
-﻿namespace Abstractions.Services
+﻿namespace drz.Abstractions.Services
 {
     public interface IDocumentService
     {

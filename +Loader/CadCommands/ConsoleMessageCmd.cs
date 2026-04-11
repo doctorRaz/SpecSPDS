@@ -1,4 +1,4 @@
-﻿using Abstractions.Services;
+﻿using drz.Abstractions.Services;
 using drz.Loader;
 using Teigha.Runtime;
 
@@ -10,7 +10,7 @@ namespace Test.CadCommands
          
         public static void ConsoleMessageCommand()
         {
-            IMessageService messageService = CadPlugin.Container.GetInstance<IMessageService>();
+            IMessageService messageService = EntryPoint.Container.GetInstance<IMessageService>();
             messageService.ConsoleMessage("test Console message");
         }
     }

@@ -1,5 +1,5 @@
-﻿using Abstractions.Infrastructure;
-using Abstractions.Services;
+﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;

@@ -1,7 +1,7 @@
-﻿using Abstractions.Enums;
-using Abstractions.Services;
+﻿using drz.Abstractions.Enums;
+using drz.Abstractions.Services;
 
-namespace Abstractions.Factories
+namespace drz.Abstractions.Factories
 {
     public interface IMessageServiceFactory
     {

@@ -1,9 +1,9 @@
-﻿using Abstractions.Enums;
-using Abstractions.Factories;
-using Abstractions.Services;
-using Test.Services;
+﻿using Test.Services;
 using SimpleInjector;
 using System;
+using drz.Abstractions.Services;
+using drz.Abstractions.Enums;
+using drz.Abstractions.Factories;
 
 namespace Test.Factories
 {

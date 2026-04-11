@@ -1,4 +1,4 @@
-﻿using Abstractions.Services;
+﻿using drz.Abstractions.Services;
 using System;
 
 namespace Test.Services

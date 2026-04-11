@@ -1,4 +1,4 @@
-﻿using Abstractions.Infrastructure;
+﻿using drz.Abstractions.Infrastructure;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;

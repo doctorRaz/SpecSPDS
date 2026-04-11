@@ -12,11 +12,27 @@ using System.Reflection;
 //using drz.Loader.Interfaces;
 using drz.Cad.Diagnostics;
 
-using System.ComponentModel;
 using drz.Loader.Infrastructure;
-using Abstractions.Services;
-using Abstractions.Factories;
-using Abstractions.Enums;
+using SimpleInjector;
+using Test.Infrastructure;
+using Test.Services;
+using Test.Factories;
+using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
+using drz.Abstractions.Factories;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -32,6 +48,7 @@ using drz.SpecSpds;
 using Test;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
+using Scm = System.ComponentModel;
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 

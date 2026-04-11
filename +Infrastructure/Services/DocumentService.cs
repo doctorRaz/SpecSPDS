@@ -1,4 +1,4 @@
-﻿using Abstractions.Services;
+﻿using drz.Abstractions.Services;
 using HostMgd.ApplicationServices;
 using System;
 using System.IO;

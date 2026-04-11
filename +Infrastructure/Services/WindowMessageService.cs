@@ -1,5 +1,5 @@
-﻿using Abstractions.Infrastructure;
-using Abstractions.Services;
+﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;

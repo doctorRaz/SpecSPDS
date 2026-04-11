@@ -1,6 +1,6 @@
-﻿using Abstractions.Services;
+﻿using drz.Abstractions.Services;
 
-namespace Abstractions.Enums
+namespace drz.Abstractions.Enums
 {
     /// <summary> Тиы возможных реализаций <see cref="IMessageService">IMessageService</see> </summary>
     public enum MessageServiceType
