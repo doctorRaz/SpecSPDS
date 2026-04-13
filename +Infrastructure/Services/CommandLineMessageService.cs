@@ -59,7 +59,14 @@ namespace drz.Infrastructure.Services
             }
             else
             {
-                Application.ShowAlertDialog(formatted);
+                try
+                {
+                    McNotificator.WriteMessage(formatted);
+                }
+                catch
+                {
+                    Application.ShowAlertDialog(formatted);
+                }
             }
         }
 
