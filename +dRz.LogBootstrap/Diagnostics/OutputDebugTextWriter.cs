@@ -10,12 +10,10 @@ namespace drz.LogServices.Diagnostics
     /// <seealso cref="TextWriter" />
     public sealed class OutputDebugTextWriter : TextWriter
     {
-
         /// <summary>
         /// При переопределении в производном классе возвращает кодировку символов, в которой записаны выходные данные.
         /// </summary>
         public override Encoding Encoding => Encoding.UTF8;
-
 
         /// <summary>
         /// Записывает в текстовую строку или поток строку, за которой следует признак конца строки.

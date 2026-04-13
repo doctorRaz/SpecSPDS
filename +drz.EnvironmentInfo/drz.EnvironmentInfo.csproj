@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<PropertyGroup>
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.EnvironmentInfo</RootNamespace>
+		<Description>Среда окружения приложения</Description>
+		<AssemblyTitle>dRz.EnvironmentInfo</AssemblyTitle>
+		<Product>dRz.EnvironmentInfo</Product>
+		<InformationalVersion>dRz.EnvironmentInfo for All</InformationalVersion>
+
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	</ItemGroup>
+
+	<!--<ItemGroup>
+		<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+	</ItemGroup>-->
+
+</Project>

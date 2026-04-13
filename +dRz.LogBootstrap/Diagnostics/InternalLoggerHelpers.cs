@@ -8,11 +8,10 @@ using System.Linq;
 namespace drz.LogServices.Diagnostics
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static class InternalLoggerHelpers
     {
-
         private static bool _initialized = false;
         private static readonly object _lock = new();
 
@@ -21,18 +20,17 @@ namespace drz.LogServices.Diagnostics
         private const int MaxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
         private const int MaxArchiveFiles = 5;
 
-
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
-        /// </summary>        
+        /// </summary>
         public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logDir = null)
         {
             lock (_lock)
             {
                 /* Получаем уровень из файла DiagnosticMode
-                    Если файла нет — Off (ничего не делаем). 
+                    Если файла нет — Off (ничего не делаем).
                         Если файл создан, но пустой — Trace (максимум инфы)
                         иначе уровень из файла.
                 */
@@ -44,7 +42,6 @@ namespace drz.LogServices.Diagnostics
                 // 2. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
                 if (!_initialized)
                 {
-
                     logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools");
 
                     string currentLogPath = GetInternalLogPath(logDir);
@@ -86,7 +83,6 @@ namespace drz.LogServices.Diagnostics
 
                     InternalLogger.LogLevel = requestedLevel;
                 }
-
             }
         }
 
@@ -98,7 +94,6 @@ namespace drz.LogServices.Diagnostics
         {
             try
             {
-
                 FileInfo file = new FileInfo(filePath);
                 if (file.Exists && file.Length > MaxFileSizeBytes)
                 {
@@ -109,7 +104,6 @@ namespace drz.LogServices.Diagnostics
             }
             catch { }
         }
-
 
         /// <summary>
         /// Rotates the internal logs.
@@ -131,11 +125,9 @@ namespace drz.LogServices.Diagnostics
                  .OrderByDescending(f => f.LastWriteTime)
                  .ToList();
 
-
                 // Если файлов больше 5, удаляем лишние
                 //if (files.Count > arhivedFilesCount)
                 //{
-
                 foreach (FileInfo file in files.Skip(MaxArchiveFiles))
                 {
                     file.Delete();
@@ -147,9 +139,5 @@ namespace drz.LogServices.Diagnostics
 
         private static string GetInternalLogPath(string logDir) =>
            Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}.log");
-
-
-
-
     }
 }

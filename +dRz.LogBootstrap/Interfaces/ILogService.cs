@@ -4,7 +4,7 @@ using System;
 namespace drz.LogServices.Interfaces
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public interface ILogService
     {

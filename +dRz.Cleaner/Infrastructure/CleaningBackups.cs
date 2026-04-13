@@ -16,6 +16,7 @@ namespace drz.Cleaner.Infrastructure
         //private static Regex digitsInBracketsAtEnd = new Regex(@"\(\d+\)\.\w+$");
         private static readonly Regex digitsInBracketsAtEnd =
                                 new(@"\(\d+\)\.[^.]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
         /// <summary>
         /// чистилка *.bak и *****(111).****
         /// </summary>
@@ -38,15 +39,12 @@ namespace drz.Cleaner.Infrastructure
                         try
                         {
                             File.Delete(filePath);
-
                         }
                         catch { }
                     }
                 }
-
             }
             catch { }
-
         }
     }
 }

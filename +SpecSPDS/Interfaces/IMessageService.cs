@@ -10,14 +10,17 @@ namespace drz.SpecSPDS.Interfaces
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         void ConsoleMessage(string message, [CallerMemberName] string? caller = null);
+
         /// <summary> Информационное сообщение </summary>
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         void InfoMessage(string message, [CallerMemberName] string? caller = null);
+
         /// <summary> Сообщение об ошибке </summary>
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         void ErrorMessage(string message, [CallerMemberName] string? caller = null);
+
         /// <summary> Сообщение об исключении </summary>
         /// <param name="message">Сообщение</param>
         /// <param name="ex">Исключение</param>

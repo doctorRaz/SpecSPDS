@@ -9,7 +9,6 @@ namespace drz.SpecSpds.Test.Tests
 
         internal void Test()
         {
-
             log.Trace("Сообщение {prop1} {prop2}", "1", "2");
             log.Debug("Сообщение {prop1} {prop2}", "1", "2");
             log.Info("Сообщение {prop1} {prop2}", "1", "2");
@@ -36,7 +35,6 @@ namespace drz.SpecSpds.Test.Tests
 
             try
             {
-
                 if (log.IsDebugEnabled)
                 {
                     log.ForTraceEvent()
@@ -69,18 +67,14 @@ namespace drz.SpecSpds.Test.Tests
                 log.Info("Продолжение работы после ошибки");
 
                 log.Error(ex);
-
             }
             finally
             {
-
             }
-
         }
 
         internal class tt
         {
-
             public string g = "10";
             public string g1 = "10";
             public string g2 = "10";

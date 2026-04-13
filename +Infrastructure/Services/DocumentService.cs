@@ -1,11 +1,11 @@
-﻿using drz.SpecSPDS.Abstractions.Services;
+﻿using drz.Abstractions.Services;
 using HostMgd.ApplicationServices;
 using System;
 using System.IO;
 
-namespace drz.SpecSPDS.Infrastructure.Services
+namespace drz.Infrastructure.Services
 {
-    internal class DocumentService : IDocumentService
+    public class DocumentService : IDocumentService
     {
         public bool IsActive
         {

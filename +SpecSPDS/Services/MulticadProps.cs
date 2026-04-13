@@ -25,16 +25,14 @@ namespace drz.SpecSPDS.Services;
 public partial class MultiCadProps
 
 {
-
     private static readonly ILogger log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="settings"></param>
     public MultiCadProps(ApplicationSettings settings)
     {
-
         _guid = new Guid(settings.Guid);//какой объект работаем
 
         _fieldName = settings.FieldNames;//имена полей
@@ -51,26 +49,20 @@ public partial class MultiCadProps
         string _appProductName = System.Windows.Forms.Application.ProductName;
         string _sender = $"{_appProductName}_{_version.Major.ToString()}.{_version.Minor.ToString()}";
 
-
-        #endregion
-
+        #endregion Logger
     }
 
     public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
     {
-
-
         log.Trace($"Total files: {filenames.Count}");
 
         List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
-
 
         List<McObjectId> mcObjectIds = new List<McObjectId>();
 
         ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр дольше чем его сбросить
 
         _countFilesTotal = filenames.Count;
-
 
         //запомним рабочий документ на всякий
         McDocument pOldWD = McDocument.WorkingDocument;
@@ -106,7 +98,6 @@ public partial class MultiCadProps
                     //перекидываем в мультикад
                     //mcDocument = McDocumentsManager.GetDocument(filename);
 
-
                     //if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
                     //{
                     //    _badFilePatchs.Add(filename);
@@ -118,7 +109,7 @@ public partial class MultiCadProps
                     //если не нулл работаем его
                     _countFilesRead++;
 
-                    of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+                    of.Reset();//сброс фильтра иначе в цикле добавляет документы
                     of.AddType(guid);
                     of.AddDoc(mcDocument);
 
@@ -136,10 +127,8 @@ public partial class MultiCadProps
                     _stwProp.Stop();
                     _stwID.Start();
 
-
                     logger.Log($"\t\told props {markerProps.Count}");
                     */
-
                 }
                 catch (Exception ex)
                 {
@@ -153,7 +142,6 @@ public partial class MultiCadProps
 
             log.Trace($"{count} CLOSE {filename}");
 
-
             _countFilesRead++;
 
             //}
@@ -162,7 +150,7 @@ public partial class MultiCadProps
             //    logger.Log($"{count} ОТКРЫТ!!!! {filename}");
             //    _countFilesRead++;
 
-            //    of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+            //    of.Reset();//сброс фильтра иначе в цикле добавляет документы
             //    of.AddType(guid);
             //    of.AddDoc(mcDocument);
 
@@ -180,7 +168,6 @@ public partial class MultiCadProps
             //    //_stwProp.Stop();
             //    //_stwID.Start();
 
-
             //    logger.Log($"\t\told props");
 
             //    //после обработки закрываем
@@ -192,8 +179,6 @@ public partial class MultiCadProps
             //    //_stwID.Stop();
 
             //}
-
-
         }
 
         _elapsedProp = _stwProp.Elapsed.ToString();
@@ -206,7 +191,6 @@ public partial class MultiCadProps
         return markerProps;
     }
 
-
     /// <summary>
     /// Gets the props.Multicad
     /// </summary>
@@ -214,7 +198,6 @@ public partial class MultiCadProps
     /// <returns>Список свойств мультикад объектов</returns>
     public List<DefinitionMarkerProps> GetPropsMC(List<string> filenames)
     {
-
         log.Trace($"Total files: {filenames.Count}");
 
         List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
@@ -247,12 +230,11 @@ public partial class MultiCadProps
                     _badFilePatchs.Add(filename);
                     continue;
                 }
-
             }
 
             _countFilesRead++;
 
-            of.Reset();//сброс фильтра иначе в цикле добавляет документы 
+            of.Reset();//сброс фильтра иначе в цикле добавляет документы
             of.AddType(guid);
             of.AddDoc(mcDocument);
 
@@ -269,7 +251,6 @@ public partial class MultiCadProps
 
             _stwProp.Stop();
             _stwID.Start();
-
 
             log.Trace($"\t\told props");
 
@@ -293,9 +274,7 @@ public partial class MultiCadProps
         McDocument.WorkingDocument = pOldWD;
 
         return markerProps;
-
     }
-
 
     /// <summary>
     /// Gets the props.
@@ -307,7 +286,6 @@ public partial class MultiCadProps
         List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
 
         List<McObjectId> mcObjectIds = new List<McObjectId>();
-
 
         ObjectFilter of = new ObjectFilter(true);
 
@@ -363,6 +341,7 @@ public partial class MultiCadProps
 
         return markerProps;
     }
+
     private void ExtractNamedProps(List<McObjectId> mcObjectIds, ref List<DefinitionMarkerProps> markerProps)
     {
         /*
@@ -373,7 +352,6 @@ public partial class MultiCadProps
 
         foreach (McObjectId mcObjectId in mcObjectIds)//по собранным ID маркеров
         {
-
             DefinitionMarkerProps markerProp = new DefinitionMarkerProps();
             McUMarker? tempUmark = McObjectManager.GetObject(mcObjectId) as McUMarker;
 
@@ -435,7 +413,6 @@ public partial class MultiCadProps
 
             markerProps.Add(markerProp);
         }
-
     }
 
     /// <summary>
@@ -470,6 +447,7 @@ public partial class MultiCadProps
     /// The name of the field.
     /// </value>
     private FieldNameSettings _fieldName { get; set; }
+
     private string _mcUmarkerName { get; set; }
 
     /// <summary>
@@ -483,9 +461,7 @@ public partial class MultiCadProps
     private Guid guid => _guid;
     private Guid _guid;
 
-
     #region Statistics
-
 
     public int CountIncorrectData => _countIncorrectData;//маркеры с отрицательной суммой, некорректными данными
     private int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
@@ -506,14 +482,15 @@ public partial class MultiCadProps
     /// файлов всего обработано
     /// </summary>
     public int CountFilesTotal => _countFilesTotal;//
+
     private int _countFilesTotal = 0;//файлов всего
 
     /// <summary>
     /// успешно файлов прочитано
     /// </summary>
-    public int CountFilesRead => _countFilesRead;// 
-    private int _countFilesRead = 0;//файлов всего
+    public int CountFilesRead => _countFilesRead;//
 
+    private int _countFilesRead = 0;//файлов всего
 
     /// <summary>
     /// Gets the TMR identifier.
@@ -522,9 +499,8 @@ public partial class MultiCadProps
     /// The TMR identifier.
     /// </value>
     public string ElapsedID => _elapsedID;
+
     private string _elapsedID = "";
-
-
 
     /// <summary>
     /// Gets the TMR property.
@@ -533,11 +509,11 @@ public partial class MultiCadProps
     /// The TMR property.
     /// </value>
     public string ElapsedProp => _elapsedProp;
+
     private string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
 
     public List<string> BadFilePatchs => _badFilePatchs;
     private List<string> _badFilePatchs = new List<string>();
-
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is ok.
@@ -547,6 +523,5 @@ public partial class MultiCadProps
     /// </value>
     public bool IsOk { get; set; }
 
-    #endregion
-
+    #endregion Statistics
 }

@@ -1,16 +1,13 @@
-﻿
-using NLog;
+﻿using NLog;
 using System;
 using System.ComponentModel;
 using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
-using static drz.SpecSPDS.Infrastructure.AddonContext;
-using drz.SpecSPDS.Infrastructure;
+using static drz.Src.Infrastructure.AddOnContext;
+using drz.Src.Infrastructure;
 using drz.Cleaner.Infrastructure;
-using drz.Cad.Diagnostics;
-
-
+using drz.EnvironmentInfo;
 
 
 #if AC
@@ -20,6 +17,7 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 #elif NC
 
 using Rtm = Teigha.Runtime;
+
 #endif
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
@@ -28,11 +26,12 @@ namespace drz.SpecSPDS
 {
     public class EntryPoint : Rtm.IExtensionApplication
     {
-        private Logger log;
+        private Logger? log;
 
-        private IMessageService msg;
+        private IMessageService? msg;
 
 #if DEBUG
+
         [Rtm.CommandMethod("инитСП")]
         [Description("ручной инит адаптера")]
         public static void test()
@@ -42,6 +41,7 @@ namespace drz.SpecSPDS
             EntryPoint entryPoint = new EntryPoint();
             entryPoint.Initialize();
         }
+
 #endif
 
         /// <summary>
@@ -62,9 +62,8 @@ namespace drz.SpecSPDS
                 TryCleanBackups(); //независимо от результата чистки, работа аддона будет продолжена
                                    //ошибку сюда не поднимаем
 
-                //  
+                //
                 TryInit();
-
             }
             catch (Exception ex)
             {
@@ -111,12 +110,10 @@ namespace drz.SpecSPDS
             {
                 CleanBackups();
             }
-
             catch (Exception ex)
             {
                 log.Error(ex, $"CleanBackups: {ex.Message}");
             }
-
         }
 
         private void CleanBackups()
@@ -128,14 +125,12 @@ namespace drz.SpecSPDS
             catch { }
         }
 
-        #endregion
-
+        #endregion CleaningBackups
 
         private void TryInit()
         {
             try
             {
-
                 log.Debug("{0}", RT.Info);
 
                 log.Debug("{0}", InfoDll.ToString());
@@ -160,7 +155,6 @@ namespace drz.SpecSPDS
         {
             try
             {
-
             }
             catch (Exception ex)
             {
@@ -176,7 +170,6 @@ namespace drz.SpecSPDS
         {
             try
             {
-
             }
             catch (Exception ex)
             {
@@ -190,9 +183,7 @@ namespace drz.SpecSPDS
             {
                 log.Debug("Terminate");
             }
-            catch { }// смысла нет что то показывать при закрытии наны     
+            catch { }// смысла нет что то показывать при закрытии наны
         }
-
     }
-
 }

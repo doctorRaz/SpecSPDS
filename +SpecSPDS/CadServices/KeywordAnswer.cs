@@ -45,9 +45,6 @@ namespace drz.SpecSPDS.CadServices
                 return null;
             }
             return keyItem.Answer;
-
-
         }
-
     }
 }

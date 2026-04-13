@@ -1,0 +1,34 @@
+﻿using Test.Services;
+using SimpleInjector;
+using System;
+using drz.Abstractions.Services;
+using drz.Abstractions.Enums;
+using drz.Abstractions.Factories;
+
+namespace Test.Factories
+{
+    public class MessageServiceFactory : IMessageServiceFactory
+    {
+        public MessageServiceFactory(Container container)
+        {
+            _container = container;
+        }
+
+        public IMessageService GetService(MessageServiceType messageType)
+        {
+            if (messageType == MessageServiceType.CommandLine)
+            {
+                return _container.GetInstance<CommandLineMessageService>();
+            }
+
+            if (messageType == MessageServiceType.Window)
+            {
+                return _container.GetInstance<WindowMessageService>();
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(messageType));
+        }
+
+        private readonly Container _container;
+    }
+}

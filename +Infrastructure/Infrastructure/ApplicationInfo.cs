@@ -1,35 +1,45 @@
-﻿using drz.SpecSPDS.Abstractions.Infrastructure;
+﻿using drz.Abstractions.Infrastructure;
 using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
 
-namespace drz.SpecSPDS.Infrastructure.Infrastructure
+namespace drz.Infrastructure.Infrastructure
 {
-    internal class ApplicationInfo : IApplicationInfo
+    public class ApplicationInfo : IApplicationInfo
     {
-        public ApplicationInfo()
+        private Assembly _assembly;
+
+        private IntPtr _handle;
+
+        public ApplicationInfo(Assembly assembly)
         {
-            _assembly = Assembly.GetExecutingAssembly();
+            _assembly = assembly;
+
             _handle = Application.MainWindow.Handle;
         }
 
-        public Version Version
+        public IntPtr CadWindowHandle { get => _handle; }
+
+        public string Name
         {
-            get => _assembly.GetName().Version!;
+            get => _assembly.FullName;
         }
+
         public string Path
         {
             get => _assembly.Location;
         }
-        public string Name
+
+        public string ProductName
         {
-            get => _assembly.FullName!;
+            get => _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FilePrefix";
         }
 
-        public IntPtr CadWindowHandle { get => _handle; }
-        public string TitlePrefix { get => $"CadSimpleInject v.{Version} : "; }
+        public string TitlePrefix { get => $"{ProductName} v.{Version} : "; }
 
-        private Assembly _assembly;
-        private IntPtr _handle;
+        public Version Version
+        {
+            get => _assembly.GetName().Version;
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace drz.SpecSPDS.Services
     internal class MessageService : IMessageService
     {
         private const string prefix = "\n";
+
         static MessageService()
         {
             Assembly assembly = typeof(MessageService).Assembly;
@@ -39,7 +40,7 @@ namespace drz.SpecSPDS.Services
         /// </summary>
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
-        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
             //MessageBox.Show(message, _titlePrefix, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -51,7 +52,7 @@ namespace drz.SpecSPDS.Services
         /// <param name="message">Выводимое сообщение, без начальных и конечных переносов строк</param>
         /// <param name="caller">Вызывающий метода</param>
         /// <exception cref="NotImplementedException"></exception>
-        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
@@ -61,13 +62,12 @@ namespace drz.SpecSPDS.Services
         /// </summary>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
-
             }
 
             doc.Editor.WriteMessage($"{prefix}[{caller}]: {ex.Message}{prefix}{ex.StackTrace}");
@@ -82,20 +82,18 @@ namespace drz.SpecSPDS.Services
             */
         }
 
-
         /// <summary>
         /// Сообщение об исключении
         /// </summary>
         /// <param name="message">сообщение</param>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null)
         {
             Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
-
             }
 
             doc.Editor.WriteMessage($"{prefix}[{caller}]: {message} = {ex.Message}{prefix}{ex.StackTrace}");

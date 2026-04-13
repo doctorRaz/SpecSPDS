@@ -1,100 +1,139 @@
 ﻿/* EntryPoint.cs
  * © Andrey Bushman, 2014
- * Поиск и загрузка версии плагина .NET, ARX или VBA, наиболее пригодной для 
+ * Поиск и загрузка версии плагина .NET, ARX или VBA, наиболее пригодной для
  * текущей версии AutoCAD.
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
+
 using NLog;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using drz.Loader.Interfaces;
-using drz.Cad.Diagnostics;
 
-using System.ComponentModel;
-using drz.Loader.Infrastructure;
+using drz.Src.Infrastructure;
+
+//using AC = drz.Loader.Infrastructure.AddOnContext;
+
+using static drz.Src.Infrastructure.AddOnContext;
+
+using drz.AddOn.Composition;
+using drz.EnvironmentInfo;
 
 
 #if CMD
-using drz.SpecSpds.Test.Services;
+
 using drz.SpecSpds;
 
-
 #elif NC
+
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
-using drz.Loader.Services;
+using Scm = System.ComponentModel;
+
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
-
 
 namespace drz.Loader
 {
     /// <summary>
-    /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее 
+    /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее
     /// подходящей для него версии плагина.
     /// </summary>
 #if CMD
+
     internal sealed class EntryPoint
 #else
+
     internal sealed class EntryPoint : Rtm.IExtensionApplication
 #endif
     {
+        private static bool _isAddOnCompositionRoot;//контейнер наполнен
+
+        private bool _isRegisterAssemblyResolver;//register assembly resolver
+
+        private Logger log;//логгер
+
+        private bool _isLoggerProvider;//логер есть
+
         private const string netPluginExtension = ".dll";
 
-        private IMessageService msg;
-
-        private bool _registered;
-
-        private Logger log;
-
-
 #if DEBUG && NC
-        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}")]
-        [Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
+
+        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
+        [Scm.Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
         public static void test()
         {
-            IMessageService msg = new MessageService();
-            msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
+            Msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
             EntryPoint entryPoint = new EntryPoint();
             entryPoint.Initialize();
         }
+
+        [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
+        public static void ConsoleMessageCommand()
+        {
+            MsgCmd.ConsoleMessage("Console message");
+        }
+
 #endif
 
         /// <summary>
-        /// Код этого метода будет запущен на исполнение при загрузке сборки в 
+        /// Код этого метода будет запущен на исполнение при загрузке сборки в
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
         /// AutoCAD наиболее подходящую версию плагина из имеющихся в наличии.
         /// </summary>
         public void Initialize()
         {
-
             //если нет библиотек или еще какой косяк
             try
             {
                 /* регистрируемся
+                    TryRegisterAssemblyResolver();
                     каждая регистрация вызыввается во всех модулях
-                            TryRegisterAssemblyResolver();
                 */
 
-                TryMessageService();
+                TryAddOnCompositionRoot();//получаем окружение
 
                 //nlog
                 //обертка инит логера, если ех на старте, то отловим в месадж
                 TryLoggerProvider();
 
-                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msg сообщаем
+                //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msgClass1 сообщаем
                 CadLoading();
-
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                //в лог тут писать нельзя, возможно не поднялся логгер
                 string message = $"Приложение не загружено!!!" +
                      $"\nСкопируйте это сообщение и отправьте разработчику";
 
-                msg.ExceptionMessage(message, ex);
+                if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
+                {
+                    log.Error(message, ex);
+                }
+                if (_isAddOnCompositionRoot)
+                {
+                    Msg.ExceptionMessage(message, ex);
+                }
+                else
+                {
+#if NC
+                    message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
+
+                    Document document = Application.DocumentManager.MdiActiveDocument;
+                    if (document != null)
+                    {
+                        Editor editor = document.Editor;
+
+                        editor.WriteMessage(message);
+                    }
+                    else
+                    {
+                        Application.ShowAlertDialog(message);
+                    }
+#endif
+                }
             }
 
             /*отписываемся независимо от результата этому аддону подписка  больше не нужен
@@ -102,26 +141,33 @@ namespace drz.Loader
             {
                 try
                 {
-
                     //TryUnregisterAssemblyResolver();
-
                 }
                 catch { }
             }
             */
-
         }
 
-        /// <summary>
-        /// Tries the message service.
-        /// </summary>
-        private void TryMessageService()
+        private void TryAddOnCompositionRoot()
         {
             try
             {
-                msg = new MessageService();
+                if (_isAddOnCompositionRoot)
+                {
+                    return;
+                }
+
+                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
+
+                AddOnContext.Initialize(root);
+
+                _isAddOnCompositionRoot = true;//сервис поднялся
             }
-            catch { throw; }//роняем загрузчик
+            catch (Exception ex)
+            {
+                //роняем загрузчик
+                throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
+            }
         }
 
         /// <summary>
@@ -132,8 +178,14 @@ namespace drz.Loader
             try
             {
                 log = LoggerProvider.For<EntryPoint>();
+
+                _isLoggerProvider = true;//сервис поднялся
             }
-            catch { throw; }//роняем загрузчик
+            catch (Exception ex)
+            {
+                //роняем загрузчик
+                throw new InvalidOperationException("LoggerProvider initialization failed", ex);
+            }
         }
 
         /// <summary>
@@ -148,10 +200,10 @@ namespace drz.Loader
             try
             {
                 // Для начала извлекаем информацию о текущей версии AutoCAD и ищем
-                // соответствующую ей версию файла. Имя такого файла должно 
-                // формироваться по правилу: 
+                // соответствующую ей версию файла. Имя такого файла должно
+                // формироваться по правилу:
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
-                // Где <Major> и <Minor> - это значения одноимённых свойств объекта 
+                // Где <Major> и <Minor> - это значения одноимённых свойств объекта
                 // Version, полученного из Application.Version.
                 Version version = RT.Cad.ProductVersion;// Version;
 
@@ -175,14 +227,14 @@ namespace drz.Loader
 
                     log.Error($"{mesag}");
 
-                    msg.ExceptionMessage(new FileNotFoundException(mesag));
+                    Msg.ExceptionMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
 
                 log.Debug("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
 
-                // Если найден файл, соответствующий нашей версии CAD, то 
+                // Если найден файл, соответствующий нашей версии CAD, то
                 // загружаем его.
                 Assembly? asm = null;
                 try
@@ -206,7 +258,6 @@ namespace drz.Loader
                     }
 
                     log.Debug("Адаптер для {0} загружен", RT.Cad);
-
                 }
                 catch (Exception ex)
                 {
@@ -217,7 +268,8 @@ namespace drz.Loader
             catch (Exception ex)
             {
                 log.Error(ex, ex.Message);
-                throw;
+
+                throw new InvalidOperationException("failed", ex);
             }
 
             return true;
@@ -227,20 +279,19 @@ namespace drz.Loader
         /// Получить имя наиболее подходящего файла, для его последующей загрузки в
         /// AutoCAD. Если такой файл не будет найден, то возвращается null.
         /// </summary>
-        /// <param name="fileFullName">"Базовое" имя файла, т.е. полное имя 
+        /// <param name="fileFullName">"Базовое" имя файла, т.е. полное имя
         /// файла без указания в нём версий ядра и разрядности платформы.</param>
-        /// <param name="expectedVersion">Версия AutoCAD, для которой следует 
+        /// <param name="expectedVersion">Версия AutoCAD, для которой следует
         /// выполнить поиск соответствующей версии файла.</param>
-        /// <param name="minVersion">Наименьшая версия AutoCAD, ниже которой не 
+        /// <param name="minVersion">Наименьшая версия AutoCAD, ниже которой не
         /// следует выполнять поиск.</param>
-        /// <returns>Возвращается FileInfo наиболее подходящего файла, для его 
-        /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то 
+        /// <returns>Возвращается FileInfo наиболее подходящего файла, для его
+        /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то
         /// возвращается null.</returns>
         private FileInfo? FindFile(string fileFullName,
                                    Version expectedVersion,
                                    Version minVersion)
         {
-
             if (fileFullName == null)
             {
                 throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
@@ -302,9 +353,7 @@ namespace drz.Loader
             }
 
             return null;
-
         }
-
 
         /// <summary>Получить список путей фалов в директории</summary>
         /// <param name="path">Директория с файлами</param>
@@ -322,7 +371,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex, $"Error searching files in {path}");
+                Msg.ExceptionMessage(ex, $"Error searching files in {path}");
                 return string.Empty;
             }
         }
@@ -336,21 +385,20 @@ namespace drz.Loader
         {
             try
             {
-                if (_registered)
+                if (_isRegisterAssemblyResolver)
                 {
                     return;
                 }
 
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                _registered = true;
+                _isRegisterAssemblyResolver = true;
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+                Msg.ExceptionMessage("AssemblyResolver registration failed", ex);
             }
         }
-
 
         /// <summary>
         /// Tries the unregister assembly resolver.
@@ -359,18 +407,18 @@ namespace drz.Loader
         {
             try
             {
-                if (!_registered)
+                if (!_isRegisterAssemblyResolver)
                 {
                     return;
                 }
 
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
 
-                _registered = false;
+                _isRegisterAssemblyResolver = false;
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
+                Msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -405,13 +453,13 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("Failed to resolve assembly", ex);
+                Msg.ExceptionMessage("Failed to resolve assembly", ex);
             }
 
             return null;
         }
 
-        #endregion
+        #endregion AssemblyResolver
 
         #region Terminate
 
@@ -432,14 +480,12 @@ namespace drz.Loader
             try
             {
                 log.Debug("Terminate");
+
+                AddOnContext.Dispose();
             }
             catch { } // смысла нет что то показывать при закрытии наны
-
         }
 
-        #endregion
-
-
-
+        #endregion Terminate
     }
 }

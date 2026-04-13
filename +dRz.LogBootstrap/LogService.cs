@@ -1,4 +1,5 @@
-﻿using drz.LogServices.Diagnostics;
+﻿using drz.Abstractions.Logger;
+using drz.LogServices.Diagnostics;
 using drz.LogServices.Interfaces;
 using NLog;
 using NLog.Common;
@@ -50,7 +51,6 @@ namespace drz.LogServices
             _assemblyDirectoryProvider = assemblyDirectoryProvider ?? throw new ArgumentNullException(nameof(assemblyDirectoryProvider));
 
             _envInfoProvider = envInfoProvider;
-
         }
 
         /// <summary>
@@ -86,7 +86,6 @@ namespace drz.LogServices
         /// <returns></returns>
         private LogFactory CreateFactory(string productName)
         {
-
             string assemblyDirectory = SafeGetAssemblyDirectory();
 
             //путь к Diagnostic.Mode
@@ -110,11 +109,9 @@ namespace drz.LogServices
 
             try
             {
-
                 factory = new LogFactory();// Пытаемся использовать внешний конфиг
 
                 config = factory.Configuration;
-
             }
             catch (NLogConfigurationException ex)
             {
@@ -136,11 +133,10 @@ namespace drz.LogServices
                 isFallback = true;
 
                 factory.Configuration = CreateConfiguration(logName, logsDir, currentLevel);
-
             }
             else
             {
-                // Конфиг уже есть (nlog.config), просто прокидываем в него 
+                // Конфиг уже есть (nlog.config), просто прокидываем в него
                 // наши пути через переменные
                 ApplyCommonVariables(factory, logName, logsDir, currentLevel);
             }
@@ -156,17 +152,14 @@ namespace drz.LogServices
         {
             try
             {
-
                 string assemblyDirectory = _assemblyDirectoryProvider();
                 return string.IsNullOrWhiteSpace(assemblyDirectory) ? string.Empty : assemblyDirectory;
-
             }
             catch
             {
                 return string.Empty;
             }
         }
-
 
         /// <summary>
         /// Writes the factory diagnostics.
@@ -201,17 +194,13 @@ namespace drz.LogServices
                 }
                 else
                 {
-
                     log.Debug(msg);
                 }
-
-
 
                 if (_envInfoProvider != null)
                 {
                     log.Debug($"{_envInfoProvider.GetSummary()}");
                 }
-
 
                 if (configException != null)
                 {
@@ -239,7 +228,6 @@ namespace drz.LogServices
             return LogLevel.Off;
         }
 
-
         /// <summary>
         /// Creates the configuration.
         /// </summary>
@@ -252,16 +240,16 @@ namespace drz.LogServices
             LoggingConfiguration config = new LoggingConfiguration();
 
 #if DEBUG
-            // Если файла уровня нет — Debug. 
+            // Если файла уровня нет — Debug.
             LogLevel level = LogLevel.Debug;
 #else
-            // Если файла нет — Info. 
+            // Если файла нет — Info.
             LogLevel level = LogLevel.Info;
             // Если файл есть, но пустой —Trace
             //string fallbackLevelName = "Trace";
-#endif            
+#endif
 
-            // Если файла уровня нет — Off (ничего не делаем). 
+            // Если файла уровня нет — Off (ничего не делаем).
             // Если файл создан, но пустой — Trace (максимум инфы)
             // иначе уровень из файла.
             //LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel, fallbackLevelName);
@@ -274,7 +262,6 @@ namespace drz.LogServices
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("file")
             {
-
                 FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
 
                 ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
@@ -288,7 +275,6 @@ namespace drz.LogServices
                 OpenFileCacheTimeout = 10,
 
                 Layout = CreateXmlLayout(),
-
             };
 
             // ---------------------------
@@ -300,14 +286,12 @@ namespace drz.LogServices
                 OverflowAction = AsyncTargetWrapperOverflowAction.Block,
                 BatchSize = 500,
                 TimeToSleepBetweenBatches = 50,
-
             };
 
             config.AddTarget("async", asyncTarget);
             config.LoggingRules.Add(new LoggingRule("*", level, asyncTarget));
 
             return config;
-
         }
 
         /// <summary>
@@ -378,7 +362,7 @@ namespace drz.LogServices
             /*factory.Configuration*/
             config.Variables["LogsDir"] = logsDir;
 
-            // Если файла нет — Off (ничего не делаем). 
+            // Если файла нет — Off (ничего не делаем).
             // Если файл создан, но пустой — Trace (максимум инфы)
             // иначе уровень из файла.
             //LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel);
@@ -388,11 +372,9 @@ namespace drz.LogServices
             {
                 /*factory.Configuration*/
                 config.Variables["LevelMay"] = currentLevel.ToString();
-
             }
 
             factory.ReconfigExistingLoggers();
-
 
 #if DEBUG || CMD
             //проверка значений  var
@@ -417,7 +399,6 @@ namespace drz.LogServices
             }
 
 #endif
-
         }
     }
 }
