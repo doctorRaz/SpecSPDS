@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "drz.Cleaner", "+dRz.Cleaner
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "+Loader\Loader.csproj", "{AF4385F8-4DD1-203E-3313-26D3C42AB6A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.Cad.Diagnostics", "+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj", "{1838B971-373A-0C62-0F73-FA519F012E44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drz.EnvironmentInfo", "+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj", "{1838B971-373A-0C62-0F73-FA519F012E44}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AF1AD432-E96F-4209-B9D6-A1C82AE212CC}"
 EndProject

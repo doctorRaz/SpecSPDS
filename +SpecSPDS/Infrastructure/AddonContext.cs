@@ -1,9 +1,9 @@
-﻿using drz.Cad.Diagnostics.AddOn;
+﻿using drz.EnvironmentInfo.App;
 
 namespace drz.SpecSPDS.Infrastructure
 {
     internal static class AddonContext
     {
-        public static readonly InfoAddOn InfoDll = InfoAddOn.Get(typeof(AddonContext));
+        public static readonly AppInfo InfoDll = AppInfo.Get(typeof(AddonContext));
     }
 }

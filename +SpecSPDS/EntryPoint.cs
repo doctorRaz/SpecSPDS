@@ -7,7 +7,8 @@ using drz.SpecSPDS;
 using static drz.SpecSPDS.Infrastructure.AddonContext;
 using drz.SpecSPDS.Infrastructure;
 using drz.Cleaner.Infrastructure;
-using drz.Cad.Diagnostics;
+using drz.EnvironmentInfo;
+
 
 #if AC
 

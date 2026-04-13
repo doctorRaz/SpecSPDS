@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
-using drz.Cad.Diagnostics.AddOn;
+using drz.EnvironmentInfo.App;
 using SimpleInjector;
 using System;
 
@@ -10,7 +10,7 @@ namespace drz.Loader.Infrastructure
     internal static class AddOnContext
     {
         // metadata (всегда доступно)
-        internal static readonly InfoAddOn InfoDll = InfoAddOn.Get(typeof(AddOnContext));
+        internal static readonly AppInfo InfoDll = AppInfo.Get(typeof(AddOnContext));
 
         //---R
         //***B

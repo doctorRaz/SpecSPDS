@@ -1,15 +1,16 @@
 ﻿//GPT
 // https://chatgpt.com/c/69c44adf-7f6c-8331-80de-c905a35fea87
 
+using drz.Abstractions.Infrastructure;
 using Microsoft.Win32;
 using System;
 
-namespace drz.Cad.Diagnostics.Os;
+namespace drz.EnvironmentInfo.Sys;
 
 /// <summary>
 /// Информация об ОС (Registry + Environment fallback)
 /// </summary>
-public sealed class InfoOs
+public sealed class SysInfo : ISysInfo
 {
     private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
 
@@ -30,7 +31,7 @@ public sealed class InfoOs
     /// </summary>
     public bool IsFallback { get; private set; }
 
-    private InfoOs()
+    private SysInfo()
     {
         try
         {
@@ -192,16 +193,16 @@ public sealed class InfoOs
         }
     }
 
-    private static readonly Lazy<InfoOs> _current = new Lazy<InfoOs>(() => new InfoOs());
+    private static readonly Lazy<SysInfo> _current = new Lazy<SysInfo>(() => new SysInfo());
 
-    public static InfoOs Current
+    public static SysInfo Current
     {
         get { return _current.Value; }
     }
 
-    public static InfoOs Refresh()
+    public static SysInfo Refresh()
     {
-        return new InfoOs();
+        return new SysInfo();
     }
 
     public override string ToString()

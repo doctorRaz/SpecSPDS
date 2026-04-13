@@ -1,26 +1,27 @@
-﻿using System;
+﻿using drz.Abstractions.Infrastructure;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace drz.Cad.Diagnostics.Cad;
+namespace drz.EnvironmentInfo.Cad;
 
 /// <summary>
-/// InfoCad
+/// CadInfo
 /// </summary>
-public sealed class InfoCad
+public sealed class CadInfo : ICadInfo
 {
-    private static readonly Lazy<InfoCad> _current =
-        new Lazy<InfoCad>(() => new InfoCad(), true);
+    private static readonly Lazy<CadInfo> _current =
+        new Lazy<CadInfo>(() => new CadInfo(), true);
 
     /// <summary>
     /// Gets the current.
     /// </summary>
     /// <value>
-    /// The current InfoCad.
+    /// The current CadInfo.
     /// </value>
-    public static InfoCad Current => _current.Value;
+    public static CadInfo Current => _current.Value;
 
     public string ExePath { get; }
     public string InstallDirectory { get; }
@@ -40,7 +41,7 @@ public sealed class InfoCad
     /// </summary>
     public bool IsFallback { get; private set; }
 
-    private InfoCad()
+    private CadInfo()
     {
         try
         {

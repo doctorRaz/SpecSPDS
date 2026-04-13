@@ -8,7 +8,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+SpecSPDS.Core\SpecSPDS.Core.csproj"/>
 		<ProjectReference Include="..\+dRz.Cleaner\dRz.Cleaner.csproj"/>
-		<ProjectReference Include="..\+dRz.Cad.Diagnostics\dRz.Cad.Diagnostics.csproj"/>
+		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj"/>
 		<ProjectReference Include="..\+dRz.LogBootstrap\dRz.LogBootstrap.csproj" />
 	</ItemGroup>
 	<ItemGroup>

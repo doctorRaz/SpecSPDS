@@ -1,4 +1,4 @@
-﻿using drz.Cad.Diagnostics;
+﻿using drz.EnvironmentInfo;
 using drz.LogServices;
 using drz.LogServices.Interfaces;
 using NLog;

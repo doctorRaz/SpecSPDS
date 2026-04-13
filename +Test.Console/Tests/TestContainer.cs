@@ -1,6 +1,6 @@
 ﻿using drz.AddOn.Composition;
-using drz.Cad.Diagnostics.Cad;
-using drz.Cad.Diagnostics.Os;
+using drz.EnvironmentInfo.Cad;
+using drz.EnvironmentInfo.Sys;
 using System;
 using static drz.Loader.Infrastructure.AddOnContext;
 
@@ -28,13 +28,13 @@ namespace drz.SpecSpds.Test.Tests
 
         public void test()
         {
-            InfoOs os = InfoOs.Current;
+            SysInfo os = SysInfo.Current;
 
             Console.WriteLine(os);
 
             string path = InfoDll.AppDataProductLogPath;
 
-            Console.WriteLine(InfoCad.Current);
+            Console.WriteLine(CadInfo.Current);
         }
 
         public void TestCondole()

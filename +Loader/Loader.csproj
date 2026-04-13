@@ -31,7 +31,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
-		<ProjectReference Include="..\+dRz.Cad.Diagnostics\drz.Cad.Diagnostics.csproj" />
+		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
 	</ItemGroup>
 	<!--CoreCompile BeforeBuild PrepareForBuild-->

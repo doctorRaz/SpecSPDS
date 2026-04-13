@@ -10,7 +10,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using drz.Cad.Diagnostics;
 
 using drz.Loader.Infrastructure;
 
@@ -21,6 +20,8 @@ using static drz.Loader.Infrastructure.AddOnContext;
 using drz.AddOn.Composition;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using drz.EnvironmentInfo;
+
 
 #if CMD
 

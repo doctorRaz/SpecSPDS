@@ -1,36 +1,37 @@
-﻿using System;
+﻿using drz.Abstractions.Infrastructure;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 
-namespace drz.Cad.Diagnostics.AddOn;
+namespace drz.EnvironmentInfo.App;
 
 /// <summary>
 /// Runtime environment for specific assembly (addon/module).
 /// Immutable per-assembly context.
 /// </summary>
-public sealed class InfoAddOn
+public sealed class AppInfo : IAppInfo
 {
     private const string _nLogConfigFileName = "drzNLog.dll.nlog";
 
-    private static readonly ConcurrentDictionary<Assembly, InfoAddOn> _cache = new();
+    private static readonly ConcurrentDictionary<Assembly, AppInfo> _cache = new();
 
     /// <summary>
     /// Gets the specified assembly.
     /// </summary>
     /// <param name="assembly">The assembly.</param>
     /// <returns></returns>
-    public static InfoAddOn Get(Assembly assembly)
+    public static AppInfo Get(Assembly assembly)
     {
-        return _cache.GetOrAdd(assembly, asm => new InfoAddOn(asm));
+        return _cache.GetOrAdd(assembly, asm => new AppInfo(asm));
     }
 
-    public static InfoAddOn Get(Type type)
+    public static AppInfo Get(Type type)
     {
         return Get(type.Assembly);
     }
 
-    private InfoAddOn(Assembly assembly)
+    private AppInfo(Assembly assembly)
     {
         Assembly = assembly;
         try
@@ -105,14 +106,14 @@ public sealed class InfoAddOn
     /// <param name="assembly">The assembly.</param>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException">assembly</exception>
-    public static InfoAddOn FromAssembly(Assembly assembly)
+    public static AppInfo FromAssembly(Assembly assembly)
     {
         if (assembly == null)
         {
             throw new ArgumentNullException(nameof(assembly));
         }
 
-        return new InfoAddOn(assembly);
+        return new AppInfo(assembly);
     }
 
     /// <summary>
@@ -120,14 +121,14 @@ public sealed class InfoAddOn
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns></returns>
-    public static InfoAddOn FromType(Type type)
-        => new InfoAddOn(type.Assembly);
+    public static AppInfo FromType(Type type)
+        => new AppInfo(type.Assembly);
 
     /// <summary>
     /// НЕ рекомендуется для production (может вернуть не ту сборку)
     /// </summary>
-    public static InfoAddOn FromCallingAssembly()
-        => new InfoAddOn(Assembly.GetCallingAssembly());
+    public static AppInfo FromCallingAssembly()
+        => new AppInfo(Assembly.GetCallingAssembly());
 
     // -------------------- Public API --------------------
 
