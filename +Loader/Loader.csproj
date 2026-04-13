@@ -26,7 +26,7 @@
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
-		<PackageReference Include="SimpleInjector" Version="5.5.0" />
+		<!-- <PackageReference Include="SimpleInjector" Version="5.5.0" /> -->
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
