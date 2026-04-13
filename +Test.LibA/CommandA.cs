@@ -37,7 +37,7 @@ namespace drz.Lib_A
             AC.Dispose();
         }
 
-        public string Execute()
+        public string ExecuteEnvironmentInfoProvider()
         {
             CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
 
@@ -53,33 +53,9 @@ namespace drz.Lib_A
         {
             AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage("Info message");
+            AC.MsgGUI.InfoMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            // Если нужно Scoped-сервисы, можно обернуть в using
-            //using (AC.BeginScope())
-            //{
-            //    AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
-
-            //    AC.MsgGUI.InfoMessage("Info message");
-
-            //    var app1 = AC.Get<IApplicationInfo>();
-
-            //    IMessageService messageService1 = AC.Get<ICommandLineMessageService>();
-
-            //    messageService1.ConsoleMessage($"{app1.TitlePrefix} Console message");
-
-            //    messageService1 = AC.Get<IWindowMessageService>();
-            //    messageService1.InfoMessage("Info message");
-            //}
-
-            //IApplicationInfo app =  AC.Get<IApplicationInfo>();
-
-            //IMessageService messageService = AC.Get<ICommandLineMessageService>();
-
-            //messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
-
-            //messageService = AC.Get<IWindowMessageService>();
-            //messageService.InfoMessage("Info message");
+            AC.Msg.InfoMessage($"{AC.AddOn.TitlePrefix} Console message");
         }
     }
 }

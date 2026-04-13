@@ -32,7 +32,7 @@ namespace drz.Lib_B
             AC.Dispose();
         }
 
-        public string Execute()
+        public string ExecuteEnvironmentInfoProvider()
         {
             CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
 
@@ -48,14 +48,9 @@ namespace drz.Lib_B
         {
             AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage("Info message");
+            AC.MsgGUI.InfoMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            //IApplicationInfo app = AC.Get<IApplicationInfo>();
-            //IMessageService messageService = AC.Get<ICommandLineMessageService>();
-            //messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
-
-            //messageService = AC.Get<IWindowMessageService>();
-            //messageService.InfoMessage("Info message");
+            AC.Msg.InfoMessage($"{AC.AddOn.TitlePrefix} Console message");
         }
     }
 }

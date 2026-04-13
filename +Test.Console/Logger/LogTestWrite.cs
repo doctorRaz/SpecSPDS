@@ -1,11 +1,12 @@
-﻿using NLog;
+﻿using drz.Src.Infrastructure;
+using NLog;
 using System;
 
-namespace drz.SpecSpds.Test.Tests
+namespace drz.SpecSpds.Test.Logger
 {
     internal class LogTestWrite
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private ILogger log = LoggerProvider.For<LogTestWrite>();
 
         internal void Test()
         {

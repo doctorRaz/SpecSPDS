@@ -6,7 +6,7 @@ using static drz.Src.Infrastructure.AddOnContext;
 
 using AC = drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.SpecSpds.Test.Tests
+namespace drz.SpecSpds.Test.SimpleInjector
 {
     internal class TestContainer
     {
