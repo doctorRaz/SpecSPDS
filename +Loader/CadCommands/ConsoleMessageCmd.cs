@@ -1,15 +1,15 @@
-﻿using drz.Abstractions.Services;
-using Teigha.Runtime;
+﻿using Teigha.Runtime;
+using static drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Loader.CadCommands
 {
     public class ConsoleMessageCmd
     {
-        [CommandMethod($"console-message-{GeneratedCompile.CommandSuf}")]
+        [CommandMethod($"console-message-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
-            IMessageService messageService = EntryPoint.Container.GetInstance<IMessageService>();
-            messageService.ConsoleMessage("test Console message");
+
+            MsgCmd.ConsoleMessage("test Console message");
         }
     }
 }

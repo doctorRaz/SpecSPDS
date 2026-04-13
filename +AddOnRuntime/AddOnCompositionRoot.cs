@@ -11,7 +11,6 @@ namespace drz.AddOn.Composition
 {
     public class AddOnCompositionRoot : IDisposable
     {
-
         private readonly Container _container;
 
         private bool _disposed;
@@ -42,7 +41,6 @@ namespace drz.AddOn.Composition
         /// </summary>
         public Scope BeginScope() => AsyncScopedLifestyle.BeginScope(_container);
 
-
         private void RegisterInfrastructure(Container container, Assembly addOnAssembly)
         {
             container.RegisterInstance(addOnAssembly);
@@ -58,7 +56,6 @@ namespace drz.AddOn.Composition
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton/*Transient*/);
         }
-
 
         public void Dispose()
         {

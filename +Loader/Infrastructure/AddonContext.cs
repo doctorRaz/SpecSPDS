@@ -1,4 +1,6 @@
-﻿using drz.AddOn.Composition;
+﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
+using drz.AddOn.Composition;
 using drz.Cad.Diagnostics.AddOn;
 using SimpleInjector;
 using System;
@@ -16,34 +18,66 @@ namespace drz.Loader.Infrastructure
         // DI root (инициализируется отдельно)
         private static AddOnCompositionRoot? _root;
 
-        private static AddOnCompositionRoot Root =>
-            _root ?? throw new InvalidOperationException("DI is not initialized");
+        internal static IDocumentService DocService => Root.Get<IDocumentService>();
 
-        /// <summary>
-        /// Создать scope
-        /// </summary>
-        public static Scope BeginScope()
+        internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
+
+        internal static IMessageService MsgCmd => Root.Get<ICommandLineMessageService>();
+
+        internal static IMessageService MsgGUI => Root.Get<IWindowMessageService>();
+
+        internal static IMessageService Msg
         {
-            return Root.BeginScope();
+            get
+            {
+
+                if (DocService.IsActive)
+                {
+                    return Root.Get<ICommandLineMessageService>();
+                }
+                else
+                {
+                    return Root.Get<IWindowMessageService>();
+                }
+            }
         }
 
-        public static void Dispose()
+        private static AddOnCompositionRoot Root => _root ?? throw new InvalidOperationException("AddOnCompositionRoot is not initialized");
+
+        internal static void Dispose()
         {
             _root?.Dispose();
             _root = null;
         }
 
         /// <summary>
-        /// Получить сервис
+        /// Initializes the specified root.
         /// </summary>
-        public static T Get<T>() where T : class
-        {
-            return Root.Get<T>();
-        }
-
-        public static void Initialize(AddOnCompositionRoot root)
+        /// <param name="root">The root.</param>
+        /// <exception cref="System.ArgumentNullException">root</exception>
+        internal static void Initialize(AddOnCompositionRoot root)
         {
             _root = root ?? throw new ArgumentNullException(nameof(root));
         }
+
+        #region Спрятать методы
+
+        /// <summary>
+        /// Создать scope
+        /// </summary>
+        private static Scope BeginScope()
+        {
+            return Root.BeginScope() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
+        }
+
+        /// <summary>
+        /// Получить сервис
+        /// </summary>
+        private static T Get<T>() where T : class
+        {
+            return Root.Get<T>() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
+        }
+
+        #endregion Спрятать методы
     }
 }

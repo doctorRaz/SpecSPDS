@@ -1,19 +1,14 @@
-﻿using drz.Abstractions.Enums;
-using drz.Abstractions.Factories;
-using drz.Abstractions.Services;
-using Teigha.Runtime;
+﻿using Teigha.Runtime;
+using static drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Loader.CadCommands.DocInfo
 {
     public class DocInfoMsgCmd
     {
-        [CommandMethod($"doc-info-{GeneratedCompile.CommandSuf}")]
+        [CommandMethod($"doc-info-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void DocInfoMessageCommand()
         {
-            IDocumentService documentService = EntryPoint.Container.GetInstance<IDocumentService>();
-            IMessageServiceFactory messageFactory = EntryPoint.Container.GetInstance<IMessageServiceFactory>();
-            IMessageService messageService = messageFactory.GetService(MessageServiceType.Window);
-            messageService.InfoMessage(documentService.FullPath);
+            MsgGUI.InfoMessage(DocService.FullPath);
         }
     }
 }

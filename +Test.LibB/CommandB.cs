@@ -1,6 +1,4 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
-using drz.AddOn.Composition;
+﻿using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
 using NLog;
 using System;
@@ -9,15 +7,18 @@ using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Lib_B
 {
-    public class CommandB:IDisposable
+    public class CommandB : IDisposable
     {
-      private static bool _initialized;
+        private static bool _initialized;
 
         private ILogger log = LoggerProvider.For<CommandB>();
 
         public CommandB()
         {
-            if (_initialized) return;
+            if (_initialized)
+            {
+                return;
+            }
 
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(CommandB).Assembly);
 
@@ -45,12 +46,16 @@ namespace drz.Lib_B
 
         public void msgCommandB()
         {
-            IApplicationInfo app = AC.Get<IApplicationInfo>();
-            IMessageService messageService = AC.Get<ICommandLineMessageService>();
-            messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
+            AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            messageService = AC.Get<IWindowMessageService>();
-            messageService.InfoMessage("Info message");
+            AC.MsgGUI.InfoMessage("Info message");
+
+            //IApplicationInfo app = AC.Get<IApplicationInfo>();
+            //IMessageService messageService = AC.Get<ICommandLineMessageService>();
+            //messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
+
+            //messageService = AC.Get<IWindowMessageService>();
+            //messageService.InfoMessage("Info message");
         }
     }
 }

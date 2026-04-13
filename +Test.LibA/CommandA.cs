@@ -1,12 +1,8 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
-using drz.AddOn.Composition;
+﻿using drz.AddOn.Composition;
 using drz.Loader.Infrastructure;
 
 using NLog;
 using System;
-using System.Reflection;
-using SimpleInjector;
 
 using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
 
@@ -24,7 +20,10 @@ namespace drz.Lib_A
 
         public CommandA()
         {
-            if (_initialized) return;
+            if (_initialized)
+            {
+                return;
+            }
 
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(CommandA).Assembly);
 
@@ -54,27 +53,36 @@ namespace drz.Lib_A
 
         public void msgCommandA()
         {
+            AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
+
+            AC.MsgGUI.InfoMessage("Info message");
+
             // Если нужно Scoped-сервисы, можно обернуть в using
-            using (AC.BeginScope())
-            {
-                var app1 = AC.Get<IApplicationInfo>();
+            //using (AC.BeginScope())
+            //{
 
-                IMessageService messageService1 = AC.Get<ICommandLineMessageService>();
+            //    AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-                messageService1.ConsoleMessage($"{app1.TitlePrefix} Console message");
+            //    AC.MsgGUI.InfoMessage("Info message");
 
-                messageService1 = AC.Get<IWindowMessageService>();
-                messageService1.InfoMessage("Info message");
-            }
+            //    var app1 = AC.Get<IApplicationInfo>();
 
-            IApplicationInfo app =  AC.Get<IApplicationInfo>();
+            //    IMessageService messageService1 = AC.Get<ICommandLineMessageService>();
 
-            IMessageService messageService = AC.Get<ICommandLineMessageService>();
+            //    messageService1.ConsoleMessage($"{app1.TitlePrefix} Console message");
 
-            messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
+            //    messageService1 = AC.Get<IWindowMessageService>();
+            //    messageService1.InfoMessage("Info message");
+            //}
 
-            messageService = AC.Get<IWindowMessageService>();
-            messageService.InfoMessage("Info message");
+            //IApplicationInfo app =  AC.Get<IApplicationInfo>();
+
+            //IMessageService messageService = AC.Get<ICommandLineMessageService>();
+
+            //messageService.ConsoleMessage($"{app.TitlePrefix} Console message");
+
+            //messageService = AC.Get<IWindowMessageService>();
+            //messageService.InfoMessage("Info message");
         }
     }
 }

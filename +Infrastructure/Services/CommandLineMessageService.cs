@@ -1,27 +1,15 @@
-﻿using drz.Abstractions.Services;
+﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Services;
 using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using System;
 
 namespace drz.Infrastructure.Services
 {
     public class CommandLineMessageService : IMessageService, ICommandLineMessageService
     {
-        public CommandLineMessageService()
+        public CommandLineMessageService(IApplicationInfo applicationInfo)
         {
-            Document document = Application.DocumentManager.MdiActiveDocument;
-            if (document == null)
-            {
-                throw new ArgumentNullException("Нет активного документа");
-            }
-
-            Editor editor = document.Editor;
-            if (editor == null)
-            {
-                throw new ArgumentNullException("Невозможно использовать редактор");
-            }
-
-            _editor = editor;
+            _applicationInfo = applicationInfo;
         }
 
         public void ConsoleMessage(string message, string caller = null)
@@ -57,10 +45,24 @@ namespace drz.Infrastructure.Services
 
         private void WriteMessage(string prefix, string message, string caller)
         {
-            _editor.WriteMessage("\n" + (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
-                          (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+            string formatted =
+                   "\n" +
+                   (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
+                   (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") +
+                   message;
+
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+
+            if (doc != null && doc.Editor != null)
+            {
+                doc.Editor.WriteMessage(formatted);
+            }
+            else
+            {
+                Application.ShowAlertDialog(formatted);
+            }
         }
 
-        private Editor _editor;
+        private IApplicationInfo _applicationInfo;
     }
 }

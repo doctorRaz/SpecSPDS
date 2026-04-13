@@ -10,16 +10,17 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-
-//using drz.Loader.Interfaces;
 using drz.Cad.Diagnostics;
 
 using drz.Loader.Infrastructure;
-using SimpleInjector;
-using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
-using drz.Infrastructure.Services;
-using drz.Infrastructure.Infrastructure;
+
+//using AC = drz.Loader.Infrastructure.AddOnContext;
+
+using static drz.Loader.Infrastructure.AddOnContext;
+
+using drz.AddOn.Composition;
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
 
 #if CMD
 
@@ -27,7 +28,6 @@ using drz.SpecSpds;
 
 #elif NC
 
- 
 using drz.Loader;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
@@ -49,33 +49,31 @@ namespace drz.Loader
     internal sealed class EntryPoint : Rtm.IExtensionApplication
 #endif
     {
-        public static Container Container { get; private set; }
+        private static bool _isAddOnCompositionRoot;//контейнер наполнен
+
+        private bool _isRegisterAssemblyResolver;//register assembly resolver
+
+        private Logger log;//логгер
+
+        private bool _isLoggerProvider;//логер есть
 
         private const string netPluginExtension = ".dll";
 
-        private IMessageService msg;
-
-        private bool _registered;
-
-        private Logger log;
-
 #if DEBUG && NC
 
-        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}")]
+        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
         [Scm.Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
         public static void test()
         {
-            IMessageService msg = Container.GetInstance<IMessageService>();
-            msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
+            Msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
             EntryPoint entryPoint = new EntryPoint();
             entryPoint.Initialize();
         }
 
-        [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}")]
+        [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
-            IMessageService msg = Container.GetInstance<IMessageService>();
-            msg.ConsoleMessage("Console message");
+            MsgCmd.ConsoleMessage("Console message");
         }
 
 #endif
@@ -91,13 +89,11 @@ namespace drz.Loader
             try
             {
                 /* регистрируемся
-                            TryRegisterAssemblyResolver();
+                    TryRegisterAssemblyResolver();
                     каждая регистрация вызыввается во всех модулях
                 */
 
-                TryContainer();
-
-                TryMessageService();
+                TryAddOnCompositionRoot();//получаем окружение
 
                 //nlog
                 //обертка инит логера, если ех на старте, то отловим в месадж
@@ -108,11 +104,34 @@ namespace drz.Loader
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                //в лог тут писать нельзя, возможно не поднялся логгер
                 string message = $"Приложение не загружено!!!" +
                      $"\nСкопируйте это сообщение и отправьте разработчику";
 
-                msg.ExceptionMessage(message, ex);
+                if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
+                {
+                    log.Error(message, ex);
+                }
+                if (_isAddOnCompositionRoot)
+                {
+                    Msg.ExceptionMessage(message, ex);
+                }
+                else
+                {
+                    message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
+
+                    Document document = Application.DocumentManager.MdiActiveDocument;
+                    if (document != null)
+                    {
+                        Editor editor = document.Editor;
+
+                        editor.WriteMessage(message);
+                    }
+                    else
+                    {
+
+                        Application.ShowAlertDialog(message);
+                    }
+                }
             }
 
             /*отписываемся независимо от результата этому аддону подписка  больше не нужен
@@ -127,61 +146,26 @@ namespace drz.Loader
             */
         }
 
-        private void TryContainer()
+        private void TryAddOnCompositionRoot()
         {
             try
             {
-                Container = new Container();
-                ConfigureContainer(Container);
-                Container.Verify();
+                if (_isAddOnCompositionRoot)
+                {
+                    return;
+                }
+
+                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
+
+                AddOnContext.Initialize(root);
+
+                _isAddOnCompositionRoot = true;//сервис поднялся
             }
             catch (Exception ex)
             {
-                // лог (NLog / InternalLogger)
-                throw new InvalidOperationException("DI container initialization failed", ex);
-            }//роняем загрузчик
-        }
-
-        private void ConfigureContainer(Container container)
-        {
-            container.RegisterInstance<Assembly>(Assembly.GetExecutingAssembly());
-
-            container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
-
-            container.Register<IMessageService>(() =>
-            {
-                IApplicationInfo applicationInfo = container.GetInstance<IApplicationInfo>();
-                return new WindowMessageService(applicationInfo);
-            },
-                Lifestyle.Singleton);
-
-            container.Register<WindowMessageService>(Lifestyle.Singleton);
-
-            container.Register<CommandLineMessageService>(Lifestyle.Transient);
-
-            //container.RegisterSingleton<IMessageServiceFactory, MessageServiceFactory>();
-
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
-        }
-
-        /// <summary>
-        /// Tries the message service.
-        /// </summary>
-        private void TryMessageService()
-        {
-            try
-            {
-#if NC
-
-#endif
-
-                //msgClass1 = new MessageService();
+                //роняем загрузчик
+                throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
-            catch (Exception ex)
-            {
-                // лог (NLog / InternalLogger)
-                throw new InvalidOperationException("failed", ex);
-            }//роняем загрузчик
         }
 
         /// <summary>
@@ -192,12 +176,14 @@ namespace drz.Loader
             try
             {
                 log = LoggerProvider.For<EntryPoint>();
+
+                _isLoggerProvider = true;//сервис поднялся
             }
             catch (Exception ex)
             {
-                // лог (NLog / InternalLogger)
-                throw new InvalidOperationException("failed", ex);
-            }//роняем загрузчик
+                //роняем загрузчик
+                throw new InvalidOperationException("LoggerProvider initialization failed", ex);
+            }
         }
 
         /// <summary>
@@ -239,7 +225,7 @@ namespace drz.Loader
 
                     log.Error($"{mesag}");
 
-                    msg.ExceptionMessage(new FileNotFoundException(mesag));
+                    Msg.ExceptionMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
@@ -383,7 +369,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage(ex, $"Error searching files in {path}");
+                Msg.ExceptionMessage(ex, $"Error searching files in {path}");
                 return string.Empty;
             }
         }
@@ -397,18 +383,18 @@ namespace drz.Loader
         {
             try
             {
-                if (_registered)
+                if (_isRegisterAssemblyResolver)
                 {
                     return;
                 }
 
                 AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                _registered = true;
+                _isRegisterAssemblyResolver = true;
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+                Msg.ExceptionMessage("AssemblyResolver registration failed", ex);
             }
         }
 
@@ -419,18 +405,18 @@ namespace drz.Loader
         {
             try
             {
-                if (!_registered)
+                if (!_isRegisterAssemblyResolver)
                 {
                     return;
                 }
 
                 AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
 
-                _registered = false;
+                _isRegisterAssemblyResolver = false;
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
+                Msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -465,7 +451,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                msg.ExceptionMessage("Failed to resolve assembly", ex);
+                Msg.ExceptionMessage("Failed to resolve assembly", ex);
             }
 
             return null;
@@ -493,7 +479,7 @@ namespace drz.Loader
             {
                 log.Debug("Terminate");
 
-                Container.Dispose();
+                AddOnContext.Dispose();
             }
             catch { } // смысла нет что то показывать при закрытии наны
         }

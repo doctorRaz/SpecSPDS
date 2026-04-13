@@ -16,11 +16,7 @@ namespace drz.Loader.Infrastructure
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
-        /*public*/
-
         internal static Logger For<T>() => _service.Value.GetLogger<T>();
-
-        /*public*/
 
         internal static Logger For(Type type) => _service.Value.GetLogger(type);
     }

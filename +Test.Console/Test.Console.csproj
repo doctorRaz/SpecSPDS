@@ -27,7 +27,7 @@
 	<ItemGroup>
 		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="Loader\Infrastructure\AddonContext.cs" />
 		<Compile Include="..\+Loader\Infrastructure\LoggerProvider.cs" Link="Loader\Infrastructure\LoggerProvider.cs" />
-		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
+		<!--<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />

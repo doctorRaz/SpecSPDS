@@ -1,12 +1,9 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
-using drz.AddOn.Composition;
+﻿using drz.AddOn.Composition;
 using drz.Cad.Diagnostics.Cad;
 using drz.Cad.Diagnostics.Os;
-using drz.Lib_A;
 using System;
 using static drz.Loader.Infrastructure.AddOnContext;
-using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
+using AC = drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.SpecSpds.Test.Tests
 {
@@ -16,7 +13,10 @@ namespace drz.SpecSpds.Test.Tests
 
         public TestContainer()
         {
-            if (_initialized) return;
+            if (_initialized)
+            {
+                return;
+            }
 
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(TestContainer).Assembly);
 
@@ -38,12 +38,18 @@ namespace drz.SpecSpds.Test.Tests
 
         public void TestCondole()
         {
-            IApplicationInfo app = AC.Get<IApplicationInfo>();
-            IMessageService messageService = AC.Get<ICommandLineMessageService>();
-            messageService.ConsoleMessage($"{app.TitlePrefix}  Console message");
 
-            messageService = AC.Get<IWindowMessageService>();
-            messageService.InfoMessage("Info message");
+            AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
+
+            AC.MsgGUI.InfoMessage("Info message");
+
+
+            //IApplicationInfo app = AC.Get<IApplicationInfo>();
+            //IMessageService messageService = AC.Get<ICommandLineMessageService>();
+            //messageService.ConsoleMessage($"{app.TitlePrefix}  Console message");
+
+            //messageService = AC.Get<IWindowMessageService>();
+            //messageService.InfoMessage("Info message");
         }
     }
 }

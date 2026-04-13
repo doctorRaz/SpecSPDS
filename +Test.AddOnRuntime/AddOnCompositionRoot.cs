@@ -10,7 +10,7 @@ using System.Reflection;
 namespace drz.AddOn.Composition
 {
     public class AddOnCompositionRoot : IDisposable
-    {           
+    {
 
         private readonly Container _container;
 

@@ -1,15 +1,15 @@
-﻿using drz.Abstractions.Services;
-using Teigha.Runtime;
+﻿using Teigha.Runtime;
+using static drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.Loader.CadCommands
 {
     public class InfoMessageCmd
     {
-        [CommandMethod($"info-message-{GeneratedCompile.CommandSuf}")]
+        [CommandMethod($"info-message-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void InfoMessageCommand()
         {
-            IMessageService messageService = EntryPoint.Container.GetInstance<IMessageService>();
-            messageService.InfoMessage("Info message");
+
+            MsgGUI.InfoMessage("Info message");
         }
     }
 }

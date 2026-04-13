@@ -73,7 +73,7 @@ namespace drz.SpecSpds.Test
             cmdB.msgCommandB();
 
             testContainer.TestCondole();
-             cmdA.msgCommandA();
+            cmdA.msgCommandA();
             cmdB.msgCommandB();
 
 
