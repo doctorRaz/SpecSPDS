@@ -2,9 +2,9 @@
 using drz.EnvironmentInfo.Cad;
 using drz.EnvironmentInfo.Sys;
 using System;
-using static drz.Loader.Infrastructure.AddOnContext;
+using static drz.Src.Infrastructure.AddOnContext;
 
-using AC = drz.Loader.Infrastructure.AddOnContext;
+using AC = drz.Src.Infrastructure.AddOnContext;
 
 namespace drz.SpecSpds.Test.Tests
 {

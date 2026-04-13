@@ -1,4 +1,4 @@
-﻿using drz.Loader.Infrastructure;
+﻿using drz.Src.Infrastructure;
 using NLog;
 
 namespace drz.SpecSpds.Test.Tests

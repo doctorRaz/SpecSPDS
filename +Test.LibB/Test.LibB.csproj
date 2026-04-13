@@ -15,13 +15,12 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\+Loader\Infrastructure\AddonContext.cs" Link="AddonContext.cs" />
-		<Compile Include="..\+Loader\Infrastructure\LoggerProvider.cs" Link="Infrastructure\LoggerProvider.cs" />
+		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		
+
 		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />

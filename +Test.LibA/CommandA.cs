@@ -1,10 +1,10 @@
 ﻿using drz.AddOn.Composition;
-using drz.Loader.Infrastructure;
+using drz.Src.Infrastructure;
 
 using NLog;
 using System;
 
-using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
+using /*static*/ AC = drz.Src.Infrastructure.AddOnContext;
 
 /// <summary>
 ///

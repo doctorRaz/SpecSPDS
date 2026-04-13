@@ -11,15 +11,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using drz.Loader.Infrastructure;
+using drz.Src.Infrastructure;
 
 //using AC = drz.Loader.Infrastructure.AddOnContext;
 
-using static drz.Loader.Infrastructure.AddOnContext;
+using static drz.Src.Infrastructure.AddOnContext;
 
 using drz.AddOn.Composition;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using drz.EnvironmentInfo;
 
 
@@ -29,6 +27,8 @@ using drz.SpecSpds;
 
 #elif NC
 
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
@@ -118,6 +118,7 @@ namespace drz.Loader
                 }
                 else
                 {
+#if NC
                     message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
 
                     Document document = Application.DocumentManager.MdiActiveDocument;
@@ -131,6 +132,7 @@ namespace drz.Loader
                     {
                         Application.ShowAlertDialog(message);
                     }
+#endif
                 }
             }
 

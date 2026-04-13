@@ -4,8 +4,8 @@ using System.ComponentModel;
 using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
-using static drz.SpecSPDS.Infrastructure.AddonContext;
-using drz.SpecSPDS.Infrastructure;
+using static drz.Src.Infrastructure.AddOnContext;
+using drz.Src.Infrastructure;
 using drz.Cleaner.Infrastructure;
 using drz.EnvironmentInfo;
 

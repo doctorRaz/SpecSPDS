@@ -1,12 +1,16 @@
-﻿using drz.EnvironmentInfo;
+﻿using drz.Abstractions.Logger;
+using drz.EnvironmentInfo;
 using drz.LogServices;
 using drz.LogServices.Interfaces;
 using NLog;
 using System;
-using static drz.Loader.Infrastructure.AddOnContext;
+using static drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Loader.Infrastructure
+namespace drz.Src.Infrastructure
 {
+    /// <summary>
+    /// проброс в фабрику ProductName и получение логера для продукта
+    /// </summary>
     public static class LoggerProvider
     {
         private static readonly Lazy<ILogService> _service = new(() =>
@@ -24,7 +28,7 @@ namespace drz.Loader.Infrastructure
     /// <summary>
     /// Проброс в фабрику инфы о ОС КАД и аддоне
     /// </summary>
-    /// <seealso cref="drz.LogServices.Interfaces.IEnvironmentInfoProvider" />
+    /// <seealso cref="Abstractions.Logger.IEnvironmentInfoProvider" />
     public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
     {
         /// <summary>

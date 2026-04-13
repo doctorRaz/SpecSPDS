@@ -2,10 +2,10 @@
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
 using drz.EnvironmentInfo.App;
-using SimpleInjector;
+//using SimpleInjector;
 using System;
 
-namespace drz.Loader.Infrastructure
+namespace drz.Src.Infrastructure
 {
     internal static class AddOnContext
     {
@@ -64,10 +64,10 @@ namespace drz.Loader.Infrastructure
         /// <summary>
         /// Создать scope
         /// </summary>
-        private static Scope BeginScope()
-        {
-            return Root.BeginScope() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
-        }
+        //private static Scope BeginScope()
+        //{
+        //    return Root.BeginScope() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
+        //}
 
         /// <summary>
         /// Получить сервис
