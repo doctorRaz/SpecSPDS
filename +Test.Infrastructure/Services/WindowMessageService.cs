@@ -19,7 +19,7 @@ namespace drz.Infrastructure.Services
             //if (doc == null)
             //{
             InfoMessage(message, caller);
-            return;
+            //return;
             //}
 
             //Editor ed = doc.Editor;

@@ -1,4 +1,4 @@
-﻿namespace drz.LogServices.Interfaces
+﻿namespace drz.Abstractions.Logger
 {
     /// <summary>
     ///

@@ -18,4 +18,8 @@
 		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	</ItemGroup>
+
 </Project>

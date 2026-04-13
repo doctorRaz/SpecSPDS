@@ -1,4 +1,5 @@
-﻿using drz.LogServices.Diagnostics;
+﻿using drz.Abstractions.Logger;
+using drz.LogServices.Diagnostics;
 using drz.LogServices.Interfaces;
 using NLog;
 using NLog.Common;
