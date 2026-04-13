@@ -7,7 +7,7 @@ using System;
 using /*static*/ AC = drz.Loader.Infrastructure.AddOnContext;
 
 /// <summary>
-/// 
+///
 /// </summary>
 namespace drz.Lib_A
 {
@@ -30,8 +30,6 @@ namespace drz.Lib_A
             AC.Initialize(root);
 
             _initialized = true;
-
-
         }
 
         public void Dispose()
@@ -60,7 +58,6 @@ namespace drz.Lib_A
             // Если нужно Scoped-сервисы, можно обернуть в using
             //using (AC.BeginScope())
             //{
-
             //    AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
             //    AC.MsgGUI.InfoMessage("Info message");

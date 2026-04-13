@@ -128,7 +128,6 @@ namespace drz.Loader
                     }
                     else
                     {
-
                         Application.ShowAlertDialog(message);
                     }
                 }

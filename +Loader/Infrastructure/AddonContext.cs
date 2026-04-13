@@ -30,7 +30,6 @@ namespace drz.Loader.Infrastructure
         {
             get
             {
-
                 if (DocService.IsActive)
                 {
                     return Root.Get<ICommandLineMessageService>();

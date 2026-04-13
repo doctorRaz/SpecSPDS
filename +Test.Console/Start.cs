@@ -36,8 +36,6 @@ namespace drz.SpecSpds.Test
     {
         //public static SimpleInjector.Container ContainerIn;
 
-
-
         //internal static class AddonContext
         //{
         //    public static readonly InfoAdOn Info = InfoAdOn.Get(typeof(Start));
@@ -62,7 +60,6 @@ namespace drz.SpecSpds.Test
 
             //entryPoint.Terminate();
 
-
             TestContainer testContainer = new TestContainer();
             testContainer.TestCondole();
 
@@ -75,7 +72,6 @@ namespace drz.SpecSpds.Test
             testContainer.TestCondole();
             cmdA.msgCommandA();
             cmdB.msgCommandB();
-
 
             string assemblyDirectory = string.Empty;
 

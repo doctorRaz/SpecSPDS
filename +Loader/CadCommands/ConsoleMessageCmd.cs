@@ -8,7 +8,6 @@ namespace drz.Loader.CadCommands
         [CommandMethod($"console-message-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
-
             MsgCmd.ConsoleMessage("test Console message");
         }
     }

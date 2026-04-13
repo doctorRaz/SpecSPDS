@@ -8,7 +8,6 @@ namespace drz.Loader.CadCommands
         [CommandMethod($"info-message-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void InfoMessageCommand()
         {
-
             MsgGUI.InfoMessage("Info message");
         }
     }

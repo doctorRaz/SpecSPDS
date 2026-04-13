@@ -3,6 +3,7 @@ using drz.Cad.Diagnostics.Cad;
 using drz.Cad.Diagnostics.Os;
 using System;
 using static drz.Loader.Infrastructure.AddOnContext;
+
 using AC = drz.Loader.Infrastructure.AddOnContext;
 
 namespace drz.SpecSpds.Test.Tests
@@ -38,11 +39,9 @@ namespace drz.SpecSpds.Test.Tests
 
         public void TestCondole()
         {
-
             AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
             AC.MsgGUI.InfoMessage("Info message");
-
 
             //IApplicationInfo app = AC.Get<IApplicationInfo>();
             //IMessageService messageService = AC.Get<ICommandLineMessageService>();
