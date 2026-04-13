@@ -10,7 +10,7 @@ using System.Reflection;
 namespace drz.AddOn.Composition
 {
     public class AddOnCompositionRoot : IDisposable
-    {           
+    {
 
         private readonly Container _container;
 
@@ -56,7 +56,7 @@ namespace drz.AddOn.Composition
 
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
+            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton/*Transient*/);
         }
 
 
