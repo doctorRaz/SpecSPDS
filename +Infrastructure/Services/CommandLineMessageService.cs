@@ -40,14 +40,14 @@ namespace drz.Infrastructure.Services
         /// <param name="caller">Вызывающий метод</param>
         public void ExceptionMessage(string message, Exception ex, string caller = null)
         {
-            WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
+            WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace.ToString()}", caller);
         }
 
         private void WriteMessage(string prefix, string message, string caller)
         {
             string formatted =
                    "\n" +
-                   (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
+                   (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}] ") +
                    (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") +
                    message;
 

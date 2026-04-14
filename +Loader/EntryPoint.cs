@@ -106,11 +106,11 @@ namespace drz.Loader
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
                 string message = $"Приложение не загружено!!!" +
-                     $"\nСкопируйте это сообщение и отправьте разработчику";
+                     $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
 
                 if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
                 {
-                    log.Error(message, ex);
+                    log.Error(ex,message);
                 }
                 if (_isAddOnCompositionRoot)
                 {
@@ -269,7 +269,7 @@ namespace drz.Loader
             {
                 log.Error(ex, ex.Message);
 
-                throw new InvalidOperationException("failed", ex);
+                throw new InvalidOperationException("CadLoading failed", ex);
             }
 
             return true;
