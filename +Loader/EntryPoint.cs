@@ -105,12 +105,16 @@ namespace drz.Loader
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                string message = $"Приложение не загружено!!!" +
-                     $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
+                string message = $"Приложение не загружено!!!";
+
+
 
                 if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
                 {
-                    log.Error(ex,message);
+
+                    message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
+
+                    log.Error(ex, message);
                 }
                 if (_isAddOnCompositionRoot)
                 {
@@ -119,6 +123,8 @@ namespace drz.Loader
                 else
                 {
 #if NC
+                    message += $"\nСкопируйте и отправьте разработчику это сообщение";
+
                     message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
 
                     Document document = Application.DocumentManager.MdiActiveDocument;
