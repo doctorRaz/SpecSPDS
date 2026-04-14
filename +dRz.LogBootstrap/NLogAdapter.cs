@@ -4,68 +4,69 @@ using NLog;
 using System;
 using drz.LogServices.Interfaces;
 using drz.Abstractions.Logger;
+using drz.LogServices;
 
 namespace drz.LogServices
 {
-    public class NLogAdapter : IDrzLogger
+    internal sealed class NLogAdapter : IDrzLogger
     {
-        private readonly NLog.Logger _logger;
+        #region Private Fields
 
-        public NLogAdapter(NLog.Logger logger)
+        private readonly Logger _inner;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
+
+        internal NLogAdapter(Logger inner)
         {
-            _logger = logger;
+            _inner = inner;
         }
 
-        public void Debug(string message) => _logger.Debug(message);
-        public void Info(string message) => _logger.Info(message);
-        public void Warn(string message) => _logger.Warn(message);
-        public void Error(string message, Exception exception = null) =>
-            _logger.Error(exception, message);
-        public void Fatal(string message, Exception exception = null) =>
-            _logger.Fatal(exception, message);
+        #endregion Internal Constructors
 
-        public IDrzLogger GetLogger<T>()
-        {
-            throw new NotImplementedException();
-        }
+        #region Public Properties
 
-        public IDrzLogger GetLogger(Type type)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsDebugEnabled => _inner.IsDebugEnabled;
+        public bool IsErrorEnabled => _inner.IsErrorEnabled;
+        public bool IsFatalEnabled => _inner.IsFatalEnabled;
+        public bool IsInfoEnabled => _inner.IsInfoEnabled;
+        public bool IsTraceEnabled => _inner.IsTraceEnabled;
+        public bool IsWarnEnabled => _inner.IsWarnEnabled;
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void Debug(string message) => _inner.Debug(message);
+
+        public void Error(string message, Exception exception = null) => _inner.Error(exception, message);
+
+        public void Fatal(string message, Exception exception = null) => _inner.Fatal(exception, message);
+
+        public void Info(string message) => _inner.Info(message);
+
+        public void Trace(string message) => _inner.Trace(message);
+        public void Warn(string message) => _inner.Warn(message);
+
+        #endregion Public Methods
+    }
+}
+
+public class NLogService : IDrzLogService
+{
+    #region Public Methods
+
+    public IDrzLogger GetLogger<T>() => GetLogger(typeof(T));
+
+    public IDrzLogger GetLogger(Type type)
+    {
+        //if (type == null) throw new ArgumentNullException(nameof(type));
+        //string productName = SafeGetProductName();
+        //LogFactory factory = _factories.GetOrAdd(productName, CreateFactory);
+        //return new NLogAdapter(factory.GetLogger(type.FullName)); // <-- оборачиваем
+        throw new NotSupportedException ("Не доделано");
     }
 
-    public class NLogService : IDrzLogService
-    {
-        public void Debug(string message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Error(string message, Exception exception = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Fatal(string message, Exception exception = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDrzLogger GetLogger<T>() =>
-            new NLogAdapter(LogManager.GetLogger(typeof(T).FullName));
-
-        public IDrzLogger GetLogger(Type type) =>
-            new NLogAdapter(LogManager.GetLogger(type.FullName));
-
-        public void Info(string message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Warn(string message)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    #endregion Public Methods
 }

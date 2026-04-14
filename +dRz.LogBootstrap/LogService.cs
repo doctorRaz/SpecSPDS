@@ -11,6 +11,8 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 
+//https://replit.com/@razygraev/Log-Service-interface
+
 namespace drz.LogServices
 {
     /// <summary>
