@@ -3,41 +3,10 @@ using System;
 
 namespace drz.Abstractions.Logger
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public interface IDrzLogger
-    {
-        void Trace(string message);
-
-        void Debug(string message);
-
-        void Info(string message);
-
-        void Warn(string message);
-
-        void Error(string message, Exception exception = null);
-
-        void Fatal(string message, Exception exception = null);
-
-        bool IsTraceEnabled { get; }
-
-        bool IsDebugEnabled { get; }
-
-        bool IsInfoEnabled { get; }
-
-        bool IsWarnEnabled { get; }
-
-        bool IsErrorEnabled { get; }
-
-        bool IsFatalEnabled { get; }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
     public interface IDrzLogService
     {
+        #region Public Methods
+
         /// <summary>
         /// Gets the logger.
         /// </summary>
@@ -51,5 +20,7 @@ namespace drz.Abstractions.Logger
         /// <param name="type">The type.</param>
         /// <returns></returns>
         IDrzLogger GetLogger(Type type);
+
+        #endregion Public Methods
     }
 }
