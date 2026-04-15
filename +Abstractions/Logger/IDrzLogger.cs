@@ -30,6 +30,10 @@ namespace drz.Abstractions.Logger
 
         void Error(string message, Exception exception = null);
 
+        void Error(Exception exception, string message = null);
+
+        void Fatal(Exception exception, string message = null);
+
         void Fatal(string message, Exception exception = null);
 
         ILogEventBuilder ForDebugEvent();
@@ -47,6 +51,7 @@ namespace drz.Abstractions.Logger
         void Info(string message);
 
         void Trace(string message);
+
         void Warn(string message);
 
         #endregion Public Methods

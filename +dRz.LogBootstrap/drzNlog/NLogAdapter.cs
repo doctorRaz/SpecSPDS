@@ -8,39 +8,58 @@ namespace drz.LogServices.drzNlog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {
+        #region Private Fields
+
         private readonly NLog.Logger _inner;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal NLogAdapter(NLog.Logger inner) => _inner = inner;
 
-        public bool IsTraceEnabled => _inner.IsTraceEnabled;
+        #endregion Internal Constructors
+
+        #region Public Properties
+
         public bool IsDebugEnabled => _inner.IsDebugEnabled;
-        public bool IsInfoEnabled => _inner.IsInfoEnabled;
-        public bool IsWarnEnabled => _inner.IsWarnEnabled;
         public bool IsErrorEnabled => _inner.IsErrorEnabled;
         public bool IsFatalEnabled => _inner.IsFatalEnabled;
+        public bool IsInfoEnabled => _inner.IsInfoEnabled;
+        public bool IsTraceEnabled => _inner.IsTraceEnabled;
+        public bool IsWarnEnabled => _inner.IsWarnEnabled;
 
-        public void Trace(string message) => _inner.Trace(message);
+        #endregion Public Properties
+
+        #region Public Methods
 
         public void Debug(string message) => _inner.Debug(message);
 
-        public void Info(string message) => _inner.Info(message);
-
-        public void Warn(string message) => _inner.Warn(message);
-
         public void Error(string message, Exception exception = null) => _inner.Error(exception, message);
+
+        public void Error(Exception exception, string message = null) => _inner.Error(exception, message);
+        public void Fatal(Exception exception, string message = null) => _inner.Error(exception, message);
 
         public void Fatal(string message, Exception exception = null) => _inner.Fatal(exception, message);
 
-        public ILogEventBuilder ForTraceEvent() => new NLogEventBuilderAdapter(_inner.ForTraceEvent());
-
         public ILogEventBuilder ForDebugEvent() => new NLogEventBuilderAdapter(_inner.ForDebugEvent());
-
-        public ILogEventBuilder ForInfoEvent() => new NLogEventBuilderAdapter(_inner.ForInfoEvent());
-
-        public ILogEventBuilder ForWarnEvent() => new NLogEventBuilderAdapter(_inner.ForWarnEvent());
 
         public ILogEventBuilder ForErrorEvent() => new NLogEventBuilderAdapter(_inner.ForErrorEvent());
 
         public ILogEventBuilder ForFatalEvent() => new NLogEventBuilderAdapter(_inner.ForFatalEvent());
+
+        public ILogEventBuilder ForInfoEvent() => new NLogEventBuilderAdapter(_inner.ForInfoEvent());
+
+        public ILogEventBuilder ForTraceEvent() => new NLogEventBuilderAdapter(_inner.ForTraceEvent());
+
+        public ILogEventBuilder ForWarnEvent() => new NLogEventBuilderAdapter(_inner.ForWarnEvent());
+
+        public void Info(string message) => _inner.Info(message);
+
+        public void Trace(string message) => _inner.Trace(message);
+
+        public void Warn(string message) => _inner.Warn(message);
+
+        #endregion Public Methods
     }
 }

@@ -12,6 +12,8 @@ namespace drz.Abstractions.Logger
 
         ILogEventBuilder Property(string name, object value);
 
+        ILogEventBuilder Exception(Exception exception);
+
         #endregion Public Methods
     }
 }

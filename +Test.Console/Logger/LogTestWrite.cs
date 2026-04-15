@@ -51,6 +51,8 @@ namespace drz.SpecSpds.Test.Logger
                           .Property("класс", t)
                        .Log();
 
+               
+
                 int e = 10;
 
                 log.Trace("Сообщение {prop1} {prop2}", "1", "2");
@@ -63,6 +65,7 @@ namespace drz.SpecSpds.Test.Logger
                    .Exception(ex)
                    .Property("prop1", 50000)
                    .Property("prop2", 123)
+                   .Exception(ex)
                    .Log();
 
                 log.Info("Продолжение работы после ошибки");

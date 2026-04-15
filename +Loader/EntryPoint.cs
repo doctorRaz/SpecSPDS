@@ -115,6 +115,7 @@ namespace drz.Loader
                     message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
 
                     log.Error(ex, message);
+                    
                 }
                 if (_isAddOnCompositionRoot)
                 {

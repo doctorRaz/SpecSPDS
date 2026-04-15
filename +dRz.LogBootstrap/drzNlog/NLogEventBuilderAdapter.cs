@@ -9,12 +9,30 @@ namespace drz.LogServices.drzNlog
 {
     internal sealed class NLogEventBuilderAdapter : ILogEventBuilder
     {
+        #region Private Fields
+
         private readonly NLog.LogEventBuilder _inner;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal NLogEventBuilderAdapter(NLog.LogEventBuilder inner)
         {
             _inner = inner;
         }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
+        public ILogEventBuilder Exception(Exception exception)
+        {
+            _inner.Exception(exception);
+            return this;
+        }
+
+        public void Log() => _inner.Log();
 
         public ILogEventBuilder Message(string message)
         {
@@ -28,6 +46,6 @@ namespace drz.LogServices.drzNlog
             return this;
         }
 
-        public void Log() => _inner.Log();
+        #endregion Public Methods
     }
 }
