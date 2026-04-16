@@ -13,7 +13,7 @@
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
