@@ -1,8 +1,6 @@
 ﻿using drz.Abstractions.Logger;
 using drz.EnvironmentInfo;
-using drz.LogServices;
-using drz.LogServices.Interfaces;
-using NLog;
+using drz.LogServices.drzNlog;
 using System;
 using static drz.Src.Infrastructure.AddOnContext;
 
@@ -13,16 +11,16 @@ namespace drz.Src.Infrastructure
     /// </summary>
     public static class LoggerProvider
     {
-        private static readonly Lazy<ILogService> _service = new(() =>
-            new LogService(
+        private static readonly Lazy<IDrzLogService> _service = new(() =>
+            new NLogService(
                 productNameProvider: () => InfoDll.ProductName,
                 assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
-        internal static Logger For<T>() => _service.Value.GetLogger<T>();
+        internal static IDrzLogger For<T>() => _service.Value.GetLogger<T>();
 
-        internal static Logger For(Type type) => _service.Value.GetLogger(type);
+        internal static IDrzLogger For(Type type) => _service.Value.GetLogger(type);
     }
 
     /// <summary>
