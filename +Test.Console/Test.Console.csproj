@@ -9,11 +9,8 @@
 		<!--<ImplicitUsings>disable</ImplicitUsings>-->
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<UseWPF>true</UseWPF>
-
-
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
-
 		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
 		<!--*******-->
 		<Description>Отладка в консоли</Description>
@@ -25,12 +22,11 @@
 		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
 		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-
 		<ProjectReference Include="..\+dRz.Cleaner\drz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
@@ -39,21 +35,15 @@
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
 		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />
-
 	</ItemGroup>
-
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
 	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
 		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs" Overwrite="true" Lines="&#xD;&#xA;namespace drz.Loader&#xD;&#xA;{&#xD;&#xA;    public static class GeneratedCompile&#xD;&#xA;    {&#xD;&#xA;        public const int MinVersion = $(MinVersion)%3B&#xD;&#xA;        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B&#xD;&#xA;    }&#xD;&#xA;}" />
-
 	</Target>
-
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
-
-
 </Project>

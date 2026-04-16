@@ -8,7 +8,7 @@ using drz.SpecSpds.Test.Logger;
 using System;
 using static drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.SpecSpds.Test.SimpleInjector
+namespace drz.SpecSpds.Test.EnvironmentInfo
 {
     /// <summary>
     /// SimpleInjector Test
@@ -17,9 +17,9 @@ namespace drz.SpecSpds.Test.SimpleInjector
     {
         internal void Start()
         {
-            LogTests logTests = new LogTests();
+            
 
-            Console.WriteLine($"{logTests.Execute()}");
+           
 
             CommandA cmdA = new CommandA();
             CommandB cmdB = new CommandB();
@@ -43,8 +43,8 @@ namespace drz.SpecSpds.Test.SimpleInjector
             Console.WriteLine(CadInfo.Current);
             Console.WriteLine(AppInfo.Get(typeof(Start).Assembly));
 
-            var rt = RT.Info;
-            var id = InfoDll;
+            RuntimeInfo rt = RT.Info;
+            AppInfo id = InfoDll;
         }
     }
 }

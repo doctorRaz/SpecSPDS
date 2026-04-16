@@ -1,87 +1,23 @@
-﻿using drz.Src.Infrastructure;
-using NLog;
+﻿using drz.Abstractions.Logger;
+using drz.Src.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace drz.SpecSpds.Test.Logger
 {
     internal class LogTestWrite
     {
-        private ILogger log = LoggerProvider.For<LogTestWrite>();
+        private IDrzLogger log = LoggerProvider.For<LogTestWrite>();
 
         internal void Test()
         {
-            log.Trace("Сообщение {prop1} {prop2}", "1", "2");
-            log.Debug("Сообщение {prop1} {prop2}", "1", "2");
-            log.Info("Сообщение {prop1} {prop2}", "1", "2");
-            log.Warn("Сообщение {prop1} {prop2}", "1", "2");
-            log.Error("Сообщение {prop1} {prop2}", "1", "2");
-            log.Fatal("Сообщение {prop1} {prop2}", "1", "2");
-
-            int b = 0;
-
-            int calcs()
-            {
-                int a = 10;
-
-                return a + b;
-            }
-            b = calcs();
-
-            if (log.IsDebugEnabled)
-            {
-                log.Warn("This is a message from {Calc}", calcs());
-            }
-
-            tt t = new tt();
-
-            try
-            {
-                if (log.IsDebugEnabled)
-                {
-                    log.ForTraceEvent()
-                       .Message("Начало работы")
-                       .Property("prop1", calcs())
-                       .Property("prop2", 123)
-                       .Log();
-                }
-
-                log.ForTraceEvent()
-                       .Message("Класс Продолжение работы")
-                       .Property("prop10", calcs())
-                          .Property("класс", t)
-                       .Log();
-
-               
-
-                int e = 10;
-
-                log.Trace("Сообщение {prop1} {prop2}", "1", "2");
-
-                int ii = 10 / e;
-            }
-            catch (Exception ex)
-            {
-                log.ForErrorEvent()
-                   .Exception(ex)
-                   .Property("prop1", 50000)
-                   .Property("prop2", 123)
-                   .Exception(ex)
-                   .Log();
-
-                log.Info("Продолжение работы после ошибки");
-
-                log.Error(ex);
-            }
-            finally
-            {
-            }
-        }
-
-        internal class tt
-        {
-            public string g = "10";
-            public string g1 = "10";
-            public string g2 = "10";
+            log.Trace($"Сообщение Trace");
+            log.Debug($"Сообщение Debug");
+            log.Info($"Сообщение Info");
+            log.Warn($"Сообщение Warn");
+            log.Error($"Сообщение Error");
+            log.Fatal($"Сообщение Fatal");
         }
     }
 }

@@ -1,31 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+	<PropertyGroup>		
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>drz.Lib_A</RootNamespace>
 		<Description>1 чистилка bak и копий</Description>
 		<AssemblyTitle>dRz.Lib_A</AssemblyTitle>
 		<Product>Lib_A</Product>
 		<InformationalVersion>Cleaner for 1</InformationalVersion>
-
 	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-
 	<ItemGroup>
 		 <Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />		
 		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
 		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 	</ItemGroup>
-
-
 </Project>

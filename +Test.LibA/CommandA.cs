@@ -1,4 +1,5 @@
-﻿using drz.AddOn.Composition;
+﻿using drz.Abstractions.Logger;
+using drz.AddOn.Composition;
 using drz.Src.Infrastructure;
 
 using NLog;
@@ -14,9 +15,8 @@ namespace drz.Lib_A
     public class CommandA : IDisposable
     {
         private static bool _initialized;
-        //private readonly AddOnCompositionRoot _di;
-
-        private ILogger log = LoggerProvider.For<CommandA>();
+    
+        private IDrzLogger log = LoggerProvider.For<CommandA>();
 
         public CommandA()
         {
@@ -39,14 +39,20 @@ namespace drz.Lib_A
 
         public string ExecuteEnvironmentInfoProvider()
         {
-            CadEnvironmentInfoProvider ff = new CadEnvironmentInfoProvider();
+            CadEnvironmentInfoProvider cadEnvironmentInfoProvider   = new CadEnvironmentInfoProvider();
 
-            return ff.GetSummary();
+            return cadEnvironmentInfoProvider.GetSummary();
         }
 
         public void LogTest(string msg)
         {
-            log.Info(msg);
+            log.Trace($"Сообщение Trace");
+            log.Debug($"Сообщение Debug");
+            log.Info($"Сообщение Info");
+            log.Warn($"Сообщение Warn");
+            log.Error($"Сообщение Error");
+            log.Fatal($"Сообщение Fatal");
+            log.Fatal($"{msg}");
         }
 
         public void msgCommandA()
