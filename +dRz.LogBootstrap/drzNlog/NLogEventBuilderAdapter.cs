@@ -1,9 +1,6 @@
 ﻿using drz.Abstractions.Logger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace drz.LogServices.drzNlog
 {
@@ -45,6 +42,18 @@ namespace drz.LogServices.drzNlog
             _inner.Property(name, value);
             return this;
         }
+        public ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties)
+        {
+            if (properties == null) return this;
+
+            foreach (var kvp in properties)
+            {
+                _inner.Property(kvp.Key, kvp.Value);
+            }
+            return this;
+        }
+
+
 
         #endregion Public Methods
     }
