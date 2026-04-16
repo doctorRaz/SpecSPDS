@@ -1,10 +1,5 @@
 ﻿using drz.Lib_A;
 using drz.Lib_B;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace drz.SpecSpds.Test.Logger
 {
@@ -15,6 +10,10 @@ namespace drz.SpecSpds.Test.Logger
     {
         internal void Start()
         {
+            LogFluentTest logFluentTest = new LogFluentTest();
+
+            logFluentTest.Test();
+
             CommandA cmdA = new CommandA();
 
             CommandB cmdB = new CommandB();
@@ -23,21 +22,11 @@ namespace drz.SpecSpds.Test.Logger
 
             logTestWrite.Test();
 
-            LogTests logTests = new LogTests();
+            cmdA.LogTest("cmdA");
 
-            cmdA.LogTest("A0ttrrt");
+            cmdB.LogTest("cmdB");
 
-            cmdB.LogTest("B0trte");
 
-            logTests.LogTest("Test0tet");
-
-            cmdA.LogTest("2");
-
-            cmdB.LogTest("2");
-
-            cmdA.LogTest("20");
-
-            cmdB.LogTest("20");
         }
     }
 }

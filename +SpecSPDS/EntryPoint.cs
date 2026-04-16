@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.ComponentModel;
 using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
@@ -8,6 +7,8 @@ using static drz.Src.Infrastructure.AddOnContext;
 using drz.Src.Infrastructure;
 using drz.Cleaner.Infrastructure;
 using drz.EnvironmentInfo;
+using drz.Abstractions.Logger;
+
 
 
 #if AC
@@ -26,7 +27,7 @@ namespace drz.SpecSPDS
 {
     public class EntryPoint : Rtm.IExtensionApplication
     {
-        private Logger? log;
+        private IDrzLogger? log;
 
         private IMessageService? msg;
 
@@ -131,9 +132,9 @@ namespace drz.SpecSPDS
         {
             try
             {
-                log.Debug("{0}", RT.Info);
+                log.Debug( RT.Info.ToString());
 
-                log.Debug("{0}", InfoDll.ToString());
+                log.Debug(InfoDll.ToString());
 
                 msg.ConsoleMessage($"Hello {InfoDll.ToShortString()} for {RT.Cad}");
 

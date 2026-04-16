@@ -5,7 +5,6 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 
-using NLog;
 using System;
 using System.IO;
 using System.Linq;
@@ -13,13 +12,11 @@ using System.Reflection;
 
 using drz.Src.Infrastructure;
 
-//using AC = drz.Loader.Infrastructure.AddOnContext;
-
 using static drz.Src.Infrastructure.AddOnContext;
 
 using drz.AddOn.Composition;
 using drz.EnvironmentInfo;
-
+using drz.Abstractions.Logger;
 
 #if CMD
 
@@ -54,7 +51,7 @@ namespace drz.Loader
 
         private bool _isRegisterAssemblyResolver;//register assembly resolver
 
-        private Logger log;//логгер
+        private IDrzLogger log;//логгер
 
         private bool _isLoggerProvider;//логер есть
 
@@ -107,11 +104,8 @@ namespace drz.Loader
             {
                 string message = $"Приложение не загружено!!!";
 
-
-
                 if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
                 {
-
                     message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
 
                     log.Error(ex, message);
@@ -215,7 +209,7 @@ namespace drz.Loader
 
                 string fileDescription = RT.Cad.FileDescription;
 
-                log.Debug("Обнаружен: {0}", RT.Cad);
+                log.Debug($"Обнаружен: {RT.Cad}");
 
                 string fileFullName = GetType().Assembly.Location;
 
@@ -223,7 +217,7 @@ namespace drz.Loader
 
                 Version minVersion = new Version(minMajor, 0);
 
-                log.Debug("minVersion {0}", minVersion);
+                log.Debug($"minVersion {minVersion}");
 
                 FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
 
@@ -238,7 +232,7 @@ namespace drz.Loader
                     return false;
                 }
 
-                log.Debug("Адаптер найден в: {0}", targetDllFullName);//найден адаптер
+                log.Debug($"Адаптер найден в: {targetDllFullName}");//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то
                 // загружаем его.
@@ -249,7 +243,7 @@ namespace drz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Debug("Загружается адаптер для: {0}, целевая сборка: {1}", RT.Cad, targetDllFullName.FullName);
+                        log.Debug($"Загружается адаптер для: {RT.Cad}, целевая сборка: {targetDllFullName.FullName}");
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -263,7 +257,7 @@ namespace drz.Loader
                         throw exception;
                     }
 
-                    log.Debug("Адаптер для {0} загружен", RT.Cad);
+                    log.Debug($"Адаптер для {RT.Cad} загружен");
                 }
                 catch (Exception ex)
                 {

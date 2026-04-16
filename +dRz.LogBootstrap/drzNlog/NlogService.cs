@@ -1,6 +1,5 @@
 ﻿using drz.Abstractions.Logger;
 using drz.LogServices.Diagnostics;
-using drz.LogServices.Interfaces;
 using NLog;
 using NLog.Common;
 using NLog.Config;
@@ -95,7 +94,7 @@ namespace drz.LogServices.drzNlog
 
             LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostyc);
 
-            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(LogService).FullName}.{productName}", requestedLevel);
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogService).FullName}.{productName}", requestedLevel);
 
             string logName = productName;// ${shortdate}_{logName}.log;
 
@@ -129,7 +128,7 @@ namespace drz.LogServices.drzNlog
 
             LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel);
 
-            if (config == null || config.AllTargets.Count == 0)//тут проверка конфига на нулл, конфиг если есть подгружается сам
+            if (config == null || config.AllTargets.Count == 0|| config.LoggingRules.Count == 0)//тут проверка конфига на нулл, конфиг если есть подгружается сам
             {
                 //конфг из файла не подтянулся или битый
                 isFallback = true;
@@ -177,7 +176,7 @@ namespace drz.LogServices.drzNlog
         {
             try
             {
-                Logger log = factory.GetLogger(typeof(LogService).FullName);
+                Logger log = factory.GetLogger(typeof(NLogService).FullName);
 
                 // Internal log level
                 LogLevel internalLevel = InternalLogger.LogLevel;
@@ -321,7 +320,7 @@ namespace drz.LogServices.drzNlog
                 Elements =
                 {
                     new XmlElement("message", "${message}"),
-                    new XmlElement("exception", "${exception:format=ToString}")
+                    new XmlElement("exception", "${exception:format=ToString:innerFormat=ToString:maxInnerExceptionLevel=10}")
                 }
             };
         }

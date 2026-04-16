@@ -1,20 +1,35 @@
 ﻿using drz.Abstractions.Logger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace drz.LogServices.drzNlog
 {
     internal sealed class NLogEventBuilderAdapter : ILogEventBuilder
     {
+        #region Private Fields
+
         private readonly NLog.LogEventBuilder _inner;
+
+        #endregion Private Fields
+
+        #region Internal Constructors
 
         internal NLogEventBuilderAdapter(NLog.LogEventBuilder inner)
         {
             _inner = inner;
         }
+
+        #endregion Internal Constructors
+
+        #region Public Methods
+
+        public ILogEventBuilder Exception(Exception exception)
+        {
+            _inner.Exception(exception);
+            return this;
+        }
+
+        public void Log() => _inner.Log();
 
         public ILogEventBuilder Message(string message)
         {
@@ -27,7 +42,19 @@ namespace drz.LogServices.drzNlog
             _inner.Property(name, value);
             return this;
         }
+        public ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties)
+        {
+            if (properties == null) return this;
 
-        public void Log() => _inner.Log();
+            foreach (var kvp in properties)
+            {
+                _inner.Property(kvp.Key, kvp.Value);
+            }
+            return this;
+        }
+
+
+
+        #endregion Public Methods
     }
 }
