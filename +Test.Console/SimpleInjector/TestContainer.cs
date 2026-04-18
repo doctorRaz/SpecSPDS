@@ -39,9 +39,12 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         public void TestCondole()
         {
+            AC.Msg.InfoMessage($"{AC.AddOn.TitlePrefix} Message");
+
             AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage("Info message");
+            AC.MsgGUI.InfoMessage($"{AC.AddOn.TitlePrefix} Info message");
+
 
             //IApplicationInfo app = AC.Get<IApplicationInfo>();
             //IMessageService messageService = AC.Get<ICommandLineMessageService>();

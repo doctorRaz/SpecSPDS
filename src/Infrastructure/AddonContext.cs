@@ -2,7 +2,6 @@
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
 using drz.EnvironmentInfo.App;
-//using SimpleInjector;
 using System;
 
 namespace drz.Src.Infrastructure
@@ -58,25 +57,5 @@ namespace drz.Src.Infrastructure
         {
             _root = root ?? throw new ArgumentNullException(nameof(root));
         }
-
-        #region Спрятать методы
-
-        /// <summary>
-        /// Создать scope
-        /// </summary>
-        //private static Scope BeginScope()
-        //{
-        //    return Root.BeginScope() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
-        //}
-
-        /// <summary>
-        /// Получить сервис
-        /// </summary>
-        private static T Get<T>() where T : class
-        {
-            return Root.Get<T>() ?? throw new InvalidOperationException("AddOnCompositionRoot not initialized");
-        }
-
-        #endregion Спрятать методы
     }
 }

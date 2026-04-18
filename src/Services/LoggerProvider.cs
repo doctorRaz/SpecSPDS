@@ -1,16 +1,18 @@
 ﻿using drz.Abstractions.Logger;
-using drz.EnvironmentInfo;
 using drz.LogServices.drzNlog;
+using drz.Src.Infrastructure;
 using System;
 using static drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Src.Infrastructure
+namespace drz.Src.Services
 {
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта
     /// </summary>
     public static class LoggerProvider
     {
+        #region Private Fields
+
         private static readonly Lazy<IDrzLogService> _service = new(() =>
             new NLogService(
                 productNameProvider: () => InfoDll.ProductName,
@@ -18,25 +20,16 @@ namespace drz.Src.Infrastructure
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 
+        #endregion Private Fields
+
+        #region Internal Methods
+
         internal static IDrzLogger For<T>() => _service.Value.GetLogger<T>();
 
         internal static IDrzLogger For(Type type) => _service.Value.GetLogger(type);
+
+        #endregion Internal Methods
     }
 
-    /// <summary>
-    /// Проброс в фабрику инфы о ОС КАД и аддоне
-    /// </summary>
-    /// <seealso cref="Abstractions.Logger.IEnvironmentInfoProvider" />
-    public class CadEnvironmentInfoProvider : IEnvironmentInfoProvider
-    {
-        /// <summary>
-        /// Gets the summary.
-        /// </summary>
-        /// <returns></returns>
-        public string GetSummary()
-        {
-            //порнография конечно( /InfoDll/
-            return $"{RT.Info.ToString()}\n{InfoDll.ToString()}";
-        }
-    }
+
 }

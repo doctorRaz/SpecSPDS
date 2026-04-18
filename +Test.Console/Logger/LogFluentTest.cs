@@ -1,5 +1,5 @@
 ﻿using drz.Abstractions.Logger;
-using drz.Src.Infrastructure;
+using drz.Src.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +19,9 @@ namespace drz.SpecSpds.Test.Logger
         internal void Test()
         {
             log.Fatal("----------LogFluentTest------------");
-            var userId = "user_ID";
-            var documentPath = "documentPath";
-            var value = 42;
+            string userId = "user_ID";
+            string documentPath = "documentPath";
+            int value = 42;
 
             int b = 0;
 
@@ -66,7 +66,7 @@ namespace drz.SpecSpds.Test.Logger
             catch (Exception ex)
             {
                 // Dictionary
-                var props = new Dictionary<string, object>
+                Dictionary<string, object> props = new Dictionary<string, object>
                         {
                             { "UserId",   userId        },
                             { "Action",   "SaveDocument" },
@@ -84,7 +84,7 @@ namespace drz.SpecSpds.Test.Logger
 
                 // Список объектов через LINQ
 
-                var elements = new List<CadElement>
+                List<CadElement> elements = new List<CadElement>
                         {
                             new CadElement { Id = 1042, Name = "Колонна",  Layer = "Конструкции", Type = "Column", Length = 3600 },
                             new CadElement { Id = 1078, Name = "Балка",    Layer = "Конструкции", Type = "Beam",   Length = 6000 },
