@@ -4,7 +4,6 @@ using drz.EnvironmentInfo.Cad;
 using drz.EnvironmentInfo.Sys;
 using drz.Lib_A;
 using drz.Lib_B;
-using drz.SpecSpds.Test.Logger;
 using System;
 using static drz.Src.Infrastructure.AddOnContext;
 
@@ -17,9 +16,9 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
     {
         internal void Start()
         {
-            
 
-           
+
+
 
             CommandA cmdA = new CommandA();
             CommandB cmdB = new CommandB();

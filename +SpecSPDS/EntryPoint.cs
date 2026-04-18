@@ -4,10 +4,11 @@ using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
 using static drz.Src.Infrastructure.AddOnContext;
-using drz.Src.Infrastructure;
 using drz.Cleaner.Infrastructure;
 using drz.EnvironmentInfo;
 using drz.Abstractions.Logger;
+using drz.Src.Services;
+
 
 
 
@@ -132,7 +133,7 @@ namespace drz.SpecSPDS
         {
             try
             {
-                log.Debug( RT.Info.ToString());
+                log.Debug(RT.Info.ToString());
 
                 log.Debug(InfoDll.ToString());
 

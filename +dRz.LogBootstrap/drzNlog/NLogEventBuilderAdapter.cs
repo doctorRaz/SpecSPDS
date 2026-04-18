@@ -44,9 +44,12 @@ namespace drz.LogServices.drzNlog
         }
         public ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties)
         {
-            if (properties == null) return this;
+            if (properties == null)
+            {
+                return this;
+            }
 
-            foreach (var kvp in properties)
+            foreach (KeyValuePair<string, object> kvp in properties)
             {
                 _inner.Property(kvp.Key, kvp.Value);
             }

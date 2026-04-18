@@ -1,8 +1,5 @@
 ﻿using drz.Abstractions.Logger;
-using drz.Src.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using drz.Src.Services;
 
 namespace drz.SpecSpds.Test.Logger
 {
