@@ -42,51 +42,51 @@ namespace drz.Infrastructure.Infrastructure
             get => _assembly.GetName().Version;
         }
 
-        string IAppInfo.AppDataProductLogPath => throw new NotImplementedException();
+        public string AppDataProductLogPath => throw new NotImplementedException();
 
-        string IAppInfo.AppDataProductPath => throw new NotImplementedException();
+        public string AppDataProductPath => throw new NotImplementedException();
 
-        Assembly IAppInfo.Assembly => throw new NotImplementedException();
+       public Assembly Assembly => throw new NotImplementedException();
 
-        string IAppInfo.AssemblyDirectory => throw new NotImplementedException();
+       public string AssemblyDirectory => throw new NotImplementedException();
 
-        string IAppInfo.AssemblyPath => throw new NotImplementedException();
+       public string AssemblyPath => throw new NotImplementedException();
 
-        Version IAppInfo.AssemblyVersion => throw new NotImplementedException();
+       public Version AssemblyVersion => throw new NotImplementedException();
 
-        DateTime IAppInfo.BuildDate => throw new NotImplementedException();
+       public DateTime BuildDate => throw new NotImplementedException();
 
-        string IAppInfo.Copyright => throw new NotImplementedException();
+       public string Copyright => throw new NotImplementedException();
 
-        string IAppInfo.Description => throw new NotImplementedException();
+       public string Description => throw new NotImplementedException();
 
-        string IAppInfo.FileName => throw new NotImplementedException();
+       public string FileName => throw new NotImplementedException();
 
-        string IAppInfo.FilePrefix => throw new NotImplementedException();
+       public string FilePrefix => throw new NotImplementedException();
 
-        string IAppInfo.FileVersion => throw new NotImplementedException();
+      public  string FileVersion => throw new NotImplementedException();
 
-        string IAppInfo.InformationalVersion => throw new NotImplementedException();
+       public string InformationalVersion => throw new NotImplementedException();
 
-        bool IAppInfo.IsAutoVersion => throw new NotImplementedException();
+       public bool IsAutoVersion => throw new NotImplementedException();
 
-        string IAppInfo.NLogConfigPath => throw new NotImplementedException();
+       public string NLogConfigPath => throw new NotImplementedException();
 
-        string IAppInfo.ProductName => throw new NotImplementedException();
+    
 
-        string IAppInfo.ProductTitle => throw new NotImplementedException();
+       public string ProductTitle => throw new NotImplementedException();
 
         string IAppInfo.ToShortString()
         {
             throw new NotImplementedException();
         }
 
-        string IAppInfo.ToString()
+        public override string ToString()
         {
             throw new NotImplementedException();
         }
 
-        string IAppInfo.ToStringLong()
+       public string ToStringLong()
         {
             throw new NotImplementedException();
         }
