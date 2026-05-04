@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace drz.Infrastructure.Infrastructure
+namespace drz.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {
