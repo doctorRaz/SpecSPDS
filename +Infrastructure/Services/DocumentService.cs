@@ -1,7 +1,10 @@
 ﻿using drz.Abstractions.Services;
-using HostMgd.ApplicationServices;
 using System;
 using System.IO;
+
+#if !TEST
+using HostMgd.ApplicationServices;
+#endif
 
 namespace drz.Infrastructure.Services
 {
@@ -11,8 +14,13 @@ namespace drz.Infrastructure.Services
         {
             get
             {
+#if !TEST
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 return doc != null;
+#else
+                return true;
+#endif
+
             }
         }
 
@@ -24,9 +32,12 @@ namespace drz.Infrastructure.Services
                 {
                     throw new NullReferenceException("Нет активного документа");
                 }
-
+#if !TEST
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 return doc.Name;
+#else
+                return "Doc Name TEST";
+#endif
             }
         }
 

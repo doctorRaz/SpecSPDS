@@ -1,7 +1,10 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
-using HostMgd.ApplicationServices;
 using System;
+
+#if !TEST
+using HostMgd.ApplicationServices;
+#endif
 
 namespace drz.Infrastructure.Services
 {
@@ -51,6 +54,7 @@ namespace drz.Infrastructure.Services
                    (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") +
                    message;
 
+#if !TEST
             Document doc = Application.DocumentManager.MdiActiveDocument;
 
             if (doc != null && doc.Editor != null)
@@ -68,6 +72,12 @@ namespace drz.Infrastructure.Services
                     Application.ShowAlertDialog(formatted);
                 }
             }
+#else
+            Console.WriteLine("\n" + (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
+                          (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+#endif
+
+
         }
 
         private IApplicationInfo _applicationInfo;

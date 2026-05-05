@@ -1,7 +1,10 @@
 ﻿using drz.Abstractions.Infrastructure;
-using HostMgd.ApplicationServices;
 using System;
 using System.Reflection;
+
+#if !TEST
+using HostMgd.ApplicationServices;
+#endif
 
 namespace drz.Infrastructure.Infrastructure
 {
@@ -14,8 +17,11 @@ namespace drz.Infrastructure.Infrastructure
         public ApplicationInfo(Assembly assembly)
         {
             _assembly = assembly;
-
+#if !TEST
             _handle = Application.MainWindow.Handle;
+#else
+            _handle = IntPtr.Zero;
+#endif
         }
 
         public IntPtr CadWindowHandle { get => _handle; }

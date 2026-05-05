@@ -1,11 +1,14 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
+
+#if !TEST
+using HostMgd.ApplicationServices;
+using HostMgd.EditorInput;
 using Application = HostMgd.ApplicationServices.Application;
+#endif
 
 namespace drz.Infrastructure.Services
 {
@@ -14,10 +17,12 @@ namespace drz.Infrastructure.Services
         public WindowMessageService(IApplicationInfo applicationInfo)
         {
             _applicationInfo = applicationInfo;
+
         }
 
         public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
         {
+#if !TEST
             Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
@@ -26,7 +31,11 @@ namespace drz.Infrastructure.Services
             }
 
             Editor ed = doc.Editor;
+
             ed.WriteMessage("\n" + (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+#else
+            InfoMessage(message, caller);
+#endif
         }
 
         public void ErrorMessage(string message, [CallerMemberName] string caller = null)
@@ -59,5 +68,6 @@ namespace drz.Infrastructure.Services
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private IApplicationInfo _applicationInfo;
+
     }
 }
