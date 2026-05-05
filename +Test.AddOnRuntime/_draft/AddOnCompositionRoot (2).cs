@@ -7,6 +7,7 @@ using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
 
+
 namespace drz.AddOn.Composition
 {
     public class AddOnCompositionRoot : IDisposable
@@ -46,15 +47,18 @@ namespace drz.AddOn.Composition
             container.RegisterInstance(addOnAssembly);
 
             container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
+
+            //todo новый апп инфо
+            container.Register<IAppInfo, AppInfo>(Lifestyle.Singleton);
         }
 
         private void RegisterServices(Container container)
         {
-            container.Register<ICommandLineMessageService, CommandLineMessageService>();
+            container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
 
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Transient);
+            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
         }
 
         public void Dispose()

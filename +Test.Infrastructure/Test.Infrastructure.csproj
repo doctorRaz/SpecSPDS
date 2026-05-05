@@ -15,9 +15,11 @@
 		<ImplicitUsings>disable</ImplicitUsings>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-
+		<PropertyGroup>
+		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
+	</PropertyGroup>
 	<ItemGroup>
-		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
+		 <Compile Include="..\+Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -14,12 +14,14 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-
 	<ItemGroup>
-	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-	  <ProjectReference Include="..\+Test.Infrastructure\Test.Infrastructure.csproj" />
+		<Compile Include="..\+AddOnRuntime\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-		<ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Test.Infrastructure\Test.Infrastructure.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="SimpleInjector" Version="5.5.0" />
 	</ItemGroup>
 
