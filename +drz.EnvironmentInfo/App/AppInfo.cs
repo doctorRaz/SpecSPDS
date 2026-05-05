@@ -10,7 +10,7 @@ namespace drz.EnvironmentInfo.App;
 /// Runtime environment for specific assembly (addon/module).
 /// Immutable per-assembly context.
 /// </summary>
-public sealed class AppInfo : IAppInfo
+public sealed class AppInfo : IApplicationInfo_NEW
 {
     private const string _nLogConfigFileName = "drzNLog.dll.nlog";
 

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace drz.Abstractions.Infrastructure
 {
-    public interface IAppInfo
+    public interface IApplicationInfo_NEW
     {
         string AppDataProductLogPath { get; }
         string AppDataProductPath { get; }
