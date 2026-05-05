@@ -54,7 +54,7 @@ namespace drz.AddOn.Composition
 
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton/*Transient*/);
+            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
         }
 
         public void Dispose()
