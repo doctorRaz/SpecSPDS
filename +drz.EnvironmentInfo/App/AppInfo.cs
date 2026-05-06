@@ -1,6 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -16,24 +17,10 @@ public sealed class AppInfo : IApplicationInfo_NEW
 
     private static readonly ConcurrentDictionary<Assembly, AppInfo> _cache = new();
 
-    /// <summary>
-    /// Gets the specified assembly.
-    /// </summary>
-    /// <param name="assembly">The assembly.</param>
-    /// <returns></returns>
-    public static AppInfo Get(Assembly assembly)
-    {
-        return _cache.GetOrAdd(assembly, asm => new AppInfo(asm));
-    }
-
-    public static AppInfo Get(Type type)
-    {
-        return Get(type.Assembly);
-    }
-
     private AppInfo(Assembly assembly)
     {
-        Assembly = assembly;
+        _asembly = assembly;
+
         try
         {
             AssemblyPath = assembly.Location;
@@ -98,55 +85,14 @@ public sealed class AppInfo : IApplicationInfo_NEW
             : _nLogConfigFileName;
     }
 
-    // -------------------- Factory --------------------
-
+    public string AppDataProductLogPath { get; }
     /// <summary>
-    /// Froms the assembly.
-    /// </summary>
-    /// <param name="assembly">The assembly.</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException">assembly</exception>
-    public static AppInfo FromAssembly(Assembly assembly)
-    {
-        if (assembly == null)
-        {
-            throw new ArgumentNullException(nameof(assembly));
-        }
-
-        return new AppInfo(assembly);
-    }
-
-    /// <summary>
-    /// Froms the type.
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <returns></returns>
-    public static AppInfo FromType(Type type)
-        => new AppInfo(type.Assembly);
-
-    /// <summary>
-    /// НЕ рекомендуется для production (может вернуть не ту сборку)
-    /// </summary>
-    public static AppInfo FromCallingAssembly()
-        => new AppInfo(Assembly.GetCallingAssembly());
-
-    // -------------------- Public API --------------------
-
-    /// <summary>
-    /// Gets the assembly.
+    /// Gets the application data product path.
     /// </summary>
     /// <value>
-    /// The assembly.
+    /// The application data product path.
     /// </value>
-    public Assembly Assembly { get; }
-
-    /// <summary>
-    /// Gets the assembly path.
-    /// </summary>
-    /// <value>
-    /// The assembly path.
-    /// </value>
-    public string AssemblyPath { get; }
+    public string AppDataProductPath { get; }
 
     /// <summary>
     /// Gets the assembly directory.
@@ -157,44 +103,12 @@ public sealed class AppInfo : IApplicationInfo_NEW
     public string AssemblyDirectory { get; }
 
     /// <summary>
-    /// Gets the name of the file.
+    /// Gets the assembly path.
     /// </summary>
     /// <value>
-    /// The name of the file.
+    /// The assembly path.
     /// </value>
-    public string FileName { get; }
-
-    /// <summary>
-    /// Gets the file prefix.
-    /// </summary>
-    /// <value>
-    /// The file prefix.
-    /// </value>
-    public string FilePrefix { get; }
-
-    /// <summary>
-    /// Gets the name of the product.
-    /// </summary>
-    /// <value>
-    /// The name of the product.
-    /// </value>
-    public string ProductName { get; }
-
-    /// <summary>
-    /// Gets the product title.
-    /// </summary>
-    /// <value>
-    /// The product title.
-    /// </value>
-    public string ProductTitle { get; }
-
-    /// <summary>
-    /// Gets the informational version.
-    /// </summary>
-    /// <value>
-    /// The informational version.
-    /// </value>
-    public string InformationalVersion { get; }
+    public string AssemblyPath { get; }
 
     /// <summary>
     /// Gets the assembly version.
@@ -213,43 +127,6 @@ public sealed class AppInfo : IApplicationInfo_NEW
     public DateTime BuildDate { get; }
 
     /// <summary>
-    /// Gets a value indicating whether this instance is automatic version.
-    /// </summary>
-    /// <value>
-    ///   <c>true</c> if this instance is automatic version; otherwise, <c>false</c>.
-    /// </value>
-    public bool IsAutoVersion { get; }
-
-    /// <summary>
-    /// Gets the application data product path.
-    /// </summary>
-    /// <value>
-    /// The application data product path.
-    /// </value>
-    public string AppDataProductPath { get; }
-
-    /// <summary>
-    /// Gets the application data product log path.
-    /// </summary>
-    /// <value>
-    /// The application data product log path.
-    /// </value>
-    public string AppDataProductLogPath { get; }
-
-    /// <summary>
-    /// Gets the n log configuration path.
-    /// </summary>
-    /// <value>
-    /// The n log configuration path.
-    /// </value>
-    public string NLogConfigPath { get; }
-
-    /// <summary>
-    /// Gets the assembly file version.
-    /// </summary>
-    public string FileVersion { get; }
-
-    /// <summary>
     /// Gets the assembly copyright information.
     /// </summary>
     public string Copyright { get; }
@@ -260,6 +137,128 @@ public sealed class AppInfo : IApplicationInfo_NEW
     public string Description { get; }
 
     /// <summary>
+    /// Gets the name of the file.
+    /// </summary>
+    /// <value>
+    /// The name of the file.
+    /// </value>
+    public string FileName { get; }
+
+    /// <summary>
+    /// Gets the file prefix.
+    /// </summary>
+    /// <value>
+    /// The file prefix.
+    /// </value>
+    public string FilePrefix { get; }
+
+    /// <summary>
+    /// Gets the assembly file version.
+    /// </summary>
+    public string FileVersion { get; }
+
+    /// <summary>
+    /// Gets the informational version.
+    /// </summary>
+    /// <value>
+    /// The informational version.
+    /// </value>
+    public string InformationalVersion { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this instance is automatic version.
+    /// </summary>
+    /// <value>
+    ///   <c>true</c> if this instance is automatic version; otherwise, <c>false</c>.
+    /// </value>
+    public bool IsAutoVersion { get; }
+
+    /// <summary>
+    /// Gets the n log configuration path.
+    /// </summary>
+    /// <value>
+    /// The n log configuration path.
+    /// </value>
+    public string NLogConfigPath { get; }
+
+    /// <summary>
+    /// Gets the name of the product.
+    /// </summary>
+    /// <value>
+    /// The name of the product.
+    /// </value>
+    public string ProductName { get; }
+
+    /// <summary>
+    /// Gets the product title.
+    /// </summary>
+    /// <value>
+    /// The product title.
+    /// </value>
+    public string ProductTitle { get; }
+
+    public string TitlePrefix { get => $"{ProductName} v.{FileVersion} : "; }
+
+    /// <summary>
+    /// Gets the assembly.
+    /// </summary>
+    /// <value>
+    /// The assembly.
+    /// </value>
+    private Assembly _asembly { get; }
+
+    /// <summary>
+    /// Froms the assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly.</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException">assembly</exception>
+    public static AppInfo FromAssembly(Assembly assembly)
+    {
+        if (assembly == null)
+        {
+            throw new ArgumentNullException(nameof(assembly));
+        }
+
+        return new AppInfo(assembly);
+    }
+
+    /// <summary>
+    /// НЕ рекомендуется для production (может вернуть не ту сборку)
+    /// </summary>
+    public static AppInfo FromCallingAssembly()
+        => new AppInfo(Assembly.GetCallingAssembly());
+
+    // -------------------- Factory --------------------
+    /// <summary>
+    /// Froms the type.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns></returns>
+    public static AppInfo FromType(Type type)
+        => new AppInfo(type.Assembly);
+
+    /// <summary>
+    /// Gets the specified assembly.
+    /// </summary>
+    /// <param name="assembly">The assembly.</param>
+    /// <returns></returns>
+    public static AppInfo Get(Assembly assembly)
+    {
+        return _cache.GetOrAdd(assembly, asm => new AppInfo(asm));
+    }
+
+    public static AppInfo Get(Type type)
+    {
+        return Get(type.Assembly);
+    }
+    public string ToShortString()
+    {
+        return $"{ProductTitle} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")})";
+    }
+
+    // -------------------- Public API --------------------
+    /// <summary>
     /// Converts to string.
     /// </summary>
     /// <returns>
@@ -267,14 +266,8 @@ public sealed class AppInfo : IApplicationInfo_NEW
     /// </returns>
     public override string ToString()
     {
-        return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); Assembly: {FileName}; [{InformationalVersion}]";
+        return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); _asembly: {FileName}; [{InformationalVersion}]";
     }
-
-    public string ToShortString()
-    {
-        return $"{ProductTitle} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")})";
-    }
-
     /// <summary>
     /// Converts Longs the string.
     /// </summary>
@@ -296,6 +289,45 @@ public sealed class AppInfo : IApplicationInfo_NEW
     }
 
     // -------------------- Helpers --------------------
+
+    /// <summary>
+    /// Extracts the product prefix.
+    /// </summary>
+    /// <param name="fileName">Name of the file.</param>
+    /// <returns></returns>
+    private static string ExtractProductPrefix(string fileName)
+    {
+        int dotIndex = fileName.IndexOf('.');
+        return dotIndex > 0
+            ? fileName.Substring(0, dotIndex)
+            : fileName;
+    }
+
+    /// <summary>
+    /// Tries the get build date.
+    /// </summary>
+    /// <param name="version">The version.</param>
+    /// <returns></returns>
+    private static DateTime? TryGetBuildDate(Version version)
+    {
+        if (version == null || version.Build < 0 || version.Revision < 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
+            DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return baseDate
+                .AddDays(version.Build)
+                .AddSeconds(version.Revision * 2);
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// Computes the build date.
@@ -331,44 +363,5 @@ public sealed class AppInfo : IApplicationInfo_NEW
         // 3. Последний fallback
         isAuto = false;
         return DateTime.UtcNow;
-    }
-
-    /// <summary>
-    /// Tries the get build date.
-    /// </summary>
-    /// <param name="version">The version.</param>
-    /// <returns></returns>
-    private static DateTime? TryGetBuildDate(Version version)
-    {
-        if (version == null || version.Build < 0 || version.Revision < 0)
-        {
-            return null;
-        }
-
-        try
-        {
-            // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
-            DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return baseDate
-                .AddDays(version.Build)
-                .AddSeconds(version.Revision * 2);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    /// <summary>
-    /// Extracts the product prefix.
-    /// </summary>
-    /// <param name="fileName">Name of the file.</param>
-    /// <returns></returns>
-    private static string ExtractProductPrefix(string fileName)
-    {
-        int dotIndex = fileName.IndexOf('.');
-        return dotIndex > 0
-            ? fileName.Substring(0, dotIndex)
-            : fileName;
     }
 }
