@@ -32,6 +32,9 @@ namespace drz.SpecSpds.Test
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
             //
+            SysInfo_NEW2 sysInfo_NEW2 = new SysInfo_NEW2();
+
+            Console.WriteLine(sysInfo_NEW2);
 
             /* //SimpleInjector */
             DrzSimpleInjector drzSimpleInjector = new DrzSimpleInjector();
