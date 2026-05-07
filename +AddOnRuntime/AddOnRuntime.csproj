@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	  <ProjectReference Include="..\+CadServices\CadServices.csproj" />
 	  <ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 		<ItemGroup>

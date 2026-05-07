@@ -4,11 +4,12 @@
 		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
 
-		<RootNamespace>drz.Infrastructure</RootNamespace>
-		<Description>Infrastructure</Description>
-		<AssemblyTitle>dRz.Infrastructure</AssemblyTitle>
-		<Product>dRz.Infrastructure</Product>
-		<InformationalVersion>Infrastructure for All</InformationalVersion>
+		<RootNamespace>drz.CadServices</RootNamespace>
+		<Description>Сервис nanoCAD</Description>
+		<AssemblyTitle>dRz.CadServices</AssemblyTitle>
+		<Product>dRz.CadServices</Product>
+		<InformationalVersion>CadServices for nanoCad</InformationalVersion>
+
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
@@ -19,7 +20,7 @@
 		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\+Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\+CadServices\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />

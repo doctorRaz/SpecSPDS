@@ -7,10 +7,6 @@ namespace drz.Infrastructure.Infrastructure
 {
     public class ApplicationInfo_NEW : IApplicationInfo_NEW
     {
-        //private readonly Assembly _assembly;
-
-        //private IntPtr _handle;
-
         #region Public Constructors
 
         public ApplicationInfo_NEW(Assembly assembly)
@@ -137,47 +133,6 @@ namespace drz.Infrastructure.Infrastructure
         #region Private Methods
 
         /// <summary>
-        /// Extracts the product prefix.
-        /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
-        private /*static*/ string ExtractProductPrefix(string fileName)
-        {
-            int dotIndex = fileName.IndexOf('.');
-            return dotIndex > 0
-                ? fileName.Substring(0, dotIndex)
-                : fileName;
-        }
-
-        /// <summary>
-        /// Tries the get build date.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        private /*static*/ DateTime? TryGetBuildDate(Version version)
-        {
-            if (version == null || version.Build < 0 || version.Revision < 0)
-            {
-                return null;
-            }
-
-            try
-            {
-                // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
-                DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                DateTime buildDate = baseDate.AddDays(version.Build).AddSeconds(version.Revision * 2);
-
-                // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
-                // а просто какие-то числа от CI/CD системы.
-                return buildDate > DateTime.UtcNow.AddDays(1) ? null : (DateTime?)buildDate;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Computes the build date.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
@@ -213,6 +168,46 @@ namespace drz.Infrastructure.Infrastructure
             return DateTime.UtcNow;
         }
 
+        /// <summary>
+        /// Extracts the product prefix.
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns></returns>
+        private string ExtractProductPrefix(string fileName)
+        {
+            int dotIndex = fileName.IndexOf('.');
+            return dotIndex > 0
+                ? fileName.Substring(0, dotIndex)
+                : fileName;
+        }
+
+        /// <summary>
+        /// Tries the get build date.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        private DateTime? TryGetBuildDate(Version version)
+        {
+            if (version == null || version.Build < 0 || version.Revision < 0)
+            {
+                return null;
+            }
+
+            try
+            {
+                // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
+                DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                DateTime buildDate = baseDate.AddDays(version.Build).AddSeconds(version.Revision * 2);
+
+                // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
+                // а просто какие-то числа от CI/CD системы.
+                return buildDate > DateTime.UtcNow.AddDays(1) ? null : (DateTime?)buildDate;
+            }
+            catch
+            {
+                return null;
+            }
+        }
         #endregion Private Methods
     }
 }
