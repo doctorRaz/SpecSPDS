@@ -14,9 +14,11 @@ namespace drz.Infrastructure.Services
 {
     public class WindowMessageService : IMessageService, IWindowMessageService
     {
-        public WindowMessageService(IApplicationInfo applicationInfo)
+        public WindowMessageService(IApplicationInfo applicationInfo, IWindowHandleProvider handleProvider )
         {
             _applicationInfo = applicationInfo;
+
+            _cadWindowHandle= handleProvider.Handle;
 
         }
 
@@ -55,9 +57,9 @@ namespace drz.Infrastructure.Services
 
         public void InfoMessage(string message, [CallerMemberName] string caller = null)
         {
-            if (_applicationInfo.CadWindowHandle != IntPtr.Zero)
+            if (/*_applicationInfo.CadWindowHandle*/_cadWindowHandle != IntPtr.Zero)
             {
-                SetForegroundWindow(_applicationInfo.CadWindowHandle);
+                SetForegroundWindow(/*_applicationInfo.CadWindowHandle*/_cadWindowHandle);
             }
 
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
@@ -68,6 +70,8 @@ namespace drz.Infrastructure.Services
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private IApplicationInfo _applicationInfo;
+
+        private IntPtr _cadWindowHandle=IntPtr.Zero;
 
     }
 }

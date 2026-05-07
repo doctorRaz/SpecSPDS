@@ -50,6 +50,8 @@ namespace drz.AddOn.Composition
 
         private void RegisterServices(Container container)
         {
+            container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
+
             container.Register<ICommandLineMessageService, CommandLineMessageService>();
 
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
