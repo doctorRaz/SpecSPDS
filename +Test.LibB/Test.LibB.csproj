@@ -11,6 +11,9 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
+	<PropertyGroup>
+	<DefineConstants>$(DefineConstants);TEST</DefineConstants>
+</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>

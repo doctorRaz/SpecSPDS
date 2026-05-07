@@ -11,27 +11,21 @@ namespace drz.Infrastructure.Infrastructure
     public class ApplicationInfo : IApplicationInfo
     {
         private Assembly _assembly;
-
-        private IntPtr _handle;
+               
 
         public ApplicationInfo(Assembly assembly)
         {
             _assembly = assembly;
-#if !TEST
-            _handle = Application.MainWindow.Handle;
-#else
-            _handle = IntPtr.Zero;
-#endif
+
         }
 
-        public IntPtr CadWindowHandle { get => _handle; }
 
-        public string Name
+        public string AssembleFullName
         {
             get => _assembly.FullName;
         }
 
-        public string Path
+        public string AssemblyPath
         {
             get => _assembly.Location;
         }
@@ -41,9 +35,9 @@ namespace drz.Infrastructure.Infrastructure
             get => _assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? "FilePrefix";
         }
 
-        public string TitlePrefix { get => $"{ProductName} v.{Version} : "; }
+        public string TitlePrefix { get => $"{ProductName} v.{AssemblyVersion} : "; }
 
-        public Version Version
+        public Version AssemblyVersion
         {
             get => _assembly.GetName().Version;
         }

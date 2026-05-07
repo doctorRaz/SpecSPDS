@@ -2,6 +2,7 @@
 using drz.Abstractions.Services;
 using System;
 
+//todo все связанное с HostMgd в отдельную сборку CadInfrastructure
 #if !TEST
 using HostMgd.ApplicationServices;
 #endif
@@ -73,8 +74,7 @@ namespace drz.Infrastructure.Services
                 }
             }
 #else
-            Console.WriteLine("\n" + (string.IsNullOrWhiteSpace(prefix) ? "" : $"[{prefix}]\t") +
-                          (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+            Console.WriteLine(formatted);
 #endif
 
 

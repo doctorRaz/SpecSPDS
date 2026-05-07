@@ -27,7 +27,7 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             Console.WriteLine($"{cmdB.ExecuteEnvironmentInfoProvider()}");
 
-            Console.WriteLine($"{InfoDll.ToStringLong()}");
+            Console.WriteLine($"{InfoDll.ToLongString()}");
 
             Console.WriteLine($"{RT.Info}");
             Console.WriteLine($"{RT.Os}");

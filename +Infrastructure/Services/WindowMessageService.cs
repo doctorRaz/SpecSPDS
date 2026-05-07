@@ -24,20 +24,20 @@ namespace drz.Infrastructure.Services
 
         public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
         {
-#if !TEST
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                InfoMessage(message, caller);
-                return;
-            }
+//#if !TEST
+            //Document doc = Application.DocumentManager.MdiActiveDocument;
+            //if (doc == null)
+            //{
+            //    InfoMessage(message, caller);
+            //    return;
+            //}
 
-            Editor ed = doc.Editor;
+            //Editor ed = doc.Editor;
 
-            ed.WriteMessage("\n" + (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
-#else
+            //ed.WriteMessage("\n" + (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message);
+//#else
             InfoMessage(message, caller);
-#endif
+//#endif
         }
 
         public void ErrorMessage(string message, [CallerMemberName] string caller = null)

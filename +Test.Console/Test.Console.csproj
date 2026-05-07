@@ -19,7 +19,7 @@
 		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);CMD</DefineConstants>
+		<DefineConstants>$(DefineConstants);CMD;TEST</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->

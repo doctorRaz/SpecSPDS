@@ -1,7 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -13,34 +12,52 @@ namespace drz.EnvironmentInfo.App;
 /// </summary>
 public sealed class AppInfo : IApplicationInfo_NEW
 {
-    private const string _nLogConfigFileName = "drzNLog.dll.nlog";
+
+    #region Private Fields
+
+    //private const string _nLogConfigFileName = "drzNLog.dll.nlog";
 
     private static readonly ConcurrentDictionary<Assembly, AppInfo> _cache = new();
 
+    /// <summary>
+    /// Gets the assembly.
+    /// </summary>
+    /// <value>
+    /// The assembly.
+    /// </value>
+    //private readonly Assembly _assembly;
+
+    #endregion Private Fields
+
+    #region Private Constructors
+
     private AppInfo(Assembly assembly)
     {
-        _asembly = assembly;
+        //_assembly = assembly;
 
-        try
+        AssemblyName assemblyName = assembly.GetName();
+
+        AssemblyPath = assembly.Location ?? string.Empty;
+
+        if (!string.IsNullOrEmpty(AssemblyPath))
         {
-            AssemblyPath = assembly.Location;
+            AssemblyDirectory = Path.GetDirectoryName(AssemblyPath) ?? string.Empty;
+
+            FileName = Path.GetFileNameWithoutExtension(AssemblyPath);
+
         }
-        catch
+        else
         {
-            AssemblyPath = string.Empty;
+            AssemblyDirectory = string.Empty;
+
+            FileName = assemblyName.Name ?? "Unknown";
         }
 
-        AssemblyDirectory = !string.IsNullOrEmpty(AssemblyPath)
-            ? Path.GetDirectoryName(AssemblyPath) ?? string.Empty
-            : string.Empty;
+        AssembleFullName = assembly.FullName;
 
-        FileName = !string.IsNullOrEmpty(AssemblyPath)
-            ? Path.GetFileNameWithoutExtension(AssemblyPath)
-            : assembly.GetName().Name ?? "Unknown";
+        AssemblyVersion = assemblyName.Version ?? new Version(0, 0, 0, 0);
 
         FilePrefix = ExtractProductPrefix(FileName);
-
-        AssemblyVersion = assembly.GetName().Version ?? new Version(0, 0, 0, 0);
 
         BuildDate = ComputeBuildDate(assembly, out bool isAuto);
 
@@ -58,13 +75,16 @@ public sealed class AppInfo : IApplicationInfo_NEW
             assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
             ?? FileName;
 
-        FileVersion = assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version
+        FileVersion =
+            assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version
             ?? "Unknown";
 
-        Copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright
+        Copyright =
+          assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright
             ?? "Unknown";
 
-        Description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description
+        Description =
+           assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description
             ?? "Unknown";
 
         // ---AppData ---
@@ -80,55 +100,31 @@ public sealed class AppInfo : IApplicationInfo_NEW
         AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
 
         // --- Nlog ---
-        NLogConfigPath = !string.IsNullOrEmpty(AssemblyDirectory)
-            ? Path.Combine(AssemblyDirectory, _nLogConfigFileName)
-            : _nLogConfigFileName;
+        //NLogConfigPath = !string.IsNullOrEmpty(AssemblyDirectory)
+        //    ? Path.Combine(AssemblyDirectory, _nLogConfigFileName)
+        //    : _nLogConfigFileName;
     }
 
+    #endregion Private Constructors
+
+    #region Public Properties
+
     public string AppDataProductLogPath { get; }
-    /// <summary>
-    /// Gets the application data product path.
-    /// </summary>
-    /// <value>
-    /// The application data product path.
-    /// </value>
+
+
     public string AppDataProductPath { get; }
 
-    /// <summary>
-    /// Gets the assembly directory.
-    /// </summary>
-    /// <value>
-    /// The assembly directory.
-    /// </value>
+    public string AssembleFullName { get; }
     public string AssemblyDirectory { get; }
 
-    /// <summary>
-    /// Gets the assembly path.
-    /// </summary>
-    /// <value>
-    /// The assembly path.
-    /// </value>
     public string AssemblyPath { get; }
 
-    /// <summary>
-    /// Gets the assembly version.
-    /// </summary>
-    /// <value>
-    /// The assembly version.
-    /// </value>
     public Version AssemblyVersion { get; }
 
-    /// <summary>
-    /// Gets the build date.
-    /// </summary>
-    /// <value>
-    /// The build date.
-    /// </value>
-    public DateTime BuildDate { get; }
 
-    /// <summary>
-    /// Gets the assembly copyright information.
-    /// </summary>
+    public DateTime BuildDate { get; }
+     
+
     public string Copyright { get; }
 
     /// <summary>
@@ -136,12 +132,6 @@ public sealed class AppInfo : IApplicationInfo_NEW
     /// </summary>
     public string Description { get; }
 
-    /// <summary>
-    /// Gets the name of the file.
-    /// </summary>
-    /// <value>
-    /// The name of the file.
-    /// </value>
     public string FileName { get; }
 
     /// <summary>
@@ -179,7 +169,7 @@ public sealed class AppInfo : IApplicationInfo_NEW
     /// <value>
     /// The n log configuration path.
     /// </value>
-    public string NLogConfigPath { get; }
+    //public string NLogConfigPath { get; }
 
     /// <summary>
     /// Gets the name of the product.
@@ -197,15 +187,11 @@ public sealed class AppInfo : IApplicationInfo_NEW
     /// </value>
     public string ProductTitle { get; }
 
-    public string TitlePrefix { get => $"{ProductName} v.{FileVersion} : "; }
+    public string TitlePrefix { get => $"{ProductName} v.{AssemblyVersion} : "; }
 
-    /// <summary>
-    /// Gets the assembly.
-    /// </summary>
-    /// <value>
-    /// The assembly.
-    /// </value>
-    private Assembly _asembly { get; }
+    #endregion Public Properties
+
+    #region Public Methods
 
     /// <summary>
     /// Froms the assembly.
@@ -272,7 +258,7 @@ public sealed class AppInfo : IApplicationInfo_NEW
     /// Converts Longs the string.
     /// </summary>
     /// <returns></returns>
-    public string ToStringLong()
+    public string ToLongString()
     {
         return @$"LongString
     {ProductName} v{AssemblyVersion}
@@ -288,7 +274,11 @@ public sealed class AppInfo : IApplicationInfo_NEW
 ";
     }
 
+    #endregion Public Methods
+
     // -------------------- Helpers --------------------
+
+    #region Private Methods
 
     /// <summary>
     /// Extracts the product prefix.
@@ -301,6 +291,7 @@ public sealed class AppInfo : IApplicationInfo_NEW
         return dotIndex > 0
             ? fileName.Substring(0, dotIndex)
             : fileName;
+
     }
 
     /// <summary>
@@ -364,4 +355,7 @@ public sealed class AppInfo : IApplicationInfo_NEW
         isAuto = false;
         return DateTime.UtcNow;
     }
+
+    #endregion Private Methods
+
 }

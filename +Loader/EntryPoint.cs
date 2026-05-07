@@ -206,8 +206,8 @@ namespace drz.Loader
                 // формироваться по правилу:
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта
-                // Version, полученного из Application.Version.
-                Version version = RT.Cad.ProductVersion;// Version;
+                // AssemblyVersion, полученного из Application.AssemblyVersion.
+                Version version = RT.Cad.ProductVersion;// AssemblyVersion;
 
                 string fileDescription = RT.Cad.FileDescription;
 

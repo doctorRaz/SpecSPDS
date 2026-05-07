@@ -13,7 +13,10 @@ namespace drz.SpecSpds.Test.SimpleInjector
         internal void Start()
         {
             TestContainer testContainer = new TestContainer();
-            testContainer.TestCondole();
+
+            testContainer.TestInjectorInfo();
+            
+            testContainer.TestInjectorMessage();
 
             CommandA cmdA = new CommandA();
             cmdA.msgCommandA();
@@ -21,7 +24,7 @@ namespace drz.SpecSpds.Test.SimpleInjector
             CommandB cmdB = new CommandB();
             cmdB.msgCommandB();
 
-            testContainer.TestCondole();
+            testContainer.TestInjectorMessage();
             cmdA.msgCommandA();
             cmdB.msgCommandB();
         }

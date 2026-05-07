@@ -21,6 +21,8 @@ namespace drz.Src.Infrastructure
 
         internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
+        internal static IApplicationInfo_NEW InfoDll_NEW => Root.Get<IApplicationInfo_NEW>();
+
         internal static IMessageService MsgCmd => Root.Get<ICommandLineMessageService>();
 
         internal static IMessageService MsgGUI => Root.Get<IWindowMessageService>();
