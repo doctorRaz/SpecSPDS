@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-
+//todo все связанное с HostMgd в отдельную сборку CadInfrastructure
 namespace drz.Infrastructure.Services
 {
     /// <summary>

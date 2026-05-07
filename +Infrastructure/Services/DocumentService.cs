@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 
+//todo все связанное с HostMgd в отдельную сборку CadInfrastructure
 #if !TEST
 using HostMgd.ApplicationServices;
 #endif
@@ -10,6 +11,7 @@ namespace drz.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {
+
         public bool IsActive
         {
             get

@@ -4,11 +4,11 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-#if !TEST
-using HostMgd.ApplicationServices;
-using HostMgd.EditorInput;
-using Application = HostMgd.ApplicationServices.Application;
-#endif
+//#if !TEST
+//using HostMgd.ApplicationServices;
+//using HostMgd.EditorInput;
+//using Application = HostMgd.ApplicationServices.Application;
+//#endif
 
 namespace drz.Infrastructure.Services
 {
