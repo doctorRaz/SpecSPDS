@@ -9,14 +9,16 @@ namespace drz.Abstractions.Infrastructure
         #region Public Properties
 
         /// <summary> Возвращает путь к журналу данных приложения.</summary>
-        /// <value>
-        /// Путь к журналу данных приложения.
-        /// </value>
+        /// <value>Путь к журналу данных приложения.</value>
         string AppDataProductLogPath { get; }
 
         /// <summary> Возвращает путь к данным приложения.</summary>
         /// <value> Путь к данным приложения. </value>
         string AppDataProductPath { get; }
+
+        /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
+        /// <value>"Полное Имя" сборки.</value>
+        string AssembleFullName { get; }
 
         /// <summary> Возвращает директорию сборки. </summary>
         /// <value> Директория сборки. </value>
@@ -32,7 +34,7 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Возвращает дату-время компиляции к сборки.</summary>
         /// <value>Дата-время компиляции к сборки.</value>
-        DateTime BuildDate { get; }             
+        DateTime BuildDate { get; }
 
         /// <summary>Возвращает информацию о копирайте.</summary>
         /// <value>Копирайт.</value>
@@ -41,11 +43,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает описание сборки.</summary>
         /// <value>The description.</value>
         string Description { get; }
-
-         /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
-        /// <value>"Полное Имя" сборки.</value>
-        string AssembleFullName { get; }//todo возможно не нужно?
-
+             
         /// <summary>Возвращает имя файла сборки без расширения.</summary>
         /// <value>Имя файла сборки без расширения.</value>
         string FileName { get; }
@@ -62,7 +60,6 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Признак, что дата сборки получена из версии.</summary>
         bool IsAutoVersion { get; }
 
-
         //string NLogConfigPath { get; }
 
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
@@ -78,23 +75,17 @@ namespace drz.Abstractions.Infrastructure
 
         #region Public Methods
 
-        //static abstract AppInfo FromAssembly(Assembly assembly);
-        //static abstract AppInfo FromCallingAssembly();
-        //static abstract AppInfo FromType(Type type);
-        //static abstract AppInfo Get(Assembly assembly);
-        //static abstract AppInfo Get(Type type);
+        /// <summary>Converts to longstring.</summary>
+        /// <returns>long string</returns>
+        string ToLongString();
 
         /// <summary>Converts to shortstring.</summary>
-        /// <returns>shortstring</returns>
+        /// <returns>short string</returns>
         string ToShortString();
 
         /// <summary>Converts to string.</summary>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         string ToString();
-
-        /// <summary>Converts to longstring.</summary>
-        /// <returns>longstring</returns>
-        string ToLongString();
 
         #endregion Public Methods
     }

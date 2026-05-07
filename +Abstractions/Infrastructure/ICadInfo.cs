@@ -4,6 +4,8 @@ namespace drz.Abstractions.Infrastructure
 {
     public interface ICadInfo
     {
+        #region Public Properties
+
         /// <summary>Gets the name of the company.</summary>
         /// <value>The name of the company.</value>
         string CompanyName { get; }
@@ -60,8 +62,22 @@ namespace drz.Abstractions.Infrastructure
         /// <value>The product version.</value>
         Version ProductVersion { get; }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
+        /// <summary>Converts to longstring.</summary>
+        /// <returns>long string</returns>
+        string ToLongString();
+
+        /// <summary>Converts to shortstring.</summary>
+        /// <returns>short string</returns>
+        string ToShortString();
+
         /// <summary>Converts to string.</summary>
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         string ToString();
+
+        #endregion Public Methods
     }
 }
