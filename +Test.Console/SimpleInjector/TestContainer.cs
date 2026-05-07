@@ -1,17 +1,11 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
+using drz.EnvironmentInfo;
 using drz.EnvironmentInfo.Cad;
 using drz.EnvironmentInfo.Sys;
 using System;
 using static drz.Src.Infrastructure.AddOnContext;
-
-
-using drz.Abstractions.Logger;
-
-using drz.EnvironmentInfo;
-
-
 using AC = drz.Src.Infrastructure.AddOnContext;
 
 namespace drz.SpecSpds.Test.SimpleInjector
@@ -46,6 +40,11 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         public void TestInjectorInfo()
         {
+            ICadInfo cadInfo = CadInfo_NEW;
+            Console.WriteLine(CadInfo_NEW);
+            Console.WriteLine(CadInfo_NEW.ToString());
+            Console.WriteLine(CadInfo_NEW.Copyright);
+
             ISysInfo sysInfo = SysInfo_NEW;
             Console.WriteLine(sysInfo);
 

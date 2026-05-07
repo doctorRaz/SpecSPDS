@@ -57,6 +57,8 @@ namespace drz.AddOn.Composition
             container.Register<IApplicationInfo_NEW, ApplicationInfo_NEW>(Lifestyle.Singleton);
 
             container.Register<ISysInfo, SysInfo_NEW>(Lifestyle.Singleton);
+
+            container.Register<ICadInfo, CadInfo_NEW>(Lifestyle.Singleton);
         }
 
         private void RegisterServices(Container container)

@@ -8,6 +8,8 @@ namespace drz.Loader.CadCommands.NewCmd
         [CommandMethod($"console-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleNewCmd()
         {
+            Msg.InfoMessage($"{CadInfo_NEW}");
+
             Msg.InfoMessage($"{SysInfo_NEW}");
 
             Msg.ErrorMessage($"{InfoDll_NEW}");
@@ -18,6 +20,8 @@ namespace drz.Loader.CadCommands.NewCmd
         [CommandMethod($"info-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void GuiNewCmd()
         {
+            MsgGUI.InfoMessage($"{CadInfo_NEW}");
+
             MsgGUI.ConsoleMessage($"{SysInfo_NEW}");
 
             MsgGUI.InfoMessage($"{InfoDll_NEW}");

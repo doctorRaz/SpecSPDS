@@ -24,6 +24,8 @@ namespace drz.Src.Infrastructure
 
         internal static ISysInfo SysInfo_NEW => Root.Get<ISysInfo>();
 
+        internal static ICadInfo CadInfo_NEW => Root.Get<ICadInfo>();
+
         internal static IDocumentService DocService => Root.Get<IDocumentService>();
 
         internal static IMessageService MsgCmd => Root.Get<ICommandLineMessageService>();
