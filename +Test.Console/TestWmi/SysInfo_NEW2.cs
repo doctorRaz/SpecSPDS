@@ -9,7 +9,6 @@ namespace drz.SpecSpds.Test.TestWmi
 {
     public class SysInfo_NEW2 : ISysInfo
     {
-
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
@@ -107,12 +106,13 @@ namespace drz.SpecSpds.Test.TestWmi
 
         #region Private Properties
 
-        string longStr => $"CPU: {ProcessorName}\n" +
-                          $"RAM: {RamTotalGb}\n" +
-                          $"GPU: {GpuInfo}";
-        string shortStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} [{Architecture}]";
-        string defStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} ({OsVersion}) [{Architecture}]";
+        private string defStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} ({OsVersion}) [{Architecture}]";
 
+        private string longStr => $"CPU: {ProcessorName}\n" +
+                                  $"RAM: {RamTotalGb}\n" +
+                          $"GPU: {GpuInfo}";
+
+        private string shortStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} [{Architecture}]";
         #endregion Private Properties
 
         #region Public Methods
@@ -122,7 +122,7 @@ namespace drz.SpecSpds.Test.TestWmi
 
         public string ToShortString() => shortStr;
 
-        public override string ToString() =>defStr;
+        public override string ToString() => defStr;
 
         #endregion Public Methods
 
@@ -144,16 +144,7 @@ namespace drz.SpecSpds.Test.TestWmi
                     {
                         string name = gpu["Name"]?.ToString() ?? "Unknown";
 
-                        // Исправляем баг WMI с объемом памяти (uint32 может прийти как отрицательное число)
-                        //todo  с памятью GPU трындеж
-                        long.TryParse(gpu["AdapterRAM"]?.ToString(), out long vramRaw);
-                        uint vramBytes = (uint)vramRaw; // Принудительно в беззнаковое
-
-                        string vram = vramBytes > 0
-                            ? $"({vramBytes / (1024 * 1024)} MB)"
-                            : "";
-
-                        return $"{name} {vram}".Trim();
+                        return $"{name}".Trim();
                     });
 
                     return string.Join(" / ", results);
@@ -185,7 +176,6 @@ namespace drz.SpecSpds.Test.TestWmi
         }
 
         #endregion Private Methods
-
     }
 }
 

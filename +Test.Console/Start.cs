@@ -24,6 +24,7 @@ using drz.SpecSpds.Test.TestWmi;
 using System;
 using System.Diagnostics;
 
+
 namespace drz.SpecSpds.Test
 {
     public class Start
@@ -61,4 +62,6 @@ namespace drz.SpecSpds.Test
 
         #endregion Private Methods
     }
+
+    
 }
