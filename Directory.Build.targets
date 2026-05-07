@@ -4,7 +4,8 @@
 		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
 		<ConfigNameIn>Single_var</ConfigNameIn>
 		<!-- <ConfigNameOut>$(AssemblyName).dll.nlog</ConfigNameOut> -->
-		<ConfigNameOut>drzNLog.dll.nlog</ConfigNameOut>
+		<!-- <ConfigNameOut>drzNLog.dll.nlog</ConfigNameOut> -->
+		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>
 	<Target Name="CopyNLogConfig"
 	        AfterTargets="Build">
