@@ -17,11 +17,14 @@ namespace drz.Src.Infrastructure
         // DI root (инициализируется отдельно)
         private static AddOnCompositionRoot? _root;
 
-        internal static IDocumentService DocService => Root.Get<IDocumentService>();
 
         internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
         internal static IApplicationInfo_NEW InfoDll_NEW => Root.Get<IApplicationInfo_NEW>();
+
+        internal static ISysInfo SysInfo_NEW => Root.Get<ISysInfo>();
+
+        internal static IDocumentService DocService => Root.Get<IDocumentService>();
 
         internal static IMessageService MsgCmd => Root.Get<ICommandLineMessageService>();
 
@@ -42,8 +45,12 @@ namespace drz.Src.Infrastructure
             }
         }
 
+        /// <summary>DI root (инициализируется отдельно)</summary>
+        /// <value>The root.</value>
+        /// <exception cref="System.InvalidOperationException">AddOnCompositionRoot is not initialized</exception>
         private static AddOnCompositionRoot Root => _root ?? throw new InvalidOperationException("AddOnCompositionRoot is not initialized");
 
+        /// <summary>Releases unmanaged and - optionally - managed resources.</summary>
         internal static void Dispose()
         {
             _root?.Dispose();

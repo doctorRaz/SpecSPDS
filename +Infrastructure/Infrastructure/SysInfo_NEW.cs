@@ -1,207 +1,96 @@
-﻿//GPT
-// https://chatgpt.com/c/69c44adf-7f6c-8331-80de-c905a35fea87
-
-using drz.Abstractions.Infrastructure;
+﻿using drz.Abstractions.Infrastructure;
 using Microsoft.Win32;
 using System;
 
-namespace drz.Infrastructure.Infrastructure;
-
-/// <summary>
-/// Информация об ОС (Registry + Environment fallback)
-/// </summary>
-public class SysInfo_NEW : ISysInfo
+namespace drz.Infrastructure.Infrastructure
 {
-    private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
-
-    public SysInfo_NEW()
+    /// <summary>
+    /// Информация об ОС (Registry + Environment fallback)
+    /// </summary>
+    public class SysInfo_NEW : ISysInfo
     {
-        try
+        private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+
+        public SysInfo_NEW()
         {
-            using (RegistryKey key = OpenKey())
-            {
-                if (key == null)
-                {
-                    FillFromEnvironment();
-                    return;
-                }
-
-                ProductName = GetString(key, "ProductName", "Unknown");
-
-                DisplayVersion =
-                    GetString(key, "DisplayVersion", null)
-                    ?? GetString(key, "ReleaseId", null)
-                    ?? "Unknown";
-
-                int major = GetInt(key, "CurrentMajorVersionNumber");
-                int minor = GetInt(key, "CurrentMinorVersionNumber");
-
-                if (major == 0)
-                {
-                    ParseLegacyVersion(GetString(key, "CurrentVersion", null), out major, out minor);
-                }
-
-                int build = ParseInt(GetString(key, "CurrentBuild", null));
-                int rev = GetInt(key, "UBR");
-
-                OsVersion = new Version(major, minor, build, rev);
-                VersionString = OsVersion.ToString();
-
-                Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
-
-                EditionId = GetString(key, "EditionID", "Unknown");
-                InstallationType = GetString(key, "InstallationType", "Unknown");
-                BuildLab = GetString(key, "BuildLab", "Unknown");
-
-                IsFallback = false;
-            }
-        }
-        catch
-        {
-            FillFromEnvironment();
-        }
-    }
-
-    public string Architecture { get; private set; }
-    public string BuildLab { get; private set; }
-    public string DisplayVersion { get; private set; }
-
-    // Дополнительно
-    public string EditionId { get; private set; }
-
-    public string InstallationType { get; private set; }
-
-    public bool IsFallback { get; private set; }
-
-    public Version OsVersion { get; private set; }
-    public string ProductName { get; private set; }
-    public string VersionString { get; private set; }
-
-    private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
-               IsFallback ? "OS (fallback):" : "OS:",
-               ProductName,
-               DisplayVersion,
-               VersionString,
-               Architecture);
-
- 
-
-    public override string ToString()
-    {
-        return fullString;
-    }
-
-    private void FillFromEnvironment()
-    {
-        try
-        {
-            OperatingSystem os = Environment.OSVersion;
-
+            // Устанавливаем базовые значения через Environment (служит дефолтом)
+            Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
             ProductName = "Windows";
             DisplayVersion = "Unknown";
-
-            Version v = os.Version;
-            OsVersion = new Version(v.Major, v.Minor, v.Build, v.Revision);
-            VersionString = OsVersion.ToString();
-
-            Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
-
             EditionId = "Unknown";
             InstallationType = "Unknown";
             BuildLab = "Unknown";
 
-            IsFallback = true;
-        }
-        catch
-        {
-            ProductName = "Unknown";
-            DisplayVersion = "Unknown";
-            OsVersion = new Version(0, 0, 0, 0);
-            VersionString = OsVersion.ToString();
-            Architecture = "Unknown";
-            EditionId = "Unknown";
-            InstallationType = "Unknown";
-            BuildLab = "Unknown";
+            Version envVersion = Environment.OSVersion.Version;
+
+            OsVersion = new Version(envVersion.Major, envVersion.Minor, Math.Max(0, envVersion.Build), Math.Max(0, envVersion.Revision));
 
             IsFallback = true;
-        }
-    }
 
-    private int GetInt(RegistryKey key, string name)
-    {
-        try
-        {
-            if (key == null)
+            // Пытаемся обогатить данными из реестра
+            try
             {
-                return 0;
+                using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+                using RegistryKey key = baseKey.OpenSubKey(RegPath);
+
+                if (key != null)
+                {
+                    ProductName = GetString(key, "ProductName", ProductName);
+                    DisplayVersion = GetString(key, "DisplayVersion") ?? GetString(key, "ReleaseId") ?? "Unknown";
+                    EditionId = GetString(key, "EditionID", EditionId);
+                    InstallationType = GetString(key, "InstallationType", InstallationType);
+                    BuildLab = GetString(key, "BuildLab", BuildLab);
+
+                    // Уточняем версию
+                    int major = GetInt(key, "CurrentMajorVersionNumber", OsVersion.Major);
+                    int minor = GetInt(key, "CurrentMinorVersionNumber", OsVersion.Minor);
+
+                    // Если Win7/8 (CurrentMajor будет 0), пробуем парсить CurrentVersion
+                    if (major == 0)
+                    {
+                        string cv = GetString(key, "CurrentVersion");
+                        if (Version.TryParse(cv, out Version? parsed))
+                        {
+                            major = parsed.Major;
+                            minor = parsed.Minor;
+                        }
+                    }
+
+                    int build = int.TryParse(GetString(key, "CurrentBuild"), out int b) ? b : OsVersion.Build;
+                    int rev = GetInt(key, "UBR", OsVersion.Revision);
+
+                    OsVersion = new Version(major, minor, Math.Max(0, build), Math.Max(0, rev));
+                    IsFallback = false;
+                }
             }
-
-            object value = key.GetValue(name);
-            return value is int ? (int)value : 0;
-        }
-        catch
-        {
-            return 0;
-        }
-    }
-
-    private   string GetString(RegistryKey key, string name, string fallback)
-    {
-        try
-        {
-            if (key == null)
+            catch
             {
-                return fallback;
+                // Если упал реестр, данные от Environment уже лежат в свойствах
             }
+        }
 
-            object value = key.GetValue(name);
-            return value != null ? value.ToString() : fallback;
-        }
-        catch
-        {
-            return fallback;
-        }
+        public string Architecture { get; init; }
+        public string BuildLab { get; init; }
+        public string DisplayVersion { get; init; }
+        public string EditionId { get; init; }
+        public string InstallationType { get; init; }
+        public bool IsFallback { get; init; }
+        public Version OsVersion { get; init; }
+        public string ProductName { get; init; }
+        public string VersionString => OsVersion.ToString();
+        public override string ToString() =>
+            $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} ({OsVersion}) [{Architecture}]";
+
+        private static int GetInt(RegistryKey key, string name, int fallback = 0) =>
+            key.GetValue(name) is int val ? val : fallback;
+
+        private static string GetString(RegistryKey key, string name, string fallback = null) =>
+                    key.GetValue(name)?.ToString() ?? fallback;
     }
+}
 
-    private   RegistryKey OpenKey()
-    {
-        try
-        {
-            RegistryKey baseKey = RegistryKey.OpenBaseKey(
-                RegistryHive.LocalMachine,
-                Environment.Is64BitOperatingSystem
-                    ? RegistryView.Registry64
-                    : RegistryView.Registry32);
-
-            return baseKey.OpenSubKey(RegPath);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private   int ParseInt(string value)
-    {
-        int result;
-        return int.TryParse(value, out result) ? result : 0;
-    }
-
-    private   void ParseLegacyVersion(string value, out int major, out int minor)
-    {
-        major = 0;
-        minor = 0;
-
-        if (string.IsNullOrEmpty(value))
-        {
-            return;
-        }
-
-        string[] parts = value.Split('.');
-        if (parts.Length >= 2)
-        {
-            int.TryParse(parts[0], out major);
-            int.TryParse(parts[1], out minor);
-        }
-    }
+namespace System.Runtime.CompilerServices
+{
+    internal static class IsExternalInit
+    { }
 }
