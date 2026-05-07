@@ -377,7 +377,7 @@ namespace drz.LogServices.drzNlog
 
             factory.ReconfigExistingLoggers();
 
-#if DEBUG || CMD
+#if DEBUG || TEST
             //проверка значений  var
 
             if (config.Variables.ContainsKey(LogVar.LevelMay))

@@ -20,7 +20,7 @@ using drz.Abstractions.Logger;
 using drz.Src.Services;
 
 
-#if CMD
+#if TEST
 
 using drz.SpecSpds;
 
@@ -41,7 +41,7 @@ namespace drz.Loader
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее
     /// подходящей для него версии плагина.
     /// </summary>
-#if CMD
+#if TEST
 
     internal sealed class EntryPoint
 #else
@@ -317,7 +317,7 @@ namespace drz.Loader
 
             string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-#if CMD
+#if TEST
             fileName = "SpecSPDSn";
 #endif
             int major = expectedVersion.Major;
