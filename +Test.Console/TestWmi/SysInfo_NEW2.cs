@@ -25,22 +25,22 @@ namespace drz.SpecSpds.Test.TestWmi
         {
             // Устанавливаем базовые значения через Environment (служит дефолтом)
             Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";
-            //ProductName = "Windows";
-            //DisplayVersion = "Unknown";
-            //EditionId = "Unknown";
-            //InstallationType = "Unknown";
-            //BuildLab = "Unknown";
 
             Version envVersion = Environment.OSVersion.Version;
-            OsVersion = new Version(envVersion.Major, envVersion.Minor, Math.Max(0, envVersion.Build), Math.Max(0, envVersion.Revision));
+            OsVersion = new Version(envVersion.Major,
+                        envVersion.Minor,
+                        Math.Max(0, envVersion.Build),
+                        Math.Max(0, envVersion.Revision));
 
             IsFallback = true;
 
             try
             {
-                using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+                using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine,
+                                                                    RegistryView.Registry64);
+
                 using RegistryKey key = baseKey.OpenSubKey(RegPath);
-              
+
                 if (key != null)
                 {
                     ProductName = GetString(key, "ProductName", ProductName);
@@ -76,7 +76,7 @@ namespace drz.SpecSpds.Test.TestWmi
             // Данные Железа (WMI)
             // Инициализируем "обещания" получить данные
             _processorName = new Lazy<string>(() => GetWmiValue("Win32_Processor", "Name"));
-                        
+
             _ramTotal = new Lazy<string>(() =>
             {
                 double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
@@ -92,36 +92,37 @@ namespace drz.SpecSpds.Test.TestWmi
 
         public string Architecture { get; init; }
         public string BuildLab { get; init; } = "Unknown";
-        public string DisplayVersion { get; init; }= "Unknown";
-        public string EditionId { get; init; }= "Unknown";
+        public string DisplayVersion { get; init; } = "Unknown";
+        public string EditionId { get; init; } = "Unknown";
         public string GpuInfo => _gpuInfo.Value;
         public string InstallationType { get; init; } = "Unknown";
         public bool IsFallback { get; init; }
         public Version OsVersion { get; init; }
         public string ProcessorName => _processorName.Value;
-        public string ProductName { get; init; }="Windows";
+        public string ProductName { get; init; } = "Windows";
         public string RamTotalGb => _ramTotal.Value;
         public string VersionString => OsVersion.ToString();
 
         #endregion Public Properties
 
+        #region Private Properties
+
+        string longStr => $"CPU: {ProcessorName}\n" +
+                          $"RAM: {RamTotalGb}\n" +
+                          $"GPU: {GpuInfo}";
+        string shortStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} [{Architecture}]";
+        string defStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} ({OsVersion}) [{Architecture}]";
+
+        #endregion Private Properties
+
         #region Public Methods
 
-        public string ToLongString()
-        {
-            throw new NotImplementedException();
-        }
+        public string ToLongString() => $"{defStr}\n" +
+                                         $"{longStr}";
 
-        public string ToShortString()
-        {
-            throw new NotImplementedException();
-        }
+        public string ToShortString() => shortStr;
 
-        public override string ToString() =>
-                                    $"OS: {ProductName} {DisplayVersion} [{Architecture}]\n" +
-                    $"CPU: {ProcessorName}\n" +
-                    $"RAM: {RamTotalGb}\n" +
-                    $"GPU: {GpuInfo}";
+        public override string ToString() =>defStr;
 
         #endregion Public Methods
 

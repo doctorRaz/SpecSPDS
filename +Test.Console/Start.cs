@@ -38,6 +38,8 @@ namespace drz.SpecSpds.Test
             SysInfo_NEW2 sysInfo_NEW2 = new SysInfo_NEW2();
 
             Console.WriteLine(sysInfo_NEW2);
+            Console.WriteLine(sysInfo_NEW2.ToShortString());
+            Console.WriteLine(sysInfo_NEW2.ToLongString());
 
             /* //SimpleInjector */
             DrzSimpleInjector drzSimpleInjector = new DrzSimpleInjector();
