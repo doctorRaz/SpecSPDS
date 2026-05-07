@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace drz.Abstractions.Services
 {
-    /// <summary> Сервис сообщений для пользователя </summary>
+    /// <summary> Общий сервис сообщений для пользователя </summary>
     public interface IMessageService
     {
         /// <summary> Сообщение в консоль CAD </summary>

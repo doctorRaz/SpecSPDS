@@ -1,14 +1,15 @@
 ﻿using Teigha.Runtime;
 using static drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Loader.CadCommands
+namespace drz.Loader.CadCommands.Message
 {
-    public class InfoMessageCmd
+    public class GuiMessageCmd
     {
         [CommandMethod($"info-message-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void InfoMessageCommand()
         {
             MsgGUI.InfoMessage("Info message");
+          
         }
     }
 }

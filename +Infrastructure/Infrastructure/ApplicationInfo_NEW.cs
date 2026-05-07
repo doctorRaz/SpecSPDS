@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using System;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 
 namespace drz.Infrastructure.Infrastructure
 {
@@ -201,7 +201,7 @@ namespace drz.Infrastructure.Infrastructure
 
                 // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
                 // а просто какие-то числа от CI/CD системы.
-                return buildDate > DateTime.UtcNow.AddDays(1) ? null : (DateTime?)buildDate;
+                return buildDate > DateTime.UtcNow.AddDays(1) ? null : buildDate;
             }
             catch
             {

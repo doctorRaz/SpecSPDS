@@ -10,12 +10,18 @@ using System.Reflection;
 
 namespace drz.AddOn.Composition
 {
+    /// <summary> Наполнение SimpleInjector объектами </summary>
+    /// <seealso cref="System.IDisposable" />
     public class AddOnCompositionRoot : IDisposable
     {
         private readonly Container _container;
 
         private bool _disposed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddOnCompositionRoot"/> class.
+        /// </summary>
+        /// <param name="addOnAssembly">The add on assembly.</param>
         public AddOnCompositionRoot(Assembly addOnAssembly)
         {
             _container = new Container();
@@ -64,6 +70,9 @@ namespace drz.AddOn.Composition
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
         }
 
+        /// <summary>
+        /// Выполняет определяемые приложением задачи, связанные с удалением, высвобождением или сбросом неуправляемых ресурсов.
+        /// </summary>
         public void Dispose()
         {
             if (!_disposed)

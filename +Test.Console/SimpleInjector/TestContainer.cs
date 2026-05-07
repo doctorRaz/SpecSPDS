@@ -46,8 +46,10 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         public void TestInjectorInfo()
         {
+            ISysInfo sysInfo = SysInfo_NEW;
+            Console.WriteLine(sysInfo);
 
-            IApplicationInfo_NEW infoDll_NEW = AC.InfoDll_NEW;
+            IApplicationInfo_NEW infoDll_NEW = InfoDll_NEW;
 
             Console.WriteLine(infoDll_NEW);
             Console.WriteLine(infoDll_NEW.ToShortString());
@@ -66,7 +68,7 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
             RuntimeInfo rt = RT.Info;
 
-            
+
             //-----
 
 

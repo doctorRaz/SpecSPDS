@@ -2,7 +2,7 @@
 
 namespace drz.Abstractions.Infrastructure
 {
-    /// <summary> Информация о сборке </summary>
+    /// <summary> Информация о сборке от Крыс</summary>
     public interface IApplicationInfo
     {
         #region Public Properties

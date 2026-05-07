@@ -5,6 +5,7 @@ using System;
 
 namespace drz.Abstractions.Infrastructure
 {
+    /// <summary>Информация о системе </summary>
     public interface ISysInfo
     {
 

@@ -1,5 +1,6 @@
 ﻿namespace drz.Abstractions.Services
 {
+    /// <summary>Информация о активном документе</summary>
     public interface IDocumentService
     {
         /// <summary> Активен ли документ </summary>
