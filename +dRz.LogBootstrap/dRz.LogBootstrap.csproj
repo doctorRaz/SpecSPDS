@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
@@ -13,13 +13,13 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
+		<PackageReference Include="NLog" Version="6.1.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
 
 </Project>
