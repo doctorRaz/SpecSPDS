@@ -30,8 +30,8 @@
 		<ProjectReference Include="..\+dRz.Cleaner\drz.Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
-		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
+		<ProjectReference Include="..\+LogBootstrap\drz.LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
 		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />

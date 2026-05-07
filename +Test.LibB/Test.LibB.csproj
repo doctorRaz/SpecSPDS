@@ -19,8 +19,8 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
+		<ProjectReference Include="..\+LogBootstrap\drz.LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 	</ItemGroup>
 </Project>

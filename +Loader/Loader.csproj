@@ -31,8 +31,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
-		<ProjectReference Include="..\+drz.EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+dRz.LogBootstrap\drz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
+		<ProjectReference Include="..\+LogBootstrap\drz.LogBootstrap.csproj" />
 	</ItemGroup>
 
 	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
