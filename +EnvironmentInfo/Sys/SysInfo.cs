@@ -12,24 +12,15 @@ namespace drz.EnvironmentInfo.Sys;
 /// </summary>
 public sealed class SysInfo : ISysInfo
 {
+    #region Private Fields
+
     private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
 
-    public string ProductName { get; private set; }
-    public string DisplayVersion { get; private set; }
-    public Version OsVersion { get; private set; }
-    public string VersionString { get; private set; }
-    public string Architecture { get; private set; }
+    private static readonly Lazy<SysInfo> _current = new Lazy<SysInfo>(() => new SysInfo());
 
-    // Дополнительно
-    public string EditionId { get; private set; }
+    #endregion Private Fields
 
-    public string InstallationType { get; private set; }
-    public string BuildLab { get; private set; }
-
-    /// <summary>
-    /// true = использован fallback (Environment)
-    /// </summary>
-    public bool IsFallback { get; private set; }
+    #region Private Constructors
 
     private SysInfo()
     {
@@ -79,6 +70,145 @@ public sealed class SysInfo : ISysInfo
         }
     }
 
+    #endregion Private Constructors
+
+    #region Public Properties
+
+    public static SysInfo Current
+    {
+        get { return _current.Value; }
+    }
+
+    public string Architecture { get; private set; }
+    public string BuildLab { get; private set; }
+    public string DisplayVersion { get; private set; }
+    public string EditionId { get; private set; }
+    public string GpuInfo => throw new NotImplementedException();
+    public string InstallationType { get; private set; }
+    public bool IsFallback { get; private set; }
+    public Version OsVersion { get; private set; }
+    public string ProcessorName => throw new NotImplementedException();
+    public string ProductName { get; private set; }
+    public string RamTotalGb => throw new NotImplementedException();
+    public string VersionString { get; private set; }
+
+    #endregion Public Properties
+
+    #region Private Properties
+
+    private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
+               IsFallback ? "OS (fallback):" : "OS:",
+               ProductName,
+               DisplayVersion,
+               VersionString,
+               Architecture);
+
+    #endregion Private Properties
+
+    #region Public Methods
+
+    public static SysInfo Refresh()
+    {
+        return new SysInfo();
+    }
+
+    public string ToLongString()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string ToShortString()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override string ToString()
+    {
+        return fullString;
+    }
+
+    #endregion Public Methods
+
+    #region Private Methods
+
+    private static int GetInt(RegistryKey key, string name)
+    {
+        try
+        {
+            if (key == null)
+            {
+                return 0;
+            }
+
+            object value = key.GetValue(name);
+            return value is int ? (int)value : 0;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+    private static string GetString(RegistryKey key, string name, string fallback)
+    {
+        try
+        {
+            if (key == null)
+            {
+                return fallback;
+            }
+
+            object value = key.GetValue(name);
+            return value != null ? value.ToString() : fallback;
+        }
+        catch
+        {
+            return fallback;
+        }
+    }
+
+    private static RegistryKey OpenKey()
+    {
+        try
+        {
+            RegistryKey baseKey = RegistryKey.OpenBaseKey(
+                RegistryHive.LocalMachine,
+                Environment.Is64BitOperatingSystem
+                    ? RegistryView.Registry64
+                    : RegistryView.Registry32);
+
+            return baseKey.OpenSubKey(RegPath);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static int ParseInt(string value)
+    {
+        int result;
+        return int.TryParse(value, out result) ? result : 0;
+    }
+
+    private static void ParseLegacyVersion(string value, out int major, out int minor)
+    {
+        major = 0;
+        minor = 0;
+
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        string[] parts = value.Split('.');
+        if (parts.Length >= 2)
+        {
+            int.TryParse(parts[0], out major);
+            int.TryParse(parts[1], out minor);
+        }
+    }
+
     private void FillFromEnvironment()
     {
         try
@@ -115,105 +245,5 @@ public sealed class SysInfo : ISysInfo
         }
     }
 
-    private static RegistryKey OpenKey()
-    {
-        try
-        {
-            RegistryKey baseKey = RegistryKey.OpenBaseKey(
-                RegistryHive.LocalMachine,
-                Environment.Is64BitOperatingSystem
-                    ? RegistryView.Registry64
-                    : RegistryView.Registry32);
-
-            return baseKey.OpenSubKey(RegPath);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private static string GetString(RegistryKey key, string name, string fallback)
-    {
-        try
-        {
-            if (key == null)
-            {
-                return fallback;
-            }
-
-            object value = key.GetValue(name);
-            return value != null ? value.ToString() : fallback;
-        }
-        catch
-        {
-            return fallback;
-        }
-    }
-
-    private static int GetInt(RegistryKey key, string name)
-    {
-        try
-        {
-            if (key == null)
-            {
-                return 0;
-            }
-
-            object value = key.GetValue(name);
-            return value is int ? (int)value : 0;
-        }
-        catch
-        {
-            return 0;
-        }
-    }
-
-    private static int ParseInt(string value)
-    {
-        int result;
-        return int.TryParse(value, out result) ? result : 0;
-    }
-
-    private static void ParseLegacyVersion(string value, out int major, out int minor)
-    {
-        major = 0;
-        minor = 0;
-
-        if (string.IsNullOrEmpty(value))
-        {
-            return;
-        }
-
-        string[] parts = value.Split('.');
-        if (parts.Length >= 2)
-        {
-            int.TryParse(parts[0], out major);
-            int.TryParse(parts[1], out minor);
-        }
-    }
-
-    private static readonly Lazy<SysInfo> _current = new Lazy<SysInfo>(() => new SysInfo());
-
-    public static SysInfo Current
-    {
-        get { return _current.Value; }
-    }
-
-    public static SysInfo Refresh()
-    {
-        return new SysInfo();
-    }
-
-    public override string ToString()
-    {
-        return fullString;
-    }
-
-    private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
-               IsFallback ? "OS (fallback):" : "OS:",
-               ProductName,
-               DisplayVersion,
-               VersionString,
-               Architecture);
+    #endregion Private Methods
 }

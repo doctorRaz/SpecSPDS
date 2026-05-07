@@ -26,11 +26,9 @@ using System.Diagnostics;
 
 namespace drz.SpecSpds.Test
 {
-
     public class Start
     {
-     
-
+        #region Private Methods
 
         [STAThread]
         private static void Main(string[] args)
@@ -58,5 +56,7 @@ namespace drz.SpecSpds.Test
             //Thread.Sleep(new TimeSpan(0, 0, 10));
             Console.ReadKey();
         }
+
+        #endregion Private Methods
     }
 }

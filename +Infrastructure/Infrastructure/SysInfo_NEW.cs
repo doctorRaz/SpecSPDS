@@ -9,7 +9,16 @@ namespace drz.Infrastructure.Infrastructure
     /// </summary>
     public class SysInfo_NEW : ISysInfo
     {
+        #region Private Fields
+
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+        private readonly Lazy<string> _gpuInfo;
+        private readonly Lazy<string> _processorName;
+        private readonly Lazy<string> _ramTotal;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public SysInfo_NEW()
         {
@@ -36,7 +45,7 @@ namespace drz.Infrastructure.Infrastructure
                 if (key != null)
                 {
                     ProductName = GetString(key, "ProductName", ProductName);
-                    DisplayVersion = GetString(key, "DisplayVersion") ?? GetString(key, "ReleaseId") ?? "Unknown";
+                    DisplayVersion = GetString(key, "DisplayVersion") ?? GetString(key, "ReleaseId") ?? DisplayVersion;
                     EditionId = GetString(key, "EditionID", EditionId);
                     InstallationType = GetString(key, "InstallationType", InstallationType);
                     BuildLab = GetString(key, "BuildLab", BuildLab);
@@ -69,23 +78,59 @@ namespace drz.Infrastructure.Infrastructure
             }
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public string Architecture { get; init; }
-        public string BuildLab { get; init; }
+        public string BuildLab { get; init; } 
         public string DisplayVersion { get; init; }
         public string EditionId { get; init; }
+        public string GpuInfo => throw new NotImplementedException();
         public string InstallationType { get; init; }
         public bool IsFallback { get; init; }
         public Version OsVersion { get; init; }
-        public string ProductName { get; init; }
+        public string ProcessorName => throw new NotImplementedException();
+        public string ProductName { get; init; } 
+        public string RamTotalGb => throw new NotImplementedException();
         public string VersionString => OsVersion.ToString();
+        #endregion Public Properties
+
+        #region Public Methods
+
         public override string ToString() =>
             $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} ({OsVersion}) [{Architecture}]";
 
+        #endregion Public Methods
+
+        #region Private Methods
+
+        public string ToLongString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ToShortString()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Gets the int.</summary>
+        /// <param name="key">The key.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="fallback">The fallback.</param>
+        /// <returns></returns>
         private static int GetInt(RegistryKey key, string name, int fallback = 0) =>
             key.GetValue(name) is int val ? val : fallback;
 
+        /// <summary>Gets the string.</summary>
+        /// <param name="key">The key.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="fallback">The fallback.</param>
+        /// <returns></returns>
         private static string GetString(RegistryKey key, string name, string fallback = null) =>
                     key.GetValue(name)?.ToString() ?? fallback;
+        #endregion Private Methods
     }
 }
 

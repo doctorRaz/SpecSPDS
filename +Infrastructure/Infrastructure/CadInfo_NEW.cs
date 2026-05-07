@@ -12,7 +12,7 @@ namespace drz.Infrastructure.Infrastructure;
 /// </summary>
 public class CadInfo_NEW : ICadInfo
 {
-  
+    #region Public Constructors
 
     public CadInfo_NEW()
     {
@@ -65,6 +65,10 @@ public class CadInfo_NEW : ICadInfo
         }
     }
 
+    #endregion Public Constructors
+
+    #region Public Properties
+
     public string CompanyName { get; }
     public string Copyright { get; }
     public string ExePath { get; }
@@ -79,6 +83,10 @@ public class CadInfo_NEW : ICadInfo
     public string ProductName { get; }
     public Version ProductVersion { get; }
 
+    #endregion Public Properties
+
+    #region Private Properties
+
     private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
        IsFallback ? "CAD (fallback):" : "CAD:",
        string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription,
@@ -86,22 +94,45 @@ public class CadInfo_NEW : ICadInfo
        FileVersion,
        HostArchitecture);
 
+    #endregion Private Properties
+
+    #region Public Methods
+
+    public string ToLongString()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string ToShortString()
+    {
+        throw new NotImplementedException();
+    }
 
     public override string ToString()
     {
         return fullString;
     }
 
+    #endregion Public Methods
+
+    #region Private Methods
+
     private static T Safe<T>(Func<T> f)
     {
         try { return f(); } catch { return default; }
     }
+
+    #endregion Private Methods
+
+    #region Private Classes
 
     /// <summary>
     /// Получение пути к исполняемому файлу хоста (exe)
     /// </summary>
     private static class CadPath
     {
+        #region Internal Methods
+
         /// <summary>
         /// Получить полный путь к exe текущего процесса с fallback
         /// </summary>
@@ -134,7 +165,15 @@ public class CadInfo_NEW : ICadInfo
             }
         }
 
+        #endregion Internal Methods
+
+        #region Private Methods
+
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern int GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+        #endregion Private Methods
     }
+
+    #endregion Private Classes
 }

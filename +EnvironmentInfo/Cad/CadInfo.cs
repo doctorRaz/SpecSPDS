@@ -12,34 +12,14 @@ namespace drz.EnvironmentInfo.Cad;
 /// </summary>
 public sealed class CadInfo : ICadInfo
 {
+    #region Private Fields
+
     private static readonly Lazy<CadInfo> _current =
         new Lazy<CadInfo>(() => new CadInfo(), true);
 
-    /// <summary>
-    /// Gets the current.
-    /// </summary>
-    /// <value>
-    /// The current CadInfo.
-    /// </value>
-    public static CadInfo Current => _current.Value;
+    #endregion Private Fields
 
-    public string ExePath { get; }
-    public string InstallDirectory { get; }
-    public string FileName { get; }
-    public Version ProductVersion { get; }
-    public Version FileVersion { get; }
-    public string ProductName { get; }
-    public string CompanyName { get; }
-    public string FileDescription { get; }
-    public string OriginalFilename { get; }
-    public string Copyright { get; }
-    public bool Is64BitProcess { get; }
-    public string HostArchitecture { get; }
-
-    /// <summary>
-    /// true = использован fallback (Environment)
-    /// </summary>
-    public bool IsFallback { get; private set; }
+    #region Private Constructors
 
     private CadInfo()
     {
@@ -92,16 +72,88 @@ public sealed class CadInfo : ICadInfo
         }
     }
 
+    #endregion Private Constructors
+
+    #region Public Properties
+
+    /// <summary>
+    /// Gets the current.
+    /// </summary>
+    /// <value>
+    /// The current CadInfo.
+    /// </value>
+    public static CadInfo Current => _current.Value;
+
+    public string CompanyName { get; }
+    public string Copyright { get; }
+    public string ExePath { get; }
+    public string FileDescription { get; }
+    public string FileName { get; }
+    public Version FileVersion { get; }
+    public string HostArchitecture { get; }
+    public string InstallDirectory { get; }
+    public bool Is64BitProcess { get; }
+    public bool IsFallback { get; private set; }
+    public string OriginalFilename { get; }
+    public string ProductName { get; }
+    public Version ProductVersion { get; }
+
+    #endregion Public Properties
+
+    #region Private Properties
+
+    private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
+       IsFallback ? "CAD (fallback):" : "CAD:",
+       string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription,
+       ProductVersion,
+       FileVersion,
+       HostArchitecture);
+
+    #endregion Private Properties
+
+    #region Public Methods
+
+    public string ToLongString()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string ToShortString()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Converts to string.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="System.String" /> that represents this instance.
+    /// </returns>
+    public override string ToString()
+    {
+        return fullString;
+    }
+
+    #endregion Public Methods
+
+    #region Private Methods
+
     private static T Safe<T>(Func<T> f)
     {
         try { return f(); } catch { return default; }
     }
+
+    #endregion Private Methods
+
+    #region Private Classes
 
     /// <summary>
     /// Получение пути к исполняемому файлу хоста (exe)
     /// </summary>
     private static class CadPath
     {
+        #region Internal Methods
+
         /// <summary>
         /// Получить полный путь к exe текущего процесса с fallback
         /// </summary>
@@ -134,25 +186,15 @@ public sealed class CadInfo : ICadInfo
             }
         }
 
+        #endregion Internal Methods
+
+        #region Private Methods
+
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         private static extern int GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+        #endregion Private Methods
     }
 
-    /// <summary>
-    /// Converts to string.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="System.String" /> that represents this instance.
-    /// </returns>
-    public override string ToString()
-    {
-        return fullString;
-    }
-
-    private string fullString => string.Format("{0} {1} {2} ({3}) [{4}]",
-       IsFallback ? "CAD (fallback):" : "CAD:",
-       string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription,
-       ProductVersion,
-       FileVersion,
-       HostArchitecture);
+    #endregion Private Classes
 }
