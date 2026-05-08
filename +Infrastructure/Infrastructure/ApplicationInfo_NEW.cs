@@ -5,63 +5,51 @@ using System.Reflection;
 
 namespace drz.Infrastructure.Infrastructure
 {
+    //00:00:00.0056869 ApplicationInfo_NEW
     public class ApplicationInfo_NEW : IApplicationInfo_NEW
     {
+        private readonly Assembly _assembly;
+
         #region Public Constructors
 
         public ApplicationInfo_NEW(Assembly assembly)
         {
-            AssemblyName assemblyName = assembly.GetName();
+            _assembly =
+                assembly ?? throw new ArgumentNullException(nameof(assembly));
 
-            AssemblyPath = assembly.Location ?? string.Empty;
+            // 1. Базовые данные о путях (работа со строками — это быстро)
+            AssemblyPath =
+                _assembly.Location ?? string.Empty;
+
+            AssembleFullName =
+                _assembly.FullName;
+
+            AssemblyName assemblyName =
+                _assembly.GetName();
 
             if (!string.IsNullOrEmpty(AssemblyPath))
             {
-                AssemblyDirectory = Path.GetDirectoryName(AssemblyPath) ?? string.Empty;
+                AssemblyDirectory =
+                    Path.GetDirectoryName(AssemblyPath) ?? string.Empty;
 
-                FileName = Path.GetFileNameWithoutExtension(AssemblyPath);
+                FileName =
+                    Path.GetFileNameWithoutExtension(AssemblyPath);
             }
             else
             {
                 AssemblyDirectory = string.Empty;
 
-                FileName = assemblyName.Name ?? "Unknown";
+                FileName =
+                    assemblyName.Name ?? "Unknown";
             }
-
-            AssembleFullName = assembly.FullName;
-
-            AssemblyVersion = assemblyName.Version ?? new Version(0, 0, 0, 0);
 
             FilePrefix = ExtractProductPrefix(FileName);
 
-            BuildDate = ComputeBuildDate(assembly, out bool isAuto);
+            // 2. Данные версии (GetName тоже относительно быстр, но вызываем 1 раз)
+            AssemblyVersion =
+                assemblyName.Version ?? new Version(0, 0, 0, 0);
 
-            IsAutoVersion = isAuto;
-
-            InformationalVersion =
-                assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-                ?? "Unknown";
-
-            ProductName =
-                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product
-                ?? FilePrefix;
-
-            ProductTitle =
-                assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title
-                ?? FileName;
-
-            FileVersion =
-                assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version
-                ?? "Unknown";
-
-            Copyright =
-              assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright
-                ?? "Unknown";
-
-            Description =
-               assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description
-                ?? "Unknown";
-
+            // 3. Подготовка путей AppData (без Reflection)
             // ---AppData ---
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
@@ -70,12 +58,60 @@ namespace drz.Infrastructure.Infrastructure
                 appData = Path.GetTempPath(); // fallback
             }
 
-            AppDataProductPath = Path.Combine(appData, ProductName);
+            // Внимание: ProductName здесь берется лениво ниже,
+            // поэтому для путей используем FilePrefix или вычисляем ProductName сразу, если он критичен.
+            // Но лучше ProductName вычислить в конструкторе, так как он нужен для путей:
+            ProductName =
+                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? FilePrefix;
 
-            AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
+            AppDataProductPath =
+                Path.Combine(appData, ProductName);
+
+            AppDataProductLogPath =
+                Path.Combine(AppDataProductPath, "Logs");
 
             TitlePrefix = $"{ProductName} v.{AssemblyVersion} : ";
         }
+
+        private bool _isAutoVersion;
+
+        private DateTime? _buildDate;
+        public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
+
+        public bool IsAutoVersion
+        {
+            get
+            {
+                if (_buildDate == null) { var _ = BuildDate; } // Триггерим вычисление даты
+                return _isAutoVersion;
+            }
+        }
+
+        private string _informationalVersion;
+
+        public string InformationalVersion => _informationalVersion ??=
+                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                  ?? "Unknown";
+
+        private string _productTitle;
+
+        public string ProductTitle => _productTitle ??=
+            _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
+
+        private string _fileVersion;
+
+        public string FileVersion => _fileVersion ??=
+                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
+
+        private string _copyright;
+
+        public string Copyright => _copyright ??=
+               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
+
+        private string _description;
+
+        public string Description => _description ??=
+               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
 
         #endregion Public Constructors
 
@@ -87,16 +123,9 @@ namespace drz.Infrastructure.Infrastructure
         public string AssemblyDirectory { get; }
         public string AssemblyPath { get; }
         public Version AssemblyVersion { get; }
-        public DateTime BuildDate { get; }
-        public string Copyright { get; }
-        public string Description { get; }
         public string FileName { get; }
         public string FilePrefix { get; }
-        public string FileVersion { get; }
-        public string InformationalVersion { get; }
-        public bool IsAutoVersion { get; }
         public string ProductName { get; }
-        public string ProductTitle { get; }
         public string TitlePrefix { get; }
 
         #endregion Public Properties
@@ -208,6 +237,7 @@ namespace drz.Infrastructure.Infrastructure
                 return null;
             }
         }
+
         #endregion Private Methods
     }
 }
