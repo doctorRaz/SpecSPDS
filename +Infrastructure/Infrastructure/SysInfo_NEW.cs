@@ -12,9 +12,9 @@ namespace drz.Infrastructure.Infrastructure
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
-        private readonly Lazy<string> _gpuInfo;
-        private readonly Lazy<string> _processorName;
-        private readonly Lazy<string> _ramTotal;
+        private string _gpuInfo;
+        private string _processorName;
+        private string _ramTotal;
 
         #endregion Private Fields
 
@@ -74,17 +74,6 @@ namespace drz.Infrastructure.Infrastructure
             }
             catch { }
 
-            // Данные Железа (WMI)
-            // Инициализируем "обещания" получить данные
-            _processorName = new Lazy<string>(() => GetWmiValue("Win32_Processor", "Name"));
-
-            _ramTotal = new Lazy<string>(() =>
-            {
-                double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
-                return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
-            });
-
-            _gpuInfo = new Lazy<string>(GetGpuData);
         }
 
         #endregion Public Constructors
@@ -95,13 +84,13 @@ namespace drz.Infrastructure.Infrastructure
         public string BuildLab { get; init; } = "Unknown";
         public string DisplayVersion { get; init; } = "Unknown";
         public string EditionId { get; init; } = "Unknown";
-        public string GpuInfo => _gpuInfo.Value;
+        public string GpuInfo => _gpuInfo ??= GetGpuData();
         public string InstallationType { get; init; } = "Unknown";
         public bool IsFallback { get; init; }
         public Version OsVersion { get; init; }
-        public string ProcessorName => _processorName.Value;
+        public string ProcessorName => _processorName ??= GetWmiValue("Win32_Processor", "Name");
         public string ProductName { get; init; } = "Windows";
-        public string RamTotalGb => _ramTotal.Value;
+        public string RamTotalGb => _ramTotal ??= GetRamTotal();
         public string VersionString => OsVersion.ToString();
 
         #endregion Public Properties
@@ -130,6 +119,12 @@ namespace drz.Infrastructure.Infrastructure
 
         #region Private Methods
 
+        private string GetRamTotal()
+        {
+            double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
+            return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
+
+        }
         private static string GetGpuData()
         {
             try
