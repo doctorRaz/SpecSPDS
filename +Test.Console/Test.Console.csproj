@@ -42,7 +42,5 @@
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Reference Include="System.Management" />
-	</ItemGroup>
+
 </Project>

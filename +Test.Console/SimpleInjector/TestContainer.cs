@@ -5,6 +5,7 @@ using drz.EnvironmentInfo;
 using drz.EnvironmentInfo.Cad;
 using drz.EnvironmentInfo.Sys;
 using System;
+using System.Diagnostics;
 using static drz.Src.Infrastructure.AddOnContext;
 using AC = drz.Src.Infrastructure.AddOnContext;
 
@@ -22,6 +23,8 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         public TestContainer()
         {
+
+             Stopwatch sw = Stopwatch.StartNew();
             if (_initialized)
             {
                 return;

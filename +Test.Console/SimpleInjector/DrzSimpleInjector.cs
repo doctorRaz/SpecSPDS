@@ -1,5 +1,7 @@
 ﻿using drz.Lib_A;
 using drz.Lib_B;
+using System;
+using System.Diagnostics;
 
 namespace drz.SpecSpds.Test.SimpleInjector
 {
@@ -12,7 +14,11 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         internal void Start()
         {
+             Stopwatch sw = Stopwatch.StartNew();
+
             TestContainer testContainer = new TestContainer();
+            Console.WriteLine($"{sw.Elapsed} new TestContainer();");
+            sw.Restart();
 
             testContainer.TestInjectorInfo();
             

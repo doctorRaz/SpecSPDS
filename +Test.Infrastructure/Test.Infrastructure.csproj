@@ -24,4 +24,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+		<Reference Include="System.Management" />
+	</ItemGroup>
 </Project>
