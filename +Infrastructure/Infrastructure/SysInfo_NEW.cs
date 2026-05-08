@@ -14,7 +14,7 @@ namespace drz.Infrastructure.Infrastructure
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
         private string _gpuInfo;
         private string _processorName;
-        private string _ramTotal;
+        private string _ramTotal ;
 
         #endregion Private Fields
 
