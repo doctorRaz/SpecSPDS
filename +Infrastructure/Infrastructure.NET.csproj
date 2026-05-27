@@ -1,12 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<UseWindowForms>true</UseWindowForms>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Description>Среда окружения приложения</Description>
+
+		<Description>Инфраструктура</Description>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -15,8 +20,11 @@
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
 
-	<!--<ItemGroup>
-		<PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
-	</ItemGroup>-->
+	<ItemGroup>
+		<Reference Include="System.Management">
+			<HintPath>..\..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
+			<Private>True</Private>
+		</Reference>
+	</ItemGroup>
 
 </Project>

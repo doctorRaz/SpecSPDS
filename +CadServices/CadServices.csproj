@@ -1,27 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName)n.$(MSBuildProjectName)</AssemblyName>
+		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
 
-		<RootNamespace>drz.CadServices</RootNamespace>
-		<Description>Сервис nanoCAD</Description>
-		<AssemblyTitle>dRz.CadServices</AssemblyTitle>
-		<Product>dRz.CadServices</Product>
-		<InformationalVersion>CadServices for nanoCad</InformationalVersion>
-
-		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
-		<ImplicitUsings>disable</ImplicitUsings>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<Description>Сервис nanoCAD</Description>
 	</PropertyGroup>
-
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
 		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>

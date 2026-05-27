@@ -3,18 +3,19 @@
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
-		<AssemblyName>$(SolutionName)n</AssemblyName>
-		<RootNamespace>drz.Loader</RootNamespace>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<!--<AssemblyName>$(SolutionName)n</AssemblyName>-->
+		<AssemblyName>$(SolutionName)n.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<!--<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>-->
 		<!-- значение по умолчанию мин версии-->
-		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>
+		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
 		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
 		<Description>Загрузчик модулей $(SolutionName) под версию CAD</Description>
-		<AssemblyTitle>$(SolutionName).Loader</AssemblyTitle>
+		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>

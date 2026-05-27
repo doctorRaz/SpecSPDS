@@ -3,13 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
-		<RootNamespace>dRz.SpecSPDS.Core</RootNamespace>
+		<RootNamespace>dRz.$(MSBuildProjectName)</RootNamespace>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-		<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>
+		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
 		<!--**********-->
 		<Description>SpecSPDS ядро</Description>
 		<AssemblyTitle>SpecSPDS.Core</AssemblyTitle>

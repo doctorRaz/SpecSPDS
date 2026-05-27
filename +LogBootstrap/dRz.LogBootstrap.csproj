@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>drz.LogServices</RootNamespace>
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Description>Настройка логирования nLog</Description>
-		<AssemblyTitle>dRz.LogBootstrap</AssemblyTitle>
-		<Product>dRz.LogBootstrap</Product>
-		<InformationalVersion>dRz.LogBootstrap for All</InformationalVersion>
-
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -17,9 +15,7 @@
 		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
 		<PackageReference Include="NLog" Version="6.1.3" />
 	</ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
-
 </Project>

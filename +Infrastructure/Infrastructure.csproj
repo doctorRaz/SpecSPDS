@@ -1,28 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-
-		<RootNamespace>drz.Infrastructure</RootNamespace>
-		<Description>Infrastructure</Description>
-		<AssemblyTitle>dRz.Infrastructure</AssemblyTitle>
-		<Product>dRz.Infrastructure</Product>
-		<InformationalVersion>Infrastructure for All</InformationalVersion>
-
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<Description>Инфраструктура</Description>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
-
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
-
+	<!--<ItemGroup>
+	  <Reference Include="System.Management">
+	    <HintPath>..\..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
+		  <Private>True</Private>
+	  </Reference>
+	</ItemGroup>-->
 	<ItemGroup>
-	  <Reference Include="System.Management" />
+		<Reference Include="System.Management">
+		</Reference>
 	</ItemGroup>
+	<!-- внешние библиотеки NET-->
+	<!--<ItemGroup>
+		<Reference Include="System.Management">
+			<HintPath>..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
+			<Private>True</Private>
+		</Reference>
+	</ItemGroup>-->
 
 </Project>

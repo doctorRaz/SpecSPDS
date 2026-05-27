@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-	<TargetFramework>net462</TargetFramework>
-
-		<RootNamespace>drz.Abstractions</RootNamespace>
-		<Description>абстракции, интерфейсы</Description>
-		<AssemblyTitle>dRz.Abstractions</AssemblyTitle>
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
+		<Description>абстракции, интерфейсы</Description>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>

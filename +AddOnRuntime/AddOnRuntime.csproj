@@ -1,28 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>drz.AddOn.Composition</RootNamespace>
+		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
 		<Description>точка создания контейнера</Description>
-		<AssemblyTitle>AddOn.Composition</AssemblyTitle>
-		<Product>AddOn.Composition</Product>
-		<InformationalVersion>AddOn.Composition for All</InformationalVersion>
-
+		<ImplicitUsings>disable</ImplicitUsings>
 	</PropertyGroup>
-
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-
 	<ItemGroup>
-	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-	  <ProjectReference Include="..\+CadServices\CadServices.csproj" />
-	  <ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+CadServices\CadServices.csproj" />
+		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
-		<ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="SimpleInjector" Version="5.5.0" />
 	</ItemGroup>
-
-
 </Project>
