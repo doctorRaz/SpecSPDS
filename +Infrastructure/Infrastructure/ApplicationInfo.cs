@@ -8,9 +8,27 @@ namespace drz.Infrastructure.Infrastructure
     //00:00:00.0056869 ApplicationInfo_NEW
     public class ApplicationInfo : IApplicationInfo
     {
+        #region Private Fields
+
         private readonly Assembly _assembly;
 
+        #endregion Private Fields
+
         #region Public Constructors
+
+        private DateTime? _buildDate;
+
+        private string _copyright;
+
+        private string _description;
+
+        private string _fileVersion;
+
+        private string _informationalVersion;
+
+        private bool _isAutoVersion;
+
+        private string _productTitle;
 
         public ApplicationInfo(Assembly assembly)
         {
@@ -72,11 +90,20 @@ namespace drz.Infrastructure.Infrastructure
 
             TitlePrefix = $"{ProductName} v.{AssemblyVersion} : ";
         }
-
-        private bool _isAutoVersion;
-
-        private DateTime? _buildDate;
         public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
+
+        public string Copyright => _copyright ??=
+               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
+
+        public string Description => _description ??=
+               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
+
+        public string FileVersion => _fileVersion ??=
+                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
+
+        public string InformationalVersion => _informationalVersion ??=
+                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                  ?? "Unknown";
 
         public bool IsAutoVersion
         {
@@ -86,33 +113,8 @@ namespace drz.Infrastructure.Infrastructure
                 return _isAutoVersion;
             }
         }
-
-        private string _informationalVersion;
-
-        public string InformationalVersion => _informationalVersion ??=
-                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-                  ?? "Unknown";
-
-        private string _productTitle;
-
         public string ProductTitle => _productTitle ??=
             _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
-
-        private string _fileVersion;
-
-        public string FileVersion => _fileVersion ??=
-                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
-
-        private string _copyright;
-
-        public string Copyright => _copyright ??=
-               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
-
-        private string _description;
-
-        public string Description => _description ??=
-               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
-
         #endregion Public Constructors
 
         #region Public Properties

@@ -5,6 +5,8 @@ namespace drz.LogServices.Diagnostics
 {
     internal static class LogLevelReader
     {
+        #region Public Methods
+
         /// <summary>
         /// Читает LogLevel из файла.
         /// Если файла нет — возвращает defaultLevel.
@@ -60,6 +62,10 @@ namespace drz.LogServices.Diagnostics
             }
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         private static LogLevel TryFromString(string levelName, LogLevel defaultLevel)
         {
             try
@@ -71,5 +77,7 @@ namespace drz.LogServices.Diagnostics
                 return defaultLevel;
             }
         }
+
+        #endregion Private Methods
     }
 }

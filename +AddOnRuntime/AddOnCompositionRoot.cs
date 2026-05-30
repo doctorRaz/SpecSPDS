@@ -14,9 +14,15 @@ namespace drz.AddOn.Composition
     /// <seealso cref="System.IDisposable" />
     public class AddOnCompositionRoot : IDisposable
     {
+        #region Private Fields
+
         private readonly Container _container;
 
         private bool _disposed;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddOnCompositionRoot"/> class.
@@ -35,6 +41,27 @@ namespace drz.AddOn.Composition
             _container.Verify();
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        /// <summary>
+        /// Создать скоуп для Scoped-сервисов
+        /// </summary>
+        public Scope BeginScope() => AsyncScopedLifestyle.BeginScope(_container);
+
+        /// <summary>
+        /// Выполняет определяемые приложением задачи, связанные с удалением, высвобождением или сбросом неуправляемых ресурсов.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _container.Dispose();
+                _disposed = true;
+            }
+        }
+
         /// <summary>
         /// Получить сервис
         /// </summary>
@@ -43,10 +70,9 @@ namespace drz.AddOn.Composition
             return _container.GetInstance<TService>();
         }
 
-        /// <summary>
-        /// Создать скоуп для Scoped-сервисов
-        /// </summary>
-        public Scope BeginScope() => AsyncScopedLifestyle.BeginScope(_container);
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void RegisterInfrastructure(Container container, Assembly addOnAssembly)
         {
@@ -72,16 +98,6 @@ namespace drz.AddOn.Composition
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
         }
 
-        /// <summary>
-        /// Выполняет определяемые приложением задачи, связанные с удалением, высвобождением или сбросом неуправляемых ресурсов.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _container.Dispose();
-                _disposed = true;
-            }
-        }
+        #endregion Private Methods
     }
 }

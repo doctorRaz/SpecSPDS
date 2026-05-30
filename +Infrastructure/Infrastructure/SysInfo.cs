@@ -9,12 +9,13 @@ namespace drz.Infrastructure.Infrastructure
 {
     public class SysInfo : ISysInfo
     {
+
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
         private string _gpuInfo;
         private string _processorName;
-        private string _ramTotal ;
+        private string _ramTotal;
 
         #endregion Private Fields
 
@@ -104,6 +105,7 @@ namespace drz.Infrastructure.Infrastructure
                                   $"GPU: {GpuInfo}";
 
         private string shortStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} [{Architecture}]";
+
         #endregion Private Properties
 
         #region Public Methods
@@ -119,12 +121,6 @@ namespace drz.Infrastructure.Infrastructure
 
         #region Private Methods
 
-        private string GetRamTotal()
-        {
-            double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
-            return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
-
-        }
         private static string GetGpuData()
         {
             try
@@ -172,6 +168,14 @@ namespace drz.Infrastructure.Infrastructure
             return "Unknown";
         }
 
+        private string GetRamTotal()
+        {
+            double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
+            return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
+
+        }
+
         #endregion Private Methods
+
     }
 }

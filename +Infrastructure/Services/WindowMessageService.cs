@@ -8,6 +8,7 @@ namespace drz.Infrastructure.Services
 {
     public class WindowMessageService : IMessageService, IWindowMessageService
     {
+
         #region Private Fields
 
         private IApplicationInfo _applicationInfo;
@@ -68,5 +69,6 @@ namespace drz.Infrastructure.Services
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         #endregion Private Methods
+
     }
 }

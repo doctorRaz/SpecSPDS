@@ -12,6 +12,8 @@ namespace drz.Infrastructure.Infrastructure;
 /// </summary>
 public class CadInfo : ICadInfo
 {
+    #region Public Constructors
+
     public CadInfo()
     {
         try
@@ -54,6 +56,10 @@ public class CadInfo : ICadInfo
         }
     }
 
+    #endregion Public Constructors
+
+    #region Public Properties
+
     // Значения по умолчанию
     public string CompanyName { get; } = string.Empty;
 
@@ -69,6 +75,10 @@ public class CadInfo : ICadInfo
     public string OriginalFilename { get; } = string.Empty;
     public string ProductName { get; } = "Unknown CAD";
     public Version ProductVersion { get; } = new(0, 0, 0, 0);
+
+    #endregion Public Properties
+
+    #region Private Properties
 
     private string defString => 
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}"+
@@ -86,6 +96,10 @@ public class CadInfo : ICadInfo
        $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} [{HostArchitecture}]";
 
+    #endregion Private Properties
+
+    #region Public Methods
+
     public string ToLongString()
     {
         return longString;
@@ -101,6 +115,10 @@ public class CadInfo : ICadInfo
         return defString;
     }
 
+    #endregion Public Methods
+
+    #region Private Methods
+
     /// <summary>
     /// Получить полный путь к exe текущего процесса с fallback
     /// </summary>
@@ -111,7 +129,7 @@ public class CadInfo : ICadInfo
         {
             string? path = Process.GetCurrentProcess().MainModule?.FileName;
 
-            path = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";//todo заглушка
+            //path = @"c:\Program Files\Nanosoft\nanoCAD x64 26.0\nCads.exe";//todo заглушка
             //path = @"c:\Program Files\Autodesk\AutoCAD 2026\acad.exe";//todo заглушка
 
             if (!string.IsNullOrEmpty(path))
@@ -135,5 +153,7 @@ public class CadInfo : ICadInfo
 
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern int GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+    #endregion Private Methods
 
 }

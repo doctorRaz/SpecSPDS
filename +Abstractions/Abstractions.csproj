@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
+		<RootNamespace>drz.Abstractions</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
 		<ImplicitUsings>disable</ImplicitUsings>

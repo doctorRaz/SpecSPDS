@@ -13,19 +13,26 @@ namespace drz.CadServices.Services
 {
     public class CommandLineMessageService : IMessageService, ICommandLineMessageService
     {
+        #region Private Fields
+
+        private IApplicationInfo _applicationInfo;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public CommandLineMessageService(IApplicationInfo applicationInfo)
         {
             _applicationInfo = applicationInfo;
         }
 
+        #endregion Public Constructors
+
+        #region Public Methods
+
         public void ConsoleMessage(string message, string caller = null)
         {
             WriteMessage("", message, caller);
-        }
-
-        public void InfoMessage(string message, string caller = null)
-        {
-            WriteMessage("Info", message, caller);
         }
 
         public void ErrorMessage(string message, string caller = null)
@@ -48,6 +55,15 @@ namespace drz.CadServices.Services
         {
             WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace.ToString()}", caller);
         }
+
+        public void InfoMessage(string message, string caller = null)
+        {
+            WriteMessage("Info", message, caller);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void WriteMessage(string prefix, string message, string caller)
         {
@@ -76,12 +92,11 @@ namespace drz.CadServices.Services
                 }
             }
 #else
-            Console.WriteLine(formatted);
+                        Console.WriteLine(formatted);
 #endif
-
 
         }
 
-        private IApplicationInfo _applicationInfo;
+        #endregion Private Methods
     }
 }

@@ -10,12 +10,18 @@ namespace drz.Cleaner.Infrastructure
     public class CleaningBackups
 
     {
+        #region Private Fields
+
         /// <summary>
         /// Регулярное выражение для файлов вида "Имя(число).Расширение"
         /// </summary>
         //private static Regex digitsInBracketsAtEnd = new Regex(@"\(\d+\)\.\w+$");
         private static readonly Regex digitsInBracketsAtEnd =
                                 new(@"\(\d+\)\.[^.]+$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+        #endregion Private Fields
+
+        #region Public Methods
 
         /// <summary>
         /// чистилка *.bak и *****(111).****
@@ -46,5 +52,7 @@ namespace drz.Cleaner.Infrastructure
             }
             catch { }
         }
+
+        #endregion Public Methods
     }
 }

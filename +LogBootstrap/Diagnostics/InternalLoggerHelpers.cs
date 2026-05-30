@@ -12,14 +12,19 @@ namespace drz.LogServices.Diagnostics
     /// </summary>
     public static class InternalLoggerHelpers
     {
-        private static bool _initialized = false;
-        private static readonly object _lock = new();
+        #region Private Fields
 
         private const string logName = "nlog-drzTools-internal";
-
-        private const int MaxFileSizeBytes = 10 * 1024 * 1024; // 10 MB
         private const int MaxArchiveFiles = 5;
+        private const int MaxFileSizeBytes = 10 * 1024 * 1024;
+        private static readonly object _lock = new();
+        private static bool _initialized = false;
 
+        #endregion Private Fields
+
+        #region Public Methods
+
+        // 10 MB
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
         /// Internal logger → Output file.log<br/>
@@ -86,6 +91,10 @@ namespace drz.LogServices.Diagnostics
             }
         }
 
+        #endregion Public Methods
+
+        #region Private Methods
+
         /// <summary>
         /// Checks the size of the current file.
         /// </summary>
@@ -104,6 +113,9 @@ namespace drz.LogServices.Diagnostics
             }
             catch { }
         }
+
+        private static string GetInternalLogPath(string logDir) =>
+                   Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}.log");
 
         /// <summary>
         /// Rotates the internal logs.
@@ -137,7 +149,6 @@ namespace drz.LogServices.Diagnostics
             catch { }
         }
 
-        private static string GetInternalLogPath(string logDir) =>
-           Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}.log");
+        #endregion Private Methods
     }
 }

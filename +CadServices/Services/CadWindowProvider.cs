@@ -11,26 +11,18 @@ namespace drz.CadServices.Services
 {
 
     /// <summary>
-    /// Указатель на окно привязан к HostMgd <br/>
-    /// Не используется
-    /// </summary>
-    /// <seealso cref="IWindowHandleProvider" />
-    public class CadWindowProvider_Cad : IWindowHandleProvider
-    {
-#if !TEST
-        public IntPtr Handle => Application.MainWindow.Handle;
-#else
-        public IntPtr Handle => IntPtr.Zero;
-#endif
-    }
-
-    /// <summary>
     /// Указатель на окно отвязан от Cad
     /// </summary>
     /// <seealso cref="IWindowHandleProvider" />
     public class CadWindowProvider : IWindowHandleProvider
     {
+        #region Private Fields
+
         private IntPtr? _handle;
+
+        #endregion Private Fields
+
+        #region Public Properties
 
         public IntPtr Handle
         {
@@ -45,5 +37,23 @@ namespace drz.CadServices.Services
                 return _handle.Value;
             }
         }
+
+        #endregion Public Properties
+    }
+
+    /// <summary>
+    /// Указатель на окно привязан к HostMgd <br/>
+    /// Не используется
+    /// </summary>
+    /// <seealso cref="IWindowHandleProvider" />
+    public class CadWindowProvider_Cad : IWindowHandleProvider
+    {
+
+#if !TEST
+        public IntPtr Handle => Application.MainWindow.Handle;
+#else
+        public IntPtr Handle => IntPtr.Zero;
+#endif
+
     }
 }
