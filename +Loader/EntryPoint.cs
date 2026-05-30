@@ -15,7 +15,6 @@ using drz.Src.Infrastructure;
 using static drz.Src.Infrastructure.AddOnContext;
 
 using drz.AddOn.Composition;
-using drz.EnvironmentInfo;
 using drz.Abstractions.Logger;
 using drz.Src.Services;
 
@@ -207,13 +206,14 @@ namespace drz.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта
                 // AssemblyVersion, полученного из Application.AssemblyVersion.
-                Version version = RT.Cad.ProductVersion;// AssemblyVersion;
+                Version version = CadInfo_NEW.ProductVersion;// AssemblyVersion;
 
-                string fileDescription = RT.Cad.FileDescription;
+                //string fileDescription = RT.Cad.FileDescription;
 
-                log.Debug($"Обнаружен: {RT.Cad}");
+                log.Debug($"Обнаружен: {CadInfo_NEW}");
 
                 string fileFullName = GetType().Assembly.Location;
+                //косяк   string fileFullName = InfoDll.FilePrefix;
 
                 int minMajor = GeneratedCompile.MinVersion;//из Directory.Build.props проекта
 
@@ -225,7 +225,7 @@ namespace drz.Loader
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {RT.Cad}";
+                    string mesag = $"Не найден подходящий адаптер для {CadInfo_NEW}";
 
                     log.Error($"{mesag}");
 
@@ -245,7 +245,7 @@ namespace drz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Debug($"Загружается адаптер для: {RT.Cad}, целевая сборка: {targetDllFullName.FullName}");
+                        log.Debug($"Загружается адаптер для: {CadInfo_NEW}, целевая сборка: {targetDllFullName.FullName}");
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -259,7 +259,7 @@ namespace drz.Loader
                         throw exception;
                     }
 
-                    log.Debug($"Адаптер для {RT.Cad} загружен");
+                    log.Debug($"Адаптер для {CadInfo_NEW} загружен");
                 }
                 catch (Exception ex)
                 {

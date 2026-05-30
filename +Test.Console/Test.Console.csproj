@@ -23,11 +23,11 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+Cleaner\drz.Cleaner.csproj">
+		<ProjectReference Include="..\+Cleaner\Cleaner.csproj">
 			<Private>True</Private>
 		</ProjectReference>
-		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+LogBootstrap\drz.LogBootstrap.csproj" />
+		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
+		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
 		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />

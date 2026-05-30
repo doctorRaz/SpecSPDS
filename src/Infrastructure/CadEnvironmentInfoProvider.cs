@@ -1,6 +1,6 @@
 ﻿using drz.Abstractions.Logger;
 
-using drz.EnvironmentInfo;
+//using drz.EnvironmentInfo;
 using static drz.Src.Infrastructure.AddOnContext;
 
 namespace drz.Src.Infrastructure
@@ -17,8 +17,9 @@ namespace drz.Src.Infrastructure
         /// <returns></returns>
         public string GetSummary()
         {
-            //порнография конечно( /InfoDll/
-            return $"{RT.Info.ToString()}\n{InfoDll.ToString()}";
+            //порнография конечно(
+            return $"{SysInfo_NEW}\n {CadInfo_NEW}";
+            
         }
     }
 }

@@ -19,7 +19,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />
+		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 	</ItemGroup>

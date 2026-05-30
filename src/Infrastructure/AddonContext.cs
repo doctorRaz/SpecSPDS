@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
-using drz.EnvironmentInfo.App;
+
 using System;
 
 namespace drz.Src.Infrastructure
@@ -9,7 +9,7 @@ namespace drz.Src.Infrastructure
     internal static class AddOnContext
     {
         // metadata (всегда доступно)
-        internal static readonly AppInfo InfoDll = AppInfo.Get(typeof(AddOnContext));
+        //internal static readonly AppInfo InfoDll = AppInfo.Get(typeof(AddOnContext));
 
         //---R
         //***B
@@ -18,7 +18,7 @@ namespace drz.Src.Infrastructure
         private static AddOnCompositionRoot? _root;
 
 
-        internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
+        //internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
         internal static IApplicationInfo_NEW InfoDll_NEW => Root.Get<IApplicationInfo_NEW>();
 

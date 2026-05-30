@@ -1,9 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
-using drz.EnvironmentInfo;
-using drz.EnvironmentInfo.Cad;
-using drz.EnvironmentInfo.Sys;
 using System;
 using System.Diagnostics;
 using static drz.Src.Infrastructure.AddOnContext;
@@ -43,51 +40,60 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
         public void TestInjectorInfo()
         {
+            //ICadInfo
             ICadInfo cadInfo = CadInfo_NEW;
-            Console.WriteLine(CadInfo_NEW);
+
+            Console.WriteLine("CadInfo_NEW");
             Console.WriteLine(CadInfo_NEW.ToString());
-            Console.WriteLine(CadInfo_NEW.Copyright);
+            Console.WriteLine(CadInfo_NEW.ToShortString());//todo not implement CadInfo_NEW.ToShortString
+            Console.WriteLine(CadInfo_NEW.ToLongString());//todo not implement CadInfo_NEW.ToLongString
 
-            ISysInfo sysInfo = SysInfo_NEW;
-            Console.WriteLine(sysInfo);
+            //ISysInfo
+            ISysInfo sysInfo_NEW = SysInfo_NEW;
 
+            Console.WriteLine("sysInfo_NEW");
+            Console.WriteLine(sysInfo_NEW.ToString());
+            Console.WriteLine(sysInfo_NEW.ToShortString());
+            Console.WriteLine(sysInfo_NEW.ToLongString());
+
+            //IApplicationInfo_NEW
             IApplicationInfo_NEW infoDll_NEW = InfoDll_NEW;
 
-            Console.WriteLine(infoDll_NEW);
+            Console.WriteLine("infoDll_NEW");
+            Console.WriteLine(infoDll_NEW.ToString());
             Console.WriteLine(infoDll_NEW.ToShortString());
             Console.WriteLine(infoDll_NEW.ToLongString());
             //
 
-            IApplicationInfo addon = AC.AddOn;
+            IApplicationInfo_NEW addon = AC.InfoDll_NEW;
 
-            IApplicationInfo_NEW infoDll = InfoDll;
+            IApplicationInfo_NEW infoDll = InfoDll_NEW;
 
-            ISysInfo os = SysInfo.Current;
+            ISysInfo os = SysInfo_NEW;
+            Console.WriteLine(os);
 
-            ICadInfo cad = CadInfo.Current;
+            ICadInfo cad = CadInfo_NEW;
 
             IDocumentService documentService = AC.DocService;
 
-            RuntimeInfo rt = RT.Info;
-
+           
 
             //-----
 
 
-            Console.WriteLine(os);
 
-            string path = InfoDll.AppDataProductLogPath;
+            string path = InfoDll_NEW.AppDataProductLogPath;
 
-            Console.WriteLine(CadInfo.Current);
+            Console.WriteLine(CadInfo_NEW);
         }
 
         public void TestInjectorMessage()
         {
-            AC.Msg.InfoMessage($"{AC.AddOn.TitlePrefix} Message");
+            AC.Msg.InfoMessage($"{AC.InfoDll_NEW.TitlePrefix} Message");
 
-            AC.MsgCmd.ConsoleMessage($"{AC.AddOn.TitlePrefix} Console message");
+            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll_NEW.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage($"{AC.AddOn.TitlePrefix} Info message");
+            AC.MsgGUI.InfoMessage($"{AC.InfoDll_NEW.TitlePrefix} Info message");
 
             //new
             AC.Msg.InfoMessage($"{AC.InfoDll_NEW.TitlePrefix} Message NEW");

@@ -1,7 +1,4 @@
-﻿using drz.EnvironmentInfo;
-using drz.EnvironmentInfo.App;
-using drz.EnvironmentInfo.Cad;
-using drz.EnvironmentInfo.Sys;
+﻿using drz.Abstractions.Infrastructure;
 using drz.Lib_A;
 using drz.Lib_B;
 using System;
@@ -27,23 +24,22 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             Console.WriteLine($"{cmdB.ExecuteEnvironmentInfoProvider()}");
 
-            Console.WriteLine($"{InfoDll.ToLongString()}");
+            Console.WriteLine($"{InfoDll_NEW.ToLongString()}");
 
-            Console.WriteLine($"{RT.Info}");
-            Console.WriteLine($"{RT.Os}");
-            Console.WriteLine($"{RT.Cad}");
+            //Console.WriteLine($"{RT.Info}");
+            //Console.WriteLine($"{RT.Os}");
+            //Console.WriteLine($"{RT.Cad}");
 
             Console.WriteLine(typeof(Start).FullName);
 
-            RuntimeInfo runtime = RuntimeInfo.Current;
-            Console.WriteLine(runtime);
+            
 
-            Console.WriteLine(SysInfo.Current);
-            Console.WriteLine(CadInfo.Current);
-            Console.WriteLine(AppInfo.Get(typeof(Start).Assembly));
+            Console.WriteLine(SysInfo_NEW);
+            Console.WriteLine(CadInfo_NEW);
+            Console.WriteLine(InfoDll_NEW);
 
-            RuntimeInfo rt = RT.Info;
-            AppInfo id = InfoDll;
+          
+            IApplicationInfo_NEW id = InfoDll_NEW;
         }
     }
 }

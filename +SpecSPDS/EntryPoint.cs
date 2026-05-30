@@ -5,7 +5,6 @@ using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
 using static drz.Src.Infrastructure.AddOnContext;
 using drz.Cleaner.Infrastructure;
-using drz.EnvironmentInfo;
 using drz.Abstractions.Logger;
 using drz.Src.Services;
 
@@ -122,7 +121,7 @@ namespace drz.SpecSPDS
         {
             try//игнорим ошибки
             {
-                CleaningBackups.Cleaning(InfoDll.AssemblyDirectory);
+                CleaningBackups.Cleaning(InfoDll_NEW.AssemblyDirectory);
             }
             catch { }
         }
@@ -133,11 +132,13 @@ namespace drz.SpecSPDS
         {
             try
             {
-                log.Debug(RT.Info.ToString());
+                log.Debug(SysInfo_NEW.ToString());
 
-                log.Debug(InfoDll.ToString());
+                log.Debug(CadInfo_NEW.ToString());
 
-                msg.ConsoleMessage($"Hello {InfoDll.ToShortString()} for {RT.Cad}");
+                log.Debug(InfoDll_NEW.ToString());
+
+                msg.ConsoleMessage($"Hello {InfoDll_NEW.ToShortString()} for {CadInfo_NEW}");
 
                 TryListCMD();
 
