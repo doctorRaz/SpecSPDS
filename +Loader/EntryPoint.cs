@@ -19,6 +19,8 @@ using drz.Abstractions.Logger;
 using drz.Src.Services;
 
 
+
+
 #if TEST
 
 using drz.SpecSpds;
@@ -221,7 +223,7 @@ namespace drz.Loader
 
                 log.Debug($"minVersion {minVersion}");
 
-                FileInfo? targetDllFullName = FindFile(fileFullName, version, minVersion);
+                FileInfo? targetDllFullName = FindFile(/*fileFullName,*/ version, minVersion);
 
                 if (targetDllFullName == null)
                 {
@@ -290,10 +292,13 @@ namespace drz.Loader
         /// <returns>Возвращается FileInfo наиболее подходящего файла, для его
         /// последующей загрузки в AutoCAD. Если такой файл не будет найден, то
         /// возвращается null.</returns>
-        private FileInfo? FindFile(string fileFullName,
-                                   Version expectedVersion,
+        private FileInfo? FindFile(Version expectedVersion,
                                    Version minVersion)
         {
+
+            string fileFullName = InfoDll_NEW.AssemblyPath;
+           
+
             if (fileFullName == null)
             {
                 throw new ArgumentNullException(nameof(fileFullName), "The fileFullName parameter cannot be null.");
@@ -309,17 +314,16 @@ namespace drz.Loader
                 throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
             }
 
-            string? directory = Path.GetDirectoryName(fileFullName);
+            string? directory = InfoDll_NEW.AssemblyDirectory;
+            //string? directory = Path.GetDirectoryName(fileFullName);
             if (directory == null)
             {
                 throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
             }
 
-            string fileName = Path.GetFileNameWithoutExtension(fileFullName);
+            string fileName = InfoDll_NEW.FilePrefix;
+            //string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
-#if TEST
-            fileName = "SpecSPDSn";
-#endif
             int major = expectedVersion.Major;
             int minor = expectedVersion.Minor;
 
@@ -484,6 +488,7 @@ namespace drz.Loader
                 log.Debug("Terminate");
 
                 AddOnContext.Dispose();
+
             }
             catch { } // смысла нет что то показывать при закрытии наны
         }
