@@ -41,7 +41,7 @@ namespace drz.SpecSpds.Test
           
 
 
-            ICadInfo cadInfo1 = new CadInfo_NEW();
+            ICadInfo cadInfo1 = new CadInfo();
 
             Console.WriteLine(cadInfo1.ToString()); 
             Console.WriteLine(cadInfo1.ToShortString()); 
@@ -59,7 +59,7 @@ namespace drz.SpecSpds.Test
                  *00:00:00.0024684 SysInfo_NEW2
                  *00:00:00.1066559 SysInfo_NEW.ToLongString
                  */
-                ISysInfo sysInfo_NEW = new SysInfo_NEW();
+                ISysInfo sysInfo_NEW = new SysInfo();
                 Console.WriteLine($"{sw.Elapsed} SysInfo_NEW2");
                 Console.WriteLine($"{sysInfo_NEW.GpuInfo}");
                 Console.WriteLine($"{sysInfo_NEW.ProcessorName}");
@@ -72,11 +72,11 @@ namespace drz.SpecSpds.Test
                 //Console.WriteLine($"{sw.Elapsed} SysInfo_NEW.ToLongString");
                 //sw.Restart();
 
-                IApplicationInfo_NEW  applicationInfo = new ApplicationInfo_NEW(typeof(Start).Assembly);
+                IApplicationInfo  applicationInfo = new ApplicationInfo(typeof(Start).Assembly);
                 Console.WriteLine($"{sw.Elapsed} ApplicationInfo");
                 sw.Restart();
 
-                IApplicationInfo_NEW applicationInfoNew = new ApplicationInfo_NEW(typeof(Start).Assembly);
+                IApplicationInfo applicationInfoNew = new ApplicationInfo(typeof(Start).Assembly);
                 Console.WriteLine($"{sw.Elapsed} ApplicationInfo_NEW");
                 sw.Restart();
 
@@ -85,7 +85,7 @@ namespace drz.SpecSpds.Test
                 //Console.WriteLine($"{sw.Elapsed} applicationInfoNew.ToLongString();");
                 //sw.Restart();
 
-                ICadInfo cadInfo = new CadInfo_NEW();
+                ICadInfo cadInfo = new CadInfo();
                 Console.WriteLine($"{sw.Elapsed} CadInfo_NEW");
                 sw.Restart();
 

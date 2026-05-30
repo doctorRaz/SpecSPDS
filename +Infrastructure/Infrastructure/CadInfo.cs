@@ -10,9 +10,9 @@ namespace drz.Infrastructure.Infrastructure;
 /// <summary>
 /// CadInfo
 /// </summary>
-public class CadInfo_NEW : ICadInfo
+public class CadInfo : ICadInfo
 {
-    public CadInfo_NEW()
+    public CadInfo()
     {
         try
         {

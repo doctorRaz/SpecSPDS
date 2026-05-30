@@ -6,13 +6,13 @@ using System.Reflection;
 namespace drz.Infrastructure.Infrastructure
 {
     //00:00:00.0056869 ApplicationInfo_NEW
-    public class ApplicationInfo_NEW : IApplicationInfo_NEW
+    public class ApplicationInfo : IApplicationInfo
     {
         private readonly Assembly _assembly;
 
         #region Public Constructors
 
-        public ApplicationInfo_NEW(Assembly assembly)
+        public ApplicationInfo(Assembly assembly)
         {
             _assembly =
                 assembly ?? throw new ArgumentNullException(nameof(assembly));

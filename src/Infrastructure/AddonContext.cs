@@ -20,7 +20,7 @@ namespace drz.Src.Infrastructure
 
         //internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
-        internal static IApplicationInfo_NEW InfoDll_NEW => Root.Get<IApplicationInfo_NEW>();
+        internal static IApplicationInfo InfoDll_NEW => Root.Get<IApplicationInfo>();
 
         internal static ISysInfo SysInfo_NEW => Root.Get<ISysInfo>();
 

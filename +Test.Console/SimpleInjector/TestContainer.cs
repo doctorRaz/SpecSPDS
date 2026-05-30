@@ -45,8 +45,8 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
             Console.WriteLine("CadInfo_NEW");
             Console.WriteLine(CadInfo_NEW.ToString());
-            Console.WriteLine(CadInfo_NEW.ToShortString());//todo not implement CadInfo_NEW.ToShortString
-            Console.WriteLine(CadInfo_NEW.ToLongString());//todo not implement CadInfo_NEW.ToLongString
+            Console.WriteLine(CadInfo_NEW.ToShortString());//todo not implement CadInfo.ToShortString
+            Console.WriteLine(CadInfo_NEW.ToLongString());//todo not implement CadInfo.ToLongString
 
             //ISysInfo
             ISysInfo sysInfo_NEW = SysInfo_NEW;
@@ -56,8 +56,8 @@ namespace drz.SpecSpds.Test.SimpleInjector
             Console.WriteLine(sysInfo_NEW.ToShortString());
             Console.WriteLine(sysInfo_NEW.ToLongString());
 
-            //IApplicationInfo_NEW
-            IApplicationInfo_NEW infoDll_NEW = InfoDll_NEW;
+            //IApplicationInfo
+            IApplicationInfo infoDll_NEW = InfoDll_NEW;
 
             Console.WriteLine("infoDll_NEW");
             Console.WriteLine(infoDll_NEW.ToString());
@@ -65,9 +65,9 @@ namespace drz.SpecSpds.Test.SimpleInjector
             Console.WriteLine(infoDll_NEW.ToLongString());
             //
 
-            IApplicationInfo_NEW addon = AC.InfoDll_NEW;
+            IApplicationInfo addon = AC.InfoDll_NEW;
 
-            IApplicationInfo_NEW infoDll = InfoDll_NEW;
+            IApplicationInfo infoDll = InfoDll_NEW;
 
             ISysInfo os = SysInfo_NEW;
             Console.WriteLine(os);

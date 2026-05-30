@@ -4,7 +4,7 @@ using System.Reflection;
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о сборке </summary>
-    public interface IApplicationInfo_NEW
+    public interface IApplicationInfo
     {
         #region Public Properties
 

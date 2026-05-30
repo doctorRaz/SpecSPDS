@@ -7,7 +7,7 @@ using System.Management; // Не забудьте добавить ссылку
 
 namespace drz.Infrastructure.Infrastructure
 {
-    public class SysInfo_NEW : ISysInfo
+    public class SysInfo : ISysInfo
     {
         #region Private Fields
 
@@ -20,7 +20,7 @@ namespace drz.Infrastructure.Infrastructure
 
         #region Public Constructors
 
-        public SysInfo_NEW()
+        public SysInfo()
         {
             // Устанавливаем базовые значения через Environment (служит дефолтом)
             Architecture = Environment.Is64BitOperatingSystem ? "X64" : "X32";

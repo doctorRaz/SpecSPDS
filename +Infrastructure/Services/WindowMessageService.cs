@@ -10,7 +10,7 @@ namespace drz.Infrastructure.Services
     {
         #region Private Fields
 
-        private IApplicationInfo_NEW _applicationInfo;
+        private IApplicationInfo _applicationInfo;
 
         private IntPtr _cadWindowHandle = IntPtr.Zero;
 
@@ -18,7 +18,7 @@ namespace drz.Infrastructure.Services
 
         #region Public Constructors
 
-        public WindowMessageService(IApplicationInfo_NEW applicationInfo, IWindowHandleProvider handleProvider)
+        public WindowMessageService(IApplicationInfo applicationInfo, IWindowHandleProvider handleProvider)
         {
             _applicationInfo = applicationInfo;
 

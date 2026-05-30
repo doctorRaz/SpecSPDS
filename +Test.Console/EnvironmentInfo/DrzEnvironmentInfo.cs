@@ -39,7 +39,7 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
             Console.WriteLine(InfoDll_NEW);
 
           
-            IApplicationInfo_NEW id = InfoDll_NEW;
+            IApplicationInfo id = InfoDll_NEW;
         }
     }
 }
