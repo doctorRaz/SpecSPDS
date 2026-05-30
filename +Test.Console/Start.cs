@@ -35,31 +35,58 @@ namespace drz.SpecSpds.Test
         [STAThread]
         private static void Main(string[] args)
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            //
-            ISysInfo sysInfo_NEW = new SysInfo_NEW();
-            Console.WriteLine($"{sw.Elapsed} SysInfo_NEW2");
-            sw.Restart();
+            Stopwatch swTotal = Stopwatch.StartNew();
+                Stopwatch sw = Stopwatch.StartNew();
 
-            Console.WriteLine(sysInfo_NEW.ToLongString());
-            Console.WriteLine($"{sw.Elapsed} SysInfo_NEW.ToLongString");
-            sw.Restart();
+            for (int i = 0; i < 1; i++)
+            {
+                 swTotal.Restart();
+                 sw.Restart();
 
-            IApplicationInfo applicationInfo = new ApplicationInfo(typeof(Start).Assembly);
-            Console.WriteLine($"{sw.Elapsed} ApplicationInfo");
-            sw.Restart();
+             
 
-            IApplicationInfo_NEW applicationInfoNew = new ApplicationInfo_NEW(typeof(Start).Assembly);
-            Console.WriteLine($"{sw.Elapsed} ApplicationInfo_NEW");
-            sw.Restart();
+                /*
+                 *00:00:00.0024684 SysInfo_NEW2
+                 *00:00:00.1066559 SysInfo_NEW.ToLongString
+                 */
+                ISysInfo sysInfo_NEW = new SysInfo_NEW();
+                Console.WriteLine($"{sw.Elapsed} SysInfo_NEW2");
+                Console.WriteLine($"{sysInfo_NEW.GpuInfo}");
+                Console.WriteLine($"{sysInfo_NEW.ProcessorName}");
+                Console.WriteLine($"{sysInfo_NEW.RamTotalGb}");
+                Console.WriteLine($"{sysInfo_NEW.ToLongString()}");
 
-            ICadInfo cadInfo = new CadInfo_NEW();
-            Console.WriteLine($"{sw.Elapsed} CadInfo_NEW");
-            sw.Restart();
+                sw.Restart();
+
+                //var ss = (sysInfo_NEW.ToLongString());
+                //Console.WriteLine($"{sw.Elapsed} SysInfo_NEW.ToLongString");
+                //sw.Restart();
+
+                IApplicationInfo  applicationInfo = new ApplicationInfo(typeof(Start).Assembly);
+                Console.WriteLine($"{sw.Elapsed} ApplicationInfo");
+                sw.Restart();
+
+                IApplicationInfo_NEW applicationInfoNew = new ApplicationInfo_NEW(typeof(Start).Assembly);
+                Console.WriteLine($"{sw.Elapsed} ApplicationInfo_NEW");
+                sw.Restart();
 
 
+                //var ap=applicationInfoNew.ToLongString();
+                //Console.WriteLine($"{sw.Elapsed} applicationInfoNew.ToLongString();");
+                //sw.Restart();
 
+                ICadInfo cadInfo = new CadInfo_NEW();
+                Console.WriteLine($"{sw.Elapsed} CadInfo_NEW");
+                sw.Restart();
 
+                TestContainer testContainer = new TestContainer();
+                Console.WriteLine($"{sw.Elapsed} new TestContainer();");
+
+                Console.WriteLine($"{swTotal.Elapsed} total");
+                Console.WriteLine($"\n--====--");
+               
+            }
+            //Console.ReadKey();
 
             /* //SimpleInjector */
             DrzSimpleInjector drzSimpleInjector = new DrzSimpleInjector();

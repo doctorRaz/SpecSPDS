@@ -101,7 +101,7 @@ namespace drz.Infrastructure.Infrastructure
 
         private string longStr => $"CPU: {ProcessorName}\n" +
                                   $"RAM: {RamTotalGb}\n" +
-                          $"GPU: {GpuInfo}";
+                                  $"GPU: {GpuInfo}";
 
         private string shortStr => $"{(IsFallback ? "OS (fallback):" : "OS:")} {ProductName} {DisplayVersion} [{Architecture}]";
         #endregion Private Properties

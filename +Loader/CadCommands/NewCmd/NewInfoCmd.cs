@@ -10,11 +10,10 @@ namespace drz.Loader.CadCommands.NewCmd
         {
             Msg.InfoMessage($"{CadInfo_NEW}");
 
-            Msg.InfoMessage($"{SysInfo_NEW}");
+            Msg.ConsoleMessage($"{SysInfo_NEW}");
 
             Msg.ErrorMessage($"{InfoDll_NEW}");
-
-            Msg.ConsoleMessage($"{InfoDll_NEW.ToLongString()}");
+           
         }
 
         [CommandMethod($"info-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
@@ -24,9 +23,18 @@ namespace drz.Loader.CadCommands.NewCmd
 
             MsgGUI.ConsoleMessage($"{SysInfo_NEW}");
 
-            MsgGUI.InfoMessage($"{InfoDll_NEW}");
-
             MsgGUI.ConsoleMessage($"{InfoDll_NEW.ToLongString()}");
+        }
+
+        [CommandMethod($"console-Long-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
+        public static void ConsoleLongCmd()
+        {
+            
+            Msg.ErrorMessage($"{InfoDll_NEW.ToLongString()}");
+
+            Msg.ConsoleMessage($"{SysInfo_NEW.ToLongString()}");
+
+
         }
     }
 }

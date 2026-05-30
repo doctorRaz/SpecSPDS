@@ -21,7 +21,7 @@ namespace drz.Infrastructure.Infrastructure
             AssemblyPath =
                 _assembly.Location ?? string.Empty;
 
-            AssembleFullName =
+            AssembleFullName=
                 _assembly.FullName;
 
             AssemblyName assemblyName =
@@ -154,7 +154,7 @@ namespace drz.Infrastructure.Infrastructure
 
         public override string ToString()
         {
-            return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); _asembly: {FileName}; [{InformationalVersion}]";
+            return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); asembly: {FileName}; [{InformationalVersion}]";
         }
 
         #endregion Public Methods
