@@ -54,6 +54,6 @@
 		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
 		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
 		<RepositoryUrl>https://github.com/doctorRaz/SpecSPDS</RepositoryUrl>
-		<MinVersion>20</MinVersion>
+		<MinVersion>23</MinVersion>
 	</PropertyGroup>
 </Project>

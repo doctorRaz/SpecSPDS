@@ -9,7 +9,7 @@
 		<!--<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>-->
 		<!-- значение по умолчанию мин версии-->
-		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
+		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>
 		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
