@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
-		<AssemblyName>$(SolutionName)n.$(MSBuildProjectName)</AssemblyName>
+		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 
@@ -14,6 +14,9 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />

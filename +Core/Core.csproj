@@ -4,6 +4,7 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
 		<RootNamespace>dRz.$(MSBuildProjectName)</RootNamespace>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
@@ -16,6 +17,9 @@
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="NLog" Version="6.1.3" />

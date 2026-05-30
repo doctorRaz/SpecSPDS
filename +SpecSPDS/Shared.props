@@ -6,10 +6,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+SpecSPDS.Core\SpecSPDS.Core.csproj" />
-		<ProjectReference Include="..\+Cleaner\dRz.Cleaner.csproj" />
-		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+LogBootstrap\dRz.LogBootstrap.csproj" />
+		<ProjectReference Include="..\+Core\Core.csproj" />
+		<ProjectReference Include="..\+Cleaner\Cleaner.csproj" />
+		<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />
+		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
 	</ItemGroup>
 	<ItemGroup>

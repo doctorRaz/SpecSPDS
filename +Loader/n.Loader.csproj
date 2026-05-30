@@ -4,7 +4,7 @@
 		<TargetFramework>net462</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
 		<!--<AssemblyName>$(SolutionName)n</AssemblyName>-->
-		<AssemblyName>$(SolutionName)n.$(MSBuildProjectName)</AssemblyName>
+		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<!--<Nullable>enable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>-->
@@ -32,8 +32,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
-		<ProjectReference Include="..\+EnvironmentInfo\drz.EnvironmentInfo.csproj" />
-		<ProjectReference Include="..\+LogBootstrap\drz.LogBootstrap.csproj" />
+		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
+		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 	</ItemGroup>
 
 	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
