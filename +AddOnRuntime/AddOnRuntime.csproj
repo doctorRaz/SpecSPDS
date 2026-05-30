@@ -13,7 +13,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+CadServices\n.Services.csproj" />
+		<ProjectReference Include="..\+CadServices\n.CadServices.csproj" />
 		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 	<ItemGroup>

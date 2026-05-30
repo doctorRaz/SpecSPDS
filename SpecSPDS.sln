@@ -53,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddOnRuntime", "+AddOnRunti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{CC3B1C57-DFAC-4370-9274-E6218C28054C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.Services", "+CadServices\n.Services.csproj", "{F051BF1A-9BC0-336D-3CE6-2D26BA16B37A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.CadServices", "+CadServices\n.CadServices.csproj", "{F051BF1A-9BC0-336D-3CE6-2D26BA16B37A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "+Test.CadServices\Test.CadServices.csproj", "{0C53747F-F600-4016-962C-39642398DB57}"
 EndProject
