@@ -52,7 +52,7 @@ namespace drz.AddOn.Composition
         {
             container.RegisterInstance(addOnAssembly);
 
-            container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
+            //container.Register<IApplicationInfo_NEW, ApplicationInfo>(Lifestyle.Singleton);
 
             container.Register<IApplicationInfo_NEW, ApplicationInfo_NEW>(Lifestyle.Singleton);
 

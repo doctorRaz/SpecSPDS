@@ -62,7 +62,7 @@ namespace drz.SpecSpds.Test
                 //Console.WriteLine($"{sw.Elapsed} SysInfo_NEW.ToLongString");
                 //sw.Restart();
 
-                IApplicationInfo  applicationInfo = new ApplicationInfo(typeof(Start).Assembly);
+                IApplicationInfo_NEW  applicationInfo = new ApplicationInfo_NEW(typeof(Start).Assembly);
                 Console.WriteLine($"{sw.Elapsed} ApplicationInfo");
                 sw.Restart();
 

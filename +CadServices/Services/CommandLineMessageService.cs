@@ -13,7 +13,7 @@ namespace drz.CadServices.Services
 {
     public class CommandLineMessageService : IMessageService, ICommandLineMessageService
     {
-        public CommandLineMessageService(IApplicationInfo applicationInfo)
+        public CommandLineMessageService(IApplicationInfo_NEW applicationInfo)
         {
             _applicationInfo = applicationInfo;
         }
@@ -82,6 +82,6 @@ namespace drz.CadServices.Services
 
         }
 
-        private IApplicationInfo _applicationInfo;
+        private IApplicationInfo_NEW _applicationInfo;
     }
 }
