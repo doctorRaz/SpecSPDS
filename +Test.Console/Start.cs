@@ -38,6 +38,16 @@ namespace drz.SpecSpds.Test
             Stopwatch swTotal = Stopwatch.StartNew();
                 Stopwatch sw = Stopwatch.StartNew();
 
+          
+
+
+            ICadInfo cadInfo1 = new CadInfo_NEW();
+
+            Console.WriteLine(cadInfo1.ToString()); 
+            Console.WriteLine(cadInfo1.ToShortString()); 
+            Console.WriteLine(cadInfo1.ToLongString()); 
+
+
             for (int i = 0; i < 1; i++)
             {
                  swTotal.Restart();
