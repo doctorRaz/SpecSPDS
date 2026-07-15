@@ -1,0 +1,16 @@
+﻿<Project>
+ <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.targets', '$(MSBuildThisFileDirectory)..\'))" />
+
+	<PropertyGroup>
+		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
+		<ConfigNameIn>Single_var</ConfigNameIn>
+		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
+	</PropertyGroup>
+	<Target Name="CopyNLogConfig"
+	        AfterTargets="Build">
+		<Copy SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
+		      DestinationFiles="$(OutDir)$(ConfigNameOut)"
+		      SkipUnchangedFiles="true"
+		      Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')"/>
+	</Target>
+</Project>

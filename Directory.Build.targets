@@ -1,19 +1,5 @@
 ﻿<Project>
-	<PropertyGroup>
-		<!-- <SharedConfigDir>$(MSBuildThisFileDirectory)\Shared</SharedConfigDir> -->
-		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
-		<ConfigNameIn>Single_var</ConfigNameIn>
-		<!-- <ConfigNameOut>$(AssemblyName).dll.nlog</ConfigNameOut> -->
-		<!-- <ConfigNameOut>drzNLog.dll.nlog</ConfigNameOut> -->
-		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
-	</PropertyGroup>
-	<Target Name="CopyNLogConfig"
-	        AfterTargets="Build">
-		<Copy SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
-		      DestinationFiles="$(OutDir)$(ConfigNameOut)"
-		      SkipUnchangedFiles="true"
-		      Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')"/>
-	</Target>
+	
 	<!--<PropertyGroup>
 		-->
 	<!-- Общая папка с конфигурацией -->

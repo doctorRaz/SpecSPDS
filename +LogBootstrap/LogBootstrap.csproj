@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
@@ -18,4 +19,19 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
+
+	<!--импорт конфига Nlog-->
+	<PropertyGroup>
+		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
+		<ConfigNameIn>Single_var</ConfigNameIn>
+		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
+	</PropertyGroup>
+	<Target Name="CopyNLogConfig"
+	        AfterTargets="Build">
+		<Copy SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
+		      DestinationFiles="$(OutDir)$(ConfigNameOut)"
+		      SkipUnchangedFiles="true"
+		      Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')"/>
+	</Target>
+
 </Project>
