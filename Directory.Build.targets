@@ -41,14 +41,14 @@
 
 
 	<!--ПРИБИТЬ ФАЙЛЫ UPDATE-->
-	<Target Name="DeleteUpdateFiles" BeforeTargets="BeforeBuild">
-		<ItemGroup>
-			<UpdateFiles Include="$(TargetDir)update.*"/>
-		</ItemGroup>
+	<!-- <Target Name="DeleteUpdateFiles" BeforeTargets="BeforeBuild"> -->
+		<!-- <ItemGroup> -->
+			<!-- <UpdateFiles Include="$(TargetDir)update.*"/> -->
+		<!-- </ItemGroup> -->
 
-		<Delete Files="@(UpdateFiles)"
-				ContinueOnError="true" />
-	</Target>
+		<!-- <Delete Files="@(UpdateFiles)" -->
+				<!-- ContinueOnError="true" /> -->
+	<!-- </Target> -->
 	<!--ini-->
 	<Target Name="WriteUpdateInfoINI" AfterTargets="Build">
 
