@@ -57,7 +57,7 @@ namespace drz.SpecSpds.Test
 
                 /*
                  *00:00:00.0024684 SysInfo_NEW2
-                 *00:00:00.1066559 SysInfo_NEW.ToLongString
+                 *00:00:00.1066559 SysInfo.ToLongString
                  */
                 ISysInfo sysInfo_NEW = new SysInfo();
                 Console.WriteLine($"{sw.Elapsed} SysInfo_NEW2");
@@ -69,14 +69,14 @@ namespace drz.SpecSpds.Test
                 sw.Restart();
 
                 //var ss = (sysInfo_NEW.ToLongString());
-                //Console.WriteLine($"{sw.Elapsed} SysInfo_NEW.ToLongString");
+                //Console.WriteLine($"{sw.Elapsed} SysInfo.ToLongString");
                 //sw.Restart();
 
-                IApplicationInfo  applicationInfo = new ApplicationInfo(typeof(Start).Assembly);
+                IAddOnInfo  applicationInfo = new AddOnInfo(typeof(Start).Assembly);
                 Console.WriteLine($"{sw.Elapsed} ApplicationInfo");
                 sw.Restart();
 
-                IApplicationInfo applicationInfoNew = new ApplicationInfo(typeof(Start).Assembly);
+                IAddOnInfo applicationInfoNew = new AddOnInfo(typeof(Start).Assembly);
                 Console.WriteLine($"{sw.Elapsed} ApplicationInfo_NEW");
                 sw.Restart();
 
