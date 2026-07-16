@@ -53,11 +53,11 @@ namespace drz.Lib_B
 
         public void msgCommandB()
         {
-            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll_NEW.TitlePrefix} Console message");
+            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage($"{AC.InfoDll_NEW.TitlePrefix} Console message");
+            AC.MsgGUI.InfoMessage($"{AC.InfoDll.TitlePrefix} Console message");
 
-            AC.Msg.InfoMessage($"{AC.InfoDll_NEW.TitlePrefix} Console message");
+            AC.Msg.InfoMessage($"{AC.InfoDll.TitlePrefix} Console message");
         }
     }
 }

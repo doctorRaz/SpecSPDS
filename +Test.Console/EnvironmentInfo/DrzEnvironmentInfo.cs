@@ -24,7 +24,7 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             Console.WriteLine($"{cmdB.ExecuteEnvironmentInfoProvider()}");
 
-            Console.WriteLine($"{InfoDll_NEW.ToLongString()}");
+            Console.WriteLine($"{InfoDll.ToLongString()}");
 
             //Console.WriteLine($"{RT.Info}");
             //Console.WriteLine($"{RT.Os}");
@@ -34,12 +34,12 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             
 
-            Console.WriteLine(SysInfo_NEW);
-            Console.WriteLine(CadInfo_NEW);
-            Console.WriteLine(InfoDll_NEW);
+            Console.WriteLine(SysInfo);
+            Console.WriteLine(CadInfo);
+            Console.WriteLine(InfoDll);
 
           
-            IApplicationInfo id = InfoDll_NEW;
+            IAddOnInfo id = InfoDll;
         }
     }
 }

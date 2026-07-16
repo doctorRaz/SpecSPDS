@@ -18,7 +18,7 @@ namespace drz.Src.Infrastructure
         public string GetSummary()
         {
             //порнография конечно(
-            return $"{SysInfo_NEW}\n {CadInfo_NEW}";
+            return $"{SysInfo}\n {CadInfo}";
             
         }
     }

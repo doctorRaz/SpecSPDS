@@ -8,31 +8,31 @@ namespace drz.Loader.CadCommands.NewCmd
         [CommandMethod($"console-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleNewCmd()
         {
-            Msg.InfoMessage($"{CadInfo_NEW}");
+            Msg.InfoMessage($"{CadInfo}");
 
-            Msg.ConsoleMessage($"{SysInfo_NEW}");
+            Msg.ConsoleMessage($"{SysInfo}");
 
-            Msg.ErrorMessage($"{InfoDll_NEW}");
+            Msg.ErrorMessage($"{InfoDll}");
            
         }
 
         [CommandMethod($"info-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void GuiNewCmd()
         {
-            MsgGUI.InfoMessage($"{CadInfo_NEW}");
+            MsgGUI.InfoMessage($"{CadInfo}");
 
-            MsgGUI.ConsoleMessage($"{SysInfo_NEW}");
+            MsgGUI.ConsoleMessage($"{SysInfo}");
 
-            MsgGUI.ConsoleMessage($"{InfoDll_NEW.ToLongString()}");
+            MsgGUI.ConsoleMessage($"{InfoDll.ToLongString()}");
         }
 
         [CommandMethod($"console-Long-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleLongCmd()
         {
             
-            Msg.ErrorMessage($"{InfoDll_NEW.ToLongString()}");
+            Msg.ErrorMessage($"{InfoDll.ToLongString()}");
 
-            Msg.ConsoleMessage($"{SysInfo_NEW.ToLongString()}");
+            Msg.ConsoleMessage($"{SysInfo.ToLongString()}");
 
 
         }

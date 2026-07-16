@@ -15,8 +15,8 @@ namespace drz.Src.Services
 
         private static readonly Lazy<IDrzLogService> _service = new(() =>
             new NLogService(
-                productNameProvider: () => InfoDll_NEW.ProductName,
-                assemblyDirectoryProvider: () => InfoDll_NEW.AssemblyDirectory,
+                productNameProvider: () => InfoDll.ProductName,
+                assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()
             ));
 

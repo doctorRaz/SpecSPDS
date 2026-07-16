@@ -20,11 +20,11 @@ namespace drz.Src.Infrastructure
 
         //internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
-        internal static IApplicationInfo InfoDll_NEW => Root.Get<IApplicationInfo>();
+        internal static IAddOnInfo InfoDll => Root.Get<IAddOnInfo>();
 
-        internal static ISysInfo SysInfo_NEW => Root.Get<ISysInfo>();
+        internal static ISysInfo SysInfo => Root.Get<ISysInfo>();
 
-        internal static ICadInfo CadInfo_NEW => Root.Get<ICadInfo>();
+        internal static ICadInfo CadInfo => Root.Get<ICadInfo>();
 
         internal static IDocumentService DocService => Root.Get<IDocumentService>();
 

@@ -208,11 +208,11 @@ namespace drz.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта
                 // AssemblyVersion, полученного из Application.AssemblyVersion.
-                Version version = CadInfo_NEW.ProductVersion;// AssemblyVersion;
+                Version version = CadInfo.ProductVersion;// AssemblyVersion;
 
                 //string fileDescription = RT.Cad.FileDescription;
 
-                log.Debug($"Обнаружен: {CadInfo_NEW}");
+                log.Debug($"Обнаружен: {CadInfo}");
 
                 string fileFullName = GetType().Assembly.Location;
                 //косяк   string fileFullName = InfoDll.FilePrefix;
@@ -227,7 +227,7 @@ namespace drz.Loader
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {CadInfo_NEW}";
+                    string mesag = $"Не найден подходящий адаптер для {CadInfo}";
 
                     log.Error($"{mesag}");
 
@@ -247,7 +247,7 @@ namespace drz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Debug($"Загружается адаптер для: {CadInfo_NEW}, целевая сборка: {targetDllFullName.FullName}");
+                        log.Debug($"Загружается адаптер для: {CadInfo}, целевая сборка: {targetDllFullName.FullName}");
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -261,7 +261,7 @@ namespace drz.Loader
                         throw exception;
                     }
 
-                    log.Debug($"Адаптер для {CadInfo_NEW} загружен");
+                    log.Debug($"Адаптер для {CadInfo} загружен");
                 }
                 catch (Exception ex)
                 {
@@ -296,7 +296,7 @@ namespace drz.Loader
                                    Version minVersion)
         {
 
-            string fileFullName = InfoDll_NEW.AssemblyPath;
+            string fileFullName = InfoDll.AssemblyPath;
            
 
             if (fileFullName == null)
@@ -314,14 +314,14 @@ namespace drz.Loader
                 throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
             }
 
-            string? directory = InfoDll_NEW.AssemblyDirectory;
+            string? directory = InfoDll.AssemblyDirectory;
             //string? directory = Path.GetDirectoryName(fileFullName);
             if (directory == null)
             {
                 throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
             }
 
-            string fileName = InfoDll_NEW.FilePrefix;
+            string fileName = InfoDll.FilePrefix;
             //string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
             int major = expectedVersion.Major;

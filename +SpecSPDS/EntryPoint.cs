@@ -164,13 +164,13 @@ namespace drz.SpecSPDS
         {
             try
             {
-                log.Debug(SysInfo_NEW.ToString());
+                log.Debug(SysInfo.ToString());
 
-                log.Debug(CadInfo_NEW.ToString());
+                log.Debug(CadInfo.ToString());
 
-                log.Debug(InfoDll_NEW.ToString());
+                log.Debug(InfoDll.ToString());
 
-                msg.ConsoleMessage($"Hello {InfoDll_NEW.ToShortString()} for {CadInfo_NEW}");
+                msg.ConsoleMessage($"Hello {InfoDll.ToShortString()} for {CadInfo}");
 
                 TryListCMD();
 
