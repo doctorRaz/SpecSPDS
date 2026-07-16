@@ -50,36 +50,36 @@
 				<!-- ContinueOnError="true" /> -->
 	<!-- </Target> -->
 	<!--ini-->
-	<Target Name="WriteUpdateInfoINI" AfterTargets="Build">
+	<!-- <Target Name="WriteUpdateInfoINI" AfterTargets="Build"> -->
 
-		<GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
-			<Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
-		</GetAssemblyIdentity>
+		<!-- <GetAssemblyIdentity AssemblyFiles="$(TargetPath)"> -->
+			<!-- <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/> -->
+		<!-- </GetAssemblyIdentity> -->
 
-		<WriteLinesToFile
-			File="$(TargetDir)update.ini"
-			Overwrite="false"
-			Lines="
-[$(MSBuildProjectName)]
-Name=$(AssemblyName)
-Version=%(AssemblyInfo.Version)
-"/>
+		<!-- <WriteLinesToFile -->
+			<!-- File="$(TargetDir)update.ini" -->
+			<!-- Overwrite="false" -->
+			<!-- Lines=" -->
+<!-- [$(MSBuildProjectName)] -->
+<!-- Name=$(AssemblyName) -->
+<!-- Version=%(AssemblyInfo.Version) -->
+<!-- "/> -->
 		<!--json-->
-	</Target>
-	<Target Name="WriteUpdateInfoJson" AfterTargets="Build">
+	<!-- </Target> -->
+	<!-- <Target Name="WriteUpdateInfoJson" AfterTargets="Build"> -->
 
-		<GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
-			<Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/>
-		</GetAssemblyIdentity>
-		<PropertyGroup>
-			<Major>$([System.Version]::Parse('%(AssemblyInfo.Version)').Major)</Major>
-			<Minor>$([System.Version]::Parse('%(AssemblyInfo.Version)').Minor)</Minor>
-			<Build>$([System.Version]::Parse('%(AssemblyInfo.Version)').Build)</Build>
-			<Revision>$([System.Version]::Parse('%(AssemblyInfo.Version)').Revision)</Revision>
-		</PropertyGroup>
-		<WriteLinesToFile
-			File="$(TargetDir)update.json"
-			Overwrite="false"
-			Lines='{"Project":"$(AssemblyName)","Major":$(Major),"Minor":$(Minor),"Build":$(Build),"Revision":$(Revision)}' />
-	</Target>
+		<!-- <GetAssemblyIdentity AssemblyFiles="$(TargetPath)"> -->
+			<!-- <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/> -->
+		<!-- </GetAssemblyIdentity> -->
+		<!-- <PropertyGroup> -->
+			<!-- <Major>$([System.Version]::Parse('%(AssemblyInfo.Version)').Major)</Major> -->
+			<!-- <Minor>$([System.Version]::Parse('%(AssemblyInfo.Version)').Minor)</Minor> -->
+			<!-- <Build>$([System.Version]::Parse('%(AssemblyInfo.Version)').Build)</Build> -->
+			<!-- <Revision>$([System.Version]::Parse('%(AssemblyInfo.Version)').Revision)</Revision> -->
+		<!-- </PropertyGroup> -->
+		<!-- <WriteLinesToFile -->
+			<!-- File="$(TargetDir)update.json" -->
+			<!-- Overwrite="false" -->
+			<!-- Lines='{"Project":"$(AssemblyName)","Major":$(Major),"Minor":$(Minor),"Build":$(Build),"Revision":$(Revision)}' /> -->
+	<!-- </Target> -->
 </Project>
