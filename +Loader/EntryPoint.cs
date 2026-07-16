@@ -60,25 +60,6 @@ namespace drz.Loader
 
         private const string netPluginExtension = ".dll";
 
-#if DEBUG && NC
-
-        [Rtm.CommandMethod($"инит_{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
-        [Scm.Description($"ручной инит загрузчика для {GeneratedCompile.CommandSuf}")]
-        public static void test()
-        {
-            Msg.ConsoleMessage($"инит {GeneratedCompile.CommandSuf}");
-            EntryPoint entryPoint = new EntryPoint();
-            entryPoint.Initialize();
-        }
-
-        [Rtm.CommandMethod($"console-message-test-{GeneratedCompile.CommandSuf}", Rtm.CommandFlags.Session)]
-        public static void ConsoleMessageCommand()
-        {
-            MsgCmd.ConsoleMessage("Console message");
-        }
-
-#endif
-
         /// <summary>
         /// Код этого метода будет запущен на исполнение при загрузке сборки в
         /// AutoCAD. В результате его работы происходит попытка найти и загрузить в
