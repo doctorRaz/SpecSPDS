@@ -15,13 +15,13 @@ namespace drz.CadServices.Services
     {
         #region Private Fields
 
-        private IApplicationInfo _applicationInfo;
+        private IAddOnInfo _applicationInfo;
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public CommandLineMessageService(IApplicationInfo applicationInfo)
+        public CommandLineMessageService(IAddOnInfo applicationInfo)
         {
             _applicationInfo = applicationInfo;
         }

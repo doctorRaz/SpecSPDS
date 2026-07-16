@@ -6,7 +6,7 @@ using System.Reflection;
 namespace drz.Infrastructure.Infrastructure
 {
     //00:00:00.0056869 ApplicationInfo_NEW
-    public class ApplicationInfo : IApplicationInfo
+    public class AddOnInfo : IAddOnInfo
     {
         #region Private Fields
 
@@ -18,32 +18,29 @@ namespace drz.Infrastructure.Infrastructure
 
         private DateTime? _buildDate;
 
-        private string _copyright;
+        private string? _copyright;
 
-        private string _description;
+        private string? _description;
 
-        private string _fileVersion;
+        private string? _fileVersion;
 
-        private string _informationalVersion;
+        private string? _informationalVersion;
 
         private bool _isAutoVersion;
 
-        private string _productTitle;
+        private string? _productTitle;
 
-        public ApplicationInfo(Assembly assembly)
+        public AddOnInfo(Assembly assembly)
         {
             _assembly =
                 assembly ?? throw new ArgumentNullException(nameof(assembly));
 
             // 1. Базовые данные о путях (работа со строками — это быстро)
-            AssemblyPath =
-                _assembly.Location ?? string.Empty;
+            AssemblyPath = _assembly.Location ?? string.Empty;
 
-            AssembleFullName =
-                _assembly.FullName;
+            AssembleFullName = _assembly.FullName;
 
-            AssemblyName assemblyName =
-                _assembly.GetName();
+            AssemblyName assemblyName = _assembly.GetName();
 
             if (!string.IsNullOrEmpty(AssemblyPath))
             {
@@ -82,13 +79,14 @@ namespace drz.Infrastructure.Infrastructure
             ProductName =
                 assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? FilePrefix;
 
-            AppDataProductPath =
-                Path.Combine(appData, ProductName);
+            AppDataProductPath = Path.Combine(appData, ProductName);
 
-            AppDataProductLogPath =
-                Path.Combine(AppDataProductPath, "Logs");
+            AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
 
             TitlePrefix = $"{ProductName} v.{AssemblyVersion} : ";
+
+
+            RootPath =;//
         }
         public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
 
@@ -129,6 +127,7 @@ namespace drz.Infrastructure.Infrastructure
         public string FilePrefix { get; }
         public string ProductName { get; }
         public string TitlePrefix { get; }
+        public string RootPath { get; }
 
         #endregion Public Properties
 

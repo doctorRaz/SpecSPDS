@@ -80,7 +80,7 @@ namespace drz.AddOn.Composition
 
             //container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
 
-            container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
+            container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
 
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
 

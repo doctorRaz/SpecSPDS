@@ -4,7 +4,7 @@ using System.Reflection;
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о сборке </summary>
-    public interface IApplicationInfo
+    public interface IAddOnInfo
     {
         #region Public Properties
 
@@ -15,6 +15,10 @@ namespace drz.Abstractions.Infrastructure
         /// <summary> Возвращает путь к данным приложения.</summary>
         /// <value> Путь к данным приложения. </value>
         string AppDataProductPath { get; }
+
+        /// <summary>Возвращает путь к корневому каталогу ад дона</summary>
+        /// <value>путь к корневому каталогу ад дона</value>
+        string RootPath { get; }
 
         /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
         /// <value>"Полное Имя" сборки.</value>
