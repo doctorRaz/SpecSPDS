@@ -7,7 +7,7 @@ namespace drz.Cleaner.Infrastructure
     /// <summary>
     /// чистка архивных файлов
     /// </summary>
-    public class CleaningBackups
+    public class BackupCleaner
 
     {
         #region Private Fields
@@ -27,7 +27,7 @@ namespace drz.Cleaner.Infrastructure
         /// чистилка *.bak и *****(111).****
         /// </summary>
         /// <param name="directoryPath"></param>
-        public static void Cleaning(string directoryPath)
+        public static void Clean(string directoryPath)
         {
             //digitsInBracketsAtEnd = new Regex(@"\(\d+\)$");
             //digitsInBracketsAtEnd = new Regex(@"\(\d+\)\.\*");

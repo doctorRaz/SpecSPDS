@@ -7,7 +7,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+Core\Core.csproj" />
-		<ProjectReference Include="..\+Cleaner\Cleaner.csproj" />
+		<ProjectReference Include="..\+Updater\Updater.csproj" />
 		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />

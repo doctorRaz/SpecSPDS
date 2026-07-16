@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.6.11822.322 stable
+VisualStudioVersion = 18.6.11822.322
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.23.0", "+SpecSPDS\n.23.0.csproj", "{3DFBB0EA-C68B-4199-BBA3-BC283D1E57AB}"
 EndProject
@@ -59,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "+Test.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.NET", "+Infrastructure\Infrastructure.NET.csproj", "{ECA99128-6290-43F7-BCEC-AA8D7CDD37ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cleaner", "+Cleaner\Cleaner.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "+Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
