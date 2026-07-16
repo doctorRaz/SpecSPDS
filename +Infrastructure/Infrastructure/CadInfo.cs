@@ -20,7 +20,7 @@ public class CadInfo : ICadInfo
         {
             HostArchitecture = Environment.Is64BitProcess ? "X64" : "X32";// RuntimeInformation.ProcessArchitecture.ToString();
 
-            string path = GetExePath();
+            string? path = GetExePath();
 
             if (string.IsNullOrEmpty(path)) throw new Exception("Path not found");
 
@@ -122,7 +122,7 @@ public class CadInfo : ICadInfo
     /// <summary>
     /// Получить полный путь к exe текущего процесса с fallback
     /// </summary>
-    private static string GetExePath()
+    private static string? GetExePath()
     {
         // Сначала через Process
         try
@@ -134,7 +134,7 @@ public class CadInfo : ICadInfo
 
             if (!string.IsNullOrEmpty(path))
             {
-                return path;
+                return path!; // подавляем предупреждение — path точно не null тут
             }
         }
         catch { } // fallback

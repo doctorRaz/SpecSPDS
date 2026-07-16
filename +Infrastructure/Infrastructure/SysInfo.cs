@@ -13,9 +13,9 @@ namespace drz.Infrastructure.Infrastructure
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
-        private string _gpuInfo;
-        private string _processorName;
-        private string _ramTotal;
+        private string? _gpuInfo;
+        private string? _processorName;
+        private string? _ramTotal;
 
         #endregion Private Fields
 
@@ -150,7 +150,7 @@ namespace drz.Infrastructure.Infrastructure
         private static int GetInt(RegistryKey key, string name, int fallback = 0) =>
                     key.GetValue(name) is int val ? val : fallback;
 
-        private static string GetString(RegistryKey key, string name, string fallback = null) =>
+        private static string GetString(RegistryKey key, string name, string fallback = null!) =>
                     key.GetValue(name)?.ToString() ?? fallback;
 
         // Новые свойства железа

@@ -30,27 +30,27 @@ namespace drz.Infrastructure.Services
 
         #region Public Methods
 
-        public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
+        public void ConsoleMessage(string message, [CallerMemberName] string? caller = null)
         {
             InfoMessage(message, caller);
         }
 
-        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
+        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
             if (_cadWindowHandle != IntPtr.Zero)
             {
