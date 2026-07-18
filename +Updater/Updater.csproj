@@ -1,14 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
-		<ImplicitUsings>disable</ImplicitUsings> 
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Description>обновлятор и чистилка  bak и копий</Description>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+	</ItemGroup>
+	<PropertyGroup>
+		<SharedConfigDir>$(MSBuildProjectDirectory)\res\7z_32\</SharedConfigDir>
+		<!--<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\7z_32\</SharedConfigDir>-->
+	</PropertyGroup>
+	<ItemGroup>
+		<SharedFiles Include="$(SharedConfigDir)\**\*.*"/>
+	</ItemGroup>
+	<Target Name="Copy7z32"
+	        AfterTargets="Build">
+		<Copy SourceFiles="@(SharedFiles)"
+		      DestinationFiles="$(OutDir)%(RecursiveDir)%(Filename)%(Extension)"
+		      SkipUnchangedFiles="true"/>
+	</Target>
 </Project>
