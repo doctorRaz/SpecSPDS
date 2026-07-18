@@ -15,11 +15,11 @@
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
 	<PropertyGroup>
-		<SharedConfigDir>$(MSBuildProjectDirectory)\res\7z_32\</SharedConfigDir>
-		<!--<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\7z_32\</SharedConfigDir>-->
+		<SharedConfigDir>$(MSBuildProjectDirectory)\Shared\7z_32\</SharedConfigDir>
 	</PropertyGroup>
 	<ItemGroup>
-		<SharedFiles Include="$(SharedConfigDir)\**\*.*"/>
+		<SharedFiles Include="$(SharedConfigDir)\**\*.*"
+		Exclude="$(SharedConfigDir)\*.ion"/>
 	</ItemGroup>
 	<Target Name="Copy7z32"
 	        AfterTargets="Build">

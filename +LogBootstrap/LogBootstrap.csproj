@@ -22,7 +22,7 @@
 
 	<!--импорт конфига Nlog-->
 	<PropertyGroup>
-		<SharedConfigDir>d:\@Developers\Programmers\!NET\!SpecSPDS\SpecSPDS\Shared\</SharedConfigDir>
+		<SharedConfigDir>$(MSBuildProjectDirectory)\Shared\</SharedConfigDir>
 		<ConfigNameIn>Single_var</ConfigNameIn>
 		<ConfigNameOut>NLog.dll.nlog</ConfigNameOut>
 	</PropertyGroup>
@@ -30,6 +30,10 @@
 	        AfterTargets="Build">
 		<Copy SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
 		      DestinationFiles="$(OutDir)$(ConfigNameOut)"
+		      SkipUnchangedFiles="true"
+		      Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')"/>
+		<Copy SourceFiles="$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config"
+		      DestinationFiles="$(OutDir)dRz$(ConfigNameOut)"
 		      SkipUnchangedFiles="true"
 		      Condition="Exists('$(SharedConfigDir)\$(ConfigNameIn).$(Configuration).config')"/>
 	</Target>
