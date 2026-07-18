@@ -6,7 +6,8 @@
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Description>обновлятор и чистилка  bak и копий</Description>
+		<Nullable>enable</Nullable>
+		<Description>обновлятор и чистилка  bak</Description>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>

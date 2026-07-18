@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace drz.Updater.Services.SevenZip
+{
+    /// <summary>
+    /// Уровень сжатия архива 7-Zip.
+    /// Соответствует значению параметра <c>-mx</c>.
+    /// </summary>
+    public enum SevenZipCompressionLevel
+    {
+        /// <summary>
+        /// Копирование без сжатия.
+        /// (<c>-mx=0</c>)
+        /// </summary>
+        Copy = 0,
+
+        /// <summary>
+        /// Максимальная скорость сжатия.
+        /// (<c>-mx=1</c>)
+        /// </summary>
+        Fastest = 1,
+
+        /// <summary>
+        /// Быстрое сжатие.
+        /// (<c>-mx=3</c>)
+        /// </summary>
+        Fast = 3,
+
+        /// <summary>
+        /// Нормальный уровень сжатия.
+        /// Рекомендуется для большинства задач.
+        /// (<c>-mx=5</c>)
+        /// </summary>
+        Normal = 5,
+
+        /// <summary>
+        /// Максимальное сжатие.
+        /// Требует больше времени и памяти.
+        /// (<c>-mx=7</c>)
+        /// </summary>
+        Maximum = 7,
+
+        /// <summary>
+        /// Ультра-сжатие.
+        /// Обеспечивает минимальный размер архива ценой
+        /// максимального времени обработки и потребления памяти.
+        /// (<c>-mx=9</c>)
+        /// </summary>
+        Ultra = 9
+    }
+}
