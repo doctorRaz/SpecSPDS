@@ -45,8 +45,8 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
             Console.WriteLine("CadInfo_NEW");
             Console.WriteLine(CadInfo.ToString());
-            Console.WriteLine(CadInfo.ToShortString());//todo not implement CadInfo.ToShortString
-            Console.WriteLine(CadInfo.ToLongString());//todo not implement CadInfo.ToLongString
+            Console.WriteLine(CadInfo.ToShortString()); 
+            Console.WriteLine(CadInfo.ToLongString()); 
 
             //ISysInfo
             ISysInfo sysInfo_NEW = SysInfo;

@@ -4,7 +4,7 @@ using System;
 
 
 
-//todo все связанное с HostMgd в отдельную сборку CadInfrastructure
+//все связанное с HostMgd в отдельную сборку CadInfrastructure
 #if !TEST
 using HostMgd.ApplicationServices;
 #endif
