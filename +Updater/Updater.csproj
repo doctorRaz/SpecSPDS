@@ -9,9 +9,9 @@
 		<Nullable>enable</Nullable>
 		<Description>обновлятор и чистилка  bak</Description>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>

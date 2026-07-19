@@ -1,9 +1,9 @@
 ﻿<Project>
 	<PropertyGroup>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+Core\Core.csproj" />

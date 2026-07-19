@@ -8,9 +8,9 @@
 		<Description>точка создания контейнера</Description>
 		<ImplicitUsings>disable</ImplicitUsings>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\+CadServices\n.CadServices.csproj" />

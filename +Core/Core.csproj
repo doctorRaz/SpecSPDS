@@ -15,9 +15,9 @@
 		<Description>SpecSPDS ядро</Description>
 		<AssemblyTitle>SpecSPDS.Core</AssemblyTitle>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>

@@ -8,9 +8,9 @@
 		<Product>Lib_B</Product>
 		<InformationalVersion>Cleaner for 2</InformationalVersion>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>
+	</PropertyGroup>-->
 	<PropertyGroup>
 	<DefineConstants>$(DefineConstants);TEST</DefineConstants>
 </PropertyGroup>
