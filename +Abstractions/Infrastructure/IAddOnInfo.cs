@@ -16,9 +16,19 @@ namespace drz.Abstractions.Infrastructure
         /// <value> Путь к данным приложения. </value>
         string AppDataProductPath { get; }
 
-        /// <summary>Возвращает путь к корневому каталогу ад дона</summary>
+        /// <summary>Возвращает путь к корневому каталогу ад дона где находится package</summary>
         /// <value>путь к корневому каталогу ад дона</value>
-        string RootPath { get; }
+        string PackageDirectory { get; }
+
+        /// <summary>Возвращает имя файла package.</summary>
+        /// <value>Имя файла package.</value>
+        string PackageFileName  { get; }
+
+        /// <summary>Gets a value indicating whether this instance has package.</summary>
+        /// <value>
+        ///   <c>true</c> if this instance has package; otherwise, <c>false</c>.
+        /// </value>
+        bool HasPackage { get; }
 
         /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
         /// <value>"Полное Имя" сборки.</value>
@@ -74,6 +84,18 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Возвращает ProductName v.AssemblyVersion.</summary>
         string TitlePrefix { get; }
+
+        /// <summary>Gets the repository URL.</summary>
+        /// <value>The repository URL.</value>
+        string RepositoryUrl {  get; }
+
+        /// <summary>Gets the cad family.</summary>
+        /// <value>The cad family.</value>
+        string CadFamily {  get; }
+
+        /// <summary>Gets the cad code.</summary>
+        /// <value>The cad code.</value>
+        string CadCode { get; }
 
         #endregion Public Properties
 

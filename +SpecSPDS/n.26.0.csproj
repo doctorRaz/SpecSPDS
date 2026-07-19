@@ -13,13 +13,23 @@
 		<!--******************-->
 		<Description>Спецификация из универсального маркера, nanoCAD 26</Description>
 		<AssemblyTitle>SpecSPDS.NET.26</AssemblyTitle>
+		<!--metadata-->
+		<CadFamily>NC</CadFamily>
+		<CadCode>n</CadCode>
+
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);NC;NC26</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(CadFamily);NC26</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MultiCAD.NET" Version="26.0.7226.4926" />
 		<PackageReference Include="nanoCAD.Platform.NET" Version="26.0.7226.4926" />
 	</ItemGroup>
+		<!--metadata assemble-->
+	<ItemGroup>
+		<AssemblyMetadata Include="CadFamily" Value="$(CadFamily)" />
+		<AssemblyMetadata Include="CadCode" Value="$(CadCode)" />
+	</ItemGroup>
+
 </Project>

@@ -1,6 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace drz.Infrastructure.Infrastructure
@@ -85,9 +86,20 @@ namespace drz.Infrastructure.Infrastructure
 
             TitlePrefix = $"{ProductName} v.{AssemblyVersion} : ";
 
+            FileInfo? package = FindPackageFile(AssemblyDirectory, ProductName);
 
-            RootPath =;//
+            PackageDirectory = package?.DirectoryName ?? AssemblyDirectory;
+
+            PackageFileName =package?.Name;
+
+            RepositoryUrl=GetMetadata("RepositoryUrl") ?? "https://github.com/doctorRaz";
+
+            CadFamily = GetMetadata("CadFamily") ?? "";
+
+            CadCode = GetMetadata("CadCode") ?? "";
+
         }
+
         public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
 
         public string Copyright => _copyright ??=
@@ -115,11 +127,13 @@ namespace drz.Infrastructure.Infrastructure
             _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
         #endregion Public Constructors
 
+         public bool HasPackage => PackageFileName != null;
+
         #region Public Properties
 
         public string AppDataProductLogPath { get; }
         public string AppDataProductPath { get; }
-        public string AssembleFullName { get; }
+        public string? AssembleFullName { get; }
         public string AssemblyDirectory { get; }
         public string AssemblyPath { get; }
         public Version AssemblyVersion { get; }
@@ -127,7 +141,11 @@ namespace drz.Infrastructure.Infrastructure
         public string FilePrefix { get; }
         public string ProductName { get; }
         public string TitlePrefix { get; }
-        public string RootPath { get; }
+        public string PackageDirectory { get; }
+        public string? PackageFileName { get; }
+        public string? RepositoryUrl { get; }
+        public string? CadFamily { get; }
+        public string? CadCode { get; }
 
         #endregion Public Properties
 
@@ -150,17 +168,29 @@ namespace drz.Infrastructure.Infrastructure
 
         public string ToShortString()
         {
-            return $"{ProductTitle} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")})";
+            return $"{ProductTitle} v{AssemblyVersion}({BuildDate:dd.MM.yyyy})";
         }
 
         public override string ToString()
         {
-            return $"{ProductName} v{AssemblyVersion}({BuildDate.ToString("dd.MM.yyyy")}); assembly: {FileName}; [{InformationalVersion}]";
+            return $"{ProductName} v{AssemblyVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
         }
 
         #endregion Public Methods
 
         #region Private Methods
+
+        /// <summary>
+        /// Возвращает значение AssemblyMetadata по указанному ключу.
+        /// </summary>
+        private  string? GetMetadata(string key)
+        {
+            return _assembly
+                .GetCustomAttributes<AssemblyMetadataAttribute>()
+                .FirstOrDefault(a => string.Equals(a.Key, key, StringComparison.OrdinalIgnoreCase))
+                ?.Value;
+        }
+
 
         /// <summary>
         /// Computes the build date.
@@ -226,7 +256,7 @@ namespace drz.Infrastructure.Infrastructure
             try
             {
                 // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
-                DateTime baseDate = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                DateTime baseDate = new(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
                 DateTime buildDate = baseDate.AddDays(version.Build).AddSeconds(version.Revision * 2);
 
                 // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
@@ -238,6 +268,46 @@ namespace drz.Infrastructure.Infrastructure
                 return null;
             }
         }
+
+        //получаем путь к папке ROOT с аддоном, ищем в ней все пакеты
+        private FileInfo? FindPackageFile(string startDirectory, string packageName)
+        {           
+
+            string prefix = packageName + ".";
+
+            DirectoryInfo current = new(startDirectory);
+            DirectoryInfo? parent = current.Parent;
+
+            foreach (DirectoryInfo? dir in new[] { parent, current })
+            {
+                if (dir == null)
+                    continue;
+
+
+                FileInfo? package = dir.EnumerateFiles("*.package",
+                                                       SearchOption.TopDirectoryOnly)
+                                                       .FirstOrDefault(f => f.Name.StartsWith(prefix,
+                                                       StringComparison.OrdinalIgnoreCase));
+
+                if (package != null)
+                {
+                    return package;
+                }
+            }
+
+            // Если пакет не найден, по умолчанию считаем корнем родительский каталог
+            return null;// parent?.FullName ?? current.FullName;
+        }
+        /*
+
+используем FindPackageFile для поиска папки ROOT с аддоном, затем ищем в ней все *.bak и *.~* и удаляем их
+
+string start = Path.GetDirectoryName(typeof(Updater).Assembly.Location)!;
+
+string? root = FindPackageFile(start, "SpecSPDS");
+
+  */
+
 
         #endregion Private Methods
     }

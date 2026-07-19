@@ -17,20 +17,27 @@
 		<RootNamespace>drz.SpecSpds.Test</RootNamespace>
 		<AssemblyTitle>Test.Cmd</AssemblyTitle>
 		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
+		<!--metadata-->
+		<CadFamily>TEST</CadFamily>
+		<CadCode>t</CadCode>
+
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(CadFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+Cleaner\Cleaner.csproj">
-			<Private>True</Private>
-		</ProjectReference>
 		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
 		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />
+		<ProjectReference Include="..\+Updater\Updater.csproj" />
+	</ItemGroup>
+	<!--metadata assemble-->
+	<ItemGroup>
+		<AssemblyMetadata Include="CadFamily" Value="$(CadFamily)" />
+		<AssemblyMetadata Include="CadCode" Value="$(CadCode)" />
 	</ItemGroup>
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->

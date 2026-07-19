@@ -2,7 +2,7 @@
 using static drz.Src.Infrastructure.AddOnContext;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
-namespace drz.n.Loader.CadCommands.Init
+namespace drz.Loader.CadCommands.Init
 {
     public class InitCMD
     {
