@@ -42,12 +42,16 @@ namespace drz.Abstractions.Infrastructure
         /// <value>Полный путь к сборке.</value>
         string AssemblyPath { get; }
 
-        /// <summary>Возвращает версию сборки.</summary>
-        /// <value>Путь версию сборки.</value>
-        Version AssemblyVersion { get; }
+        /// <summary>Возвращает версию загруженной сборки.</summary>
+        /// <value>версия сборки.</value>
+        Version RunningVersion { get; }
 
-        /// <summary>Возвращает дату-время компиляции к сборки.</summary>
-        /// <value>Дата-время компиляции к сборки.</value>
+        /// <summary>Возвращает версию установленной сборки.</summary>
+        /// <value>версия сборки.</value>
+        Version InstalledVersion  { get; }
+
+        /// <summary>Возвращает дату-время компиляции сборки.</summary>
+        /// <value>Дата-время компиляции сборки.</value>
         DateTime BuildDate { get; }
 
         /// <summary>Возвращает информацию о копирайте.</summary>
@@ -82,7 +86,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         string ProductTitle { get; }
 
-        /// <summary>Возвращает ProductName v.AssemblyVersion.</summary>
+        /// <summary>Возвращает ProductName v.RunningVersion.</summary>
         string TitlePrefix { get; }
 
         /// <summary>Gets the repository URL.</summary>
