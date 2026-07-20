@@ -9,7 +9,7 @@ namespace drz.Src.Infrastructure
     internal static class AddOnContext
     {
         // metadata (всегда доступно)
-        //internal static readonly AppInfo InfoDll = AppInfo.Get(typeof(AddOnContext));
+        //internal static readonly AppInfo AddonInfo = AppInfo.Get(typeof(AddOnContext));
 
         //---R
         //***B
@@ -20,7 +20,7 @@ namespace drz.Src.Infrastructure
 
         //internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
 
-        internal static IAddOnInfo InfoDll => Root.Get<IAddOnInfo>();
+        internal static IAddOnInfo AddonInfo => Root.Get<IAddOnInfo>();
 
         internal static ISysInfo SysInfo => Root.Get<ISysInfo>();
 

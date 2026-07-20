@@ -12,7 +12,7 @@ namespace drz.Loader.CadCommands.NewCmd
 
             Msg.ConsoleMessage($"{SysInfo}");
 
-            Msg.ErrorMessage($"{InfoDll}");
+            Msg.ErrorMessage($"{AddonInfo}");
            
         }
 
@@ -23,14 +23,14 @@ namespace drz.Loader.CadCommands.NewCmd
 
             MsgGUI.ConsoleMessage($"{SysInfo}");
 
-            MsgGUI.ConsoleMessage($"{InfoDll.ToLongString()}");
+            MsgGUI.ConsoleMessage($"{AddonInfo.ToLongString()}");
         }
 
         [CommandMethod($"console-Long-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleLongCmd()
         {
             
-            Msg.ErrorMessage($"{InfoDll.ToLongString()}");
+            Msg.ErrorMessage($"{AddonInfo.ToLongString()}");
 
             Msg.ConsoleMessage($"{SysInfo.ToLongString()}");
 

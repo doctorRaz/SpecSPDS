@@ -56,11 +56,11 @@ namespace drz.Lib_A
 
         public void msgCommandA()
         {
-            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll.TitlePrefix} Console message");
+            AC.MsgCmd.ConsoleMessage($"{AC.AddonInfo.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage($"{AC.InfoDll.TitlePrefix} Console message");
+            AC.MsgGUI.InfoMessage($"{AC.AddonInfo.TitlePrefix} Console message");
 
-            AC.Msg.InfoMessage($"{AC.InfoDll.TitlePrefix} Console message");
+            AC.Msg.InfoMessage($"{AC.AddonInfo.TitlePrefix} Console message");
         }
     }
 }

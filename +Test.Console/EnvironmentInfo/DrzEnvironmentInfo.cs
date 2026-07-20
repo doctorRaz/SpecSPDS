@@ -7,7 +7,7 @@ using static drz.Src.Infrastructure.AddOnContext;
 namespace drz.SpecSpds.Test.EnvironmentInfo
 {
     /// <summary>
-    /// SimpleInjector Test
+    /// SimpleInjector TestUpdater
     /// </summary>
     internal class DrzEnvironmentInfo
     {
@@ -24,7 +24,7 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             Console.WriteLine($"{cmdB.ExecuteEnvironmentInfoProvider()}");
 
-            Console.WriteLine($"{InfoDll.ToLongString()}");
+            Console.WriteLine($"{AddonInfo.ToLongString()}");
 
             //Console.WriteLine($"{RT.Info}");
             //Console.WriteLine($"{RT.Os}");
@@ -36,10 +36,10 @@ namespace drz.SpecSpds.Test.EnvironmentInfo
 
             Console.WriteLine(SysInfo);
             Console.WriteLine(CadInfo);
-            Console.WriteLine(InfoDll);
+            Console.WriteLine(AddonInfo);
 
           
-            IAddOnInfo id = InfoDll;
+            IAddOnInfo id = AddonInfo;
         }
     }
 }

@@ -4,9 +4,11 @@ using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
 using static drz.Src.Infrastructure.AddOnContext;
-using drz.Cleaner.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Src.Services;
+using drz.Updater.Services;
+
+
 
 
 
@@ -121,39 +123,11 @@ namespace drz.SpecSPDS
 
         private void CleanBackups()
         {
-            /*
-            получаем путь к папке ROOT с аддоном, ищем в ней все *.bak и *.~* и удаляем их
-            public static string? FindPackageRoot(string startDirectory, string packageName)
-                    {
-                        var dir = new DirectoryInfo(startDirectory);
-
-                        while (dir != null)
-                        {
-                            var package = dir.EnumerateFiles("*.package", SearchOption.TopDirectoryOnly)
-                                             .FirstOrDefault(f =>
-                                                 Path.GetFileNameWithoutExtension(f.Name)
-                                                     .Equals(packageName, StringComparison.OrdinalIgnoreCase));
-
-                            if (package != null)
-                                return dir.FullName;
-
-                            dir = dir.Parent;
-                        }
-
-                        return null;
-                    }
-
-        используем FindPackageRoot для поиска папки ROOT с аддоном, затем ищем в ней все *.bak и *.~* и удаляем их
-
-        string start = Path.GetDirectoryName(typeof(Updater).Assembly.Location)!;
-
-        string? root = FindPackageRoot(start, "SpecSPDS");
-
-              */
+          
 
             try//игнорим ошибки
             {
-                BackupCleaner.Clean(InfoDll.AssemblyDirectory);
+                BackupCleaner.DeleteBackupFiles(AddonInfo.AssemblyDirectory);
             }
             catch { }
         }
@@ -168,9 +142,9 @@ namespace drz.SpecSPDS
 
                 log.Debug(CadInfo.ToString());
 
-                log.Debug(InfoDll.ToString());
+                log.Debug(AddonInfo.ToString());
 
-                msg.ConsoleMessage($"Hello {InfoDll.ToShortString()} for {CadInfo}");
+                msg.ConsoleMessage($"Hello {AddonInfo.ToShortString()} for {CadInfo}");
 
                 TryListCMD();
 

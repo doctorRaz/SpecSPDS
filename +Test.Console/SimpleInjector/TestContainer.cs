@@ -57,7 +57,7 @@ namespace drz.SpecSpds.Test.SimpleInjector
             Console.WriteLine(sysInfo_NEW.ToLongString());
 
             //IApplicationInfo
-            IAddOnInfo infoDll_NEW = InfoDll;
+            IAddOnInfo infoDll_NEW = AddonInfo;
 
             Console.WriteLine("infoDll_NEW");
             Console.WriteLine(infoDll_NEW.ToString());
@@ -65,9 +65,9 @@ namespace drz.SpecSpds.Test.SimpleInjector
             Console.WriteLine(infoDll_NEW.ToLongString());
             //
 
-            IAddOnInfo addon = AC.InfoDll;
+            IAddOnInfo addon = AC.AddonInfo;
 
-            IAddOnInfo infoDll = InfoDll;
+            IAddOnInfo infoDll = AddonInfo;
 
             ISysInfo os = SysInfo;
             Console.WriteLine(os);
@@ -82,25 +82,25 @@ namespace drz.SpecSpds.Test.SimpleInjector
 
 
 
-            string path = InfoDll.AppDataProductLogPath;
+            string path = AddonInfo.AppDataProductLogPath;
 
             Console.WriteLine(CadInfo);
         }
 
         public void TestInjectorMessage()
         {
-            AC.Msg.InfoMessage($"{AC.InfoDll.TitlePrefix} Message");
+            AC.Msg.InfoMessage($"{AC.AddonInfo.TitlePrefix} Message");
 
-            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll.TitlePrefix} Console message");
+            AC.MsgCmd.ConsoleMessage($"{AC.AddonInfo.TitlePrefix} Console message");
 
-            AC.MsgGUI.InfoMessage($"{AC.InfoDll.TitlePrefix} Info message");
+            AC.MsgGUI.InfoMessage($"{AC.AddonInfo.TitlePrefix} Info message");
 
             //new
-            AC.Msg.InfoMessage($"{AC.InfoDll.TitlePrefix} Message NEW");
+            AC.Msg.InfoMessage($"{AC.AddonInfo.TitlePrefix} Message NEW");
 
-            AC.MsgCmd.ConsoleMessage($"{AC.InfoDll.TitlePrefix} Console message NEW");
+            AC.MsgCmd.ConsoleMessage($"{AC.AddonInfo.TitlePrefix} Console message NEW");
 
-            AC.MsgGUI.InfoMessage($"{AC.InfoDll.TitlePrefix} Info message NEW");
+            AC.MsgGUI.InfoMessage($"{AC.AddonInfo.TitlePrefix} Info message NEW");
 
 
 

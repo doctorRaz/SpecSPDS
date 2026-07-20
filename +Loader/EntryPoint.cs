@@ -179,7 +179,7 @@ namespace drz.Loader
         private bool CadLoading()
         {
             //var  nlogFactory=NlogFactory.Logger;
-            //ILogger log = LogManager.GetCurrentClassLogger();
+            //ILogger _logger = LogManager.GetCurrentClassLogger();
 
             try
             {
@@ -196,7 +196,7 @@ namespace drz.Loader
                 log.Debug($"Обнаружен: {CadInfo}");
 
                 string fileFullName = GetType().Assembly.Location;
-                //косяк   string fileFullName = InfoDll.FilePrefix;
+                //косяк   string fileFullName = AddonInfo.FilePrefix;
 
                 int minMajor = GeneratedCompile.MinVersion;//из Directory.Build.props проекта
 
@@ -277,7 +277,7 @@ namespace drz.Loader
                                    Version minVersion)
         {
 
-            string fileFullName = InfoDll.AssemblyPath;
+            string fileFullName = AddonInfo.AssemblyPath;
            
 
             if (fileFullName == null)
@@ -295,14 +295,14 @@ namespace drz.Loader
                 throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
             }
 
-            string? directory = InfoDll.AssemblyDirectory;
+            string? directory = AddonInfo.AssemblyDirectory;
             //string? directory = Path.GetDirectoryName(fileFullName);
             if (directory == null)
             {
                 throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
             }
 
-            string fileName = InfoDll.FilePrefix;
+            string fileName = AddonInfo.FilePrefix;
             //string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
             int major = expectedVersion.Major;
