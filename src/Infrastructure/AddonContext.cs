@@ -32,6 +32,29 @@ namespace drz.Src.Infrastructure
 
         internal static IMessageService MsgGUI => Root.Get<IWindowMessageService>();
 
+        internal static IMessageService GetMessageService(MessageServiceType type)
+        {
+            switch (type)
+            {
+                case MessageServiceType.McNotifi:
+                    return Root.Get<IMcNotificatorMessageService>();
+
+                case MessageServiceType.CommandLine:
+                    return Root.Get<ICommandLineMessageService>();
+
+                case MessageServiceType.Window:
+                    return Root.Get<IWindowMessageService>();
+
+                case MessageServiceType.Default:
+                    return DocService.IsActive
+                        ? Root.Get<ICommandLineMessageService>()
+                        : Root.Get<IWindowMessageService>();
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type));
+            }
+        }
+
         internal static IMessageService Msg
         {
             get
