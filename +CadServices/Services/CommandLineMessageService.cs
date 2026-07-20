@@ -56,6 +56,14 @@ namespace drz.CadServices.Services
             WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace.ToString()}", caller);
         }
 
+        /// <summary>Информационное сообщение для CAD</summary>
+        /// <param name="message">Выводимое сообщение</param>
+        /// <param name="caller"></param>
+        /// <example>Пример использования в C#
+        /// <code language="cs"><![CDATA[
+        /// IMessageService msgService = new MyMessageService();
+        /// msgService.InfoMessage("Информационное сообщение. Может быть, в аналог MessageBox");
+        /// ]]></code></example>
         public void InfoMessage(string message, string caller = null)
         {
             WriteMessage("Info", message, caller);
@@ -84,7 +92,8 @@ namespace drz.CadServices.Services
             {
                 try
                 {
-                    McNotificator.WriteMessage(formatted);
+                    //todo для нотифай отдельный метод и интерфейс
+                    McNotificatorMessageServise.WriteMessage(formatted);
                 }
                 catch
                 {

@@ -93,6 +93,8 @@ namespace drz.AddOn.Composition
 
             container.Register<ICommandLineMessageService, CommandLineMessageService>();
 
+            container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
+
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);

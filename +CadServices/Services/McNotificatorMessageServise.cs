@@ -1,6 +1,8 @@
-﻿using System;
+﻿using drz.Abstractions.Services;
+using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace drz.CadServices.Services
 {
@@ -8,7 +10,7 @@ namespace drz.CadServices.Services
     /// Обёртка над McNotificator NanoCad для вывода сообщений в командную строку.
     /// Работает без подключения сборки Multicad через Reflection.
     /// </summary>
-    public static class McNotificator
+    public class McNotificatorMessageServise : IMessageService, IMcNotificatorMessageService
     {
         #region Private Fields
 
@@ -17,6 +19,31 @@ namespace drz.CadServices.Services
         #endregion Private Fields
 
         #region Public Methods
+
+        public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Выводит сообщение в командную строку NanoCad.
@@ -79,6 +106,8 @@ namespace drz.CadServices.Services
 
             return null;
         }
+
+        
 
         #endregion Private Methods
     }
