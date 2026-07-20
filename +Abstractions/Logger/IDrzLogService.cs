@@ -21,6 +21,13 @@ namespace drz.Abstractions.Logger
         /// <returns></returns>
         IDrzLogger GetLogger(Type type);
 
+        /// <summary>Gets the logger.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="productName">Name of the product.</param>
+        /// <returns></returns>
+        IDrzLogger GetLogger<T>(string productName);
+       
+
         #endregion Public Methods
     }
 }

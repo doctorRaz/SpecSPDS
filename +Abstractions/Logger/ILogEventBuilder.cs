@@ -10,7 +10,6 @@ namespace drz.Abstractions.Logger
 
         ILogEventBuilder Exception(Exception exception);
 
-
         ILogEventBuilder Message(string message);
 
         ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties);

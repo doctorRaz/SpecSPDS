@@ -54,6 +54,32 @@ namespace drz.LogServices.drzNlog
             _envInfoProvider = envInfoProvider;
         }
 
+        /// <summary> Возвращает логгер для указанного продукта..</summary>
+        /// <typeparam name="T">владелец логера</typeparam>
+        /// <param name="productName">название продукта.</param>
+        /// <returns>Экземпляр логгера</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// productName
+        /// or
+        /// type
+        /// </exception>
+        public IDrzLogger GetLogger<T>(string productName)
+        {
+            //todo проверить логер из дочерних сборок
+            if (string.IsNullOrWhiteSpace(productName))
+                throw new ArgumentNullException(nameof(productName));
+
+            Type type = typeof(T);
+
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            LogFactory factory = _factories.GetOrAdd(productName, CreateFactory);
+
+            return new NLogAdapter(factory.GetLogger(type.FullName));
+        }
+
+
         /// <summary>
         /// Gets the logger.
         /// </summary>
@@ -401,5 +427,8 @@ namespace drz.LogServices.drzNlog
 
 #endif
         }
+
+
+
     }
 }

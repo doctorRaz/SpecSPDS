@@ -28,6 +28,9 @@ namespace drz.Src.Services
 
         internal static IDrzLogger For(Type type) => _service.Value.GetLogger(type);
 
+        internal static IDrzLogger For<T>(string productName) => _service.Value.GetLogger<T>(productName);
+
+
         #endregion Internal Methods
     }
 
