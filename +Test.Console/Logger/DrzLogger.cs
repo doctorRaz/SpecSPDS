@@ -4,7 +4,7 @@ using drz.Lib_B;
 namespace drz.SpecSpds.Test.Logger
 {
     /// <summary>
-    /// Logger Test
+    /// Logger TestUpdater
     /// </summary>
     internal class DrzLogger
     {

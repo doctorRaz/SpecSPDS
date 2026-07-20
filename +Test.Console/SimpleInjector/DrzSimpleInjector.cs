@@ -6,7 +6,7 @@ using System.Diagnostics;
 namespace drz.SpecSpds.Test.SimpleInjector
 {
     /// <summary>
-    /// SimpleInjector Test
+    /// SimpleInjector TestUpdater
     /// </summary>
     internal class DrzSimpleInjector
     {
