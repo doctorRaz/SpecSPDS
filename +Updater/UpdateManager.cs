@@ -1,16 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-using drz.Src.Services;
 using drz.Updater.Services;
-using drz.Updater.Services.SevenZip;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace drz.Updater
 {
@@ -19,23 +10,27 @@ namespace drz.Updater
     /// </summary>
     public class UpdateManager
     {
-        private IDrzLogger _logger;//логгер
+        private readonly IDrzLogger _logger;//логгер
+        private readonly IMessageService _messageServices;
+        private readonly IAddOnInfo _addOnInfo;
 
-        IAddOnInfo _addOnInfo { get; }
-
-        public UpdateManager(IAddOnInfo addOnInfo, IMessageService msg, UpdateMode updateMode, bool isManual = false)
+        /// <summary>Initializes a new instance of the <see cref="UpdateManager"/> class.</summary>
+        /// <param name="addOnInfo">The add on information.</param>
+        /// <param name="messageServices">The message services.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <param name="updateMode">The update mode.</param>
+        /// <param name="isManual">if set to <c>true</c> [is manual].</param>
+        public UpdateManager(IAddOnInfo addOnInfo, IMessageService messageServices, IDrzLoggerFactory loggerFactory, UpdateMode updateMode, bool isManual = false)
         {
             _addOnInfo = addOnInfo;
+            _messageServices = messageServices;
+            _logger = loggerFactory.GetLogger<UpdateManager>();
 
-           // _logger = IDrzLoggerFactory /*LoggerProvider*/.GetLogger<UpdateManager>(addOnInfo.ProductName);
+            _logger.Debug("Updater");
 
-            ICommandLineMessageService msgC = (ICommandLineMessageService)msg;
+            _messageServices.ConsoleMessage(addOnInfo.ProductName);
 
-            msgC.ConsoleMessage(addOnInfo.ProductName);
-
-            IWindowMessageService msgW = (IWindowMessageService)msg;
-
-            msgW.InfoMessage(addOnInfo.PackageDirectory);
+            Run();
 
         }
         // получаю:
@@ -92,18 +87,17 @@ namespace drz.Updater
         //	если плохо месадж бокс, что косяк с обновлением и просьбой закрыть нк и запустить батник (распаковать бэкап на место старого архива)
 
 
-        /// <summary>Runs the specified add on information.</summary>
-        /// <param name="addOnInfo">The add on information.</param>
-        /// <param name="msg">The MSG.</param>
-        /// <param name="updateMode">The update mode.</param>
-        /// <param name="isManual">if set to <c>true</c> [is manual].</param>
+        /// <summary>Runs this instance.</summary>
         /// <returns></returns>
-        public static bool Run(IAddOnInfo addOnInfo, IMessageService msg, UpdateMode updateMode, bool isManual=false)
+        public bool Run()
+        //public   bool Run(IAddOnInfo addOnInfo, IMessageService msg, IDrzLoggerFactory drzLoggerFactory, UpdateMode updateMode, bool isManual = false)
         {
-            
 
-        
 
+
+            _logger.Debug("Run");
+            _logger.DebugCaller("Архив создан");
+            _messageServices.ConsoleMessage(_addOnInfo.ProductName+".Run");
             return true;
         }
 
