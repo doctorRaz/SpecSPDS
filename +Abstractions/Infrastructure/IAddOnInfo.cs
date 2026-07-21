@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace drz.Abstractions.Infrastructure
 {
@@ -22,7 +21,7 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Возвращает имя файла package.</summary>
         /// <value>Имя файла package.</value>
-        string PackageFileName  { get; }
+        string PackageFileName { get; }
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
         /// <value>
@@ -48,7 +47,7 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Возвращает версию установленной сборки.</summary>
         /// <value>версия сборки.</value>
-        Version InstalledVersion  { get; }
+        Version InstalledVersion { get; }
 
         /// <summary>Возвращает дату-время компиляции сборки.</summary>
         /// <value>Дата-время компиляции сборки.</value>
@@ -61,7 +60,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает описание сборки.</summary>
         /// <value>The description.</value>
         string Description { get; }
-             
+
         /// <summary>Возвращает имя файла сборки без расширения.</summary>
         /// <value>Имя файла сборки без расширения.</value>
         string FileName { get; }
@@ -91,11 +90,11 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Gets the repository URL.</summary>
         /// <value>The repository URL.</value>
-        string RepositoryUrl {  get; }
+        string RepositoryUrl { get; }
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
-        string CadFamily {  get; }
+        string CadFamily { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>

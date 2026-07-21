@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.NET", "+Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "+Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Logger", "+Test.Console\Test.Logger.csproj", "{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,6 +195,7 @@ Global
 		{0C53747F-F600-4016-962C-39642398DB57} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
 		{ECA99128-6290-43F7-BCEC-AA8D7CDD37ED} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
+		{5234DC5A-08C4-A4CB-6C2D-28CAFDAE818C} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}

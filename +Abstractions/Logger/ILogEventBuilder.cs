@@ -6,6 +6,7 @@ namespace drz.Abstractions.Logger
     public interface ILogEventBuilder
     {
         #region Public Methods
+
         void Log();
 
         ILogEventBuilder Exception(Exception exception);
@@ -15,7 +16,7 @@ namespace drz.Abstractions.Logger
         ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties);
 
         ILogEventBuilder Property(string name, object value);
-        
+
         #endregion Public Methods
     }
 }

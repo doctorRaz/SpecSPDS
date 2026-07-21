@@ -55,6 +55,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Gets the ram total gb.</summary>
         /// <value>The ram total gb.</value>
         string RamTotalGb { get; }
+
         /// <summary>Gets the version string.</summary>
         /// <value>The version string.</value>
         string VersionString { get; }

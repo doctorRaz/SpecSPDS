@@ -29,9 +29,11 @@ namespace drz.Src.Infrastructure
         internal static IDocumentService DocService => Root.Get<IDocumentService>();
 
         internal static IMessageService MsgCmd => Root.Get<ICommandLineMessageService>();
-
         internal static IMessageService MsgGUI => Root.Get<IWindowMessageService>();
+        internal static IMessageService MsgMcn => Root.Get<IMcNotificatorMessageService>();
 
+        //internal static IMessageService MessageServices=>Root.Get<IMessageService>();
+        //todo переделать нга фабрику
         internal static IMessageService GetMessageService(MessageServiceType type)
         {
             switch (type)
