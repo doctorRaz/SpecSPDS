@@ -1,4 +1,5 @@
 ﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.AddOn.Composition;
 
@@ -25,6 +26,7 @@ namespace drz.Src.Infrastructure
         internal static ISysInfo SysInfo => Root.Get<ISysInfo>();
 
         internal static ICadInfo CadInfo => Root.Get<ICadInfo>();
+        internal static IDrzLoggerFactory NLogFactory => Root.Get<IDrzLoggerFactory>();
 
         internal static IDocumentService DocService => Root.Get<IDocumentService>();
 

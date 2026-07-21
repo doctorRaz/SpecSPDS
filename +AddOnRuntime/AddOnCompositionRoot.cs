@@ -1,12 +1,15 @@
 ﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.CadServices.Services;
 using drz.Infrastructure.Infrastructure;
 using drz.Infrastructure.Services;
+using drz.LogBootstrap;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
+
 
 namespace drz.AddOn.Composition
 {
@@ -85,6 +88,10 @@ namespace drz.AddOn.Composition
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
 
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+
+            container.RegisterSingleton<IDrzLoggerFactory>(() =>
+                                                            NLogBootstrap.GetLoggerFactory(
+                                                            container.GetInstance<IAddOnInfo>()));
         }
 
         private void RegisterServices(Container container)
