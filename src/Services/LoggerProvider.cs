@@ -9,12 +9,12 @@ namespace drz.Src.Services
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта
     /// </summary>
-    public static class LoggerProvider
+    public static class LoggerProvider//x прибить
     {
         #region Private Fields
 
-        private static readonly Lazy<IDrzLogService> _service = new(() =>
-            new NLogService(
+        private static readonly Lazy<IDrzLoggerFactory> _service = new(() =>
+            new NLogLoggerFactory(
                 productNameProvider: () => AddonInfo.ProductName,
                 assemblyDirectoryProvider: () => AddonInfo.AssemblyDirectory,
                 envInfoProvider: new CadEnvironmentInfoProvider()

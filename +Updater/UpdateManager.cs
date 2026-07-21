@@ -27,7 +27,7 @@ namespace drz.Updater
         {
             _addOnInfo = addOnInfo;
 
-           // _logger = IDrzLogService /*LoggerProvider*/.GetLogger<UpdateManager>(addOnInfo.ProductName);
+           // _logger = IDrzLoggerFactory /*LoggerProvider*/.GetLogger<UpdateManager>(addOnInfo.ProductName);
 
             ICommandLineMessageService msgC = (ICommandLineMessageService)msg;
 

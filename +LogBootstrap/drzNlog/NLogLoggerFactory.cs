@@ -17,8 +17,8 @@ namespace drz.LogServices.drzNlog
     /// <summary>
     /// Log Service
     /// </summary>
-    /// <seealso cref="ILogService" />
-    public sealed class NLogService : IDrzLogService
+    /// <seealso cref="IDrzLoggerFactory" />
+    public sealed class NLogLoggerFactory : IDrzLoggerFactory
     {
         private static readonly ConcurrentDictionary<string, LogFactory> _factories = new();
 
@@ -41,7 +41,7 @@ namespace drz.LogServices.drzNlog
         /// or
         /// assemblyDirectoryProvider
         /// </exception>
-        public NLogService(
+        public NLogLoggerFactory(
             Func<string> productNameProvider,
             Func<string> assemblyDirectoryProvider,
             IEnvironmentInfoProvider envInfoProvider = null)
@@ -120,7 +120,7 @@ namespace drz.LogServices.drzNlog
 
             LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostyc);
 
-            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogService).FullName}.{productName}", requestedLevel);
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogLoggerFactory).FullName}.{productName}", requestedLevel);
 
             string logName = productName;// ${shortdate}_{logName}.log;
 
@@ -202,7 +202,7 @@ namespace drz.LogServices.drzNlog
         {
             try
             {
-                Logger log = factory.GetLogger(typeof(NLogService).FullName);
+                Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName);
 
                 // Internal log level
                 LogLevel internalLevel = InternalLogger.LogLevel;

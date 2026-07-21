@@ -10,7 +10,7 @@ namespace drz.Src.Services
     {
         #region Private Fields
 
-        //private static readonly Lazy<IDrzLogService> _service = new(() =>
+        //private static readonly Lazy<IDrzLoggerFactory> _service = new(() =>
         //    new NLogService(
         //        productNameProvider: () => InfoDll.ProductName,
         //        assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,

@@ -3,7 +3,10 @@ using System;
 
 namespace drz.Abstractions.Logger
 {
-    public interface IDrzLogService
+    /// <summary>
+    /// Фабрика логеров. (Logger factory)
+    /// </summary>
+    public interface IDrzLoggerFactory
     {
         #region Public Methods
 
@@ -25,7 +28,7 @@ namespace drz.Abstractions.Logger
         /// <typeparam name="T"></typeparam>
         /// <param name="productName">Name of the product.</param>
         /// <returns></returns>
-        IDrzLogger GetLogger<T>(string productName);
+        IDrzLogger GetLogger<T>(string productName);//x прибить
        
 
         #endregion Public Methods

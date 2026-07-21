@@ -2,8 +2,8 @@
 
 **User:** dRz  
 **Created:** 7/20/2026 16:43:23  
-**Updated:** 7/21/2026 4:46:03  
-**Exported:** 7/21/2026 4:47:54  
+**Updated:** 7/21/2026 5:02:38  
+**Exported:** 7/21/2026 5:15:07  
 **Link:** [https://chatgpt.com/c/6a5e259c-e360-83eb-9316-6843d4193483](https://chatgpt.com/c/6a5e259c-e360-83eb-9316-6843d4193483)  
 
 ## Prompt:
@@ -1640,6 +1640,130 @@ public static class NLogFactoryProvider
 - **`IDrzLoggerFactory`** — абстракция, которую получают библиотеки через DI.
 
 Такое разделение делает архитектуру понятнее и по названию, и по ответственности.
+
+## Prompt:
+21.07.2026, 05:02:31
+
+using drz.Abstractions.Logger;
+using drz.LogServices.drzNlog;
+using drz.Src.Infrastructure;
+using System;
+using static drz.Src.Infrastructure.AddOnContext;
+
+namespace drz.Src.Services
+{
+/// 
+/// проброс в фабрику ProductName и получение логера для продукта
+/// 
+public static class LoggerProvider
+{
+\#region Private Fields
+
+```
+    private static readonly Lazy<IDrzLoggerFactory> _service = new(() =>
+        new NLogLoggerFactory(
+            productNameProvider: () => AddonInfo.ProductName,
+            assemblyDirectoryProvider: () => AddonInfo.AssemblyDirectory,
+            envInfoProvider: new CadEnvironmentInfoProvider()
+        ));
+
+    #endregion Private Fields
+
+    #region Internal Methods
+
+    internal static IDrzLogger For<T>() => _service.Value.GetLogger<T>();
+
+    internal static IDrzLogger For(Type type) => _service.Value.GetLogger(type);
+
+    internal static IDrzLogger For<T>(string productName) => _service.Value.GetLogger<T>(productName);
+
+
+    #endregion Internal Methods
+}
+```
+
+}
+
+еще такой класс
+
+## Response:
+21.07.2026, 05:02:32
+
+Да, этот класс тоже стоит пересмотреть.
+
+Сейчас он выполняет роль **Service Locator** — любая библиотека может вызвать `LoggerProvider.For<T>()` и получить логер через статическое состояние (`AddOnContext`). Это создает скрытую зависимость.
+
+Если ты переходишь на `IDrzLoggerFactory` через DI, то `LoggerProvider` становится практически не нужен.
+
+То есть вместо:
+
+```csharp
+private readonly IDrzLogger _logger = LoggerProvider.For<MyService>();
+```
+
+будет:
+
+```csharp
+public class MyService
+{
+    private readonly IDrzLogger _logger;
+
+    public MyService(IDrzLoggerFactory loggerFactory)
+    {
+        _logger = loggerFactory.GetLogger<MyService>();
+    }
+}
+```
+
+---
+
+### Если оставлять `LoggerProvider`
+
+Тогда я бы хотя бы не создавал внутри него `NLogLoggerFactory` через `Lazy`.
+
+Вместо этого сделать возможность инициализации:
+
+```csharp
+public static class LoggerProvider
+{
+    private static IDrzLoggerFactory _factory;
+
+    public static void Initialize(IDrzLoggerFactory factory)
+    {
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
+    }
+
+    public static IDrzLogger For<T>() => _factory.GetLogger<T>();
+}
+```
+
+В аддоне:
+
+```csharp
+var loggerFactory = NLogBootstrap.GetOrCreate(...);
+
+LoggerProvider.Initialize(loggerFactory);
+
+container.RegisterInstance(loggerFactory);
+```
+
+Тогда:
+
+- DI использует тот же экземпляр фабрики.
+- Старый код через `LoggerProvider.For<T>()` тоже использует тот же экземпляр.
+- Нет повторного создания `NLogLoggerFactory`.
+
+---
+
+### Что я бы рекомендовал
+
+Если ты постепенно переводишь проект на DI, то:
+
+1. Оставить `LoggerProvider` только как временный слой совместимости.
+2. Новые классы писать только через `IDrzLoggerFactory`.
+3. После перевода всего кода удалить `LoggerProvider`.
+
+Так архитектура будет проще: одна фабрика создается в `NLogBootstrap`, регистрируется в SimpleInjector и используется всеми библиотеками.
 
 
 
