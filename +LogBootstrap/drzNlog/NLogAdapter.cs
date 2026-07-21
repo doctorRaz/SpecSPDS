@@ -4,19 +4,19 @@ using drz.Abstractions.Logger;
 using NLog;
 using System;
 
-namespace drz.LogServices.drzNlog
+namespace drz.LogBootstrap.drzNlog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {
         #region Private Fields
 
-        private readonly NLog.Logger _inner;
+        private readonly Logger _inner;
 
         #endregion Private Fields
 
         #region Internal Constructors
 
-        internal NLogAdapter(NLog.Logger inner) => _inner = inner;
+        internal NLogAdapter(Logger inner) => _inner = inner;
 
         #endregion Internal Constructors
 

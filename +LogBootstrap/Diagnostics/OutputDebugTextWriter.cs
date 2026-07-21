@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace drz.LogServices.Diagnostics
+namespace drz.LogBootstrap.Diagnostics
 {
     /// <summary>
     /// отладочная информация из nLog в output VS только для отладки!!!

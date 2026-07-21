@@ -2,8 +2,8 @@
 
 **User:** dRz  
 **Created:** 7/20/2026 16:43:23  
-**Updated:** 7/21/2026 5:02:38  
-**Exported:** 7/21/2026 5:15:07  
+**Updated:** 7/21/2026 14:21:26  
+**Exported:** 7/21/2026 14:23:10  
 **Link:** [https://chatgpt.com/c/6a5e259c-e360-83eb-9316-6843d4193483](https://chatgpt.com/c/6a5e259c-e360-83eb-9316-6843d4193483)  
 
 ## Prompt:
@@ -1764,6 +1764,1014 @@ container.RegisterInstance(loggerFactory);
 3. После перевода всего кода удалить `LoggerProvider`.
 
 Так архитектура будет проще: одна фабрика создается в `NLogBootstrap`, регистрируется в SimpleInjector и используется всеми библиотеками.
+
+## Prompt:
+21.07.2026, 06:27:12
+
+private readonly LogFactory _factory;
+А как вернуть в вызывающий фабрику?
+
+## Response:
+21.07.2026, 06:27:12
+
+Никак. `LogFactory` **не должен возвращаться наружу**, если ты строишь архитектуру через абстракции.
+
+`LogFactory` — это внутренняя реализация `NLogLoggerFactory`.
+
+Например:
+
+```csharp
+public sealed class NLogLoggerFactory : IDrzLoggerFactory
+{
+    private readonly LogFactory _factory;
+
+    public NLogLoggerFactory(LogFactory factory)
+    {
+        _factory = factory;
+    }
+
+    public IDrzLogger GetLogger<T>()
+    {
+        return new NLogAdapter(_factory.GetLogger(typeof(T).FullName));
+    }
+}
+```
+
+А наружу возвращается **не `LogFactory`**, а `IDrzLoggerFactory`:
+
+```csharp
+public static IDrzLoggerFactory GetOrCreate(...)
+{
+    LogFactory logFactory = ...;
+
+    return new NLogLoggerFactory(logFactory);
+}
+```
+
+Тогда:
+
+```csharp
+IDrzLoggerFactory loggerFactory = NLogBootstrap.GetOrCreate(...);
+
+container.RegisterInstance(loggerFactory);
+```
+
+Библиотека получает `IDrzLoggerFactory`, вызывает `GetLogger<T>()`, а `LogFactory` остается полностью скрытым.
+
+### Но в твоем случае
+
+Я бы вообще **не стал разделять текущий класс**.
+
+Твой `NLogService` уже является фабрикой логеров. Достаточно:
+
+- переименовать его в `NLogLoggerFactory`;
+- реализовать `IDrzLoggerFactory`;
+- регистрировать его экземпляр в контейнере.
+
+То есть вместо:
+
+```csharp
+private static ConcurrentDictionary<string, LogFactory>
+```
+
+можно даже сделать:
+
+```csharp
+private static ConcurrentDictionary<string, IDrzLoggerFactory>
+```
+
+и хранить уже готовые фабрики.
+
+Это потребует минимальных изменений в существующем коде и хорошо впишется в твою архитектуру.
+
+## Prompt:
+21.07.2026, 06:32:42
+
+Думаю все же надо разделить, через словарь фабрик получаем или создаем фабрику в аддоне.
+Регистрируем фабрику в контейнере с интерфейсом
+В библиотеку передаём готовую фабрику, там же получаем логгер
+
+## Response:
+21.07.2026, 06:32:43
+
+Да, это как раз выглядит как чистая архитектура.
+
+Я бы построил ее так:
+
+```text
+           NLogBootstrap
+                │
+      ConcurrentDictionary<string, IDrzLoggerFactory>
+                │
+         GetOrCreate(productName)
+                │
+                ▼
+         NLogLoggerFactory
+                │
+        RegisterInstance<IDrzLoggerFactory>()
+                │
+      ┌─────────┴─────────┐
+      ▼                   ▼
+  AddonService       BackupService
+                          │
+                  IDrzLoggerFactory
+                          │
+                  GetLogger<BackupService>()
+                          │
+                      IDrzLogger
+```
+
+### В аддоне
+
+```csharp
+IDrzLoggerFactory loggerFactory =
+    NLogBootstrap.GetOrCreate(...);
+
+container.RegisterInstance(loggerFactory);
+```
+
+### В библиотеке
+
+```csharp
+public class BackupService
+{
+    private readonly IDrzLogger _logger;
+
+    public BackupService(IDrzLoggerFactory loggerFactory)
+    {
+        _logger = loggerFactory.GetLogger<BackupService>();
+    }
+}
+```
+
+### Ответственности
+
+**NLogBootstrap**
+- создает фабрику;
+- хранит словарь фабрик;
+- знает о `ConcurrentDictionary`.
+
+**NLogLoggerFactory**
+- хранит `LogFactory`;
+- выдает `IDrzLogger`;
+- не знает о словаре.
+
+**Библиотеки**
+- знают только об `IDrzLoggerFactory`;
+- не знают ни о `NLog`, ни о `Bootstrap`.
+
+Мне кажется, это удачнее твоего текущего варианта, потому что у каждого класса остается одна четкая ответственность. Особенно хорошо то, что библиотекам не нужно ничего знать о том, как создается и кэшируется фабрика — они получают уже готовый `IDrzLoggerFactory` через DI.
+
+## Prompt:
+21.07.2026, 11:16:02
+
+CreateFactory в каком классе?
+
+## Response:
+21.07.2026, 11:16:02
+
+Я бы поместил `CreateFactory()` в **`NLogBootstrap`**.
+
+Потому что создание `LogFactory` — это часть процесса инициализации, а не работы фабрики логеров.
+
+Получится примерно так:
+
+```text
+NLogBootstrap
+ ├─ ConcurrentDictionary<string, IDrzLoggerFactory>
+ ├─ GetOrCreate(...)
+ └─ CreateFactory(...)
+        │
+        ▼
+     LogFactory
+        │
+        ▼
+NLogLoggerFactory : IDrzLoggerFactory
+ ├─ private readonly LogFactory _factory;
+ ├─ GetLogger<T>()
+ └─ GetLogger(Type)
+```
+
+То есть:
+
+```csharp
+public static class NLogBootstrap
+{
+    private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories;
+
+    public static IDrzLoggerFactory GetOrCreate(...)
+    {
+        ...
+    }
+
+    private static LogFactory CreateFactory(...)
+    {
+        // весь твой код создания LogFactory
+    }
+}
+```
+
+А `NLogLoggerFactory` становится очень простым:
+
+```csharp
+public sealed class NLogLoggerFactory : IDrzLoggerFactory
+{
+    private readonly LogFactory _factory;
+
+    public NLogLoggerFactory(LogFactory factory)
+    {
+        _factory = factory;
+    }
+
+    public IDrzLogger GetLogger<T>() =>
+        GetLogger(typeof(T));
+
+    public IDrzLogger GetLogger(Type type) =>
+        new NLogAdapter(_factory.GetLogger(type.FullName));
+}
+```
+
+Так обязанности разделены максимально четко:
+
+- **`NLogBootstrap`** — знает, *как создать и настроить* `LogFactory`.
+- **`NLogLoggerFactory`** — знает только, *как получить логер* из уже готового `LogFactory`.
+
+Именно такой вариант я бы выбрал для твоей архитектуры.
+
+## Prompt:
+21.07.2026, 12:03:25
+
+public static class NLogBootstrap
+{
+    private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories;
+
+    public static IDrzLoggerFactory GetOrCreate(...)
+    {
+        ...
+    }
+
+    private static LogFactory CreateFactory(...)
+    {
+        // весь твой код создания LogFactory
+    }
+}
+Полностью статический?
+Допиши класс
+Тип в ловаре и возвращаемый не совпадают
+
+## Response:
+21.07.2026, 12:03:26
+
+Да, здесь есть несоответствие.
+
+Если словарь хранит `IDrzLoggerFactory`, то `CreateFactory()` не может возвращать `LogFactory`.
+
+Есть два варианта.
+
+## Вариант 1 (рекомендую)
+
+`CreateFactory()` возвращает **`IDrzLoggerFactory`**, а создание `LogFactory` скрыто внутри него.
+
+```csharp
+public static class NLogBootstrap
+{
+    private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories
+        = new();
+
+    public static IDrzLoggerFactory GetOrCreate(
+        Func<string> productNameProvider,
+        Func<string> assemblyDirectoryProvider,
+        IEnvironmentInfoProvider envInfoProvider = null)
+    {
+        string productName = productNameProvider();
+
+        return _factories.GetOrAdd(productName,
+            _ => CreateLoggerFactory(
+                    productNameProvider,
+                    assemblyDirectoryProvider,
+                    envInfoProvider));
+    }
+
+    private static IDrzLoggerFactory CreateLoggerFactory(
+        Func<string> productNameProvider,
+        Func<string> assemblyDirectoryProvider,
+        IEnvironmentInfoProvider envInfoProvider)
+    {
+        LogFactory logFactory = CreateLogFactory(
+            productNameProvider,
+            assemblyDirectoryProvider,
+            envInfoProvider);
+
+        return new NLogLoggerFactory(logFactory);
+    }
+
+    private static LogFactory CreateLogFactory(...)
+    {
+        // твой существующий CreateFactory()
+    }
+}
+```
+
+Здесь два метода с разными задачами:
+
+- `CreateLogFactory()` → создает `LogFactory`.
+- `CreateLoggerFactory()` → оборачивает его в `NLogLoggerFactory`.
+
+---
+
+## Вариант 2 (еще проще)
+
+Вообще убрать `CreateLoggerFactory()`:
+
+```csharp
+return _factories.GetOrAdd(productName,
+    _ => new NLogLoggerFactory(
+            CreateLogFactory(...)));
+```
+
+---
+
+### Полностью статический ли `NLogBootstrap`?
+
+Да, в твоем случае это хороший кандидат на `static`, потому что:
+
+- хранит общий кэш фабрик;
+- не имеет собственного состояния экземпляра;
+- используется как точка входа для получения фабрики.
+
+То есть он фактически является реестром (`Registry`) фабрик, а не сервисом, который нужно регистрировать в DI.
+
+Мне больше нравится второй вариант: он компактнее, а разделение ответственности остается понятным.
+
+## Prompt:
+21.07.2026, 12:05:00
+
+CreateLogFactory(...)))
+Напиши метод
+
+## Response:
+21.07.2026, 12:05:00
+
+Я бы сделал его примерно таким. Это практически твой текущий `CreateFactory`, только вынесенный в `NLogBootstrap` и без обращения к полям экземпляра.
+
+```csharp
+private static LogFactory CreateLogFactory(
+    string productName,
+    string assemblyDirectory,
+    IEnvironmentInfoProvider envInfoProvider = null)
+{
+    // Diagnostic.Mode
+    string diagnosticModePath = Path.Combine(
+        assemblyDirectory,
+        LogKeys.DiagnosticMode);
+
+    LogLevel requestedLevel =
+        LogLevelReader.GetLevelFromFile(diagnosticModePath);
+
+    InternalLoggerHelpers.ConfigureInternalLogger(
+        $"{typeof(NLogBootstrap).FullName}.{productName}",
+        requestedLevel);
+
+    string logsDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        productName,
+        "logs");
+
+    Exception configException = null;
+    LogFactory factory = null;
+    LoggingConfiguration config = null;
+    bool isFallback = false;
+
+    try
+    {
+        factory = new LogFactory();
+        config = factory.Configuration;
+    }
+    catch (NLogConfigurationException ex)
+    {
+        configException = ex;
+    }
+
+    // Log.Level
+    string logLevelPath = Path.Combine(
+        assemblyDirectory,
+        LogKeys.LogLevel);
+
+    LogLevel currentLevel =
+        LogLevelReader.GetLevelFromFile(logLevelPath);
+
+    if (config == null ||
+        config.AllTargets.Count == 0 ||
+        config.LoggingRules.Count == 0)
+    {
+        isFallback = true;
+
+        factory.Configuration =
+            CreateConfiguration(productName, logsDir, currentLevel);
+    }
+    else
+    {
+        ApplyCommonVariables(factory, productName, logsDir, currentLevel);
+    }
+
+    WriteFactoryDiagnostics(
+        factory,
+        productName,
+        isFallback,
+        configException,
+        envInfoProvider);
+
+    return factory;
+}
+```
+
+Но здесь есть важный момент.
+
+После такого переноса у тебя еще останутся методы:
+
+- `CreateConfiguration()`
+- `ApplyCommonVariables()`
+- `WriteFactoryDiagnostics()`
+- `CreateXmlLayout()`
+- `GetEffectiveMinLevel()`
+
+Они тоже логически относятся к созданию `LogFactory`. Поэтому я бы **перенес их в `NLogBootstrap`** (или сделал внутренним вспомогательным классом `NLogFactoryBuilder`).
+
+Тогда `NLogLoggerFactory` останется очень маленьким:
+
+```csharp
+public sealed class NLogLoggerFactory : IDrzLoggerFactory
+{
+    private readonly LogFactory _factory;
+
+    public NLogLoggerFactory(LogFactory factory)
+    {
+        _factory = factory;
+    }
+
+    public IDrzLogger GetLogger<T>() =>
+        GetLogger(typeof(T));
+
+    public IDrzLogger GetLogger(Type type) =>
+        new NLogAdapter(_factory.GetLogger(type.FullName));
+}
+```
+
+Такое разделение выглядит наиболее естественным.
+
+## Prompt:
+21.07.2026, 12:08:52
+
+Вспомогательные методы тоже Статик?
+NlogFactoryBulder static?
+
+## Response:
+21.07.2026, 12:08:53
+
+Я бы не делал `NLogFactoryBuilder` статическим.
+
+Причина — сейчас для построения фабрики нужны входные данные:
+
+- `productName`;
+- `assemblyDirectory`;
+- `IEnvironmentInfoProvider`.
+
+Они естественно становятся состоянием билдера.
+
+Например:
+
+```csharp
+internal sealed class NLogFactoryBuilder
+{
+    private readonly string _productName;
+    private readonly string _assemblyDirectory;
+    private readonly IEnvironmentInfoProvider _envInfoProvider;
+
+    public NLogFactoryBuilder(
+        string productName,
+        string assemblyDirectory,
+        IEnvironmentInfoProvider envInfoProvider)
+    {
+        ...
+    }
+
+    public LogFactory Build()
+    {
+        ...
+    }
+
+    private LoggingConfiguration CreateConfiguration(...)
+    {
+        ...
+    }
+
+    private void ApplyCommonVariables(...)
+    {
+        ...
+    }
+
+    private void WriteFactoryDiagnostics(...)
+    {
+        ...
+    }
+}
+```
+
+Тогда `NLogBootstrap` очень простой:
+
+```csharp
+public static IDrzLoggerFactory GetOrCreate(...)
+{
+    return _factories.GetOrAdd(productName, _ =>
+    {
+        var builder = new NLogFactoryBuilder(
+            productName,
+            assemblyDirectory,
+            envInfoProvider);
+
+        return new NLogLoggerFactory(builder.Build());
+    });
+}
+```
+
+### Когда делать `static`
+
+Если же ты не хочешь вводить `NLogFactoryBuilder`, а просто перенесешь туда код без полей, тогда да — все методы (`CreateConfiguration`, `CreateXmlLayout`, `WriteFactoryDiagnostics` и т.д.) тоже будут `private static`.
+
+### Что я бы выбрал
+
+Для твоего проекта я бы выбрал **обычный (`sealed`) `NLogFactoryBuilder`**, а не `static`.
+
+Преимущества:
+
+- не нужно таскать `productName`, `assemblyDirectory`, `envInfoProvider` параметрами через 5–6 приватных методов;
+- код становится заметно чище;
+- если позже появятся новые параметры (например, `LogsDir`, `LogLevel`, `CadInfo`), они добавляются в конструктор, а не во все методы сразу.
+
+Такое решение выглядит более масштабируемым, особенно для той архитектуры логирования, которую ты сейчас строишь.
+
+## Prompt:
+21.07.2026, 12:12:12
+
+CreateLogFactory() есть смысл сделать обычным ?
+
+## Response:
+21.07.2026, 12:12:13
+
+Да, если ты вводишь `NLogFactoryBuilder`, то **`CreateLogFactory()` (или лучше `Build()`) имеет смысл сделать обычным экземплярным методом**.
+
+Я бы вообще ушел от названия `CreateLogFactory()` и сделал так:
+
+```csharp
+internal sealed class NLogFactoryBuilder
+{
+    public LogFactory Build()
+    {
+        ...
+    }
+}
+```
+
+Тогда:
+
+```csharp
+var builder = new NLogFactoryBuilder(
+    productName,
+    assemblyDirectory,
+    envInfoProvider);
+
+LogFactory logFactory = builder.Build();
+
+return new NLogLoggerFactory(logFactory);
+```
+
+### Почему экземплярный метод лучше
+
+Потому что он использует состояние объекта:
+
+- `_productName`
+- `_assemblyDirectory`
+- `_envInfoProvider`
+
+Тогда все вспомогательные методы тоже становятся обычными:
+
+```csharp
+private LoggingConfiguration CreateConfiguration(...)
+
+private void ApplyCommonVariables(...)
+
+private void WriteFactoryDiagnostics(...)
+
+private string SafeGetAssemblyDirectory()
+```
+
+и им не нужно передавать множество параметров.
+
+### Когда оставить `static`
+
+Если не вводить `NLogFactoryBuilder`, а оставить всю логику в `NLogBootstrap`, тогда `CreateLogFactory()` и все вспомогательные методы должны быть `static`.
+
+---
+
+Для твоего объема кода (около 300 строк) я бы выбрал **`NLogFactoryBuilder` с экземплярным методом `Build()`**. Получится наиболее чистое разделение:
+
+- `NLogBootstrap` — реестр фабрик (`ConcurrentDictionary`).
+- `NLogFactoryBuilder` — создает и настраивает `LogFactory`.
+- `NLogLoggerFactory` — выдает `IDrzLogger` из готового `LogFactory`.
+
+## Prompt:
+21.07.2026, 12:13:30
+
+Статик остается только словарь?
+
+## Response:
+21.07.2026, 12:13:30
+
+Да, именно так. Это наиболее удачное разделение.
+
+### `NLogBootstrap` (статический)
+
+Его единственная ответственность — хранить общий кэш фабрик.
+
+```csharp
+public static class NLogBootstrap
+{
+    private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories = new();
+
+    public static IDrzLoggerFactory GetOrCreate(...)
+    {
+        ...
+    }
+}
+```
+
+Статическими остаются:
+- `ConcurrentDictionary`;
+- `GetOrCreate()`.
+
+Больше ничего.
+
+---
+
+### `NLogFactoryBuilder` (обычный класс)
+
+Хранит состояние и создает `LogFactory`.
+
+```csharp
+internal sealed class NLogFactoryBuilder
+{
+    private readonly string _productName;
+    private readonly string _assemblyDirectory;
+    private readonly IEnvironmentInfoProvider _envInfoProvider;
+
+    public LogFactory Build()
+    {
+        ...
+    }
+
+    private LoggingConfiguration CreateConfiguration()
+    {
+        ...
+    }
+
+    private void ApplyCommonVariables(...)
+    {
+        ...
+    }
+
+    private void WriteFactoryDiagnostics(...)
+    {
+        ...
+    }
+}
+```
+
+Все методы здесь обычные, потому что используют состояние объекта.
+
+---
+
+### `NLogLoggerFactory`
+
+Только оборачивает `LogFactory`.
+
+```csharp
+public sealed class NLogLoggerFactory : IDrzLoggerFactory
+{
+    private readonly LogFactory _factory;
+
+    ...
+}
+```
+
+---
+
+Такое разделение выглядит очень естественно:
+
+- **Bootstrap** — *найти или создать*.
+- **Builder** — *создать и настроить*.
+- **LoggerFactory** — *выдать логер*.
+
+Я бы только подумал над именем `NLogBootstrap`. Если его задача исключительно хранить реестр фабрик, то `NLogLoggerFactoryRegistry` или `NLogFactoryRegistry` еще точнее отражают его роль. Если же предполагается, что он останется основной точкой инициализации логирования, то `NLogBootstrap` — хорошее название.
+
+## Prompt:
+21.07.2026, 12:15:53
+
+public static IDrzLoggerFactory GetOrCreate(...)
+Обращение к экземплярному методу, покажи как
+
+## Response:
+21.07.2026, 12:15:53
+
+Да, получится примерно так.
+
+```csharp
+public static class NLogBootstrap
+{
+    private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories = new();
+
+    public static IDrzLoggerFactory GetOrCreate(
+        string productName,
+        string assemblyDirectory,
+        IEnvironmentInfoProvider envInfoProvider = null)
+    {
+        return _factories.GetOrAdd(productName, _ =>
+        {
+            var builder = new NLogFactoryBuilder(
+                productName,
+                assemblyDirectory,
+                envInfoProvider);
+
+            LogFactory logFactory = builder.Build();
+
+            return new NLogLoggerFactory(logFactory);
+        });
+    }
+}
+```
+
+`NLogFactoryBuilder`:
+
+```csharp
+internal sealed class NLogFactoryBuilder
+{
+    private readonly string _productName;
+    private readonly string _assemblyDirectory;
+    private readonly IEnvironmentInfoProvider _envInfoProvider;
+
+    public NLogFactoryBuilder(
+        string productName,
+        string assemblyDirectory,
+        IEnvironmentInfoProvider envInfoProvider = null)
+    {
+        _productName = productName;
+        _assemblyDirectory = assemblyDirectory;
+        _envInfoProvider = envInfoProvider;
+    }
+
+    public LogFactory Build()
+    {
+        // весь код из CreateFactory()
+    }
+}
+```
+
+В аддоне:
+
+```csharp
+IDrzLoggerFactory loggerFactory =
+    NLogBootstrap.GetOrCreate(
+        AddonInfo.ProductName,
+        AddonInfo.AssemblyDirectory,
+        new CadEnvironmentInfoProvider());
+
+container.RegisterInstance(loggerFactory);
+```
+
+### Я бы еще изменил сигнатуру
+
+Вместо
+
+```csharp
+Func<string> productNameProvider
+Func<string> assemblyDirectoryProvider
+```
+
+я бы передавал уже готовые значения:
+
+```csharp
+string productName,
+string assemblyDirectory
+```
+
+Поскольку `GetOrCreate()` вызывается один раз при инициализации аддона, ленивые `Func<string>` здесь уже не дают преимуществ, а код становится проще и понятнее.
+
+## Prompt:
+21.07.2026, 12:22:08
+
+Как получить фабрику для передачи в библиотеку?
+
+## Response:
+21.07.2026, 12:22:08
+
+Если фабрика уже зарегистрирована в **SimpleInjector**, то получать ее нужно **из контейнера**, а не из `NLogBootstrap` повторно.
+
+Например, в аддоне:
+
+```csharp
+IDrzLoggerFactory loggerFactory =
+    NLogBootstrap.GetOrCreate(
+        AddonInfo.ProductName,
+        AddonInfo.AssemblyDirectory,
+        new CadEnvironmentInfoProvider());
+
+container.RegisterInstance(loggerFactory);
+```
+
+### Если библиотека создается контейнером
+
+Вообще ничего делать не нужно:
+
+```csharp
+public class BackupService
+{
+    public BackupService(IDrzLoggerFactory loggerFactory)
+    {
+        ...
+    }
+}
+```
+
+### Если библиотека создается вручную
+
+Тогда получить фабрику из контейнера:
+
+```csharp
+IDrzLoggerFactory loggerFactory =
+    container.GetInstance<IDrzLoggerFactory>();
+
+var backup = new BackupService(loggerFactory);
+```
+
+или, если у тебя есть `AddOnContext`:
+
+```csharp
+IDrzLoggerFactory loggerFactory =
+    AddOnContext.Container.GetInstance<IDrzLoggerFactory>();
+
+var backup = new BackupService(loggerFactory);
+```
+
+---
+
+То есть `NLogBootstrap` нужен **только один раз** — при инициализации аддона.
+
+Дальше источник истины — **контейнер DI**. Именно из него следует получать `IDrzLoggerFactory` для передачи в любые библиотеки или сервисы.
+
+## Prompt:
+21.07.2026, 14:19:34
+
+IDrzLoggerFactory loggerFactory =
+    NLogBootstrap.GetOrCreate(
+        AddonInfo.ProductName,
+        AddonInfo.AssemblyDirectory,
+        new CadEnvironmentInfoProvider());
+
+container.RegisterInstance(loggerFactory);
+AddonInfo тоже регистрируется в контейнере
+Возможно есть смысл передавать весь объект
+
+## Response:
+21.07.2026, 14:19:35
+
+Да, это хорошая идея.
+
+Если `AddonInfo` уже содержит все необходимое для создания фабрики, то лучше передавать **его целиком**, а не отдельные строки.
+
+Например:
+
+```csharp
+public static IDrzLoggerFactory GetOrCreate(
+    IAddonInfo addonInfo,
+    IEnvironmentInfoProvider envInfoProvider = null)
+```
+
+Тогда внутри:
+
+```csharp
+string productName = addonInfo.ProductName;
+string assemblyDirectory = addonInfo.AssemblyDirectory;
+```
+
+И `NLogFactoryBuilder` тоже может принимать `IAddonInfo`:
+
+```csharp
+internal sealed class NLogFactoryBuilder
+{
+    private readonly IAddonInfo _addonInfo;
+    private readonly IEnvironmentInfoProvider _envInfoProvider;
+
+    public NLogFactoryBuilder(
+        IAddonInfo addonInfo,
+        IEnvironmentInfoProvider envInfoProvider)
+    {
+        _addonInfo = addonInfo;
+        _envInfoProvider = envInfoProvider;
+    }
+
+    public LogFactory Build()
+    {
+        string productName = _addonInfo.ProductName;
+        string assemblyDirectory = _addonInfo.AssemblyDirectory;
+        ...
+    }
+}
+```
+
+Инициализация станет проще:
+
+```csharp
+var loggerFactory = NLogBootstrap.GetOrCreate(
+    addonInfo,
+    new CadEnvironmentInfoProvider());
+
+container.RegisterInstance(loggerFactory);
+```
+
+Это дает несколько преимуществ:
+
+- сигнатуры методов короче;
+- если позже понадобятся `Company`, `Version`, `LogsDirectory`, `CadFamily` и т.п., не придется менять параметры методов;
+- `NLogBootstrap` и `NLogFactoryBuilder` получают один объект с контекстом аддона, а не длинный список аргументов.
+
+Единственное условие: если `IAddonInfo` — это действительно стабильный объект с метаданными аддона, а не "универсальный контейнер" для любых сервисов, то передавать его целиком — удачное решение.
+
+## Prompt:
+21.07.2026, 14:21:19
+
+var loggerFactory = NLogBootstrap.GetOrCreate(
+    addonInfo,
+    new CadEnvironmentInfoProvider());
+
+container.RegisterInstance(loggerFactory);
+Как получить при создании контейнера?
+
+## Response:
+21.07.2026, 14:21:19
+
+Если `AddonInfo` уже зарегистрирован в контейнере, то есть два варианта.
+
+### Вариант 1. До регистрации фабрики (предпочтительный)
+
+Создать `AddonInfo`, зарегистрировать его, а затем использовать этот же экземпляр:
+
+```csharp
+var addonInfo = new AddonInfo(...);
+
+container.RegisterInstance<IAddonInfo>(addonInfo);
+
+var loggerFactory = NLogBootstrap.GetOrCreate(
+    addonInfo,
+    new CadEnvironmentInfoProvider());
+
+container.RegisterInstance<IDrzLoggerFactory>(loggerFactory);
+```
+
+Это самый простой и правильный вариант.
+
+---
+
+### Вариант 2. Получить из контейнера
+
+Если `IAddonInfo` уже зарегистрирован:
+
+```csharp
+var addonInfo = container.GetInstance<IAddonInfo>();
+
+var loggerFactory = NLogBootstrap.GetOrCreate(
+    addonInfo,
+    new CadEnvironmentInfoProvider());
+
+container.RegisterInstance<IDrzLoggerFactory>(loggerFactory);
+```
+
+---
+
+### Если используешь регистрацию через делегаты
+
+Можно даже так:
+
+```csharp
+container.RegisterSingleton<IDrzLoggerFactory>(() =>
+    NLogBootstrap.GetOrCreate(
+        container.GetInstance<IAddonInfo>(),
+        new CadEnvironmentInfoProvider()));
+```
+
+Тогда фабрика будет создана при первом обращении.
+
+---
+
+Для SimpleInjector я бы выбрал **первый вариант**: сначала создать и зарегистрировать `AddonInfo`, затем на его основе создать `IDrzLoggerFactory` и тоже зарегистрировать его. Это явно показывает порядок инициализации и не создает лишних зависимостей от контейнера во время регистрации.
 
 
 

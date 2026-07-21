@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace drz.LogServices.drzNlog
+namespace drz.LogBootstrap.drzNlog
 {
     internal sealed class NLogEventBuilderAdapter : ILogEventBuilder
     {
