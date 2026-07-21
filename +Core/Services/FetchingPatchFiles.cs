@@ -1,4 +1,4 @@
-﻿using drz.SpecSPDS.Core.Enums;
+﻿using dRz.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace drz.SpecSPDS.Core.Services
+namespace dRz.Core.Services
 {
     public class FetchingPatchFiles
     {

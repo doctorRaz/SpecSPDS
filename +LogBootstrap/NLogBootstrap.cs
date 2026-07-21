@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.LogBootstrap.Builder;
-using drz.LogBootstrap.drzNlog;
+using drz.LogBootstrap.drzNLog;
 using NLog;
 using System.Collections.Concurrent;
 

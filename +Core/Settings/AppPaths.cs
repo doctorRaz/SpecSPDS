@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace drz.SpecSPDS.Core.Settings
+namespace dRz.Core.Settings
 {
     /// <summary>
     /// AppPaths

@@ -11,7 +11,7 @@ using System;
 using System.Reflection;
 
 
-namespace drz.AddOn.Composition
+namespace drz.AddOnRuntime
 {
     /// <summary> Наполнение SimpleInjector объектами </summary>
     /// <seealso cref="System.IDisposable" />

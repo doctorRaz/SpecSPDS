@@ -1,6 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.LogBootstrap.Diagnostics;
-using drz.LogBootstrap.drzNlog;
+using drz.LogBootstrap.drzNLog;
 using NLog;
 using NLog.Common;
 using NLog.Config;

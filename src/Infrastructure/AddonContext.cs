@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-using drz.AddOn.Composition;
+using drz.AddOnRuntime;
 
 using System;
 
@@ -19,7 +19,7 @@ namespace drz.Src.Infrastructure
         private static AddOnCompositionRoot? _root;
 
 
-        //internal static IApplicationInfo AddOn => Root.Get<IApplicationInfo>();
+        //internal static IApplicationInfo AddOnRuntaime => Root.Get<IApplicationInfo>();
 
         internal static IAddOnInfo AddonInfo => Root.Get<IAddOnInfo>();
 

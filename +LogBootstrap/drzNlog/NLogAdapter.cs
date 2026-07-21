@@ -3,8 +3,9 @@
 using drz.Abstractions.Logger;
 using NLog;
 using System;
+using System.Runtime.CompilerServices;
 
-namespace drz.LogBootstrap.drzNlog
+namespace drz.LogBootstrap.drzNLog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {
@@ -38,6 +39,7 @@ namespace drz.LogBootstrap.drzNlog
         public void Error(string message, Exception exception = null) => _inner.Error(exception, message);
 
         public void Error(Exception exception, string message = null) => _inner.Error(exception, message);
+
         public void Fatal(Exception exception, string message = null) => _inner.Error(exception, message);
 
         public void Fatal(string message, Exception exception = null) => _inner.Fatal(exception, message);

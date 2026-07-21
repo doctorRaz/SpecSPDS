@@ -4,7 +4,7 @@ using System;
 
 //https://replit.com/@razygraev/Log-Service-interface
 
-namespace drz.LogBootstrap.drzNlog
+namespace drz.LogBootstrap.drzNLog
 {
     /// <summary>
     /// Log Factory

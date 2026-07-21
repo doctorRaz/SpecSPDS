@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Logger;
 using System;
 
-namespace drz.Src.Services
+namespace drz.Updater.Services
 {
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта

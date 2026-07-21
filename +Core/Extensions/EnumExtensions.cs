@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace drz.SpecSPDS.Core.Extensions
+namespace dRz.Core.Extensions
 {
     public static class EnumExtensions
     {
