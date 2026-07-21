@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace drz.SpecSpds.Test.CallerMemberName
+namespace drz.SpecSPDS.Test.CallerMemberName
 {
     internal class DrzCallerMemberName
     {

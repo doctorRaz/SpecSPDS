@@ -10,7 +10,6 @@ using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
 
-
 namespace drz.AddOnRuntime
 {
     /// <summary> Наполнение SimpleInjector объектами </summary>
@@ -81,17 +80,13 @@ namespace drz.AddOnRuntime
         {
             container.RegisterInstance(addOnAssembly);
 
-            //container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
-
             container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
 
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
 
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
 
-            container.RegisterSingleton<IDrzLoggerFactory>(() =>
-                                                            NLogBootstrap.GetLoggerFactory(
-                                                            container.GetInstance<IAddOnInfo>()));
+            container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
         }
 
         private void RegisterServices(Container container)

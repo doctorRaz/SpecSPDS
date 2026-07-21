@@ -40,7 +40,7 @@ namespace drz.LogBootstrap.drzNLog
 
         public void Error(Exception exception, string message = null) => _inner.Error(exception, message);
 
-        public void Fatal(Exception exception, string message = null) => _inner.Error(exception, message);
+        public void Fatal(Exception exception, string message = null) => _inner.Fatal(exception, message);
 
         public void Fatal(string message, Exception exception = null) => _inner.Fatal(exception, message);
 

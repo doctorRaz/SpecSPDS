@@ -14,7 +14,7 @@
 		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
 		<!--*******-->
 		<Description>Отладка в консоли</Description>
-		<RootNamespace>drz.SpecSpds.Test</RootNamespace>
+		<RootNamespace>drz.Test.Logger</RootNamespace>
 		<AssemblyTitle>Test.Cmd</AssemblyTitle>
 		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
 		<!--metadata-->
