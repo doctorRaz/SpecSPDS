@@ -9,6 +9,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
+//using Container = SimpleInjector.Container;
 
 namespace drz.AddOnRuntime
 {
@@ -39,6 +40,8 @@ namespace drz.AddOnRuntime
             RegisterInfrastructure(_container, addOnAssembly);
 
             RegisterServices(_container);
+
+            _container.RegisterInstance<IAddOnServices>(new AddOnServices(_container));
 
             _container.Verify();
         }

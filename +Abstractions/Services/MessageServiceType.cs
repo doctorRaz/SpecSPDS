@@ -1,7 +1,7 @@
 ﻿namespace drz.Abstractions.Services
 {
     /// <summary>
-    ////перечисление типов интерфейсов
+    ///перечисление типов интерфейсов
     /// </summary>
     public enum MessageServiceType
     {
