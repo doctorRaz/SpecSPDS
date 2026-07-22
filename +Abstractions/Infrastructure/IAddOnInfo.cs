@@ -3,7 +3,7 @@
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о сборке </summary>
-    public interface IAddOnInfo
+    public interface IAddOnInfo: IStringConvertible
     {
         #region Public Properties
 
@@ -104,17 +104,17 @@ namespace drz.Abstractions.Infrastructure
 
         #region Public Methods
 
-        /// <summary>Converts to longstring.</summary>
-        /// <returns>long string</returns>
-        string ToLongString();
+        ///// <summary>Converts to longstring.</summary>
+        ///// <returns>long string</returns>
+        //string ToLongString();
 
-        /// <summary>Converts to shortstring.</summary>
-        /// <returns>short string</returns>
-        string ToShortString();
+        ///// <summary>Converts to shortstring.</summary>
+        ///// <returns>short string</returns>
+        //string ToShortString();
 
-        /// <summary>Converts to string.</summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        string ToString();
+        ///// <summary>Converts to string.</summary>
+        ///// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        //string ToString();
 
         #endregion Public Methods
     }

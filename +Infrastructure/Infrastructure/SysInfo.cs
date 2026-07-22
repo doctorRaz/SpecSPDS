@@ -40,7 +40,7 @@ namespace drz.Infrastructure.Infrastructure
                 using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine,
                                                                     RegistryView.Registry64);
 
-                using RegistryKey key = baseKey.OpenSubKey(RegPath);
+                using RegistryKey? key = baseKey.OpenSubKey(RegPath);
 
                 if (key != null)
                 {
