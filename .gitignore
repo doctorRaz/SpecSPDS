@@ -419,3 +419,6 @@ FodyWeavers.xsd
 ExamplePrj
 bin-x64
 res
+.idea
+_res
++Updater/Shared/7z.7z
