@@ -6,17 +6,18 @@
 		<OutputType>Exe</OutputType>
 		<PlatformTarget>x64</PlatformTarget>
 		<Nullable>enable</Nullable>
-		<!--<ImplicitUsings>disable</ImplicitUsings>-->
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+				<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<UseWPF>true</UseWPF>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
-		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
-		<!--*******-->
+		<!--для GeneratedCompile.cs не удалять-->
+		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
+		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
+				<!--*******-->
 		<Description>Отладка в консоли</Description>
 		<RootNamespace>drz.SpecSpds.Test</RootNamespace>
 		<AssemblyTitle>Test.Cmd</AssemblyTitle>
-		<!--<AssemblyName>SpecSPDS.nCad</AssemblyName>-->
+		
 		<!--metadata-->
 		<CadFamily>TEST</CadFamily>
 		<CadCode>t</CadCode>
@@ -27,11 +28,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
-		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\+Test.LibA\Test.LibA.csproj" />
-		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />
 		<ProjectReference Include="..\+Updater\Updater.csproj" />
 	</ItemGroup>
 	<!--metadata assemble-->
@@ -47,7 +45,7 @@
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
-		<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />
+		<!--<Compile Include="..\+Loader\EntryPoint.cs" Link="Loader\EntryPoint.cs" />-->
 	</ItemGroup>
 
 </Project>

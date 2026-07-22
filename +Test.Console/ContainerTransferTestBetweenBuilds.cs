@@ -1,35 +1,45 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
+
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-using drz.Lib_B;
-using drz.Src.Infrastructure;
+using drz.AddOnRuntime;
+using drz.Lib_A;
+//using static drz.Src.Infrastructure.AddOnContext;
 
-
-namespace drz.Lib_A
+namespace drz.SpecSpds.Test
 
 {
-    public class CommandA
+    internal class ContainerTransferTestBetweenBuilds
     {
         private readonly IDrzLogger _logger;//логгер
 
         //private readonly IAddOnServices _services;
 
-        //private static bool _isAddOnCompositionRoot;//контейнер наполнен
+        private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        public CommandA(IAddOnServices services)
+        internal ContainerTransferTestBetweenBuilds()
         {
-            // экземпляр копии контейнера by ref
-            AddOnCtx. Initialize(services);
+            if (!_isAddOnCompositionRoot)
+            {
+                //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
+                // один раз в точке входа /Rtm.IExtensionApplication/
+                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransferTestBetweenBuilds).Assembly);
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(CommandA));
 
-            _logger.InfoCaller("CommandB Initialized");
+                // экземпляр копии контейнера by ref
+                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+
+                _isAddOnCompositionRoot = true;//сервис поднялся
+            }
+
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransferTestBetweenBuilds));
+
+            _logger.InfoCaller("ContainerTransferTestBetweenBuilds Initialized");
         }
 
-        public void Run()
+        internal void Run()
         {
             System.Exception ex = new System.Exception("Properties is null");
 
@@ -69,11 +79,10 @@ namespace drz.Lib_A
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
 
-            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandA)}");
+            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(ContainerTransferTestBetweenBuilds)}");
 
-            CommandB c = new CommandB(AddOnCtx.Services);
+            CommandA c = new CommandA(AddOnCtx.Services);
             c.Run();
         }
     }
 }
-
