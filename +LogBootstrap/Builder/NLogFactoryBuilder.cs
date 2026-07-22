@@ -240,6 +240,17 @@ namespace drz.LogBootstrap.Builder
                 // Factory min level
                 LogLevel effectiveLevel = GetEffectiveMinLevel(log);
 
+                //todo logger.For_XXXX_Event
+                /*
+                  _logger.ForErrorEvent()
+                    .Message("Properties is null")
+                    .Property("name", 10)
+                    .Property("null", "Properties is null")
+                    .Property("null", "Properties is null")
+                    .Exception(ex)
+                    .Log();                 
+                 */
+
                 string msg = $"LogFactory initialized: {productName};\n" +
                                 $"ConfigSource: {(isFallback ? "Fallback (programmatic)" : "External (nlog.config)")};\n" +
                                 $"EffectiveMinLevel: {effectiveLevel};\n" +
