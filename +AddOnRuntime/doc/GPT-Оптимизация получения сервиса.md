@@ -2,8 +2,8 @@
 
 **User:** dRz  
 **Created:** 7/21/2026 22:36:00  
-**Updated:** 7/21/2026 22:53:16  
-**Exported:** 7/21/2026 22:55:29  
+**Updated:** 7/22/2026 6:05:50  
+**Exported:** 7/22/2026 6:56:15  
 **Link:** [https://chatgpt.com/c/6a5fc9a2-a350-83eb-a350-27600320e9c2](https://chatgpt.com/c/6a5fc9a2-a350-83eb-a350-27600320e9c2)  
 
 ## Prompt:
@@ -846,6 +846,485 @@ container.RegisterSingleton<IAddOnServices>(
 - нет лишнего метода `Get<T>()` у `AddOnCompositionRoot`.
 
 В итоге зависимым сборкам передается **только `IAddOnServices`**, а `AddOnCompositionRoot` вообще не покидает границы инфраструктурной сборки. Это хорошо разделяет ответственность и упрощает дальнейшее развитие архитектуры.
+
+## Prompt:
+22.07.2026, 05:35:17
+
+Как передать объект IAddOnServices между сборками?
+
+## Response:
+22.07.2026, 05:35:17
+
+Есть несколько способов, но для твоей архитектуры один из них выглядит наиболее естественным.
+
+### 1. Передавать через конструктор (предпочтительно)
+
+Если класс создаешь ты сам:
+
+```csharp
+public class MyModule
+{
+    private readonly IAddOnServices _services;
+
+    public MyModule(IAddOnServices services)
+    {
+        _services = services;
+    }
+}
+```
+
+Создание:
+
+```csharp
+var module = new MyModule(compositionRoot.Get<IAddOnServices>());
+```
+
+или вообще
+
+```csharp
+var module = container.GetInstance<MyModule>();
+```
+
+если `MyModule` зарегистрирован в контейнере.
+
+---
+
+### 2. Передать в метод и сохранить
+
+Если объект создается сторонним SDK (например, nanoCAD):
+
+```csharp
+public class MyCommands
+{
+    private IAddOnServices _services;
+
+    public void Initialize(IAddOnServices services)
+    {
+        _services = services;
+    }
+}
+```
+
+Вызывается один раз при инициализации аддона.
+
+---
+
+### 3. Передать в контекст библиотеки
+
+Если библиотека использует статические методы:
+
+```csharp
+public static class LibraryContext
+{
+    public static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+```
+
+Тогда один раз:
+
+```csharp
+LibraryContext.Initialize(
+    compositionRoot.Get<IAddOnServices>());
+```
+
+и дальше в библиотеке:
+
+```csharp
+var logger = LibraryContext.Services.Get<IDrzLoggerFactory>();
+```
+
+---
+
+## Что я бы сделал в твоем проекте
+
+Поскольку у тебя уже есть `AddOnContext`, я бы не убирал его полностью, а превратил в **тонкую обертку** над `IAddOnServices`.
+
+```csharp
+public static class AddOnContext
+{
+    private static IAddOnServices _services;
+
+    public static void Initialize(IAddOnServices services)
+    {
+        _services = services;
+    }
+
+    public static T Get<T>() where T : class
+    {
+        return _services.Get<T>();
+    }
+}
+```
+
+При запуске аддона:
+
+```csharp
+AddOnContext.Initialize(
+    compositionRoot.Get<IAddOnServices>());
+```
+
+Тогда в любой сборке:
+
+```csharp
+var logger = AddOnContext.Get<IDrzLoggerFactory>();
+var msg = AddOnContext.Get<IWindowMessageService>();
+```
+
+При этом сама реализация больше не знает о `Container` или `SimpleInjector`, а `AddOnContext` становится лишь удобной точкой доступа к зарегистрированным сервисам, а не владельцем контейнера. Это позволяет при необходимости заменить реализацию `IAddOnServices` без изменения остального кода.
+
+## Prompt:
+22.07.2026, 05:55:11
+
+Напиши интерфейс, реализацию и примеры передачи между сборками и пример использования.
+Добавь подробные комментарии
+
+## Response:
+22.07.2026, 05:55:12
+
+Я бы сделал так. Это не привязывает библиотеки к `SimpleInjector`, позволяет передавать **один объект** между сборками и при этом сохраняет возможность получать любой зарегистрированный сервис.
+
+## 1. Интерфейс (drz.Abstractions)
+
+```csharp
+namespace drz.Abstractions.Infrastructure
+{
+    /// <summary>
+    /// Предоставляет доступ к сервисам, зарегистрированным в контейнере аддона.
+    /// </summary>
+    /// <remarks>
+    /// Интерфейс предназначен для передачи между сборками.
+    /// Сборки не должны иметь зависимость от SimpleInjector и не должны
+    /// получать доступ к контейнеру напрямую.
+    ///
+    /// Обычно экземпляр интерфейса передается один раз при инициализации
+    /// библиотеки или через конструктор класса.
+    /// </remarks>
+    public interface IAddOnServices
+    {
+        /// <summary>
+        /// Возвращает зарегистрированный сервис указанного типа.
+        /// </summary>
+        /// <typeparam name="TService">
+        /// Тип требуемого сервиса.
+        /// </typeparam>
+        /// <returns>
+        /// Экземпляр зарегистрированного сервиса.
+        /// </returns>
+        /// <exception cref="ActivationException">
+        /// Сервис данного типа отсутствует в контейнере.
+        /// </exception>
+        TService Get<TService>() where TService : class;
+    }
+}
+```
+
+---
+
+## 2. Реализация (Infrastructure)
+
+```csharp
+using drz.Abstractions.Infrastructure;
+using SimpleInjector;
+
+namespace drz.Infrastructure.Infrastructure
+{
+    /// <summary>
+    /// Реализация <see cref="IAddOnServices"/>,
+    /// предоставляющая доступ к сервисам контейнера.
+    /// </summary>
+    internal sealed class AddOnServices : IAddOnServices
+    {
+        private readonly Container _container;
+
+        /// <summary>
+        /// Инициализирует новый экземпляр класса.
+        /// </summary>
+        /// <param name="container">
+        /// Контейнер SimpleInjector.
+        /// </param>
+        public AddOnServices(Container container)
+        {
+            _container = container;
+        }
+
+        /// <inheritdoc/>
+        public TService Get<TService>() where TService : class
+        {
+            return _container.GetInstance<TService>();
+        }
+    }
+}
+```
+
+---
+
+## 3. Регистрация в CompositionRoot
+
+После регистрации всех сервисов добавить:
+
+```csharp
+container.RegisterInstance<IAddOnServices>(
+    new AddOnServices(container));
+```
+
+Теперь `IAddOnServices` сам становится сервисом контейнера.
+
+---
+
+## 4. Получение интерфейса
+
+В `AddOnCompositionRoot` уже есть
+
+```csharp
+public TService Get<TService>() where TService : class
+{
+    return _container.GetInstance<TService>();
+}
+```
+
+Поэтому получить интерфейс очень просто:
+
+```csharp
+IAddOnServices services =
+    compositionRoot.Get<IAddOnServices>();
+```
+
+---
+
+# Пример 1. Передача через конструктор
+
+Главная сборка
+
+```csharp
+IAddOnServices services =
+    compositionRoot.Get<IAddOnServices>();
+
+var module = new MyModule(services);
+```
+
+Зависимая сборка
+
+```csharp
+public class MyModule
+{
+    private readonly IAddOnServices _services;
+
+    /// <summary>
+    /// Инициализирует модуль.
+    /// </summary>
+    public MyModule(IAddOnServices services)
+    {
+        _services = services;
+    }
+
+    public void Execute()
+    {
+        var message =
+            _services.Get<IWindowMessageService>();
+
+        message.ShowMessage("Hello");
+    }
+}
+```
+
+---
+
+# Пример 2. Инициализация библиотеки
+
+Если библиотека содержит статические классы.
+
+```csharp
+public static class LibraryContext
+{
+    /// <summary>
+    /// Сервисы текущего аддона.
+    /// </summary>
+    public static IAddOnServices Services { get; private set; }
+
+    /// <summary>
+    /// Выполняет инициализацию библиотеки.
+    /// </summary>
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+```
+
+Главная сборка
+
+```csharp
+LibraryContext.Initialize(
+    compositionRoot.Get<IAddOnServices>());
+```
+
+Любой код библиотеки
+
+```csharp
+var logger =
+    LibraryContext.Services.Get<IDrzLoggerFactory>();
+
+var msg =
+    LibraryContext.Services.Get<ICommandLineMessageService>();
+
+msg.ShowMessage("Ready");
+```
+
+---
+
+# Пример 3. Получение нескольких сервисов
+
+```csharp
+public class DocumentProcessor
+{
+    private readonly IAddOnServices _services;
+
+    public DocumentProcessor(IAddOnServices services)
+    {
+        _services = services;
+    }
+
+    public void Process()
+    {
+        var documentService =
+            _services.Get<IDocumentService>();
+
+        var loggerFactory =
+            _services.Get<IDrzLoggerFactory>();
+
+        var logger =
+            loggerFactory.GetLogger<DocumentProcessor>();
+
+        var messageService =
+            _services.Get<IWindowMessageService>();
+
+        logger.Info("Начало обработки.");
+
+        documentService.Save();
+
+        messageService.ShowMessage("Готово.");
+    }
+}
+```
+
+## Структура зависимостей
+
+```
+drz.Abstractions
+│
+├── IAddOnServices
+├── IMessageService
+├── IDocumentService
+└── ...
+
+                ▲
+
+drz.Infrastructure
+│
+├── AddOnCompositionRoot
+├── AddOnServices
+└── SimpleInjector
+
+                ▲
+
+Главный AddOn
+│
+├── создает CompositionRoot
+├── получает IAddOnServices
+└── передает его другим сборкам
+
+                ▲
+
+Любая зависимая сборка
+│
+└── использует только IAddOnServices
+```
+
+Такое решение хорошо масштабируется: при появлении новых сервисов (`ISettingsService`, `IUpdateService`, `ILicenseService` и т.д.) код `IAddOnServices` не изменяется, а зависимые сборки могут получать их без каких-либо дополнительных фабрик или перечислений.
+
+## Prompt:
+22.07.2026, 06:05:44
+
+Например могу создать экземпляр 
+ISettingsService и все сборки получат одинаковые настройки?
+
+## Response:
+22.07.2026, 06:05:44
+
+Да. Именно в этом одно из главных преимуществ контейнера DI.
+
+Если зарегистрировать сервис как **Singleton**, то все сборки будут получать **один и тот же экземпляр**.
+
+Например:
+
+```csharp
+container.Register<ISettingsService, SettingsService>(Lifestyle.Singleton);
+```
+
+или
+
+```csharp
+var settings = new SettingsService();
+
+container.RegisterInstance<ISettingsService>(settings);
+```
+
+Тогда из любой сборки:
+
+```csharp
+var settings = _services.Get<ISettingsService>();
+```
+
+вернется **один и тот же объект**.
+
+Например:
+
+```csharp
+// Сборка A
+var settings = _services.Get<ISettingsService>();
+settings.Theme = "Dark";
+```
+
+```csharp
+// Сборка B
+var settings = _services.Get<ISettingsService>();
+
+Console.WriteLine(settings.Theme);
+// Dark
+```
+
+`ReferenceEquals` тоже вернет `true`:
+
+```csharp
+var s1 = services.Get<ISettingsService>();
+var s2 = services.Get<ISettingsService>();
+
+Debug.Assert(ReferenceEquals(s1, s2)); // true
+```
+
+---
+
+Это относится не только к настройкам.
+
+Например, можно зарегистрировать:
+
+- `ISettingsService`
+- `IDrzLoggerFactory`
+- `IUpdateService`
+- `ILicenseService`
+- `IMessageRouter`
+- `IEventBus`
+
+и все сборки будут работать с **одними и теми же экземплярами**, если они зарегистрированы как `Singleton`.
+
+---
+
+Для твоей архитектуры это особенно удобно: каждая сборка получает только `IAddOnServices`, а дальше может запросить любой общий сервис, зарегистрированный аддоном. Получается единое "пространство сервисов" для всего аддона без статических глобальных объектов и без зависимости библиотек от `SimpleInjector`.
 
 
 
