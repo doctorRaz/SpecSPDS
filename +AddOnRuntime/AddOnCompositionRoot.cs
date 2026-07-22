@@ -89,7 +89,6 @@ namespace drz.AddOnRuntime
 
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
 
-            container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
         }
 
         private void RegisterServices(Container container)
@@ -103,6 +102,8 @@ namespace drz.AddOnRuntime
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
+            
+            container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
         }
 
         #endregion Private Methods
