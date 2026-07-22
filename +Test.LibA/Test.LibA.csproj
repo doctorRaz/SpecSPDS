@@ -21,9 +21,8 @@
 		 <Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />		
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Test.LibB\Test.LibB.csproj" />		
 		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
-		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
-		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 	</ItemGroup>
 </Project>

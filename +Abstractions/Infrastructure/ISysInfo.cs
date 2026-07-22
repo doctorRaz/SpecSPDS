@@ -6,7 +6,7 @@ using System;
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о системе </summary>
-    public interface ISysInfo
+    public interface ISysInfo: IStringConvertible
     {
         #region Public Properties
 
@@ -55,6 +55,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Gets the ram total gb.</summary>
         /// <value>The ram total gb.</value>
         string RamTotalGb { get; }
+
         /// <summary>Gets the version string.</summary>
         /// <value>The version string.</value>
         string VersionString { get; }
@@ -63,17 +64,17 @@ namespace drz.Abstractions.Infrastructure
 
         #region Public Methods
 
-        /// <summary>Converts to string.</summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        string ToString();
+        ///// <summary>Converts to string.</summary>
+        ///// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        //string  ToString();
 
-        /// <summary>Converts to long string.</summary>
-        /// <returns></returns>
-        string ToLongString();
+        ///// <summary>Converts to long string.</summary>
+        ///// <returns></returns>
+        //string ToLongString();
 
-        /// <summary>Converts to short string.</summary>
-        /// <returns></returns>
-        string ToShortString();
+        ///// <summary>Converts to short string.</summary>
+        ///// <returns></returns>
+        //string ToShortString();
 
         #endregion Public Methods
     }

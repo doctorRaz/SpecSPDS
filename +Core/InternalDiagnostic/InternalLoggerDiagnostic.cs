@@ -8,7 +8,7 @@ using System.Reflection;
 //todo только для отладки загрузки nlog конфигурации
 // скопировать в drz.Cad.Cad.InternalDiagnostic
 
-namespace drz.SpecSPDS.Core.InternalDiagnostic
+namespace dRz.Core.InternalDiagnostic
 {
     public class InternalLoggerDiagnostic
     {

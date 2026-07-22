@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Logger;
 using System;
 
-namespace drz.Src.Services
+namespace drz.Updater.Services
 {
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта
@@ -10,7 +10,7 @@ namespace drz.Src.Services
     {
         #region Private Fields
 
-        //private static readonly Lazy<IDrzLogService> _service = new(() =>
+        //private static readonly Lazy<IDrzLoggerFactory> _service = new(() =>
         //    new NLogService(
         //        productNameProvider: () => InfoDll.ProductName,
         //        assemblyDirectoryProvider: () => InfoDll.AssemblyDirectory,

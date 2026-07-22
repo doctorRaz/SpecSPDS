@@ -1,4 +1,4 @@
-﻿namespace drz.SpecSPDS.Core.Models
+﻿namespace dRz.Core.Models
 {
     public class DefinitionTableColumns
     {

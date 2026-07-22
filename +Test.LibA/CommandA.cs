@@ -1,66 +1,79 @@
-﻿using drz.Abstractions.Logger;
-using drz.AddOn.Composition;
+﻿// тест передачи контейнера между сборками
+// container transfer test between builds
+
+global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
+using drz.Abstractions.Logger;
+using drz.Abstractions.Services;
+using drz.Lib_B;
 using drz.Src.Infrastructure;
-using drz.Src.Services;
-using System;
 
-using /*static*/ AC = drz.Src.Infrastructure.AddOnContext;
 
-/// <summary>
-///
-/// </summary>
 namespace drz.Lib_A
+
 {
-    public class CommandA : IDisposable
+    public class CommandA
     {
-        private static bool _initialized;
+        private readonly IDrzLogger _logger;//логгер
 
-        private IDrzLogger log = LoggerProvider.For<CommandA>();
+        //private readonly IAddOnServices _services;
 
-        public CommandA()
+        //private static bool _isAddOnCompositionRoot;//контейнер наполнен
+
+        public CommandA(IAddOnServices services)
         {
-            if (_initialized)
-            {
-                return;
-            }
+            // экземпляр копии контейнера by ref
+            AddOnCtx. Initialize(services);
 
-            AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(CommandA).Assembly);
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(CommandA));
 
-            AC.Initialize(root);
-
-            _initialized = true;
+            _logger.InfoCaller("CommandB Initialized");
         }
 
-        public void Dispose()
+        public void Run()
         {
-            AC.Dispose();
-        }
+            System.Exception ex = new System.Exception("Properties is null");
 
-        public string ExecuteEnvironmentInfoProvider()
-        {
-            CadEnvironmentInfoProvider cadEnvironmentInfoProvider = new CadEnvironmentInfoProvider();
+            _logger.TraceCaller("TraceCaller");
+            _logger.DebugCaller("DebugCaller");
+            _logger.InfoCaller("InfoCaller");
+            _logger.WarnCaller("WarnCaller");
 
-            return cadEnvironmentInfoProvider.GetSummary();
-        }
+            _logger.ErrorCaller("ErrorCaller", ex);
+            _logger.ErrorCaller("ErrorCaller");
+            _logger.ErrorCaller(ex, "ErrorCaller");
+            _logger.ErrorCaller(ex);
 
-        public void LogTest(string msg)
-        {
-            log.Trace($"Сообщение Trace");
-            log.Debug($"Сообщение Debug");
-            log.Info($"Сообщение Info");
-            log.Warn($"Сообщение Warn");
-            log.Error($"Сообщение Error");
-            log.Fatal($"Сообщение Fatal");
-            log.Fatal($"{msg}");
-        }
+            _logger.FatalCaller("FatalCaller", ex);
+            _logger.FatalCaller("FatalCaller");
+            _logger.FatalCaller(ex, "FatalCaller");
+            _logger.FatalCaller(ex);
 
-        public void msgCommandA()
-        {
-            AC.MsgCmd.ConsoleMessage($"{AC.AddonInfo.TitlePrefix} Console message");
+            _logger.Debug("CommandB.Run");
+            _logger.ForErrorEvent()
+                    .Message("Properties is null")
+                    .Property("name", 10)
+                    .Property("null", "Properties is null")
+                    .Property("00", "Properties is null")
+                    .Exception(ex)
+                    .Log();
 
-            AC.MsgGUI.InfoMessage($"{AC.AddonInfo.TitlePrefix} Console message");
+            //---- CadInfo -------
+            _logger.Info(AddOnCtx.CadInfo.ToLongString());
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.CadInfo.ToLongString());
 
-            AC.Msg.InfoMessage($"{AC.AddonInfo.TitlePrefix} Console message");
+            //----- AddOnInfo ------
+            _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
+
+            //----- SysInfo ------
+            _logger.Info(AddOnCtx.SysInfo.ToLongString());
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
+
+            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandA)}");
+
+            CommandB c = new CommandB(AddOnCtx.Services);
+            c.Run();
         }
     }
 }
+

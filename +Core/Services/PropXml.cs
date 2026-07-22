@@ -1,10 +1,10 @@
-﻿using drz.SpecSPDS.Core.Models;
+﻿using dRz.Core.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace drz.SpecSPDS.Core.Services
+namespace dRz.Core.Services
 {
     public class PropXml
     {

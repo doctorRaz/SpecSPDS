@@ -1,14 +1,17 @@
 ﻿using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.CadServices.Services;
 using drz.Infrastructure.Infrastructure;
 using drz.Infrastructure.Services;
+using drz.LogBootstrap;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
+//using Container = SimpleInjector.Container;
 
-namespace drz.AddOn.Composition
+namespace drz.AddOnRuntime
 {
     /// <summary> Наполнение SimpleInjector объектами </summary>
     /// <seealso cref="System.IDisposable" />
@@ -37,6 +40,8 @@ namespace drz.AddOn.Composition
             RegisterInfrastructure(_container, addOnAssembly);
 
             RegisterServices(_container);
+
+            _container.RegisterInstance<IAddOnServices>(new AddOnServices(_container));
 
             _container.Verify();
         }
@@ -78,13 +83,12 @@ namespace drz.AddOn.Composition
         {
             container.RegisterInstance(addOnAssembly);
 
-            //container.Register<IApplicationInfo, ApplicationInfo>(Lifestyle.Singleton);
-
             container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
 
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
 
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+
         }
 
         private void RegisterServices(Container container)
@@ -98,6 +102,8 @@ namespace drz.AddOn.Composition
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
+            
+            container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
         }
 
         #endregion Private Methods

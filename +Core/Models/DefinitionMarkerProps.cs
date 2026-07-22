@@ -1,6 +1,6 @@
-﻿using drz.SpecSPDS.Core.Extensions;
+﻿using dRz.Core.Extensions;
 
-namespace drz.SpecSPDS.Core.Models
+namespace dRz.Core.Models
 {
     /// <summary>
     /// значения полей маркера
