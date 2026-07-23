@@ -19,9 +19,9 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.CadServices\Test.CadServices.csproj" />
-		<ProjectReference Include="..\+Test.Infrastructure\Test.Infrastructure.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="SimpleInjector" Version="5.5.0" />
