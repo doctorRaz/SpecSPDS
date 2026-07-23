@@ -5,6 +5,7 @@ global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.Src.Infrastructure;
+using System;
 
 
 namespace drz.Lib_B
@@ -82,8 +83,14 @@ namespace drz.Lib_B
             AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandB)}");
 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
-            //если подменить сборку аддона, то покажет новый номер 
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());            
+
+
+            //если подменить сборку аддона, то покажет новый номер версии
+            AddOnCtx.MsgCmd.InfoMessage($"Замените сборку аддона {AddOnCtx.AddOnInfo.AssemblyPath} на одноименную сборку другой версии");
+            AddOnCtx.MsgCmd.InfoMessage("И нажмите любую клавишу");
+            Console.ReadKey();//конечно не реализовано))
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+        
         }
     }
 }

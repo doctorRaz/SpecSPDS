@@ -51,6 +51,7 @@ namespace drz.SpecSPDS.Test
             //LibA, LibB знают только интерфейсы, Abstractions
             ct.ContainerTransfer_Run();
             _logger.Info("The End");
+            AddOnCtx.MsgCmd.InfoMessage("Press any key to exit...");
             Console.ReadKey();
         }
 
