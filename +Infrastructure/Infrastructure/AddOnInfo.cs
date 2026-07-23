@@ -66,8 +66,7 @@ namespace drz.Infrastructure.Infrastructure
                 FileName =
                     assemblyName.Name ?? "Unknown";
             }
-
-            FilePrefix = ExtractProductPrefix(FileName);
+                    
 
             // 2. Данные версии (GetName тоже относительно быстр, но вызываем 1 раз)
             RunningVersion =
@@ -86,7 +85,7 @@ namespace drz.Infrastructure.Infrastructure
             // поэтому для путей используем FilePrefix или вычисляем ProductName сразу, если он критичен.
             // Но лучше ProductName вычислить в конструкторе, так как он нужен для путей:
             ProductName =
-                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? FilePrefix;
+                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? ExtractProductPrefix(FileName);
 
             AppDataProductPath = Path.Combine(appData, ProductName);
 
@@ -184,9 +183,7 @@ namespace drz.Infrastructure.Infrastructure
         /// <value>Имя файла сборки без расширения.</value>
         public string FileName { get; }
 
-        /// <summary>Возвращает имя файла сборки до первой точки.</summary>
-        public string FilePrefix { get; }
-
+    
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string ProductName { get; }
 
@@ -229,10 +226,15 @@ namespace drz.Infrastructure.Infrastructure
         {
             return @$"{ProductName} v{RunningVersion}
   Title: {ProductTitle}
+  ProductName: {ProductName}
+  CadFamily: {CadFamily}
+  CadCode: {CadCode}
   InformationalVersion: {InformationalVersion}
   FileName: {FileName}
-  FilePrefix: {FilePrefix}
   File: {AssemblyPath}
+  AssemblyDirectory: {AssemblyDirectory}
+  AppDataProductPath: {AppDataProductPath}
+  AppDataProductLogPath: {AppDataProductLogPath}
   Copyright:{Copyright}
   Description: {Description}
   FileVersion: {FileVersion}

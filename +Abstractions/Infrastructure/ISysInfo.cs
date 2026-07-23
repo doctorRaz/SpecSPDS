@@ -61,21 +61,5 @@ namespace drz.Abstractions.Infrastructure
         string VersionString { get; }
 
         #endregion Public Properties
-
-        #region Public Methods
-
-        ///// <summary>Converts to string.</summary>
-        ///// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        //string  ToString();
-
-        ///// <summary>Converts to long string.</summary>
-        ///// <returns></returns>
-        //string ToLongString();
-
-        ///// <summary>Converts to short string.</summary>
-        ///// <returns></returns>
-        //string ToShortString();
-
-        #endregion Public Methods
     }
 }
