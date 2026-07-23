@@ -22,9 +22,9 @@ public class CadInfo : ICadInfo
 
             string? path = GetExePath();
 
-            if (string.IsNullOrEmpty(path)) throw new Exception("Path not found");
+            if (string.IsNullOrEmpty(path)) throw new FileNotFoundException("Path not found");
 
-            ExePath = path;
+            ExePath = path!;
 
             FileInfo fileInfo = new FileInfo(path);
 
@@ -80,17 +80,17 @@ public class CadInfo : ICadInfo
 
     #region Private Properties
 
-    private string defString =>
+    private string _defString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
        $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} {FileVersion} [{HostArchitecture}]";
 
-    private string longString =>
+    private string _longString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
        $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} {FileVersion} [{HostArchitecture}] CompanyName:{CompanyName} Copyright:{Copyright} ProductName:{ProductName}";
 
-    private string shortString =>
+    private string _shortString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
        $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} [{HostArchitecture}]";
@@ -101,17 +101,17 @@ public class CadInfo : ICadInfo
 
     public string ToLongString()
     {
-        return longString;
+        return _longString;
     }
 
     public string ToShortString()
     {
-        return shortString;
+        return _shortString;
     }
 
     public override string ToString()
     {
-        return defString;
+        return _defString;
     }
 
     #endregion Public Methods
