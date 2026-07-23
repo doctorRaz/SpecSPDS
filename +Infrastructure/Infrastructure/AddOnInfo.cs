@@ -105,7 +105,6 @@ namespace drz.Infrastructure.Infrastructure
             CadFamily = GetMetadata("CadFamily") ?? "";
 
             CadCode = GetMetadata("CadCode") ?? "";
-
         }
 
         /// <summary>Возвращает дату-время компиляции сборки.</summary>
@@ -144,6 +143,7 @@ namespace drz.Infrastructure.Infrastructure
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         public string ProductTitle => _productTitle ??=
             _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
+
         #endregion Public Constructors
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
@@ -167,6 +167,7 @@ namespace drz.Infrastructure.Infrastructure
         /// </summary>
         /// <value>"Полное Имя" сборки.</value>
         public string? AssembleFullName { get; }
+
         /// <summary>Возвращает директорию сборки.</summary>
         /// <value>Директория сборки.</value>
         public string AssemblyDirectory { get; }
@@ -268,7 +269,6 @@ namespace drz.Infrastructure.Infrastructure
                 ?.Value;
         }
 
-
         /// <summary>Computes the build date.</summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="isAuto">if set to <c>true</c> [is automatic].</param>
@@ -348,7 +348,6 @@ namespace drz.Infrastructure.Infrastructure
         //получаем путь к папке ROOT с аддоном, ищем в ней все пакеты
         private FileInfo? FindPackageFile(string startDirectory, string packageName)
         {
-
             string prefix = packageName + ".";
 
             DirectoryInfo current = new(startDirectory);
@@ -358,7 +357,6 @@ namespace drz.Infrastructure.Infrastructure
             {
                 if (dir == null)
                     continue;
-
 
                 FileInfo? package = dir.EnumerateFiles("*.package",
                                                        SearchOption.TopDirectoryOnly)
@@ -374,6 +372,7 @@ namespace drz.Infrastructure.Infrastructure
             // Если пакет не найден, по умолчанию считаем корнем родительский каталог
             return null;// parent?.FullName ?? current.FullName;
         }
+
         /*
 
 используем FindPackageFile для поиска папки ROOT с аддоном, затем ищем в ней все *.bak и *.~* и удаляем их
@@ -383,7 +382,6 @@ string start = Path.GetDirectoryName(typeof(Updater).Assembly.Location)!;
 string? root = FindPackageFile(start, "SpecSPDS");
 
   */
-
 
         #endregion Private Methods
     }

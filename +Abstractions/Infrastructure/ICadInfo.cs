@@ -5,7 +5,7 @@ namespace drz.Abstractions.Infrastructure
     /// <summary>
     /// Info CAd host
     /// </summary>
-    public interface ICadInfo: IStringConvertible
+    public interface ICadInfo : IStringConvertible
     {
         #region Public Properties
 

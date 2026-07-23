@@ -1,7 +1,7 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-
+using drz.Abstractions.Services.Message;
 using System;
 
 namespace drz.Src.Infrastructure

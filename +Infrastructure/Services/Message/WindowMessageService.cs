@@ -1,14 +1,14 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Services;
+using drz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace drz.Infrastructure.Services
+namespace drz.Infrastructure.Services.Message
 {
     public class WindowMessageService : IMessageService, IWindowMessageService
     {
-
         #region Private Fields
 
         private IAddOnInfo _applicationInfo;
@@ -69,6 +69,5 @@ namespace drz.Infrastructure.Services
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         #endregion Private Methods
-
     }
 }

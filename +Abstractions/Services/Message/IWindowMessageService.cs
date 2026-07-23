@@ -1,7 +1,7 @@
-﻿namespace drz.Abstractions.Services
+﻿namespace drz.Abstractions.Services.Message
 {
     /// <summary>Сервис сообщений, окно</summary>
-    /// <seealso cref="drz.Abstractions.Services.IMessageService" />
+    /// <seealso cref="IMessageService" />
     public interface IWindowMessageService : IMessageService
     {
     }

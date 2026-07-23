@@ -80,16 +80,15 @@ public class CadInfo : ICadInfo
 
     #region Private Properties
 
-    private string defString => 
-       $"{(IsFallback ? "CAD (fallback):" : "CAD:")}"+
-       $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}"+
+    private string defString =>
+       $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
+       $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} {FileVersion} [{HostArchitecture}]";
 
-    private string longString => 
-       $"{(IsFallback ? "CAD (fallback):" : "CAD:")}"+
-       $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}"+
+    private string longString =>
+       $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
+       $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
        $"{ProductVersion} {FileVersion} [{HostArchitecture}] CompanyName:{CompanyName} Copyright:{Copyright} ProductName:{ProductName}";
-
 
     private string shortString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
@@ -155,5 +154,4 @@ public class CadInfo : ICadInfo
     private static extern int GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
 
     #endregion Private Methods
-
 }

@@ -20,7 +20,6 @@ namespace drz.Updater.Services.SevenZip
         /// </param>
         public SevenZipService(string sevenZipPath = "")
         {
-
             string sevenZipName = "7z.exe";
             _sevenZipPath = Path.Combine(sevenZipPath, sevenZipName);
         }
@@ -275,9 +274,5 @@ namespace drz.Updater.Services.SevenZip
                 arguments += " -mhe=on";
             }
         }
-
     }
 }
-
-
-

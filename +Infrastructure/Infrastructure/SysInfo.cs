@@ -9,7 +9,6 @@ namespace drz.Infrastructure.Infrastructure
 {
     public class SysInfo : ISysInfo
     {
-
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
@@ -74,7 +73,6 @@ namespace drz.Infrastructure.Infrastructure
                 }
             }
             catch { }
-
         }
 
         #endregion Public Constructors
@@ -172,10 +170,8 @@ namespace drz.Infrastructure.Infrastructure
         {
             double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
             return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
-
         }
 
         #endregion Private Methods
-
     }
 }

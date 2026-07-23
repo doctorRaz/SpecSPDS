@@ -1,4 +1,4 @@
-﻿using drz.Abstractions.Services;
+﻿using drz.Abstractions.Services.Message;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -75,7 +75,6 @@ namespace drz.CadServices.Services
         /// </returns>
         private static MethodInfo FindCreateMessage()
         {
-
             Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
             foreach (Assembly? assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -97,7 +96,6 @@ namespace drz.CadServices.Services
                     }
                 }
                 catch { } // Пропускаем нативные и смешанные сборки
-
             }
 
             sw.Stop();
@@ -106,8 +104,6 @@ namespace drz.CadServices.Services
 
             return null;
         }
-
-        
 
         #endregion Private Methods
     }

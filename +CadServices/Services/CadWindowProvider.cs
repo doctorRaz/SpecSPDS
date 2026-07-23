@@ -2,14 +2,14 @@
 using System;
 using System.Diagnostics;
 
-
 #if !TEST
+
 using HostMgd.ApplicationServices;
+
 #endif
 
 namespace drz.CadServices.Services
 {
-
     /// <summary>
     /// Указатель на окно отвязан от Cad
     /// </summary>
@@ -48,12 +48,10 @@ namespace drz.CadServices.Services
     /// <seealso cref="IWindowHandleProvider" />
     public class CadWindowProvider_Cad : IWindowHandleProvider
     {
-
 #if !TEST
         public IntPtr Handle => Application.MainWindow.Handle;
 #else
         public IntPtr Handle => IntPtr.Zero;
 #endif
-
     }
 }

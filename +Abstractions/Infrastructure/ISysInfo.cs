@@ -6,7 +6,7 @@ using System;
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о системе </summary>
-    public interface ISysInfo: IStringConvertible
+    public interface ISysInfo : IStringConvertible
     {
         #region Public Properties
 

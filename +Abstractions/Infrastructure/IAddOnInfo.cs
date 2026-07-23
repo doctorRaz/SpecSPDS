@@ -3,7 +3,7 @@
 namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Информация о сборке </summary>
-    public interface IAddOnInfo: IStringConvertible
+    public interface IAddOnInfo : IStringConvertible
     {
         #region Public Properties
 

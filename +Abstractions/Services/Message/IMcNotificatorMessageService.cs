@@ -1,4 +1,4 @@
-﻿namespace drz.Abstractions.Services
+﻿namespace drz.Abstractions.Services.Message
 {
     /// <summary>
     /// Сервис сообщений мультикад уведомления

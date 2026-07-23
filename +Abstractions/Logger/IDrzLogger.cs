@@ -1,6 +1,5 @@
 ﻿//https://replit.com/@razygraev/Log-Service-interface
 using System;
-using System.Runtime.CompilerServices;
 
 namespace drz.Abstractions.Logger
 {
@@ -82,7 +81,7 @@ namespace drz.Abstractions.Logger
         /// <summary>Fors the trace event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForTraceEvent();
-        
+
         /// <summary>Fors the warning event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForWarnEvent();

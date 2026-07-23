@@ -42,6 +42,7 @@ namespace drz.LogBootstrap.drzNLog
             _inner.Property(name, value);
             return this;
         }
+
         public ILogEventBuilder Properties(IEnumerable<KeyValuePair<string, object>> properties)
         {
             if (properties == null)
@@ -55,8 +56,6 @@ namespace drz.LogBootstrap.drzNLog
             }
             return this;
         }
-
-
 
         #endregion Public Methods
     }

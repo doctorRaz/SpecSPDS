@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace drz.Updater.Services.SevenZip
+﻿namespace drz.Updater.Services.SevenZip
 {
     /// <summary>
     /// Уровень сжатия архива 7-Zip.

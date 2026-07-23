@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace drz.Abstractions.Infrastructure
+﻿namespace drz.Abstractions.Infrastructure
 {
     /// <summary>Предоставляет методы для строкового представления объекта.</summary>
     public interface IStringConvertible

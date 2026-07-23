@@ -1,6 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
+using drz.Abstractions.Services.Message;
 using drz.Updater.Services;
 
 namespace drz.Updater
@@ -31,17 +31,17 @@ namespace drz.Updater
             _messageServices.ConsoleMessage(addOnInfo.ProductName);
 
             Run();
-
         }
+
         // получаю:
-        //	adonInfo, 
+        //	adonInfo,
         //	message
-        //	logger 
-        //	флаг обновления: 
-        //		не обновлять, 
+        //	logger
+        //	флаг обновления:
+        //		не обновлять,
         //		проверять спрашивать
         //		обновлять молча
-        //	флаг как запущен обновлятор: 
+        //	флаг как запущен обновлятор:
         //		руками
         //		программно
         //-----------------
@@ -86,20 +86,15 @@ namespace drz.Updater
         // 	если все прошло хорошо удаляем распакованный архив и сообщаем юзеру, что обновились (ком строка или нотифай)
         //	если плохо месадж бокс, что косяк с обновлением и просьбой закрыть нк и запустить батник (распаковать бэкап на место старого архива)
 
-
         /// <summary>Runs this instance.</summary>
         /// <returns></returns>
         public bool Run()
         //public   bool Run(IAddOnInfo addOnInfo, IMessageService msg, IDrzLoggerFactory drzLoggerFactory, UpdateMode updateMode, bool isManual = false)
         {
-
-
-
             _logger.Debug("Run");
             _logger.DebugCaller("Архив создан");
-            _messageServices.ConsoleMessage(_addOnInfo.ProductName+".Run");
+            _messageServices.ConsoleMessage(_addOnInfo.ProductName + ".Run");
             return true;
         }
-
     }
 }

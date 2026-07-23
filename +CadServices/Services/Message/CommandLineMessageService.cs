@@ -1,12 +1,12 @@
 ﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
+using drz.Abstractions.Services.Message;
 using System;
-
-
 
 //все связанное с HostMgd в отдельную сборку CadInfrastructure
 #if !TEST
+
 using HostMgd.ApplicationServices;
+
 #endif
 
 namespace drz.CadServices.Services
@@ -103,7 +103,6 @@ namespace drz.CadServices.Services
 #else
                         Console.WriteLine(formatted);
 #endif
-
         }
 
         #endregion Private Methods

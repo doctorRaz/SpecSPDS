@@ -44,6 +44,7 @@
         /// каталог логов GDC
         /// </summary>
         public const string LogsDir = "LogsDir";
+
         #endregion GDC
 
         #region var
@@ -62,6 +63,7 @@
         /// каталог логов var
         /// </summary>
         public const string FinalLogsDir = "FinalLogsDir";
+
         #endregion var
     }
 }

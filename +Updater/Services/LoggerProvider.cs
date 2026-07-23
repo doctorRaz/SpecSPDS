@@ -1,7 +1,4 @@
-﻿using drz.Abstractions.Logger;
-using System;
-
-namespace drz.Updater.Services
+﻿namespace drz.Updater.Services
 {
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта
@@ -27,9 +24,6 @@ namespace drz.Updater.Services
 
         //internal static IDrzLogger For<T>(string productName) => _service.Value.GetLogger<T>(productName);
 
-
         #endregion Internal Methods
     }
-
-
 }

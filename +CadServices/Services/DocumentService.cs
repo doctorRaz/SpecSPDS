@@ -44,7 +44,6 @@ namespace drz.CadServices.Services
 #else
                                 return "Doc Name TEST";
 #endif
-
             }
         }
 
@@ -58,7 +57,6 @@ namespace drz.CadServices.Services
 #else
                 return true;
 #endif
-
             }
         }
 

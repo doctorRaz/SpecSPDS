@@ -86,7 +86,7 @@ namespace drz.LogBootstrap.Builder
                 ApplyCommonVariables(factory, logName, logsDir, currentLevel);
             }
 
-            // писать в лог результат создания фабрики 
+            // писать в лог результат создания фабрики
             // 🔴 ВАЖНО: только после того как конфиг установлен
             WriteFactoryDiagnostics(factory, productName, isFallback, configException);
 
@@ -248,7 +248,7 @@ namespace drz.LogBootstrap.Builder
                     .Property("null", "Properties is null")
                     .Property("null", "Properties is null")
                     .Exception(ex)
-                    .Log();                 
+                    .Log();
                  */
 
                 string msg = $"LogFactory initialized: {productName};\n" +

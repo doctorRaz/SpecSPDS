@@ -133,7 +133,7 @@ namespace dRz.Core.Services
             {
                 //todo ВСЕ диалоги переделать на интерфейс сообщений
 #if NC || AC
-              //  DocumentManager.MdiActiveDocument.Editor.WriteMessage("\n" + ex.Message);
+                //  DocumentManager.MdiActiveDocument.Editor.WriteMessage("\n" + ex.Message);
 #else
                 System.Windows.MessageBox.Show(ex.Message);
 #endif

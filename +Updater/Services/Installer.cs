@@ -26,7 +26,7 @@ namespace drz.Updater.Services
             if (File.Exists(targetFile))//todo переименование вынести в метод
             {
                 string backupFile = GetBackupName(targetFile);
-                              
+
                 File.Move(targetFile, backupFile);//rename
             }
 
@@ -42,7 +42,7 @@ namespace drz.Updater.Services
 
             string name = Path.GetFileName(file);
 
-              // file.bak
+            // file.bak
             string backup = Path.Combine(directory, name + ".bak");
 
             if (!File.Exists(backup))
@@ -57,9 +57,8 @@ namespace drz.Updater.Services
 
                 if (!File.Exists(backup))
                     return backup;
-            }                       
+            }
         }
-
 
         /// <summary>Moves the directory files with backup.</summary>
         /// <param name="sourceDirectory">The source directory.</param>
@@ -68,10 +67,8 @@ namespace drz.Updater.Services
         string sourceDirectory,
         string targetDirectory)
         {
-
             if (!Directory.Exists(sourceDirectory))
                 return false;
-
 
             foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
@@ -94,12 +91,8 @@ namespace drz.Updater.Services
             {
                 return false;
             }
-
         }
-
-
     }
-
 
     public static class PathEx
     {

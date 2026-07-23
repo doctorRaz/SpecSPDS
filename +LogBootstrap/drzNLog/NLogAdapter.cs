@@ -3,7 +3,6 @@
 using drz.Abstractions.Logger;
 using NLog;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace drz.LogBootstrap.drzNLog
 {

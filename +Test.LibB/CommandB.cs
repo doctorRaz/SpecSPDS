@@ -76,7 +76,7 @@ namespace drz.Lib_B
             AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandB)}");
 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());            
         }
     }
 }
