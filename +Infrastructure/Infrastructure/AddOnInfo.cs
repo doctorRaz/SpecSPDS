@@ -278,7 +278,7 @@ namespace drz.Infrastructure.Infrastructure
             Version? version = assembly.GetName().Version;
 
             // 1. Попробуем вычислить из Build/Revision
-            DateTime? dt = TryGetBuildDate(version);
+            DateTime? dt = TryGetBuildDate(version!);
             if (dt.HasValue)
             {
                 isAuto = true;

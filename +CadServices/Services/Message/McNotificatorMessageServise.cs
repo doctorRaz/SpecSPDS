@@ -77,7 +77,7 @@ namespace drz.CadServices.Services
         {
             Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
-            foreach (Assembly? assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 try
                 {

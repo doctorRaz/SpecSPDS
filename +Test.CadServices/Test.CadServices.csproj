@@ -10,7 +10,7 @@
 		<Product>dRz.CadServices</Product>
 		<InformationalVersion>CadServices for nanoCad</InformationalVersion>
 
-		<Nullable>enable</Nullable>
+		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
 		<ImplicitUsings>disable</ImplicitUsings>
