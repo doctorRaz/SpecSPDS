@@ -10,7 +10,7 @@ namespace drz.Abstractions.Services.Message
 
         /// <summary> Сообщение в консоль CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически. В случае, если ком.строка недоступна,<br/>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически. В случае, если ком.строка недоступна,<br/>
         /// рекомендуется реализовывать вызов <see cref="InfoMessage"/> с теми же параметрам </param>
         /// <example>Пример использования в C#
         /// <code language="cs">
@@ -24,7 +24,7 @@ namespace drz.Abstractions.Services.Message
 
         /// <summary> Сообщение об ошибке, не вызывающей критическую остановку выполнения кода </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[
@@ -37,7 +37,7 @@ namespace drz.Abstractions.Services.Message
 
         /// <summary> Сообщение об исключении. Как правило, блокирует дальнейшее выполнение кода </summary>
         /// <param name="ex">Полное описание ошибки</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[
@@ -63,7 +63,7 @@ namespace drz.Abstractions.Services.Message
 
         /// <summary> Информационное сообщение для CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
-        /// <param name="callerName">Вызывающий метод. null - вычисляется автоматически</param>
+        /// <param name="caller">Вызывающий метод. null - вычисляется автоматически</param>
         /// <example>Пример использования в C#
         /// <code language="cs">
         /// <![CDATA[

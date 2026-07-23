@@ -38,8 +38,6 @@ namespace drz.Abstractions.Logger
 
         /// <summary>Debugs the specified message.</summary>
         /// <param name="message">The message.</param>
-        /// <param name="line">The line.</param>
-        /// <param name="memberName">Name of the member.</param>
         void Debug(string message);
 
         /// <summary>Logs an error message.</summary>
