@@ -6,6 +6,9 @@ using System;
 
 namespace drz.Src.Infrastructure
 {
+    /// <summary>
+    /// Класс чисто для укорочения вызовов service or infrastructure в коде, чтобы не писать Services.Get&lt;IService&gt;()
+    /// </summary>
     internal static class AddOnContext
     {
         #region Private Fields
@@ -54,28 +57,22 @@ namespace drz.Src.Infrastructure
 
         #region Internal Methods
 
-        //todo переделать на фабрику??
-        internal static IMessageService GetMessageService(MessageServiceType type)
+        /// <summary>Gets the message service.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentOutOfRangeException">type</exception>
+        internal static IMessageService GetMessageService(MessageServiceType type)// todo переделать на фабрику??
         {
-            switch (type)
+            return type switch
             {
-                case MessageServiceType.McNotifi:
-                    return Services.Get<IMcNotificatorMessageService>();
-
-                case MessageServiceType.CommandLine:
-                    return Services.Get<ICommandLineMessageService>();
-
-                case MessageServiceType.Window:
-                    return Services.Get<IWindowMessageService>();
-
-                case MessageServiceType.Default:
-                    return DocService.IsActive
-                        ? Services.Get<ICommandLineMessageService>()
-                        : Services.Get<IWindowMessageService>();
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type));
-            }
+                MessageServiceType.McNotifi => Services.Get<IMcNotificatorMessageService>(),
+                MessageServiceType.CommandLine => Services.Get<ICommandLineMessageService>(),
+                MessageServiceType.Window => Services.Get<IWindowMessageService>(),
+                MessageServiceType.Default => DocService.IsActive
+                                        ? Services.Get<ICommandLineMessageService>()
+                                        : Services.Get<IWindowMessageService>(),
+                _ => throw new ArgumentOutOfRangeException(nameof(type)),
+            };
         }
 
         /// <summary>
