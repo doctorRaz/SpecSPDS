@@ -9,7 +9,7 @@ namespace drz.LogBootstrap.Diagnostics
 
         /// <summary>
         /// Читает LogLevel из файла.
-        /// Если файла нет — возвращает defaultLevel.
+        /// Если файла нет — возвращает [defaultLevel = LogLevel.Off].
         /// Если файл пустой или текст некорректный — возвращает fallbackIfEmpty.
         /// </summary>
         /// <param name="path">Name of the file.</param>`
@@ -20,10 +20,10 @@ namespace drz.LogBootstrap.Diagnostics
             //передавать каталог ассембле сборки
             //получать уровни для диагностики и для логера
 
-            //если файла настроек нет
+            //если файла diagnostic.mode нет
             LogLevel defaultLevel = LogLevel.Off;
 
-            //файл настроек есть, но уровень определить не удалось
+            //файл diagnostic.mode есть, но уровень определить не удалось
             LogLevel fallbackIfEmpty = TryFromString(fallbackLevelName, LogLevel.Trace);
 
             try

@@ -14,15 +14,25 @@ namespace drz.LogBootstrap.Diagnostics
     {
         #region Private Fields
 
-        private const string logName = "nlog-drzTools-internal";
+        //private const string logName = "nlog-drzTools-internal";
         private const int MaxArchiveFiles = 5;
+
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
         private static bool _initialized = false;
+        private static string _logDir;
 
         #endregion Private Fields
 
         #region Public Methods
+
+        /// <summary>Gets the log dir.</summary>
+        /// <value>The log dir.</value>
+        internal static string LogDir => _logDir;
+
+        /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
+        /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
+        internal static bool Initialized => _initialized;
 
         // 10 MB
         /// <summary>
@@ -30,29 +40,27 @@ namespace drz.LogBootstrap.Diagnostics
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
         /// </summary>
-        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logDir = null)
+        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string logDir = null)
         {
             lock (_lock)
             {
-                /* Получаем уровень из файла DiagnosticMode
+                /* Получаем уровень из файла Diagnostic.Mode
                     Если файла нет — Off (ничего не делаем).
                         Если файл создан, но пустой — Trace (максимум инфы)
-                        иначе уровень из файла.
+                        иначе уровень из файла Diagnostic.Mode.
                 */
 
-                //string baseDir = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
-
-                //LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDir);
-
-                // 2. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
+                // 1. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
                 if (!_initialized)
                 {
-                    logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools");
+                    logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools", "logs");
 
-                    string currentLogPath = GetInternalLogPath(logDir);
+                    _logDir = logDir;
+
+                    string currentLogPath = GetInternalLogPath(logName);
 
                     // 1. Сначала удаляем 6-й и далее файлы
-                    RotateOldLogs(logDir);
+                    RotateOldLogs(logName);
 
                     // 2. Проверяем размер текущего. Если > 10МБ — переименовываем в архивный
                     CheckCurrentFileSize(currentLogPath);
@@ -84,9 +92,9 @@ namespace drz.LogBootstrap.Diagnostics
                 // Runtime — понижение уровня для увеличения детализации
                 if (requestedLevel != LogLevel.Off && requestedLevel < InternalLogger.LogLevel)
                 {
-                    InternalLogger.Info($"{typeCaller} InternalLogger Level changed {InternalLogger.LogLevel} → {requestedLevel}");
-
                     InternalLogger.LogLevel = requestedLevel;
+
+                    InternalLogger.Info($"{typeCaller} InternalLogger Level changed {InternalLogger.LogLevel} → {requestedLevel}");
                 }
             }
         }
@@ -114,28 +122,26 @@ namespace drz.LogBootstrap.Diagnostics
             catch { }
         }
 
-        private static string GetInternalLogPath(string logDir) =>
-                   Path.Combine(logDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}.log");
+        private static string GetInternalLogPath(string logName) =>
+                   Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}_internal.log");
 
-        /// <summary>
-        /// Rotates the internal logs.
-        /// </summary>
-        /// <param name="logDir">The log dir.</param>
-        private static void RotateOldLogs(string logDir)
+        /// <summary>Rotates the old logs.</summary>
+        /// <param name="logName">Name of the log.</param>
+        private static void RotateOldLogs(string logName)
         {
             try
             {
-                if (!Directory.Exists(logDir))
+                if (!Directory.Exists(LogDir))
                 {
                     return;
                 }
 
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
-                List<FileInfo> files = new DirectoryInfo(logDir)
-                 .GetFiles($"*_{logName}*.log")
-                 .OrderByDescending(f => f.LastWriteTime)
-                 .ToList();
+                List<FileInfo> files = new DirectoryInfo(LogDir)
+                                         .GetFiles($"*_{logName}*.log")
+                                         .OrderByDescending(f => f.LastWriteTime)
+                                         .ToList();
 
                 // Если файлов больше 5, удаляем лишние
                 //if (files.Count > arhivedFilesCount)

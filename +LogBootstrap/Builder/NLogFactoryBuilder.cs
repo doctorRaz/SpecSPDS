@@ -9,6 +9,7 @@ using NLog.Targets;
 using NLog.Targets.Wrappers;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace drz.LogBootstrap.Builder
 {
@@ -36,15 +37,16 @@ namespace drz.LogBootstrap.Builder
             string productName = _addOnInfo.ProductName;
 
             //путь к Diagnostic.Mode
-            string baseDirDiagnostyc = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
-
-            LogLevel requestedLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostyc);
-
-            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogLoggerFactory).FullName}.{productName}", requestedLevel);
 
             string logName = $"{productName}{_addOnInfo.CadCode}";// ${shortdate}_{logName}.log;
 
-            string logsDir = _addOnInfo.AppDataProductLogPath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), productName, "logs"); // _appDataProductLogPathProvider();
+            string logsDir = _addOnInfo.AppDataProductLogPath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                                              // productName, "logs"); // _appDataProductLogPathProvider();
+            string baseDirDiagnostyc = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
+
+            LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostyc);
+
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{productName}]", internalLogLevel, logName, logsDir);
 
             Exception configException = null;
 
@@ -88,7 +90,7 @@ namespace drz.LogBootstrap.Builder
 
             // писать в лог результат создания фабрики
             // 🔴 ВАЖНО: только после того как конфиг установлен
-            WriteFactoryDiagnostics(factory, productName, isFallback, configException);
+            LoggingFactoryInfo(factory, productName, logName, logsDir, isFallback, configException);
 
             return factory;
         }
@@ -104,21 +106,13 @@ namespace drz.LogBootstrap.Builder
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
-#if DEBUG
-            // Если файла уровня нет — Debug.
-            LogLevel level = LogLevel.Debug;
-#else
-            // Если файла нет — Info.
+            // Если currentLevel-OFF значит не найдены  файлы ни Log.Level нии конфиг
+            // принудительно задаем уровень — Info.
             LogLevel level = LogLevel.Info;
-            // Если файл есть, но пустой —Trace
-            //string fallbackLevelName = "Trace";
-#endif
 
             // Если файла уровня нет — Off (ничего не делаем).
             // Если файл создан, но пустой — Trace (максимум инфы)
             // иначе уровень из файла.
-            //LogLevel currentLevel = LogLevelReader.GetLevelFromFile(LogKeys.LogLevel, fallbackLevelName);
-
             if (currentLevel != LogLevel.Off)
             {
                 level = currentLevel;
@@ -218,15 +212,17 @@ namespace drz.LogBootstrap.Builder
 #endif
         }
 
-        /// <summary>
-        /// Writes the factory diagnostics.
-        /// </summary>
+        /// <summary>Loggings the factory information.</summary>
         /// <param name="factory">The factory.</param>
         /// <param name="productName">Name of the product.</param>
+        /// <param name="logName">Name of the log.</param>
+        /// <param name="logDir">The log dir.</param>
         /// <param name="isFallback">if set to <c>true</c> [is fallback].</param>
         /// <param name="configException">The configuration exception.</param>
-        private void WriteFactoryDiagnostics(LogFactory factory,
+        private void LoggingFactoryInfo(LogFactory factory,
                                              string productName,
+                                             string logName,
+                                             string logDir,
                                              bool isFallback,
                                              Exception configException)
         {
@@ -234,41 +230,30 @@ namespace drz.LogBootstrap.Builder
             {
                 Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName);
 
-                // Internal log level
-                LogLevel internalLevel = InternalLogger.LogLevel;
+                //  метод создания события на основе условий
+                LogEventBuilder evt = configException != null ? log.ForErrorEvent() :
+                                 isFallback ? log.ForWarnEvent() :
+                                                           log.ForInfoEvent();
 
-                // Factory min level
-                LogLevel effectiveLevel = GetEffectiveMinLevel(log);
+                evt
+                    .Message("LogFactory initialized")
+                    .Property("ProductName", productName)
+                    .Property("LogsDirectory", logDir)
+                    .Property("LogName", $"YYYY-MM-DD_{logName}.log")
+                    .Property("ConfigSource", isFallback ? "Fallback (programmatic)" : $"External ({GetConfigurationFile(factory)})")
+                    .Property("LogLevel", GetEffectiveMinLevel(log));
 
-                //todo logger.For_XXXX_Event
-                /*
-                  _logger.ForErrorEvent()
-                    .Message("Properties is null")
-                    .Property("name", 10)
-                    .Property("null", "Properties is null")
-                    .Property("null", "Properties is null")
-                    .Exception(ex)
+                if (InternalLogger.LogLevel != LogLevel.Off)
+                {
+                    evt
+                    .Property("InternalLogsDirectory", Path.GetDirectoryName(InternalLogger.LogFile))
+                    .Property("InternalLogName", $"YYYY-MM-DD_{logName}_internal.log");
+                }
+
+                evt
+                    .Property("InternalLogLevel", InternalLogger.LogLevel)
+                    .Exception(configException)
                     .Log();
-                 */
-
-                string msg = $"LogFactory initialized: {productName};\n" +
-                                $"ConfigSource: {(isFallback ? "Fallback (programmatic)" : "External (nlog.config)")};\n" +
-                                $"EffectiveMinLevel: {effectiveLevel};\n" +
-                                $"InternalLoggerLevel: {internalLevel}";
-
-                if (isFallback)
-                {
-                    log.Warn(msg);
-                }
-                else
-                {
-                    log.Info(msg);
-                }
-
-                if (configException != null)
-                {
-                    log.Error(configException, configException.Message);
-                }
             }
             catch { }// Никогда не роняем приложение из-за диагностики логгера
         }
@@ -319,6 +304,11 @@ namespace drz.LogBootstrap.Builder
             }
 
             return LogLevel.Off;
+        }
+
+        private static string GetConfigurationFile(LogFactory factory)
+        {
+            return (factory.Configuration as XmlLoggingConfiguration)?.AutoReloadFileNames.FirstOrDefault();
         }
     }
 }

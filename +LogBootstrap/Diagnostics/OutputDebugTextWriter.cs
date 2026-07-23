@@ -27,7 +27,7 @@ namespace drz.LogBootstrap.Diagnostics
         /// <param name="value">Строка для записи.</param>
         public override void Write(string value)
         {
-            Debug.Write("[NLog] " + value);
+            Debug.Write(value);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace drz.LogBootstrap.Diagnostics
         /// <param name="value">Строка для записи. Если <paramref name="value" /> имеет значение null, записывается только признак конца строки.</param>
         public override void WriteLine(string value)
         {
-            Debug.WriteLine("[NLog] " + value);
+            Debug.WriteLine(value);
         }
 
         #endregion Public Methods
