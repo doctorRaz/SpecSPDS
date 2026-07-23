@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<!--<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />-->
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
