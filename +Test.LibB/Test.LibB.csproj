@@ -5,6 +5,7 @@
 		<RootNamespace>drz.Lib_B</RootNamespace>
 		<Description>2 чистилка bak и копий</Description>
 		<AssemblyTitle>dRz.Lib_B</AssemblyTitle>
+		<Nullable>enable</Nullable>
 		<Product>Lib_B</Product>
 		<InformationalVersion>Cleaner for 2</InformationalVersion>
 	</PropertyGroup>

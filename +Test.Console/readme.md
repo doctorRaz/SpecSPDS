@@ -1,16 +1,19 @@
 
 ### Предполагаемая структура зависимостей
 
+Chat GPT
+
+не совсем верно но пойдет
+
 ```text
                            Abstractions
                                  │
-          ┌──────────────┬───────┼──────────────┬───────────────┐
-          │              │       │              │        |      │
-          │              │       │              │        |      │
-   LogBootstrap   Test.CadServices   Test.Infrastructure |  Test.LibB
-          │                                              │
-          │                                              ▼
-          │                                         Test.LibA
+          ┌──────────────┬───────┼──────────────┬────────┬──────┐
+          │              │       │              │        │      │
+          │              │       │              │        │      │
+   LogBootstrap   Test.CadServices   Test.Infrastructure │  Test.LibB
+    │     │                                              │                                              
+   NLog   │                                         Test.LibA
           │
           └──────────────┐
                          ▼

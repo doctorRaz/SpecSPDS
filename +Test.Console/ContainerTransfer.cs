@@ -1,53 +1,62 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-using drz.Lib_B;
-using drz.Src.Infrastructure;
+using drz.AddOnRuntime;
+using drz.Lib_A;
+using System.Diagnostics;
 
+//using static drz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Lib_A
+namespace drz.SpecSPDS.Test
 
 {
     /// <summary>
-    /// 
+    /// Выполняет однократную инициализацию контейнера сервисов
+    /// и глобального контекста <see cref="AddOnCtx"/>.
     /// </summary>
-    public class CommandA
+    internal class ContainerTransfer
     {
         #region Private Fields
 
+        private static bool _isAddOnCompositionRoot;
         private readonly IDrzLogger _logger;
 
         #endregion Private Fields
 
         //логгер
 
-        //private readonly IAddOnServices _services;
+        //контейнер создан
 
-        //private static bool _isAddOnCompositionRoot;//контейнер наполнен
+        #region Internal Constructors
 
-        #region Public Constructors
+        /// <summary>
+        /// Инициализирует контейнер сервисов AddOn при первом создании экземпляра
+        /// и записывает информацию об успешной инициализации в журнал.
+        /// </summary>
+        internal ContainerTransfer()
 
-        /// <summary>Initializes a new instance of the <see cref="CommandA"/> class.</summary>
-        /// <param name="services">The services.</param>
-        public CommandA(IAddOnServices services)
         {
+            //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
+            // один раз в точке входа /Rtm.IExtensionApplication/
+            AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransfer).Assembly);
+
             // экземпляр копии контейнера by ref
-            AddOnCtx. Initialize(services);
+            AddOnCtx.Initialize(root.Get<IAddOnServices>());
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(CommandA));
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransfer));
 
-            _logger.InfoCaller("CommandB Initialized");
+            _logger.InfoCaller("Initialized");
+            _isAddOnCompositionRoot = true;//сервис поднялся
         }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
-        #region Public Methods
+        #region Internal Methods
 
-        /// <summary>Commands a run.</summary>
-        public void CommandA_Run()
+        /// <summary>Containers the transfer run.</summary>
+        internal void ContainerTransfer_Run()
         {
             System.Exception ex = new System.Exception("Properties is null");
 
@@ -87,13 +96,12 @@ namespace drz.Lib_A
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
 
-            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandA)}");
+            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(ContainerTransfer)}");
 
-            CommandB c = new CommandB(AddOnCtx.Services);
-            c.CommandB_Run();
+            CommandA c = new CommandA(AddOnCtx.Services);
+            c.CommandA_Run();
         }
 
-        #endregion Public Methods
+        #endregion Internal Methods
     }
 }
-

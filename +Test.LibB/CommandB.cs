@@ -10,12 +10,17 @@ using drz.Src.Infrastructure;
 namespace drz.Lib_B
 
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CommandB
     {
         private readonly IDrzLogger _logger;//логгер
 
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
+        /// <summary>Initializes a new instance of the <see cref="CommandB"/> class.</summary>
+        /// <param name="services">The services.</param>
         public CommandB(IAddOnServices services)
         {
             if (!_isAddOnCompositionRoot)
@@ -33,7 +38,8 @@ namespace drz.Lib_B
             _logger.InfoCaller("CommandB Initialized");
         }
 
-        public void Run()
+        /// <summary>Commands the b run.</summary>
+        public void CommandB_Run()
         {
             System.Exception ex = new System.Exception("Properties is null");
 
@@ -76,6 +82,7 @@ namespace drz.Lib_B
             AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandB)}");
 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+            //если подменить сборку аддона, то покажет новый номер 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());            
         }
     }

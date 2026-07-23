@@ -6,18 +6,19 @@
 		<OutputType>Exe</OutputType>
 		<PlatformTarget>x64</PlatformTarget>
 		<Nullable>enable</Nullable>
-				<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<UseWPF>true</UseWPF>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
 		<!--для GeneratedCompile.cs не удалять-->
 		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
-				<!--*******-->
+		<!--*******-->
+	
 		<Description>Отладка в консоли</Description>
-		<RootNamespace>drz.SpecSpds.Test</RootNamespace>
-		<AssemblyTitle>Test.Cmd</AssemblyTitle>
-		
+		<RootNamespace>drz.$(SolutionName).Test</RootNamespace>
+		<AssemblyTitle>$(SolutionName).Cmd</AssemblyTitle>
+
 		<!--metadata-->
 		<CadFamily>TEST</CadFamily>
 		<CadCode>t</CadCode>
