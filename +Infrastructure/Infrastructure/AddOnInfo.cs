@@ -91,7 +91,7 @@ namespace drz.Infrastructure.Infrastructure
 
             AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
 
-            TitlePrefix = $"{ProductName} v.{RunningVersion} : ";
+            ProductTitlePrefix = $"{ProductName} v.{RunningVersion} : ";
 
             FileInfo? package = FindPackageFile(AssemblyDirectory, ProductName);
 
@@ -187,8 +187,11 @@ namespace drz.Infrastructure.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string ProductName { get; }
 
+        /// <summary>Возвращает ProductName+CadCode.</summary>
+        public string ProductFamily => $"{ProductName}{CadCode}";
+
         /// <summary>Возвращает ProductName v.RunningVersion.</summary>
-        public string TitlePrefix { get; }
+        public string ProductTitlePrefix { get; }
 
         /// <summary>
         /// Возвращает путь к корневому каталогу ад дона где находится package
@@ -225,10 +228,13 @@ namespace drz.Infrastructure.Infrastructure
         public string ToLongString()
         {
             return @$"{ProductName} v{RunningVersion}
-  Title: {ProductTitle}
+  ProductTitle: {ProductTitle}
   ProductName: {ProductName}
+  ProductFamily: {ProductFamily}
+  ProductTitlePrefix: {ProductTitlePrefix}
   CadFamily: {CadFamily}
   CadCode: {CadCode}
+  RunningVersion: {RunningVersion}
   InformationalVersion: {InformationalVersion}
   FileName: {FileName}
   File: {AssemblyPath}

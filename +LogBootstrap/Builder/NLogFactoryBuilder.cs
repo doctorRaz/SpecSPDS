@@ -20,6 +20,76 @@ namespace drz.LogBootstrap.Builder
     {
         private readonly IAddOnInfo _addOnInfo;
 
+        #region help
+        //todo не передавать весь addOnInfo, а только строки
+        /*
+        нужны только:
+            string assemblyDirectory = _addOnInfo.AssemblyDirectory;
+            string productName = _addOnInfo.ProductName;
+            string logName = _addOnInfo.ProductFamily;
+            string logsDir = _addOnInfo.AppDataProductLogPath;
+        */
+        //варианты
+        // Если метод можно изменить (Лучший подход)
+        /*
+  // Регистрация в контейнере
+        container.RegisterSingleton<IDrzLoggerFactory>(() => 
+        {
+            var addOnInfo = container.GetInstance<IAddOnInfo>();
+            return NLogBootstrap.GetLoggerFactory(
+                addOnInfo.AssemblyDirectory, 
+                addOnInfo.ApplicationName, 
+                addOnInfo.Environment
+            );
+        });
+
+        // Сигнатура метода
+        public static IDrzLoggerFactory GetLoggerFactory(string dir, string appName, string env)
+        {
+            // Логика инициализации
+        }      
+        */
+        //Передача через DTO-класс (Для чистоты кода)
+        //Если параметров становится больше 3-4, передавать их списком неудобно.
+        //Объедините их в структуру или record:
+        /*
+        // Объявляем компактный рекорд
+
+            public record LoggerConfig(string Directory, string AppName, string Env);
+
+            // Регистрация в контейнере
+            container.RegisterSingleton<IDrzLoggerFactory>(() => 
+            {
+                var addOnInfo = container.GetInstance<IAddOnInfo>();
+                var config = new LoggerConfig(addOnInfo.AssemblyDirectory, addOnInfo.ApplicationName, addOnInfo.Environment);
+    
+                return NLogBootstrap.GetLoggerFactory(config);
+            });
+
+            // Сигнатура метода
+            public static IDrzLoggerFactory GetLoggerFactory(LoggerConfig config)
+            {
+                // Использование: config.Directory, config.AppName
+            }
+        */
+        //Вариант 3. Использование кортежа / Tuple (Без создания новых классов)
+        //Если не хочется создавать новый класс LoggerConfig, можно передать параметры в виде именованного кортежа:
+        /*
+            // Регистрация в контейнере
+            container.RegisterSingleton<IDrzLoggerFactory>(() => 
+            {
+                var addOnInfo = container.GetInstance<IAddOnInfo>();
+                return NLogBootstrap.GetLoggerFactory((addOnInfo.AssemblyDirectory, addOnInfo.ApplicationName));
+            });
+
+            // Сигнатура метода принимает кортеж
+            public static IDrzLoggerFactory GetLoggerFactory((string Directory, string AppName) config)
+            {
+                var path = config.Directory;
+            }
+        */
+        #endregion help
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.
         /// </summary>
@@ -38,7 +108,7 @@ namespace drz.LogBootstrap.Builder
 
             //путь к Diagnostic.Mode
 
-            string logName = $"{productName}{_addOnInfo.CadCode}";// ${shortdate}_{logName}.log;
+            string logName = _addOnInfo.ProductFamily;// ${shortdate}_{logName}.log;
 
             string logsDir = _addOnInfo.AppDataProductLogPath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                                               // productName, "logs"); // _appDataProductLogPathProvider();
@@ -238,6 +308,7 @@ namespace drz.LogBootstrap.Builder
                 evt
                     .Message("LogFactory initialized")
                     .Property("ProductName", productName)
+                    .Property("ProductFamily", _addOnInfo.ProductFamily)
                     .Property("LogsDirectory", logDir)
                     .Property("LogName", $"YYYY-MM-DD_{logName}.log")
                     .Property("ConfigSource", isFallback ? "Fallback (programmatic)" : $"External ({GetConfigurationFile(factory)})")
@@ -252,6 +323,7 @@ namespace drz.LogBootstrap.Builder
 
                 evt
                     .Property("InternalLogLevel", InternalLogger.LogLevel)
+                    .Property("factory_HashCode", factory.GetHashCode().ToString())
                     .Exception(configException)
                     .Log();
             }

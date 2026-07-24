@@ -58,7 +58,7 @@ namespace drz.Infrastructure.Services.Message
             }
 
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
-                _applicationInfo.TitlePrefix + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _applicationInfo.ProductTitlePrefix + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         #endregion Public Methods

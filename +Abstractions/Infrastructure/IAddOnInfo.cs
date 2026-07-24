@@ -79,11 +79,14 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         string ProductName { get; }
 
+        /// <summary>Возвращает ProductName+CadCode.</summary>
+        string ProductFamily { get; }
+
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         string ProductTitle { get; }
 
         /// <summary>Возвращает ProductName v.RunningVersion.</summary>
-        string TitlePrefix { get; }
+        string ProductTitlePrefix { get; }
 
         /// <summary>Gets the repository URL.</summary>
         /// <value>The repository URL.</value>
