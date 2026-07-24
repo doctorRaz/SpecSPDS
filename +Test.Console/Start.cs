@@ -21,7 +21,6 @@ AppSettings я б засунул именно в то, что работает �
 
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
 using System;
 using System.Diagnostics;
 
@@ -49,8 +48,8 @@ namespace drz.SpecSPDS.Test
             //тест проброса объектов и сервисов между библиотеками по цепочке и логгирование
             //Test.Console->Test.LibA->Test.LibB->
             //LibA, LibB знают только интерфейсы, Abstractions
-            ct.ContainerTransfer_Run();
-            _logger.Info("The End");
+            /*ct.ContainerTransfer_Run();*/
+
             AddOnCtx.MsgCmd.InfoMessage("Press any key to exit...");
             Console.ReadKey();
         }
@@ -62,7 +61,5 @@ namespace drz.SpecSPDS.Test
         private static IDrzLogger? _logger;
 
         #endregion Private Fields
-
-       
     }
 }

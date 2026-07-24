@@ -5,7 +5,6 @@ using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.AddOnRuntime;
 using drz.Lib_A;
-using System.Diagnostics;
 
 //using static drz.Src.Infrastructure.AddOnContext;
 
@@ -100,6 +99,9 @@ namespace drz.SpecSPDS.Test
 
             CommandA c = new CommandA(AddOnCtx.Services);
             c.CommandA_Run();
+
+            _logger.Info("The End");
+            AddOnCtx.MsgCmd.InfoMessage("The End");
         }
 
         #endregion Internal Methods

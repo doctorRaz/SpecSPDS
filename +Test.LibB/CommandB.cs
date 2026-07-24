@@ -4,15 +4,13 @@
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
-using drz.Src.Infrastructure;
 using System;
-
 
 namespace drz.Lib_B
 
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class CommandB
     {
@@ -26,10 +24,8 @@ namespace drz.Lib_B
         {
             if (!_isAddOnCompositionRoot)
             {
-  
-
                 // экземпляр копии контейнера by ref
-                AddOnCtx. Initialize(services);
+                AddOnCtx.Initialize(services);
 
                 _isAddOnCompositionRoot = true;//сервис поднялся
             }
@@ -84,13 +80,12 @@ namespace drz.Lib_B
 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
 
-
             //если подменить сборку аддона, то покажет новый номер версии
             AddOnCtx.MsgCmd.InfoMessage($"Замените сборку аддона {AddOnCtx.AddOnInfo.AssemblyPath} на одноименную сборку другой версии");
             AddOnCtx.MsgCmd.InfoMessage("И нажмите любую клавишу");
             Console.ReadKey();//конечно не реализовано))
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
-        
+            AddOnCtx.MsgCmd.InfoMessage("The End");
         }
     }
 }

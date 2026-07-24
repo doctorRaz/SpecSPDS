@@ -5,14 +5,12 @@ global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.Lib_B;
-using drz.Src.Infrastructure;
-
 
 namespace drz.Lib_A
 
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class CommandA
     {
@@ -35,7 +33,7 @@ namespace drz.Lib_A
         public CommandA(IAddOnServices services)
         {
             // экземпляр копии контейнера by ref
-            AddOnCtx. Initialize(services);
+            AddOnCtx.Initialize(services);
 
             _logger = AddOnCtx.NLogFactory.GetLogger(typeof(CommandA));
 
@@ -91,9 +89,10 @@ namespace drz.Lib_A
 
             CommandB c = new CommandB(AddOnCtx.Services);
             c.CommandB_Run();
+
+            AddOnCtx.MsgCmd.InfoMessage("The End");
         }
 
         #endregion Public Methods
     }
 }
-

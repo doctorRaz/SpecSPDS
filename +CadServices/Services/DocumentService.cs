@@ -42,7 +42,7 @@ namespace drz.CadServices.Services
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 return doc.Name;
 #else
-                                return "Doc Name TEST";
+                return "Doc Name TEST";
 #endif
             }
         }

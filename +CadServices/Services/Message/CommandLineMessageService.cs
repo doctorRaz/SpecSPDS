@@ -101,7 +101,7 @@ namespace drz.CadServices.Services
                 }
             }
 #else
-                        Console.WriteLine(formatted);
+            Console.WriteLine(formatted);
 #endif
         }
 
