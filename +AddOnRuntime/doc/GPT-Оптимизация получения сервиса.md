@@ -2,8 +2,8 @@
 
 **User:** dRz  
 **Created:** 7/21/2026 22:36:00  
-**Updated:** 7/22/2026 6:05:50  
-**Exported:** 7/22/2026 6:56:15  
+**Updated:** 7/22/2026 11:43:55  
+**Exported:** 7/23/2026 22:31:03  
 **Link:** [https://chatgpt.com/c/6a5fc9a2-a350-83eb-a350-27600320e9c2](https://chatgpt.com/c/6a5fc9a2-a350-83eb-a350-27600320e9c2)  
 
 ## Prompt:
@@ -1325,6 +1325,1544 @@ Debug.Assert(ReferenceEquals(s1, s2)); // true
 ---
 
 Для твоей архитектуры это особенно удобно: каждая сборка получает только `IAddOnServices`, а дальше может запросить любой общий сервис, зарегистрированный аддоном. Получается единое "пространство сервисов" для всего аддона без статических глобальных объектов и без зависимости библиотек от `SimpleInjector`.
+
+## Prompt:
+22.07.2026, 10:42:09
+
+public static class LibraryContext
+{
+    /// <summary>
+    /// Сервисы текущего аддона.
+    /// </summary>
+    Internal static IAddOnServices Services { get; private set; }
+
+    /// <summary>
+    /// Выполняет инициализацию библиотеки.
+    /// </summary>
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+Для обычного класса так тоже можно, чтобы не объявлять в каждом классе?
+
+## Response:
+22.07.2026, 10:42:09
+
+Да, можно. Более того, для твоей архитектуры это, вероятно, наиболее практичный вариант.
+
+Например, сделать базовый класс:
+
+```csharp
+public abstract class AddOnObject
+{
+    /// <summary>
+    /// Сервисы текущего аддона.
+    /// </summary>
+    protected IAddOnServices Services => LibraryContext.Services;
+}
+```
+
+Любой класс:
+
+```csharp
+public class DocumentProcessor : AddOnObject
+{
+    public void Execute()
+    {
+        var settings = Services.Get<ISettingsService>();
+        var logger = Services.Get<IDrzLoggerFactory>();
+        var messages = Services.Get<IWindowMessageService>();
+
+        ...
+    }
+}
+```
+
+Так не нужно в каждом классе писать
+
+```csharp
+private readonly IAddOnServices _services;
+```
+
+или передавать его через конструктор.
+
+---
+
+### Или даже без базового класса
+
+Если тебя устраивает статический контекст, можно обращаться напрямую:
+
+```csharp
+var logger = LibraryContext.Services.Get<IDrzLoggerFactory>();
+
+var settings = LibraryContext.Services.Get<ISettingsService>();
+```
+
+---
+
+## Что я бы выбрал
+
+Для библиотек аддона я бы сделал именно базовый класс:
+
+```csharp
+public abstract class AddOnObject
+{
+    protected IAddOnServices Services => LibraryContext.Services;
+
+    protected IDrzLoggerFactory LoggerFactory =>
+        Services.Get<IDrzLoggerFactory>();
+
+    protected ISettingsService Settings =>
+        Services.Get<ISettingsService>();
+
+    protected ICommandLineMessageService CommandLine =>
+        Services.Get<ICommandLineMessageService>();
+
+    protected IWindowMessageService Window =>
+        Services.Get<IWindowMessageService>();
+
+    protected IDocumentService Documents =>
+        Services.Get<IDocumentService>();
+}
+```
+
+Тогда код становится очень компактным:
+
+```csharp
+public class MyCommand : AddOnObject
+{
+    public void Execute()
+    {
+        Window.ShowMessage("Hello");
+
+        LoggerFactory.GetLogger<MyCommand>()
+                     .Info("Done");
+
+        Documents.Save();
+    }
+}
+```
+
+Такой подход сохраняет единый экземпляр каждого `Singleton` во всех сборках, при этом не заставляет каждый класс хранить поле `_services` или получать его через конструктор. Для архитектуры плагина, где существует один `CompositionRoot` на аддон, это вполне оправданное решение.
+
+## Prompt:
+22.07.2026, 10:44:43
+
+public abstract class AddOnObject
+{
+    protected IAddOnServices Services => LibraryContext.Services;
+
+    protected IDrzLoggerFactory LoggerFactory =>
+        Services.Get<IDrzLoggerFactory>();
+
+    protected ISettingsService Settings =>
+        Services.Get<ISettingsService>();
+
+    protected ICommandLineMessageService CommandLine =>
+        Services.Get<ICommandLineMessageService>();
+
+    protected IWindowMessageService Window =>
+        Services.Get<IWindowMessageService>();
+
+    protected IDocumentService Documents =>
+        Services.Get<IDocumentService>();
+}
+Этот класс надо дублировать во всех сборках?
+
+## Response:
+22.07.2026, 10:44:44
+
+Нет. Дублировать его не нужно.
+
+Есть несколько вариантов.
+
+### Вариант 1. Самый удачный — вынести в общую библиотеку
+
+Например, в `drz.Abstractions` или `drz.Infrastructure` (в зависимости от того, где находится `LibraryContext`).
+
+```
+drz.Abstractions
+    IAddOnServices
+
+drz.Infrastructure
+    LibraryContext
+    AddOnObject
+```
+
+Тогда все сборки просто наследуются:
+
+```csharp
+public class MyCommand : AddOnObject
+{
+}
+```
+
+Это наиболее чистое решение.
+
+---
+
+### Вариант 2. Вообще отказаться от `AddOnObject`
+
+Сделать `LibraryContext` удобнее:
+
+```csharp
+public static class LibraryContext
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+
+    public static IDrzLoggerFactory LoggerFactory =>
+        Services.Get<IDrzLoggerFactory>();
+
+    public static ISettingsService Settings =>
+        Services.Get<ISettingsService>();
+
+    public static ICommandLineMessageService CommandLine =>
+        Services.Get<ICommandLineMessageService>();
+
+    public static IWindowMessageService Window =>
+        Services.Get<IWindowMessageService>();
+
+    public static IDocumentService Documents =>
+        Services.Get<IDocumentService>();
+}
+```
+
+Использование:
+
+```csharp
+LibraryContext.Window.ShowMessage(...);
+
+LibraryContext.Settings.Load();
+
+LibraryContext.Documents.Save();
+```
+
+Тогда никакой базовый класс вообще не нужен.
+
+---
+
+### Вариант 3. Универсальный базовый класс
+
+Если в большинстве классов нужен логгер, сообщения, настройки и т.д., то один `AddOnObject` в общей библиотеке — хороший вариант.
+
+---
+
+## Что бы я выбрал для твоего проекта
+
+Я бы **не стал делать `Services.Get<T>()` в каждом классе**.
+
+Лучше один раз сделать удобный API:
+
+```csharp
+LibraryContext.LoggerFactory
+LibraryContext.Settings
+LibraryContext.Documents
+LibraryContext.CommandLine
+LibraryContext.Window
+```
+
+или
+
+```csharp
+RT.LoggerFactory
+RT.Settings
+RT.Documents
+```
+
+(аналогично твоему `RT.Info`, `RT.Cad`, `RT.Os`).
+
+Тогда код получается очень читаемым:
+
+```csharp
+LibraryContext.Window.ShowMessage("Ошибка");
+
+LibraryContext.LoggerFactory
+    .GetLogger<MyClass>()
+    .Error(ex);
+
+LibraryContext.Settings.Save();
+```
+
+Для твоей архитектуры с одним экземпляром `CompositionRoot` такой подход выглядит даже естественнее, чем базовый класс: он не требует наследования, работает в обычных и статических классах и не дублируется между сборками.
+
+## Prompt:
+22.07.2026, 10:48:17
+
+LibraryContext положить в интерфейсы?
+Это единственная сборка которая подключена ко всем
+
+## Response:
+22.07.2026, 10:48:21
+
+Я бы **не стал**.
+
+`drz.Abstractions` (интерфейсы) лучше оставить максимально "чистой" библиотекой:
+
+- интерфейсы;
+- enum;
+- DTO;
+- делегаты;
+- атрибуты.
+
+Без статических классов, без логики и без хранения состояния.
+
+`LibraryContext` — это уже **реализация инфраструктуры**, а не абстракция. Он хранит состояние (`IAddOnServices`) и выполняет инициализацию.
+
+Лучше такая структура:
+
+```
+drz.Abstractions
+│
+├── IAddOnServices
+├── ISettingsService
+├── IMessageService
+├── IDocumentService
+└── ...
+
+drz.Infrastructure
+│
+├── LibraryContext
+├── AddOnCompositionRoot
+├── AddOnServices
+└── ...
+```
+
+Если проблема в том, что **не все сборки ссылаются на `drz.Infrastructure`**, то есть два варианта.
+
+### Вариант 1 (предпочтительный)
+
+Все библиотеки аддона подключают `drz.Infrastructure`.
+
+Это нормально. Это инфраструктурная библиотека, и именно она должна содержать такие вещи.
+
+---
+
+### Вариант 2
+
+Если принципиально не хочется, чтобы библиотеки зависели от `drz.Infrastructure`, тогда можно создать отдельную небольшую библиотеку, например:
+
+```
+drz.Runtime
+```
+
+или
+
+```
+drz.Shared
+```
+
+В ней будут:
+
+- `LibraryContext`;
+- `AddOnObject` (если нужен);
+- возможно `RT`.
+
+А `drz.Infrastructure` уже будет использовать эту библиотеку.
+
+---
+
+### Для твоего проекта
+
+Судя по предыдущим обсуждениям, у тебя уже есть что-то вроде `RT.Info`, `RT.Cad`, `RT.Os`.
+
+Я бы объединил всё это в одной небольшой библиотеке времени выполнения:
+
+```
+drz.AddOnRuntime
+│
+├── LibraryContext
+├── RT
+├── AddOnCompositionRoot
+└── ...
+```
+
+А `drz.Abstractions` оставил бы только с интерфейсами.
+
+Это позволит сохранить четкое разделение:
+- **Abstractions** — контракты.
+- **Runtime/Infrastructure** — реализация и глобальный контекст.
+
+## Prompt:
+22.07.2026, 10:51:32
+
+библиотеки аддона не подключают drz.Infrastructure.  о ней знает только сам аддон
+Стараюсь работать через интерфейсы
+
+## Response:
+22.07.2026, 10:51:33
+
+Тогда я бы предложил немного изменить архитектуру.
+
+Если **все библиотеки подключают только `drz.Abstractions`**, а про `drz.Infrastructure` знает только аддон, то именно **`drz.Abstractions` должен содержать только контракты**, а не `LibraryContext`.
+
+Я бы сделал так:
+
+```
+drz.Abstractions
+│
+├── IAddOnServices
+├── ISettingsService
+├── IMessageService
+├── ...
+```
+
+```
+drz.Infrastructure
+│
+├── AddOnCompositionRoot
+├── AddOnServices : IAddOnServices
+└── ...
+```
+
+```
+MyLibrary
+│
+└── public static class LibraryContext
+```
+
+То есть **каждая библиотека имеет свой собственный `LibraryContext`**, но он очень маленький:
+
+```csharp
+public static class LibraryContext
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+```
+
+Во время инициализации аддона:
+
+```csharp
+var services = compositionRoot.Get<IAddOnServices>();
+
+LibraryA.LibraryContext.Initialize(services);
+LibraryB.LibraryContext.Initialize(services);
+LibraryC.LibraryContext.Initialize(services);
+```
+
+При этом **объект `IAddOnServices` один и тот же**. Он содержит ссылку на один контейнер, поэтому:
+
+```csharp
+LibraryA.LibraryContext.Services.Get<ISettingsService>()
+```
+
+и
+
+```csharp
+LibraryB.LibraryContext.Services.Get<ISettingsService>()
+```
+
+вернут **один и тот же экземпляр `ISettingsService`** (если он зарегистрирован как `Singleton`).
+
+---
+
+### Еще один вариант, который мне нравится даже больше
+
+Вообще отказаться от `LibraryContext`.
+
+Сделать во всех библиотеках базовый класс:
+
+```csharp
+public abstract class LibraryBase
+{
+    protected static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+```
+
+Все классы библиотеки наследуются от него.
+
+---
+
+### Но для твоего проекта я бы не рекомендовал помещать `LibraryContext` в `drz.Abstractions`.
+
+Причина архитектурная:
+
+- `IAddOnServices` — это **контракт**.
+- `LibraryContext` — это **глобальное состояние** (singleton + статическое поле).
+
+Смешивать контракты и хранение состояния в одной сборке обычно не стоит.
+
+Я бы оставил `drz.Abstractions` полностью без реализации и без статических объектов. Это позволит в будущем использовать те же интерфейсы с другой реализацией контейнера или даже без DI, не меняя библиотеку контрактов.
+
+## Prompt:
+22.07.2026, 10:54:23
+
+Бывают интерфейсы с реализацией?
+
+## Response:
+22.07.2026, 10:54:24
+
+Да, бывают. Но нужно различать несколько случаев.
+
+### 1. Интерфейс с реализацией методов (C# 8+, .NET Core 3+, .NET 5+)
+
+Начиная с C# 8 интерфейс может содержать реализацию методов:
+
+```csharp
+public interface ILogger
+{
+    void Info(string message)
+    {
+        Console.WriteLine(message);
+    }
+}
+```
+
+**Но в .NET Framework 4.6 это не поддерживается.** А ты используешь .NET 4.6, поэтому этот вариант отпадает.
+
+---
+
+### 2. Интерфейс и вложенные типы
+
+В интерфейсе можно объявлять вложенные типы, но это встречается редко и не подходит для `LibraryContext`.
+
+---
+
+### 3. Интерфейс + статический класс
+
+Это очень распространенный подход.
+
+Например:
+
+```text
+drz.Abstractions
+├── IAddOnServices
+├── ISettingsService
+└── AddOnContext
+```
+
+где
+
+```csharp
+public static class AddOnContext
+{
+    public static IAddOnServices Services { get; internal set; }
+}
+```
+
+Это **не реализация интерфейса**, а просто удобный статический класс рядом с контрактами.
+
+---
+
+## В твоем случае
+
+Я бы даже рассмотрел такой вариант.
+
+В `drz.Abstractions`:
+
+```csharp
+public interface IAddOnServices
+{
+    T Get<T>() where T : class;
+}
+```
+
+```csharp
+public static class AddOnContext
+{
+    public static IAddOnServices Services { get; internal set; }
+
+    public static T Get<T>() where T : class
+    {
+        return Services.Get<T>();
+    }
+}
+```
+
+А в `drz.Infrastructure`:
+
+```csharp
+AddOnContext.Services = new AddOnServices(container);
+```
+
+Тогда любая библиотека сможет написать:
+
+```csharp
+var settings = AddOnContext.Get<ISettingsService>();
+
+var logger = AddOnContext.Get<IDrzLoggerFactory>();
+
+var window = AddOnContext.Get<IWindowMessageService>();
+```
+
+---
+
+## Почему это может быть хорошим решением
+
+Обычно я бы не советовал помещать `AddOnContext` в библиотеку с интерфейсами. Но **в твоей архитектуре**:
+
+- существует только один экземпляр аддона;
+- только аддон выполняет инициализацию;
+- все библиотеки подключают `drz.Abstractions`;
+- библиотеки не знают о `SimpleInjector` и `drz.Infrastructure`.
+
+В такой ситуации `AddOnContext` становится **точкой доступа к контрактам**, а не частью реализации контейнера. Это вполне оправданный компромисс, если ты сознательно строишь архитектуру вокруг единого контекста аддона.
+
+## Prompt:
+22.07.2026, 10:57:27
+
+Если  аддон при загрузке создаст контекст
+Загрузит другой аддон loadfrom
+И второй тоже создаст контекст?
+
+## Response:
+22.07.2026, 10:57:27
+
+Да, и здесь как раз возникает проблема со **статическим `LibraryContext`**.
+
+Все зависит от того, **как загружается `drz.Abstractions.dll`**.
+
+### Случай 1. Общая `drz.Abstractions.dll` (наиболее вероятно)
+
+```
+nanoCAD
+ ├── AddOnA
+ │     └── drz.Abstractions.dll
+ └── AddOnB (LoadFrom)
+       └── использует ту же drz.Abstractions.dll
+```
+
+Тогда существует **один** статический объект:
+
+```csharp
+AddOnContext.Services
+```
+
+Что произойдет:
+
+1. AddOnA:
+
+```csharp
+AddOnContext.Initialize(servicesA);
+```
+
+2. Затем AddOnB:
+
+```csharp
+AddOnContext.Initialize(servicesB);
+```
+
+В результате **все библиотеки обоих аддонов начнут использовать `servicesB`**.
+
+То есть первый аддон потеряет свой контейнер.
+
+---
+
+### Случай 2. Каждый аддон загружен в отдельный `AppDomain`
+
+Тогда у каждого будет свой `AddOnContext`.
+
+Но в nanoCAD/AutoCAD обычно используется **один AppDomain**.
+
+---
+
+### Случай 3. Разные копии `drz.Abstractions.dll`
+
+Если загрузятся именно разные сборки (например, разная версия или разный identity), то статические поля будут раздельными.
+
+Но на это рассчитывать нельзя.
+
+---
+
+## Поэтому я бы **не делал глобальный `AddOnContext`**.
+
+У тебя уже есть гораздо более надежная идея — `IAddOnServices`.
+
+Передавай его туда, где он нужен:
+
+```csharp
+public class Library
+{
+    private readonly IAddOnServices _services;
+
+    public Library(IAddOnServices services)
+    {
+        _services = services;
+    }
+}
+```
+
+или
+
+```csharp
+Library.Initialize(services);
+```
+
+где `services` хранится **внутри конкретной библиотеки**, а не в общей `drz.Abstractions`.
+
+---
+
+## Для твоего проекта я бы предложил еще лучшее решение
+
+Ты уже создаешь:
+
+```csharp
+AddOnCompositionRoot
+```
+
+Добавь в него:
+
+```csharp
+public IAddOnServices Services { get; }
+```
+
+И при загрузке второго аддона будет:
+
+```
+AddOnA
+    CompositionRootA
+        ServicesA
+
+AddOnB
+    CompositionRootB
+        ServicesB
+```
+
+Никаких конфликтов.
+
+---
+
+**Я бы вообще избегал любых статических полей в `drz.Abstractions`**, если есть вероятность одновременной загрузки нескольких аддонов. Иначе ты получишь очень трудноуловимые ошибки, когда второй загруженный аддон начнет "перехватывать" сервисы первого. Для поддержки нескольких независимых аддонов лучше, чтобы каждый экземпляр `IAddOnServices` жил внутри своего `CompositionRoot` и передавался явно тем библиотекам, которые относятся именно к этому аддону.
+
+## Prompt:
+22.07.2026, 11:02:58
+
+Тогда лучший вариант передавать библиотеке сервис явно
+В конструкторе библиотеки делать его internal static
+Для удобства в using классов добавлять алиас
+
+## Response:
+22.07.2026, 11:02:59
+
+Да, для твоей архитектуры это выглядит самым безопасным и масштабируемым решением.
+
+Например, в библиотеке:
+
+```csharp
+public sealed class Library
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public Library(IAddOnServices services)
+    {
+        Services = services ?? throw new ArgumentNullException(nameof(services));
+    }
+}
+```
+
+При инициализации аддона:
+
+```csharp
+var services = compositionRoot.Get<IAddOnServices>();
+
+new Library(services);
+```
+
+После этого любой класс библиотеки может получать сервисы:
+
+```csharp
+using S = MyLibrary.Library;
+
+public class MyClass
+{
+    public void Execute()
+    {
+        var settings = S.Services.Get<ISettingsService>();
+        var logger = S.Services.Get<IDrzLoggerFactory>();
+    }
+}
+```
+
+Или сделать в `Library` удобные свойства:
+
+```csharp
+public sealed class Library
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public static ISettingsService Settings =>
+        Services.Get<ISettingsService>();
+
+    public static IDrzLoggerFactory LoggerFactory =>
+        Services.Get<IDrzLoggerFactory>();
+
+    public static IWindowMessageService Window =>
+        Services.Get<IWindowMessageService>();
+
+    public Library(IAddOnServices services)
+    {
+        Services = services;
+    }
+}
+```
+
+Тогда код станет еще проще:
+
+```csharp
+using S = MyLibrary.Library;
+
+S.Window.ShowMessage("Готово");
+
+S.LoggerFactory.GetLogger<MyClass>()
+               .Info("Выполнено");
+```
+
+### Преимущества такого подхода
+
+- ✔ каждый аддон имеет **свой экземпляр** `IAddOnServices`;
+- ✔ нет глобального статического контекста в `drz.Abstractions`, который может быть перезаписан другим аддоном;
+- ✔ библиотеки знают только об интерфейсах, а не о `SimpleInjector`;
+- ✔ инициализация библиотеки выполняется один раз;
+- ✔ код в классах остается компактным благодаря алиасу `using S = MyLibrary.Library;`.
+
+Единственное, что я бы изменил, — сделал метод инициализации явным вместо использования конструктора:
+
+```csharp
+public static class Library
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        if (Services != null)
+            throw new InvalidOperationException("Library уже инициализирована.");
+
+        Services = services ?? throw new ArgumentNullException(nameof(services));
+    }
+}
+```
+
+Тогда использование становится очевидным:
+
+```csharp
+Library.Initialize(compositionRoot.Get<IAddOnServices>());
+```
+
+По коду сразу видно, что это не создание объекта библиотеки, а ее однократная инициализация. Это лучше отражает назначение класса и исключает случайное повторное создание экземпляров.
+
+## Prompt:
+22.07.2026, 11:13:17
+
+Если код class Library
+Вынести в scr и подключить к библиотекам, где он используется?
+Можно даже без namespace
+
+## Response:
+22.07.2026, 11:13:18
+
+Да, это как раз очень хороший компромисс для твоей архитектуры.
+
+Ты описываешь подход **Shared Source (общий исходный код)** - один `.cs` файл физически лежит в одном месте, а подключается в несколько проектов как `Compile Include`.
+
+## Как это выглядит
+
+### Общий файл `Library.cs`
+
+Например:
+
+```csharp
+using System;
+using drz.Abstractions.Infrastructure;
+using drz.Abstractions.Logger;
+using drz.Abstractions.Services;
+
+/// <summary>
+/// Общий контекст библиотеки.
+/// Подключается как Shared Source в проекты библиотек.
+/// </summary>
+public static class Library
+{
+    /// <summary>
+    /// Сервисы текущего экземпляра аддона.
+    /// У каждого аддона будет свой экземпляр, потому что файл компилируется
+    /// внутрь конкретной библиотеки.
+    /// </summary>
+    internal static IAddOnServices Services { get; private set; }
+
+    /// <summary>
+    /// Инициализация библиотеки.
+    /// Вызывается один раз из аддона.
+    /// </summary>
+    public static void Initialize(IAddOnServices services)
+    {
+        if (Services != null)
+            throw new InvalidOperationException("Library уже инициализирована.");
+
+        Services = services ?? throw new ArgumentNullException(nameof(services));
+    }
+
+    // Удобные свойства
+
+    public static IDrzLoggerFactory LoggerFactory =>
+        Services.Get<IDrzLoggerFactory>();
+
+    public static ISettingsService Settings =>
+        Services.Get<ISettingsService>();
+
+    public static ICommandLineMessageService CommandLine =>
+        Services.Get<ICommandLineMessageService>();
+
+    public static IWindowMessageService Window =>
+        Services.Get<IWindowMessageService>();
+
+    public static IDocumentService Documents =>
+        Services.Get<IDocumentService>();
+}
+```
+
+---
+
+## Подключение файла к проектам
+
+В `.csproj` библиотеки:
+
+<CodeBlock language="xml" content="&lt;ItemGroup&gt;
+  &lt;Compile Include=&quot;..\Shared\Library.cs&quot; Link=&quot;Shared\Library.cs&quot; /&gt;
+&lt;/ItemGroup&gt;"/>
+
+Или через Visual Studio: **Add → Existing Item → Add As Link**.
+
+---
+
+# Почему это особенно хорошо у тебя
+
+Ты боялся этого сценария:
+
+> AddOnA загружает AddOnB через LoadFrom, и второй перезапишет глобальный контекст.
+
+С Shared Source этого не происходит.
+
+### Что реально получится
+
+```text
+AddOnA
+ └── LibraryA.dll
+      └── static Library (экземпляр A)
+
+AddOnB
+ └── LibraryB.dll
+      └── static Library (экземпляр B)
+```
+
+Хотя код одинаковый, **тип `Library` компилируется внутрь каждой сборки отдельно**.
+
+Поэтому:
+
+```csharp
+// AddOnA
+Library.Initialize(servicesA);
+
+// AddOnB
+Library.Initialize(servicesB);
+```
+
+Это **два разных статических поля**.
+
+Никакого конфликта между аддонами.
+
+---
+
+# Можно ли без namespace?
+
+Технически - да.
+
+Файл без namespace:
+
+```csharp
+public static class Library
+{
+}
+```
+
+Но я бы **не рекомендовал**.
+
+### Почему
+
+Если две библиотеки подключат один и тот же shared-файл, а затем одна библиотека будет ссылаться на другую, ты получишь конфликт типов:
+
+```text
+Library уже определен
+```
+
+### Лучше минимальный namespace
+
+Например:
+
+```csharp
+namespace drz.Shared
+{
+    public static class Library
+    {
+    }
+}
+```
+
+И в коде использовать алиас:
+
+```csharp
+using S = drz.Shared.Library;
+
+S.Window.ShowMessage("Hello");
+S.Settings.Save();
+```
+
+Это почти так же коротко, но безопасно.
+
+---
+
+# Я бы сделал именно так
+
+## Финальная архитектура
+
+### `drz.Abstractions`
+
+Только контракты:
+
+- `IAddOnServices`
+- `ISettingsService`
+- `IDocumentService`
+- `IDrzLoggerFactory`
+- и т.д.
+
+### `drz.Infrastructure`
+
+Только реализация:
+
+- `AddOnCompositionRoot`
+- `AddOnServices`
+- `SimpleInjector`
+- `NLogBootstrap`
+
+### `Shared/Library.cs`
+
+Подключается как **linked source** в библиотеки, которым нужен удобный доступ к сервисам.
+
+### Инициализация в аддоне
+
+```csharp
+var services = compositionRoot.Get<IAddOnServices>();
+
+drz.Shared.Library.Initialize(services);
+```
+
+### Использование
+
+```csharp
+using S = drz.Shared.Library;
+
+public class MyCommand
+{
+    public void Execute()
+    {
+        S.Window.ShowMessage("Готово");
+
+        S.LoggerFactory
+            .GetLogger<MyCommand>()
+            .Info("Выполнено");
+
+        S.Documents.Save();
+    }
+}
+```
+
+Для твоего случая это, на мой взгляд, лучший баланс между:
+
+- изоляцией аддонов,
+- отсутствием глобальных конфликтов,
+- работой только через интерфейсы,
+- отсутствием зависимости библиотек от Infrastructure,
+- и минимальным количеством кода в рабочих классах.
+
+## Prompt:
+22.07.2026, 11:17:16
+
+Но если объект в контейнере изменится, то изменятся экземпляры во всех сборках? Синглетон ссылочный
+
+## Response:
+22.07.2026, 11:17:16
+
+Да. Если все библиотеки используют **один и тот же `IAddOnServices`**, который обращается к **одному контейнеру**, то `Singleton` будет общим для всех.
+
+Например:
+
+```csharp
+container.Register<ISettingsService, SettingsService>(Lifestyle.Singleton);
+```
+
+В библиотеке A:
+
+```csharp
+var settings = Library.Services.Get<ISettingsService>();
+settings.Theme = "Dark";
+```
+
+В библиотеке B:
+
+```csharp
+var settings = Library.Services.Get<ISettingsService>();
+
+Debug.Assert(ReferenceEquals(
+    settings,
+    Library.Services.Get<ISettingsService>()));
+```
+
+И даже между разными библиотеками:
+
+```csharp
+var a = LibraryA.Services.Get<ISettingsService>();
+var b = LibraryB.Services.Get<ISettingsService>();
+
+Debug.Assert(ReferenceEquals(a, b)); // true
+```
+
+при условии, что:
+
+- `LibraryA.Services` и `LibraryB.Services` получили **один и тот же экземпляр** `IAddOnServices`;
+- этот `IAddOnServices` работает с **одним и тем же** `Container`.
+
+То есть цепочка выглядит так:
+
+```text
+AddOnCompositionRoot
+        │
+        ▼
+    Container
+        │
+        ▼
+ IAddOnServices
+        │
+   ┌────┴────┐
+   ▼         ▼
+LibraryA  LibraryB
+   │         │
+   └────┬────┘
+        ▼
+ ISettingsService (Singleton)
+```
+
+Все получают ссылку на **один объект** `SettingsService`.
+
+---
+
+### Если контейнеров два
+
+Если загружены два независимых аддона:
+
+```text
+AddOnA
+  ContainerA
+     │
+     └── SettingsServiceA
+
+AddOnB
+  ContainerB
+     │
+     └── SettingsServiceB
+```
+
+то даже при одинаковом коде библиотек экземпляры будут разными.
+
+---
+
+Именно поэтому предложенная тобой схема хороша: **каждый аддон имеет свой контейнер**, а все его библиотеки используют один экземпляр `IAddOnServices`. В результате `Singleton` действительно является ссылочным и общим **в пределах конкретного аддона**, но не "протекает" в другие аддоны.
+
+## Prompt:
+22.07.2026, 11:19:18
+
+Студия ругается на
+cref="ActivationException"
+Интерфейс ничего не знает про стиплеинжектор
+
+## Response:
+22.07.2026, 11:19:20
+
+Это правильно. `drz.Abstractions` не должен знать о `SimpleInjector`.
+
+Поэтому в интерфейсе не стоит писать:
+
+```csharp
+/// <exception cref="ActivationException">
+```
+
+Есть несколько вариантов.
+
+### Вариант 1. Не документировать исключение (я бы выбрал этот)
+
+```csharp
+/// <summary>
+/// Возвращает сервис указанного типа.
+/// </summary>
+/// <typeparam name="TService">Тип сервиса.</typeparam>
+/// <returns>Экземпляр зарегистрированного сервиса.</returns>
+TService Get<TService>() where TService : class;
+```
+
+Интерфейс не обещает, какое исключение будет выброшено. Это зависит от реализации.
+
+---
+
+### Вариант 2. Документировать через `InvalidOperationException`
+
+Реализация может перехватывать `ActivationException` и выбрасывать стандартное исключение:
+
+```csharp
+public TService Get<TService>() where TService : class
+{
+    try
+    {
+        return _container.GetInstance<TService>();
+    }
+    catch (ActivationException ex)
+    {
+        throw new InvalidOperationException(
+            $"Сервис '{typeof(TService).FullName}' не зарегистрирован.",
+            ex);
+    }
+}
+```
+
+Тогда в интерфейсе:
+
+```csharp
+/// <exception cref="InvalidOperationException">
+/// Сервис не зарегистрирован.
+/// </exception>
+```
+
+---
+
+### Вариант 3. Собственное исключение
+
+Можно определить в `drz.Abstractions`:
+
+```csharp
+public sealed class ServiceNotFoundException : Exception
+{
+    public ServiceNotFoundException(Type serviceType)
+        : base($"Сервис '{serviceType.FullName}' не зарегистрирован.")
+    {
+    }
+}
+```
+
+Тогда реализация преобразует исключение контейнера в свое.
+
+Это полностью отвязывает API от DI-контейнера.
+
+---
+
+## Что я бы сделал
+
+Поскольку `IAddOnServices` — это **тонкая обертка над контейнером**, я бы вообще **не документировал конкретное исключение**.
+
+```csharp
+/// <summary>
+/// Возвращает зарегистрированный сервис указанного типа.
+/// </summary>
+/// <typeparam name="TService">
+/// Тип требуемого сервиса.
+/// </typeparam>
+/// <returns>
+/// Экземпляр сервиса.
+/// </returns>
+TService Get<TService>() where TService : class;
+```
+
+Это оставляет реализации свободу использовать `SimpleInjector` сегодня, а в будущем — любой другой контейнер без изменения контракта.
+
+## Prompt:
+22.07.2026, 11:39:58
+
+Addoncontext? Вместо Library?
+
+## Response:
+22.07.2026, 11:39:58
+
+Да, мне кажется, **`AddOnContext` — более удачное название**, чем `Library`.
+
+`Library` не очень отражает назначение класса. По названию кажется, что это экземпляр библиотеки, хотя фактически это **контекст выполнения аддона для конкретной библиотеки**.
+
+Я бы сделал так:
+
+```csharp
+public static class AddOnContext
+{
+    internal static IAddOnServices Services { get; private set; }
+
+    public static void Initialize(IAddOnServices services)
+    {
+        if (Services != null)
+            throw new InvalidOperationException("AddOnContext уже инициализирован.");
+
+        Services = services ?? throw new ArgumentNullException(nameof(services));
+    }
+}
+```
+
+Использование:
+
+```csharp
+using AC = MyLibrary.AddOnContext;
+
+var settings = AC.Services.Get<ISettingsService>();
+```
+
+или, если добавить удобный метод:
+
+```csharp
+public static T Get<T>() where T : class
+{
+    return Services.Get<T>();
+}
+```
+
+то получится:
+
+```csharp
+using AC = MyLibrary.AddOnContext;
+
+var settings = AC.Get<ISettingsService>();
+var logger = AC.Get<IDrzLoggerFactory>();
+```
+
+### Еще один вариант
+
+Чтобы избежать путаницы с уже существующим `AddOnContext` в других сборках, можно назвать класс:
+
+- `RuntimeContext`
+- `ModuleContext`
+- `ServiceContext`
+
+Но если **в каждой библиотеке будет свой собственный `AddOnContext` (через Shared Source)**, то название `AddOnContext` вполне логично. Алиас:
+
+```csharp
+using AC = MyLibrary.AddOnContext;
+```
+
+делает использование коротким и понятным, а каждый аддон и каждая библиотека будут иметь свой независимый статический контекст без конфликтов.
+
+## Prompt:
+22.07.2026, 11:41:29
+
+Переделать существующий на работу в сборках с сервисом
+
+## Response:
+22.07.2026, 11:41:30
+
+Да, я бы именно так и сделал.
+
+Поскольку у тебя уже есть `AddOnContext`, не стоит вводить новый класс. Лучше изменить его назначение: вместо хранения ссылок на отдельные объекты (`Info`, `Cad`, `Os` и т.п.) он будет хранить только `IAddOnServices` и предоставлять удобный доступ к сервисам.
+
+Например:
+
+```csharp
+using System;
+using drz.Abstractions.Infrastructure;
+
+namespace MyLibrary
+{
+    /// <summary>
+    /// Контекст текущего аддона.
+    /// </summary>
+    /// <remarks>
+    /// Каждый аддон должен один раз вызвать <see cref="Initialize"/>.
+    /// После этого любые классы библиотеки могут получать зарегистрированные
+    /// сервисы через <see cref="Get{TService}"/>.
+    ///
+    /// Класс подключается в библиотеку как Shared Source, поэтому каждая
+    /// библиотека имеет собственный экземпляр статических полей.
+    /// </remarks>
+    public static class AddOnContext
+    {
+        private static IAddOnServices _services;
+
+        /// <summary>
+        /// Инициализирует контекст библиотеки.
+        /// </summary>
+        /// <param name="services">
+        /// Экземпляр сервисов текущего аддона.
+        /// </param>
+        public static void Initialize(IAddOnServices services)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            if (_services != null)
+                throw new InvalidOperationException("AddOnContext уже инициализирован.");
+
+            _services = services;
+        }
+
+        /// <summary>
+        /// Возвращает зарегистрированный сервис.
+        /// </summary>
+        /// <typeparam name="TService">Тип сервиса.</typeparam>
+        public static TService Get<TService>() where TService : class
+        {
+            if (_services == null)
+                throw new InvalidOperationException(
+                    "AddOnContext не инициализирован.");
+
+            return _services.Get<TService>();
+        }
+    }
+}
+```
+
+### Инициализация
+
+```csharp
+AddOnContext.Initialize(
+    compositionRoot.Get<IAddOnServices>());
+```
+
+### Использование
+
+```csharp
+using AC = MyLibrary.AddOnContext;
+
+var logger = AC.Get<IDrzLoggerFactory>();
+var settings = AC.Get<ISettingsService>();
+var document = AC.Get<IDocumentService>();
+```
+
+## Я бы добавил еще один метод
+
+Иногда удобно проверить, выполнена ли инициализация:
+
+```csharp
+public static bool IsInitialized => _services != null;
+```
+
+и при необходимости:
+
+```csharp
+public static void Reset()
+{
+    _services = null;
+}
+```
+
+`Reset()` может пригодиться для тестов или если аддон поддерживает полную выгрузку и повторную загрузку.
+
+---
+
+Такой `AddOnContext` остается очень маленьким (около 30 строк), не зависит от `SimpleInjector`, работает только через `IAddOnServices` и не требует изменений при добавлении новых сервисов в контейнер. Для твоей архитектуры это выглядит наиболее удачным решением.
+
+## Prompt:
+22.07.2026, 11:43:47
+
+Есть смысл добавить в него готовые свойства сервисов, логфабрика, и тд
+
+## Response:
+22.07.2026, 11:43:48
+
+Да, есть. Я бы даже рекомендовал это сделать.
+
+Но только для **часто используемых сервисов**.
+
+Например:
+
+```csharp
+public static class AddOnContext
+{
+    private static IAddOnServices _services;
+
+    public static void Initialize(IAddOnServices services)
+    {
+        _services = services ?? throw new ArgumentNullException(nameof(services));
+    }
+
+    /// <summary>
+    /// Получить произвольный сервис.
+    /// </summary>
+    public static T Get<T>() where T : class
+        => _services.Get<T>();
+
+    /// <summary>
+    /// Фабрика логгеров.
+    /// </summary>
+    public static IDrzLoggerFactory LoggerFactory
+        => Get<IDrzLoggerFactory>();
+
+    /// <summary>
+    /// Настройки аддона.
+    /// </summary>
+    public static ISettingsService Settings
+        => Get<ISettingsService>();
+
+    /// <summary>
+    /// Сообщения в командную строку.
+    /// </summary>
+    public static ICommandLineMessageService CommandLine
+        => Get<ICommandLineMessageService>();
+
+    /// <summary>
+    /// Оконные сообщения.
+    /// </summary>
+    public static IWindowMessageService Window
+        => Get<IWindowMessageService>();
+
+    /// <summary>
+    /// Работа с документом CAD.
+    /// </summary>
+    public static IDocumentService Document
+        => Get<IDocumentService>();
+}
+```
+
+Использование:
+
+```csharp
+AddOnContext.Window.ShowMessage("Ошибка");
+
+AddOnContext.CommandLine.WriteLine("Готово");
+
+var logger = AddOnContext.LoggerFactory.GetLogger<MyClass>();
+
+var settings = AddOnContext.Settings;
+```
+
+А для редко используемых сервисов:
+
+```csharp
+var updater = AddOnContext.Get<IUpdateService>();
+
+var license = AddOnContext.Get<ILicenseService>();
+```
+
+## Это хороший компромисс
+
+- **Часто используемые** сервисы доступны как свойства.
+- **Редкие** — через `Get<T>()`.
+- При добавлении нового сервиса не нужно менять `AddOnContext`, если он используется в одном-двух местах.
+
+### Я бы не добавлял абсолютно все сервисы
+
+Например:
+
+- ✅ `LoggerFactory`
+- ✅ `Settings`
+- ✅ `Document`
+- ✅ `Window`
+- ✅ `CommandLine`
+
+А вот специализированные сервисы (`IUpdateService`, `ILicenseService`, `IPluginCatalog` и т.п.) лучше получать через `Get<T>()`, чтобы `AddOnContext` не превратился в класс на сотни строк. Так он останется компактным и удобным.
 
 
 

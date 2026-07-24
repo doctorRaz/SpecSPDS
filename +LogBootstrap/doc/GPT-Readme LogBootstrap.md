@@ -2,9 +2,9 @@
 
 **User:** dRz  
 **Created:** 7/22/2026 14:47:35  
-**Updated:** 7/22/2026 14:57:54  
-**Exported:** 7/22/2026 14:58:30  
-**Link:** [https://chatgpt.com/c/6a60ad65-146c-83eb-a812-a1e955ba0bc5](https://chatgpt.com/c/6a60ad65-146c-83eb-a812-a1e955ba0bc5)  
+**Updated:** 7/23/2026 15:35:02  
+**Exported:** 7/23/2026 22:29:50  
+**Link:** [https://chatgpt.com/g/g-p-6a5f946f072c819184ddfa91a3cb048b/c/6a60ad65-146c-83eb-a812-a1e955ba0bc5](https://chatgpt.com/g/g-p-6a5f946f072c819184ddfa91a3cb048b/c/6a60ad65-146c-83eb-a812-a1e955ba0bc5)  
 
 ## Prompt:
 22.07.2026, 14:47:35
@@ -488,6 +488,265 @@ Shared
 4. файлы `log.level` и `diagnostic.mode`.
 
 Такой раздел сразу снимает вопросы о том, какая настройка имеет приоритет.
+
+## Prompt:
+22.07.2026, 18:23:28
+
+Какие предложения по рефакторингу?
+
+## Response:
+22.07.2026, 18:23:28
+
+По текущей структуре библиотека уже выглядит достаточно чистой. Я бы предложил не столько переписывать код, сколько немного улучшить архитектуру и разделение ответственности.
+
+### 1. Переименовать `drzNLog`
+
+Это единственная папка, которая выбивается из общей структуры.
+
+Сейчас:
+
+```text
+drzNLog
+```
+
+Лучше:
+
+```text
+Adapters
+```
+
+или
+
+```text
+NLog
+```
+
+Тогда получится:
+
+```text
+Builder
+Diagnostics
+NLog
+Shared
+```
+
+---
+
+### 2. `Builder` разделить
+
+Сейчас в `Builder` лежат:
+
+- создание `LogFactory`;
+- константы.
+
+Я бы сделал
+
+```text
+Bootstrap
+    NLogBootstrap.cs
+
+Configuration
+    NLogFactoryBuilder.cs
+    LogKeys.cs
+```
+
+или
+
+```text
+Bootstrap
+Builder
+Configuration
+```
+
+Так будет понятнее, где точка входа, а где построение конфигурации.
+
+---
+
+### 3. Вынести чтение файлов настроек
+
+Сейчас есть
+
+```
+LogLevelReader
+```
+
+Но библиотека уже использует несколько файлов:
+
+- log.level
+- diagnostic.mode
+- Shared/*.config
+
+Логичнее сделать единый сервис
+
+```text
+Configuration
+
+ConfigurationReader
+    ReadLogLevel()
+    ReadDiagnosticLevel()
+    EnumerateConfigs()
+```
+
+Тогда вся работа с файловой системой окажется в одном месте.
+
+---
+
+### 4. InternalLoggerHelpers
+
+Сейчас название немного размыто.
+
+Если он только включает InternalLogger, лучше
+
+```
+InternalLoggerConfigurator
+```
+
+или
+
+```
+InternalLoggerSetup
+```
+
+Helpers обычно означает набор статических утилит.
+
+---
+
+### 5. LogKeys
+
+Если там только строки
+
+```
+LogsDir
+LogLevel
+ProductName
+```
+
+лучше назвать
+
+```
+NLogConstants
+```
+
+или
+
+```
+NLogVariables
+```
+
+Потому что "Keys" не очень понятно.
+
+---
+
+### 6. Добавить Options
+
+Сейчас bootstrap, вероятно, принимает только `IAddOnInfo`.
+
+Через некоторое время наверняка появятся параметры вроде:
+
+- использовать AsyncWrapper
+- писать InternalLogger
+- использовать Shared
+- создавать каталог автоматически
+- имя файла
+
+Лучше заранее предусмотреть
+
+```csharp
+NLogBootstrap.Initialize(
+    addOnInfo,
+    options);
+```
+
+где
+
+```csharp
+class NLogBootstrapOptions
+{
+    bool UseSharedConfiguration;
+    bool EnableInternalLogger;
+    bool CreateDirectories;
+    bool UseAsyncWrapper;
+}
+```
+
+Тогда развитие библиотеки не будет ломать API.
+
+---
+
+### 7. Сделать публичной только одну точку входа
+
+Если пользователю достаточно
+
+```csharp
+NLogBootstrap.GetLoggerFactory(...)
+```
+
+то остальные классы (`Builder`, `Diagnostics`) можно сделать `internal`.
+
+Внешнему коду не нужно знать, как собирается конфигурация.
+
+---
+
+### 8. Добавить интерфейсы только там, где ожидается расширение
+
+Например:
+
+```csharp
+ILogConfigurationLoader
+```
+
+```csharp
+IInternalLoggerConfigurator
+```
+
+Это позволит позже заменить реализацию без изменения Bootstrap.
+
+---
+
+### 9. Разделить Diagnostics
+
+Можно получить более понятную структуру:
+
+```text
+Diagnostics
+    InternalLoggerConfigurator.cs
+    LogLevelReader.cs
+
+IO
+    OutputDebugTextWriter.cs
+```
+
+`OutputDebugTextWriter` не относится к диагностике — это адаптер `TextWriter`.
+
+---
+
+### 10. Самое важное
+
+Мне кажется, библиотека начинает выполнять две независимые задачи:
+
+1. **Bootstrap NLog**
+2. **Работа с конфигурацией**
+
+Я бы уже сейчас выделил отдельный слой:
+
+```text
+LogBootstrap
+│
+├── Bootstrap
+├── Configuration
+├── Diagnostics
+├── NLog
+└── Shared
+```
+
+где:
+
+- **Bootstrap** — публичный API;
+- **Configuration** — поиск и объединение `Shared/*.config`, чтение `log.level` и `diagnostic.mode`;
+- **Diagnostics** — InternalLogger;
+- **NLog** — адаптеры и фабрика.
+
+Это разделение хорошо масштабируется: если позже появятся поддержка Serilog или другого провайдера, слой `Configuration` останется практически без изменений, а потребуется заменить только реализацию провайдера логирования.
 
 
 
