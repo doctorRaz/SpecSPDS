@@ -4,5 +4,6 @@
     /// <seealso cref="IMessageService" />
     public interface IWindowMessageService : IMessageService
     {
+        //todo add  ask fiel and metod 
     }
 }

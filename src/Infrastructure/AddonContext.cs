@@ -23,6 +23,8 @@ namespace drz.Src.Infrastructure
         internal static ICadInfo CadInfo => Services.Get<ICadInfo>();
         internal static ISysInfo SysInfo => Services.Get<ISysInfo>();
 
+        //todo убрать выбор внутрь класса фабрикой
+        //file:///D:/@Developers/%D0%92%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B5/Reminder/0Prj/Abstractions/GPT-DynamicMessageService.md
         internal static IMessageService Msg
         {
             get
@@ -37,11 +39,11 @@ namespace drz.Src.Infrastructure
                 }
             }
         }
-
+        
         internal static IDocumentService DocService => Services.Get<IDocumentService>();
         internal static IMessageService MsgCmd => Services.Get<ICommandLineMessageService>();
         internal static IMessageService MsgGUI => Services.Get<IWindowMessageService>();
-        internal static IMessageService MsgMcn => Services.Get<IMcNotificatorMessageService>();
+        internal static IMessageService MsgMcN => Services.Get<IMcNotificatorMessageService>();
         internal static IDrzLoggerFactory NLogFactory => Services.Get<IDrzLoggerFactory>();
 
         #endregion Internal Properties
@@ -65,6 +67,9 @@ namespace drz.Src.Infrastructure
         {
             return type switch
             {
+                //todo убрать выбор внутрь класса фабрикой
+                //file:///D:/@Developers/%D0%92%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B5/Reminder/0Prj/Abstractions/GPT-DynamicMessageService.md
+
                 MessageServiceType.McNotifi => Services.Get<IMcNotificatorMessageService>(),
                 MessageServiceType.CommandLine => Services.Get<ICommandLineMessageService>(),
                 MessageServiceType.Window => Services.Get<IWindowMessageService>(),

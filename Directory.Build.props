@@ -57,7 +57,7 @@
 		<MinVersion>23</MinVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'!= 'Debug'">
+	<PropertyGroup Condition="'$(Configuration)'!= 'Debug'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 </Project>

@@ -61,6 +61,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "+Test.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Infrastructure", "+Test.Infrastructure\Test.Infrastructure.csproj", "{151DBA93-453B-4442-A532-854BBB5A4150}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.Loader.NET", "+Loader\n.Loader.NET.csproj", "{3FA19418-5DBF-4670-A472-7D85FC993604}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{151DBA93-453B-4442-A532-854BBB5A4150}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{151DBA93-453B-4442-A532-854BBB5A4150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{151DBA93-453B-4442-A532-854BBB5A4150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA19418-5DBF-4670-A472-7D85FC993604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA19418-5DBF-4670-A472-7D85FC993604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA19418-5DBF-4670-A472-7D85FC993604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA19418-5DBF-4670-A472-7D85FC993604}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,6 +195,7 @@ Global
 		{B5B734A2-5273-49C8-8074-9238F078CFA6} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
 		{D4C9E7E6-B843-4DB9-AAFC-0880480987D5} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
 		{151DBA93-453B-4442-A532-854BBB5A4150} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
+		{3FA19418-5DBF-4670-A472-7D85FC993604} = {9E0ED28F-095F-4CFA-8174-E6155B1992C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}
