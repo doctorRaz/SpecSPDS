@@ -427,4 +427,6 @@ SpecSPDS.wiki
 +Updater/Shared/7z_64/*.ion
 +Updater/Shared/7z.7z
 +Abstractions/res
-*/doc/*
+**/doc/
+**/_experimental/
+**/_Draft/
