@@ -21,6 +21,7 @@ AppSettings я б засунул именно в то, что работает �
 
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
+using drz.Abstractions.Services.Message;
 using System;
 using System.Diagnostics;
 
@@ -37,12 +38,24 @@ namespace drz.SpecSPDS.Test
         private static void Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
+            try
+            {
+                ContainerTransfer ct = new ContainerTransfer();
+                var add = AddOnCtx.AddOnInfo;
+                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
+                _isLoggerProvider = true;
+                _logger.Info($"Start: {sw.Elapsed}");
 
-            ContainerTransfer ct = new ContainerTransfer();
+                AddOnCtx.MsgCmd.InfoMessage("test");
+                AddOnCtx.MsgGUI.InfoMessage("test");
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
-            _logger.Info($"Start: {sw.Elapsed}");
-            sw.Restart();
+                sw.Restart();
+            }
+            catch (Exception ex)
+            {
+                if (_isLoggerProvider) _logger.Fatal(ex, "Продолжение не возможно");
+                Console.WriteLine(ex);
+            }
 
             //*******************
             //тест проброса объектов и сервисов между библиотеками по цепочке и логгирование
@@ -58,7 +71,9 @@ namespace drz.SpecSPDS.Test
 
         #region Private Fields
 
+ 
         private static IDrzLogger? _logger;
+        private static bool _isLoggerProvider;//логер есть
 
         #endregion Private Fields
     }

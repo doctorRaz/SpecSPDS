@@ -5,21 +5,18 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 
+global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using drz.Src.Infrastructure;
-
-using static drz.Src.Infrastructure.AddOnContext;
-
-using drz.AddOn.Composition;
+//using static drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
-using drz.Src.Services;
-
-
-
+using drz.AddOnRuntime;
+using drz.Abstractions.Services;
+using drz.Abstractions.Services.Message;
+using drz.Abstractions.Infrastructure;
 
 #if TEST
 
@@ -31,7 +28,6 @@ using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using drz.Loader;
 using Rtm = Teigha.Runtime;
-using Scm = System.ComponentModel;
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
@@ -54,9 +50,20 @@ namespace drz.Loader
 
         private bool _isRegisterAssemblyResolver;//register assembly resolver
 
-        private IDrzLogger log;//логгер
+        private IDrzLogger _logger;//логгер
+        private static bool _isLoggerProvider;//логер есть
 
-        private bool _isLoggerProvider;//логер есть
+        private IMessageService _message;//сообщения
+        private bool _isMessageProvider;//сообщения
+
+        private IAddOnInfo _addOnInfo;//о сборке
+        private bool _isAddOnInfoProvider;
+
+        private ICadInfo _cadInfo;//о cad
+        private bool _isCadInfoProvider;
+
+        private ISysInfo _sysInfo;//о cad
+        private bool _isSysInfoProvider;
 
         private const string netPluginExtension = ".dll";
 
@@ -77,9 +84,10 @@ namespace drz.Loader
 
                 TryAddOnCompositionRoot();//получаем окружение
 
+                _message.InfoMessage(_sysInfo.ToLongString());
                 //nlog
                 //обертка инит логера, если ех на старте, то отловим в месадж
-                TryLoggerProvider();
+                //TryLoggerProvider();
 
                 //грузим адаптер под версию кад, если ex, конец работы, исключения поднимаем сюда, юзеру в msgClass1 сообщаем
                 CadLoading();
@@ -92,11 +100,11 @@ namespace drz.Loader
                 {
                     message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
 
-                    log.Error(ex, message);
+                    _logger.Error(ex, message);
                 }
                 if (_isAddOnCompositionRoot)
                 {
-                    Msg.ExceptionMessage(message, ex);
+                    _message.ExceptionMessage(message, ex);
                 }
                 else
                 {
@@ -132,20 +140,40 @@ namespace drz.Loader
             */
         }
 
+        /// <summary>Tries the add on composition root.</summary>
+        /// <returns></returns>
+        /// <exception cref="System.InvalidOperationException">AddOnCompositionRoot initialization failed</exception>
         private void TryAddOnCompositionRoot()
         {
             try
             {
-                if (_isAddOnCompositionRoot)
+                if (!_isAddOnCompositionRoot)
                 {
-                    return;
+                    //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
+                    // один раз в точке входа /Rtm.IExtensionApplication/
+                    AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
+
+                    // экземпляр копии контейнера by ref
+                    AddOnCtx.Initialize(root.Get<IAddOnServices>());
+
+                    _isAddOnCompositionRoot = true;//сервис поднялся
                 }
 
-                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
+                //логер для класса
+                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(EntryPoint));
+                _isLoggerProvider = true;//логгер есть
 
-                AddOnContext.Initialize(root);
+                _message = AddOnCtx.Msg;
+                _isMessageProvider = true;
 
-                _isAddOnCompositionRoot = true;//сервис поднялся
+                _addOnInfo = AddOnCtx.AddOnInfo;
+                _isAddOnInfoProvider = true;
+
+                _cadInfo = AddOnCtx.CadInfo;
+                _isCadInfoProvider = true;
+
+                _sysInfo = AddOnCtx.SysInfo;
+                _isSysInfoProvider = true;
             }
             catch (Exception ex)
             {
@@ -154,23 +182,23 @@ namespace drz.Loader
             }
         }
 
-        /// <summary>
-        /// Tries the logger.
-        /// </summary>
-        private void TryLoggerProvider()
-        {
-            try
-            {
-                log = LoggerProvider.For<EntryPoint>();
+        ///// <summary>
+        ///// Tries the logger.
+        ///// </summary>
+        //private void TryLoggerProvider()
+        //{
+        //    try
+        //    {
+        //        _logger = LoggerProvider.For<EntryPoint>();
 
-                _isLoggerProvider = true;//сервис поднялся
-            }
-            catch (Exception ex)
-            {
-                //роняем загрузчик
-                throw new InvalidOperationException("LoggerProvider initialization failed", ex);
-            }
-        }
+        //        _isLoggerProvider = true;//сервис поднялся
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //роняем загрузчик
+        //        throw new InvalidOperationException("LoggerProvider initialization failed", ex);
+        //    }
+        //}
 
         /// <summary>
         /// Cads the loading.
@@ -189,35 +217,35 @@ namespace drz.Loader
                 //    ИмяТекущейСборки.Major.Minor[x86|x64].(dll|arx|dvb).
                 // Где <Major> и <Minor> - это значения одноимённых свойств объекта
                 // RunningVersion, полученного из Application.RunningVersion.
-                Version version = CadInfo.ProductVersion;// RunningVersion;
+                Version version = _cadInfo.ProductVersion;// RunningVersion;
 
                 //string fileDescription = RT.Cad.FileDescription;
 
-                log.Debug($"Обнаружен: {CadInfo}");
+                _logger.Debug($"Обнаружен: {_cadInfo}");
 
-                string fileFullName = GetType().Assembly.Location;
-                //косяк   string fileFullName = AddonInfo.FilePrefix;
+                string fileFullName = GetType().Assembly.Location;//брать из аддон инфо
+                //косяк   string fileFullName = _addOnInfo.FilePrefix;
 
                 int minMajor = GeneratedCompile.MinVersion;//из Directory.Build.props проекта
 
                 Version minVersion = new Version(minMajor, 0);
 
-                log.Debug($"minVersion {minVersion}");
+                _logger.Debug($"minVersion {minVersion}");
 
                 FileInfo? targetDllFullName = FindFile(/*fileFullName,*/ version, minVersion);
 
                 if (targetDllFullName == null)
                 {
-                    string mesag = $"Не найден подходящий адаптер для {CadInfo}";
+                    string mesag = $"Не найден подходящий адаптер для {_cadInfo}";
 
-                    log.Error($"{mesag}");
+                    _logger.Error($"{mesag}");
 
-                    Msg.ExceptionMessage(new FileNotFoundException(mesag));
+                    _message.ExceptionMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
 
-                log.Debug($"Адаптер найден в: {targetDllFullName}");//найден адаптер
+                _logger.Debug($"Адаптер найден в: {targetDllFullName}");//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то
                 // загружаем его.
@@ -228,7 +256,7 @@ namespace drz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        log.Debug($"Загружается адаптер для: {CadInfo}, целевая сборка: {targetDllFullName.FullName}");
+                        _logger.Debug($"Загружается адаптер для: {_cadInfo}, целевая сборка: {targetDllFullName.FullName}");
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -237,22 +265,22 @@ namespace drz.Loader
                         //на случай, если в будущем будет поддержка других типов плагинов, например ARX или VBA
                         NotSupportedException exception = new NotSupportedException($"Unsupported plugin type: {targetDllFullName.Extension}");
 
-                        log.Error(exception, "Plugin type validation failed");
+                        _logger.Error(exception, "Plugin type validation failed");
 
                         throw exception;
                     }
 
-                    log.Debug($"Адаптер для {CadInfo} загружен");
+                    _logger.Debug($"Адаптер для {_cadInfo} загружен");
                 }
                 catch (Exception ex)
                 {
-                    log.Error(ex, ex.Message);
+                    _logger.Error(ex, ex.Message);
                     throw;
                 }
             }
             catch (Exception ex)
             {
-                log.Error(ex, ex.Message);
+                _logger.Error(ex, ex.Message);
 
                 throw new InvalidOperationException("CadLoading failed", ex);
             }
@@ -264,8 +292,6 @@ namespace drz.Loader
         /// Получить имя наиболее подходящего файла, для его последующей загрузки в
         /// AutoCAD. Если такой файл не будет найден, то возвращается null.
         /// </summary>
-        /// <param name="fileFullName">"Базовое" имя файла, т.е. полное имя
-        /// файла без указания в нём версий ядра и разрядности платформы.</param>
         /// <param name="expectedVersion">Версия AutoCAD, для которой следует
         /// выполнить поиск соответствующей версии файла.</param>
         /// <param name="minVersion">Наименьшая версия AutoCAD, ниже которой не
@@ -276,9 +302,7 @@ namespace drz.Loader
         private FileInfo? FindFile(Version expectedVersion,
                                    Version minVersion)
         {
-
-            string fileFullName = AddonInfo.AssemblyPath;
-           
+            string fileFullName = _addOnInfo.AssemblyPath;
 
             if (fileFullName == null)
             {
@@ -295,14 +319,14 @@ namespace drz.Loader
                 throw new ArgumentException($"The expectedVersion of {expectedVersion} cannot be less than the minimum allowed version of {minVersion}.", nameof(expectedVersion));
             }
 
-            string? directory = AddonInfo.AssemblyDirectory;
+            string? directory = _addOnInfo.AssemblyDirectory;
             //string? directory = Path.GetDirectoryName(fileFullName);
             if (directory == null)
             {
                 throw new ArgumentException("The provided fileFullName does not contain a valid directory path.", nameof(fileFullName));
             }
 
-            string fileName = AddonInfo.FilePrefix;
+            string fileName = _addOnInfo.ProductFamily;
             //string fileName = Path.GetFileNameWithoutExtension(fileFullName);
 
             int major = expectedVersion.Major;
@@ -358,7 +382,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                Msg.ExceptionMessage(ex, $"Error searching files in {path}");
+                _message.ExceptionMessage(ex, $"Error searching files in {path}");
                 return string.Empty;
             }
         }
@@ -383,7 +407,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                Msg.ExceptionMessage("AssemblyResolver registration failed", ex);
+                _message.ExceptionMessage("AssemblyResolver registration failed", ex);
             }
         }
 
@@ -405,7 +429,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                Msg.ExceptionMessage("AssemblyResolver unregistered failed", ex);
+                _message.ExceptionMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -440,7 +464,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                Msg.ExceptionMessage("Failed to resolve assembly", ex);
+                _message.ExceptionMessage("Failed to resolve assembly", ex);
             }
 
             return null;
@@ -466,10 +490,7 @@ namespace drz.Loader
         {
             try
             {
-                log.Debug("Terminate");
-
-                AddOnContext.Dispose();
-
+                _logger.Debug("Terminate");
             }
             catch { } // смысла нет что то показывать при закрытии наны
         }

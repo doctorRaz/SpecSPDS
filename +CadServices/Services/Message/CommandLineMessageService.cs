@@ -82,6 +82,7 @@ namespace drz.CadServices.Services
                    message;
 
 #if !TEST
+            //todo получать документ из контейнера?
             Document doc = Application.DocumentManager.MdiActiveDocument;
 
             if (doc != null && doc.Editor != null)
@@ -97,6 +98,7 @@ namespace drz.CadServices.Services
                 }
                 catch
                 {
+                //fallback
                     Application.ShowAlertDialog(formatted);
                 }
             }

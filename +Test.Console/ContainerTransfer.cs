@@ -5,6 +5,7 @@ using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.AddOnRuntime;
 using drz.Lib_A;
+using System;
 
 //using static drz.Src.Infrastructure.AddOnContext;
 
@@ -20,13 +21,11 @@ namespace drz.SpecSPDS.Test
         #region Private Fields
 
         private static bool _isAddOnCompositionRoot;
-        private readonly IDrzLogger _logger;
+        private readonly IDrzLogger? _logger;
+        private static bool _isLoggerProvider;//логер есть
 
+        
         #endregion Private Fields
-
-        //логгер
-
-        //контейнер создан
 
         #region Internal Constructors
 
@@ -37,17 +36,27 @@ namespace drz.SpecSPDS.Test
         internal ContainerTransfer()
 
         {
-            //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
-            // один раз в точке входа /Rtm.IExtensionApplication/
-            AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransfer).Assembly);
+            try
+            {
+                if (_isAddOnCompositionRoot) return;
 
-            // экземпляр копии контейнера by ref
-            AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
+                // один раз в точке входа /Rtm.IExtensionApplication/
+                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransfer).Assembly);
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransfer));
+                // экземпляр копии контейнера by ref
+                AddOnCtx.Initialize(root.Get<IAddOnServices>());
 
-            _logger.InfoCaller("Initialized");
-            _isAddOnCompositionRoot = true;//сервис поднялся
+                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransfer));
+
+                _logger.InfoCaller("Initialized");
+                _isAddOnCompositionRoot = true;//сервис поднялся
+            }
+            catch (Exception ex)
+            {
+                //роняем загрузчик
+                throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
+            }
         }
 
         #endregion Internal Constructors
@@ -75,6 +84,7 @@ namespace drz.SpecSPDS.Test
             _logger.FatalCaller(ex);
 
             _logger.Debug("CommandB.Run");
+
             _logger.ForErrorEvent()
                     .Message("Properties is null")
                     .Property("name", 10)
