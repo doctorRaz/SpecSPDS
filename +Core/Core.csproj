@@ -30,4 +30,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Bootstrap\" />
+	</ItemGroup>
 </Project>
