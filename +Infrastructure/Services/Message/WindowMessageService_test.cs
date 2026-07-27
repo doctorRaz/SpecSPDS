@@ -25,13 +25,13 @@ public sealed class WindowMessageService_test : IMessageService, IWindowMessageS
         _owner = owner;
     }
 
-    public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string caller = null)
+    public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
         //В зависимости от контекста ошибки выберите один из двух вариантов:🔴 Error / Hand / Stop(Красный крест) — Основной вариант. Указывает на то, что произошла серьезная ошибка, которая полностью блокирует дальнейшее выполнение текущего процесса(например, Файл поврежден или Диск переполнен).⚠️ Warning(Желтый треугольник) — Альтернативный вариант. Используется, если сбой не критичен для всего приложения, но требует выбора пользователя для продолжения конкретной операции.
     }
 
-    public MessageResult AskYesNo(string text, string? caption = null, [CallerMemberName] string caller = null)
+    public MessageResult AskYesNo(string text, string? caption = null, [CallerMemberName] string? caller = null)
     {
         return Show(
             text,
@@ -42,31 +42,31 @@ public sealed class WindowMessageService_test : IMessageService, IWindowMessageS
 
     }
 
-    public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string caller = null)
+    public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
         //Иконка: Warning (Предупреждение) или Error (если операция полностью заблокирована до исправления).Смысл: «Не удалось подключиться к серверу. Попробовать еще раз?»
     }
 
-    public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string caller = null)
+    public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller  = null)
     {
         throw new NotImplementedException();
         //ℹ️ Information / Asterisk (Синий кружок с буквой «i») — Основной вариант. Отлично подходит для стандартных операций, чтобы подчеркнуть, что происходит штатный процесс (например, экспорт данных или отправка формы).Примеры: «Сгенерированный файл будет сохранен в папку Загрузки. Продолжить?», «Будет произведена отправка 5 писем».❓ Question (Синий знак вопроса) — Альтернативный вариант. Используется, если операция подразумевает выбор пути, но не несет рисков для данных.Примеры: «Установить обновления сейчас?», «Запустить сканирование системы?»
     }
 
-    public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string caller = null)
+    public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
         //В 95% случаев для этого метода используется одна конкретная иконка:⚠️ Warning (Желтый треугольник с восклицательным знаком) — Основной вариант. Сигнализирует о том, что если пользователь закроет окно без сохранения (выберет «Нет»), данные будут безвозвратно утеряны.❓ Question (Синий знак вопроса) — Альтернативный вариант. Используется редко, только если закрытие окна или переход не влекут за собой потерю критически важных данных.
     }
 
-    public void ErrorMessage(Exception ex, [CallerMemberName] string caller = null)
+    public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
     {
         //Show(text, caption, MessageButtons.Ok, MessageIcon.Error);
         throw new NotImplementedException();
     }
 
-    public void ErrorMessage(string message ,Exception ex = null, [CallerMemberName] string caller = null)
+    public void ErrorMessage(string message ,Exception? ex = null, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
     }

@@ -2,6 +2,7 @@
 using drz.Abstractions.Services;
 using drz.Abstractions.Services.Message;
 using System;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -14,9 +15,9 @@ namespace drz.Infrastructure.Services.Message
 
         #region Private Fields
 
-        private IAddOnInfo _applicationInfo;
+        private readonly IAddOnInfo _applicationInfo;
 
-        private IntPtr _cadWindowHandle = IntPtr.Zero;
+        private readonly IntPtr _cadWindowHandle = IntPtr.Zero;
 
         #endregion Private Fields
 
@@ -45,10 +46,10 @@ namespace drz.Infrastructure.Services.Message
                 _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
             //throw new NotImplementedException();
-            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex+ "\n"+message,
+            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex + "\n" + message,
               _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -60,7 +61,8 @@ namespace drz.Infrastructure.Services.Message
             }
 
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
-                _applicationInfo.ProductTitlePrefix + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                _applicationInfo.ProductTitlePrefix
+                + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void WarningMessage(string message, [CallerMemberName] string? caller = null)
@@ -70,27 +72,27 @@ namespace drz.Infrastructure.Services.Message
 
         #endregion Public Methods
 
-        public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string caller = null)
+        public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string caller = null)
+        public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string caller = null)
+        public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public MessageResult AskYesNo(string message, string title, [CallerMemberName] string caller = null)
+        public MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string caller = null)
+        public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }

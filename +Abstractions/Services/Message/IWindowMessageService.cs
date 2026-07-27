@@ -6,7 +6,6 @@ namespace drz.Abstractions.Services.Message
     /// <seealso cref="IMessageService" />
     public interface IWindowMessageService : IMessageService
     {
-        //todo add  ask fiel and metod 
         MessageResult AskOkCancel(string message, string title, [CallerMemberName] string caller = null);
         MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string caller = null);
         MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string caller = null);

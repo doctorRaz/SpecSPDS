@@ -18,7 +18,7 @@ namespace drz.n.Infrastructure.Services.Message
     {
         #region Private Fields
 
-        private IAddOnInfo _applicationInfo;
+        private readonly IAddOnInfo _applicationInfo;
 
         #endregion Private Fields
 
