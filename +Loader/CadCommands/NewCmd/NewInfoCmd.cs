@@ -1,5 +1,7 @@
-﻿using Teigha.Runtime;
+﻿using System;
+using Teigha.Runtime;
 using static drz.Src.Infrastructure.AddOnContext;
+
 
 namespace drz.Loader.CadCommands.NewCmd
 {
@@ -10,10 +12,10 @@ namespace drz.Loader.CadCommands.NewCmd
         {
             Msg.InfoMessage($"{CadInfo}");
 
-            Msg.ConsoleMessage($"{SysInfo}");
+            Msg.InfoMessage($"{SysInfo}");
 
-            Msg.ErrorMessage($"{AddOnInfo}");
-           
+            Msg.WarningMessage($"{AddOnInfo}");
+
         }
 
         [CommandMethod($"info-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
@@ -21,18 +23,19 @@ namespace drz.Loader.CadCommands.NewCmd
         {
             MsgGUI.InfoMessage($"{CadInfo}");
 
-            MsgGUI.ConsoleMessage($"{SysInfo}");
+            MsgGUI.WarningMessage($"{SysInfo}");
 
-            MsgGUI.ConsoleMessage($"{AddOnInfo.ToLongString()}");
+            System.Exception ex = new System.Exception("test err");
+            MsgGUI.ErrorMessage($"{AddOnInfo.ToLongString()}", ex);
         }
 
         [CommandMethod($"console-Long-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void ConsoleLongCmd()
         {
-            
-            Msg.ErrorMessage($"{AddOnInfo.ToLongString()}");
 
-            Msg.ConsoleMessage($"{SysInfo.ToLongString()}");
+            Msg.WarningMessage($"{AddOnInfo.ToLongString()}");
+
+            Msg.InfoMessage($"{SysInfo.ToLongString()}");
 
 
         }

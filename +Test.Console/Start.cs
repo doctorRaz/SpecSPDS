@@ -22,8 +22,11 @@ AppSettings я б засунул именно в то, что работает �
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services.Message;
+using drz.Infrastructure.Services;
+using drz.n.Infrastructure.Services;
 using System;
 using System.Diagnostics;
+using System.Windows;
 
 namespace drz.SpecSPDS.Test
 {
@@ -37,6 +40,12 @@ namespace drz.SpecSPDS.Test
         [STAThread]
         private static void Main(string[] args)
         {
+            //MessageBoxResult f = MessageBox.Show("text", "caption",MessageBoxButton.YesNo,MessageBoxImage.Exclamation);
+
+            //WindowMessageService_test wt = new WindowMessageService_test(IntPtr.Zero);
+
+            //MessageResult rr = wt.AskYesNo("test","Caption");
+
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
@@ -46,6 +55,15 @@ namespace drz.SpecSPDS.Test
                 _isLoggerProvider = true;
                 _logger.Info($"Start: {sw.Elapsed}");
 
+                //todo так делать нехорошо , но для отладки можно(((
+                DocumentService ds = (DocumentService)AddOnCtx.DocService;
+
+                ds.IsActive = true;//doc yes
+                AddOnCtx.Msg.InfoMessage("test");
+
+                ds.IsActive = !ds.IsActive;//doc no
+                AddOnCtx.Msg.InfoMessage(ds.FullPath);//ex
+
                 AddOnCtx.MsgCmd.InfoMessage("test");
                 AddOnCtx.MsgGUI.InfoMessage("test");
 
@@ -54,7 +72,9 @@ namespace drz.SpecSPDS.Test
             catch (Exception ex)
             {
                 if (_isLoggerProvider) _logger.Fatal(ex, "Продолжение не возможно");
-                Console.WriteLine(ex);
+                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно",ex);
+                AddOnCtx.Msg.ErrorMessage(ex);
+                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно");
             }
 
             //*******************

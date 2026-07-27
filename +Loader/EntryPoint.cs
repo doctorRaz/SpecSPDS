@@ -84,6 +84,7 @@ namespace drz.Loader
 
                 TryAddOnCompositionRoot();//получаем окружение
 
+                AddOnCtx.MsgCmd.InfoMessage(_sysInfo.ToLongString());
                 _message.InfoMessage(_sysInfo.ToLongString());
                 //nlog
                 //обертка инит логера, если ех на старте, то отловим в месадж
@@ -104,7 +105,7 @@ namespace drz.Loader
                 }
                 if (_isAddOnCompositionRoot)
                 {
-                    _message.ExceptionMessage(message, ex);
+                    _message.ErrorMessage(message, ex);
                 }
                 else
                 {
@@ -240,7 +241,7 @@ namespace drz.Loader
 
                     _logger.Error($"{mesag}");
 
-                    _message.ExceptionMessage(new FileNotFoundException(mesag));
+                    _message.ErrorMessage(new FileNotFoundException(mesag));
 
                     return false;
                 }
@@ -382,7 +383,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                _message.ExceptionMessage(ex, $"Error searching files in {path}");
+                _message.ErrorMessage(ex, $"Error searching files in {path}");
                 return string.Empty;
             }
         }
@@ -407,7 +408,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                _message.ExceptionMessage("AssemblyResolver registration failed", ex);
+                _message.ErrorMessage("AssemblyResolver registration failed", ex);
             }
         }
 
@@ -429,7 +430,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                _message.ExceptionMessage("AssemblyResolver unregistered failed", ex);
+                _message.ErrorMessage("AssemblyResolver unregistered failed", ex);
             }
         }
 
@@ -464,7 +465,7 @@ namespace drz.Loader
             }
             catch (Exception ex)
             {
-                _message.ExceptionMessage("Failed to resolve assembly", ex);
+                _message.ErrorMessage("Failed to resolve assembly", ex);
             }
 
             return null;

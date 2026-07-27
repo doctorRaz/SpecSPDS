@@ -3,12 +3,15 @@ using drz.Abstractions.Services;
 using drz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace drz.Infrastructure.Services.Message
 {
     public class WindowMessageService : IMessageService, IWindowMessageService
     {
+        //наследуемся от IMessageService, добавляются методы ASK
+
         #region Private Fields
 
         private IAddOnInfo _applicationInfo;
@@ -19,9 +22,9 @@ namespace drz.Infrastructure.Services.Message
 
         #region Public Constructors
 
-        public WindowMessageService(IAddOnInfo applicationInfo, IWindowHandleProvider handleProvider)
+        public WindowMessageService(IAddOnInfo addOnInfo, IWindowHandleProvider handleProvider)
         {
-            _applicationInfo = applicationInfo;
+            _applicationInfo = addOnInfo;
 
             _cadWindowHandle = handleProvider.Handle;
         }
@@ -30,24 +33,23 @@ namespace drz.Infrastructure.Services.Message
 
         #region Public Methods
 
-        public void ConsoleMessage(string message, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            InfoMessage(message, caller);
+            //throw new NotImplementedException();
+            if (_cadWindowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(_cadWindowHandle);
+            }
+
+            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex,
+                _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ErrorMessage(string message, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
-        }
-
-        public void ExceptionMessage(Exception ex, [CallerMemberName] string? caller = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string? caller = null)
-        {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex+ "\n"+message,
+              _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void InfoMessage(string message, [CallerMemberName] string? caller = null)
@@ -61,13 +63,49 @@ namespace drz.Infrastructure.Services.Message
                 _applicationInfo.ProductTitlePrefix + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        public void WarningMessage(string message, [CallerMemberName] string? caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Public Methods
+
+        public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MessageResult AskYesNo(string message, string title, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string caller = null)
+        {
+            throw new NotImplementedException();
+        }
 
         #region Private Methods
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern int MessageBoxW(
+                IntPtr hWnd,
+                string lpText,
+                string lpCaption,
+                uint uType);
         #endregion Private Methods
     }
 }
