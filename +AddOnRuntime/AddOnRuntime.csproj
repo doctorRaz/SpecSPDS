@@ -13,7 +13,7 @@
 	</PropertyGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+CadServices\n.CadServices.csproj" />
+		<ProjectReference Include="..\+Cad.Infrastructure\n.Infrastructure.csproj" />
 		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 	</ItemGroup>

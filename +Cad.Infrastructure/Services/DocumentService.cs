@@ -1,6 +1,8 @@
 ﻿using drz.Abstractions.Services;
 using System;
 using System.IO;
+using System.Xml.Linq;
+
 
 #if !TEST
 
@@ -8,7 +10,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace drz.CadServices.Services
+namespace drz.n.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {
@@ -47,18 +49,29 @@ namespace drz.CadServices.Services
             }
         }
 
+#if !TEST
         public bool IsActive
         {
             get
             {
-#if !TEST
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 return doc != null;
-#else
-                return true;
-#endif
+             
             }
         }
+#else        
+        /// <summary>The is active</summary>
+        private bool _isActive;
+
+        /// <summary>Активен ли документ
+        /// меняем руками  через свойства
+        /// </summary>
+        public bool IsActive
+        {
+            get => _isActive;
+            set => _isActive = value;
+        }
+#endif
 
         #endregion Public Properties
     }

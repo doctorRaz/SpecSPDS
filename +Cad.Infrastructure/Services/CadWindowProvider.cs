@@ -2,13 +2,14 @@
 using System;
 using System.Diagnostics;
 
+
 #if !TEST
 
 using HostMgd.ApplicationServices;
 
 #endif
 
-namespace drz.CadServices.Services
+namespace drz.n.Infrastructure.Services
 {
     /// <summary>
     /// Указатель на окно отвязан от Cad

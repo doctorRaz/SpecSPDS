@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace drz.CadServices.Services
+namespace drz.n.Infrastructure.Services.Message
 {
     /// <summary>
     /// Обёртка над McNotificator NanoCad для вывода сообщений в командную строку.
     /// Работает без подключения сборки Multicad через Reflection.
     /// </summary>
-    public class McNotificatorMessageServise : IMessageService, IMcNotificatorMessageService
+    public class McNotificatorMessageServise : IMcNotificatorMessageService
     {
         #region Private Fields
 
@@ -25,17 +25,17 @@ namespace drz.CadServices.Services
             throw new NotImplementedException();
         }
 
-        public void ErrorMessage(string message, [CallerMemberName] string caller = null)
+        public void WarningMessage(string message, [CallerMemberName] string caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ExceptionMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ErrorMessage(Exception ex, [CallerMemberName] string caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ExceptionMessage(string message, Exception ex, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message,Exception ex =null, [CallerMemberName] string caller = null)
         {
             throw new NotImplementedException();
         }

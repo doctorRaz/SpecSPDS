@@ -36,7 +36,7 @@ namespace drz.Src.Infrastructure
         /// </summary>
         internal static ICommandLineMessageService MsgCmd => Services.Get<ICommandLineMessageService>();
 
-        /// <summary>явный вызов окошка.</summary>
+        /// <summary>явный вызов окошка + Ask</summary>
         /// <value>The MSG GUI.</value>
         internal static IWindowMessageService MsgGUI => Services.Get<IWindowMessageService>();
 
@@ -51,7 +51,7 @@ namespace drz.Src.Infrastructure
         // реализация в классе DefaultMessageService?
         // вернет IWindowMessageService или ICommandLineMessageService
         //если документ есть отдаст консоль иначе окошко
-        //todo internal static IMessageService Msg => Services.Get<IDefaultMessageService>();
+        internal static IMessageService Msg => Services.Get<IMessageService>();
 
         // наследник IMessageService,IWindowMessageService расширен диалоговыми окнами: да нет пропустить дальше
         //todo internal static IWindowMessageServiceAsk MsgGUIAsc => Services.Get<IWindowMessageServiceIWindowMessageServiceAsk>();
