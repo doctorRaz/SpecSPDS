@@ -2,10 +2,15 @@
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.Abstractions.Services.Message;
-using drz.CadServices.Services;
 using drz.Infrastructure.Infrastructure;
 using drz.Infrastructure.Services.Message;
 using drz.LogBootstrap;
+using drz.n.Infrastructure.Services;
+using drz.n.Infrastructure.Services.Message;
+
+
+//using drz.n.Infrastructure.Services;
+//using drz.n.Infrastructure.Services.Message;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
@@ -96,11 +101,13 @@ namespace drz.AddOnRuntime
         {
             container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
 
-            container.Register<ICommandLineMessageService, CommandLineMessageService>();
+            container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
 
             container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
+
+            container.Register<IMessageService, MessageService>(Lifestyle.Singleton);
 
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
 
