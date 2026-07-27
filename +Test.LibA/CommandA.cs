@@ -85,7 +85,7 @@ namespace drz.Lib_A
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
 
-            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandA)}");
+            AddOnCtx.MsgGui.InfoMessage($"End {nameof(CommandA)}");
 
             CommandB c = new CommandB(AddOnCtx.Services);
             c.CommandB_Run();

@@ -76,7 +76,7 @@ namespace drz.Lib_B
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
 
-            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(CommandB)}");
+            AddOnCtx.MsgGui.InfoMessage($"End {nameof(CommandB)}");
 
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
 

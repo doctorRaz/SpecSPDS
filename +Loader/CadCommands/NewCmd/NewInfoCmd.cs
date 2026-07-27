@@ -21,12 +21,12 @@ namespace drz.Loader.CadCommands.NewCmd
         [CommandMethod($"info-New-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void GuiNewCmd()
         {
-            MsgGUI.InfoMessage($"{CadInfo}");
+            MsgGui.InfoMessage($"{CadInfo}");
 
-            MsgGUI.WarningMessage($"{SysInfo}");
+            MsgGui.WarningMessage($"{SysInfo}");
 
             System.Exception ex = new System.Exception("test err");
-            MsgGUI.ErrorMessage($"{AddOnInfo.ToLongString()}", ex);
+            MsgGui.ErrorMessage($"{AddOnInfo.ToLongString()}", ex);
         }
 
         [CommandMethod($"console-Long-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]

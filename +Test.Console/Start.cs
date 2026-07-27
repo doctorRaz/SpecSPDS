@@ -65,14 +65,14 @@ namespace drz.SpecSPDS.Test
                 AddOnCtx.Msg.InfoMessage(ds.FullPath);//ex
 
                 AddOnCtx.MsgCmd.InfoMessage("test");
-                AddOnCtx.MsgGUI.InfoMessage("test");
+                AddOnCtx.MsgGui.InfoMessage("test");
 
                 sw.Restart();
             }
             catch (Exception ex)
             {
                 if (_isLoggerProvider) _logger.Fatal(ex, "Продолжение не возможно");
-                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно",ex);
+                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
                 AddOnCtx.Msg.ErrorMessage(ex);
                 AddOnCtx.Msg.ErrorMessage("Продолжение не возможно");
             }
@@ -83,7 +83,7 @@ namespace drz.SpecSPDS.Test
             //LibA, LibB знают только интерфейсы, Abstractions
             /*ct.ContainerTransfer_Run();*/
 
-            AddOnCtx.MsgCmd.InfoMessage("Press any key to exit...");
+             AddOnCtx.MsgCmd.InfoMessage("Press any key to exit...");
             Console.ReadKey();
         }
 
@@ -91,7 +91,7 @@ namespace drz.SpecSPDS.Test
 
         #region Private Fields
 
- 
+
         private static IDrzLogger? _logger;
         private static bool _isLoggerProvider;//логер есть
 

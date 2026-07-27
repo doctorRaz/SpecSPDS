@@ -105,7 +105,7 @@ namespace drz.SpecSPDS.Test
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
 
-            AddOnCtx.MsgGUI.InfoMessage($"End {nameof(ContainerTransfer)}");
+            AddOnCtx.MsgGui.InfoMessage($"End {nameof(ContainerTransfer)}");
 
             CommandA c = new CommandA(AddOnCtx.Services);
             c.CommandA_Run();

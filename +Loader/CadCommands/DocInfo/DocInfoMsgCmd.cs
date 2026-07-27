@@ -8,7 +8,7 @@ namespace drz.Loader.CadCommands.DocInfo
         [CommandMethod($"doc-info-{GeneratedCompile.CommandSuf}", CommandFlags.Session)]
         public static void DocInfoMessageCommand()
         {
-            MsgGUI.InfoMessage(DocService.FullPath);
+            MsgGui.InfoMessage(DocService.FullPath);
         }
     }
 }

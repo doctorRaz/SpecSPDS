@@ -38,7 +38,7 @@ namespace drz.Src.Infrastructure
 
         /// <summary>явный вызов окошка + Ask</summary>
         /// <value>The MSG GUI.</value>
-        internal static IWindowMessageService MsgGUI => Services.Get<IWindowMessageService>();
+        internal static IWindowMessageService MsgGui => Services.Get<IWindowMessageService>();
 
         /// <summary>Явный вызов нотифай мультикад.</summary>
         /// <value>Сервис уведомлений <see cref="IMcNotificatorMessageService"/>.</value>
