@@ -75,22 +75,18 @@ namespace drz.Lib_A
 
             //---- CadInfo -------
             _logger.Info(AddOnCtx.CadInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
             _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
 
             //----- SysInfo ------
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
-
-            AddOnCtx.MsgGui.InfoMessage($"End {nameof(CommandA)}");
 
             CommandB c = new CommandB(AddOnCtx.Services);
             c.CommandB_Run();
 
-            AddOnCtx.MsgCmd.InfoMessage("The End");
+            _logger.Info("The End A");
+            AddOnCtx.MsgCmd.InfoMessage("The End A");
         }
 
         #endregion Public Methods

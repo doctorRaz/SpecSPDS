@@ -20,9 +20,16 @@ namespace drz.Infrastructure.Services.Message
     /// </summary>
     public sealed class MessageService : IMessageService
     {
+        #region Private Fields
+
         private readonly ICommandLineMessageService _commandLine;
         private readonly IDocumentService _documentService;
         private readonly IWindowMessageService _window;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         /// <summary>
         /// Создает сервис маршрутизации сообщений.
         /// </summary>
@@ -50,6 +57,10 @@ namespace drz.Infrastructure.Services.Message
                 ?? throw new ArgumentNullException(nameof(documentService));
         }
 
+        #endregion Public Constructors
+
+        #region Private Properties
+
         /// <summary>
         /// Возвращает текущий способ вывода сообщения.
         /// </summary>
@@ -58,10 +69,10 @@ namespace drz.Infrastructure.Services.Message
                 ? _commandLine
                 : _window;
 
-        //public void ConsoleMessage(string message, [CallerMemberName] string? caller = null)
-        //{
-        //    Current.ConsoleMessage(message, caller);
-        //}
+        #endregion Private Properties
+
+
+        #region Public Methods
 
         public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
@@ -82,5 +93,7 @@ namespace drz.Infrastructure.Services.Message
         {
             Current.WarningMessage(message, caller);
         }
+
+        #endregion Public Methods
     }
 }

@@ -16,55 +16,17 @@ namespace drz.SpecSPDS.Test
     /// Выполняет однократную инициализацию контейнера сервисов
     /// и глобального контекста <see cref="AddOnCtx"/>.
     /// </summary>
-    internal class ContainerTransfer
+    internal class TestContainerTransfer
     {
-        #region Private Fields
-
-        private static bool _isAddOnCompositionRoot;
-        private readonly IDrzLogger? _logger;
-        private static bool _isLoggerProvider;//логер есть
-
-        
-        #endregion Private Fields
-
-        #region Internal Constructors
+        private readonly IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(TestContainerTransfer));
 
         /// <summary>
         /// Инициализирует контейнер сервисов AddOn при первом создании экземпляра
         /// и записывает информацию об успешной инициализации в журнал.
         /// </summary>
-        internal ContainerTransfer()
-
-        {
-            try
-            {
-                if (_isAddOnCompositionRoot) return;
-
-                //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
-                // один раз в точке входа /Rtm.IExtensionApplication/
-                AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransfer).Assembly);
-
-                // экземпляр копии контейнера by ref
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
-
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransfer));
-
-                _logger.InfoCaller("Initialized");
-                _isAddOnCompositionRoot = true;//сервис поднялся
-            }
-            catch (Exception ex)
-            {
-                //роняем загрузчик
-                throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
-            }
-        }
-
-        #endregion Internal Constructors
-
-        #region Internal Methods
 
         /// <summary>Containers the transfer run.</summary>
-        internal void ContainerTransfer_Run()
+        internal void TestContainerTransfer_Run()
         {
             System.Exception ex = new System.Exception("Properties is null");
 
@@ -95,25 +57,18 @@ namespace drz.SpecSPDS.Test
 
             //---- CadInfo -------
             _logger.Info(AddOnCtx.CadInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
             _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
 
             //----- SysInfo ------
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
-
-            AddOnCtx.MsgGui.InfoMessage($"End {nameof(ContainerTransfer)}");
 
             CommandA c = new CommandA(AddOnCtx.Services);
             c.CommandA_Run();
 
-            _logger.Info("The End");
-            AddOnCtx.MsgCmd.InfoMessage("The End");
+            _logger.Info("The End TestContainerTransfer_Run");
+            AddOnCtx.Msg.InfoMessage("The End TestContainerTransfer_Run");
         }
-
-        #endregion Internal Methods
     }
 }

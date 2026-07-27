@@ -66,26 +66,23 @@ namespace drz.Lib_B
 
             //---- CadInfo -------
             _logger.Info(AddOnCtx.CadInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
             _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
-
             //----- SysInfo ------
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.SysInfo.ToLongString());
-
-            AddOnCtx.MsgGui.InfoMessage($"End {nameof(CommandB)}");
-
-            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
 
             //если подменить сборку аддона, то покажет новый номер версии
+            AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+
             AddOnCtx.MsgCmd.InfoMessage($"Замените сборку аддона {AddOnCtx.AddOnInfo.AssemblyPath} на одноименную сборку другой версии");
             AddOnCtx.MsgCmd.InfoMessage("И нажмите любую клавишу");
-            Console.ReadKey();//конечно не реализовано))
+            Console.ReadKey();
             AddOnCtx.MsgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
-            AddOnCtx.MsgCmd.InfoMessage("The End");
+
+            _logger.Info("The End B");
+            AddOnCtx.MsgCmd.InfoMessage("The End B");
         }
     }
 }
