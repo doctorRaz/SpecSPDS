@@ -30,7 +30,7 @@ namespace drz.Infrastructure.Infrastructure
         /// <inheritdoc/>
         public IAddOnInfo Register(Assembly assembly)
         {
-            return _addons.GetOrAdd(assembly.Location, loc => new AddOnInfo(assembly));
+            return _addons.GetOrAdd(assembly.Location /*assembly.FullName*/, key => new AddOnInfo(assembly));
         }
 
         /// <inheritdoc/>

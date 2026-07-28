@@ -8,9 +8,6 @@ using drz.LogBootstrap;
 using drz.n.Infrastructure.Services;
 using drz.n.Infrastructure.Services.Message;
 
-
-//using drz.n.Infrastructure.Services;
-//using drz.n.Infrastructure.Services.Message;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
@@ -48,6 +45,9 @@ namespace drz.AddOnRuntime
 
             RegisterServices(_container);
 
+            // регистрируем собственно сам контейнер
+            // всегда доступен через AddOnContext
+            // можно передавать в другие сборки параметром или по сервисам /требуются интерфейсы Abstractions/
             _container.RegisterInstance<IAddOnServices>(new AddOnServices(_container));
 
             _container.Verify();
@@ -86,31 +86,66 @@ namespace drz.AddOnRuntime
 
         #region Private Methods
 
+        /// <summary>Registers the infrastructure.</summary>
+        /// <param name="container">The container.</param>
+        /// <param name="addOnAssembly">The add on assembly.</param>
         private void RegisterInfrastructure(Container container, Assembly addOnAssembly)
         {
+            //регистрируемая сборка
             container.RegisterInstance(addOnAssembly);
 
-            container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
+            //IAddOnInfo регистрация не нужна
+            //container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
 
+            //инфо о системе, пока экземплярный
+            //todo засунуть в статический контейнер
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
 
+            //инфо о хосте, каде, пока экземплярный
+            //todo засунуть в статический контейнер
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+
+            // AddonInfoRegistry регистрируем интерфейс создания получения IAddOnInfo
+            // хранятся в ConcurrentDictionary<string, IAddOnInfo> _addons = new();
+            //ключ полный путь к файлу addOnAssembly
+            container.RegisterSingleton<IAddonInfoRegistry, AddonInfoRegistry>();
+
+            //регистрация новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
+            container.RegisterSingleton<IAddOnInfo>(() =>
+                                                container.GetInstance<IAddonInfoRegistry>()
+                                               .Register(addOnAssembly));
         }
 
+        /// <summary>Registers the services.</summary>
+        /// <param name="container">The container.</param>
         private void RegisterServices(Container container)
         {
             container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
 
+            // серви сообщений ком строки
             container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
 
+            //сервис мультикад сообщений
+            //   внутри корявая маршрутизация:
+            //      если вызов без документа, то попытается отправить в мультикад окошко
+            //          если неуспех выведет алерт кад
             container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
+            //сервис Win сообщений
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
 
+            //сервис маршрутизации сообщений,
+            //  документ есть ->ком строка
+            //  документа нет -> Win
             container.Register<IMessageService, MessageService>(Lifestyle.Singleton);
 
+            // сервисс документов
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
 
+            // фабрика логера, одна на ProduktName
+            //  при повторном создании с ттем же продуккт наме, будет использоваться эта же фабрика
+            //      если даже внутри одного аддоона, но в другой сборке будет создан контейнер и имя продуккта другое,
+            //      в этой сборке будет использоваться другая фабрика
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
 
             //запрашивает фабрику из словаря при каждом обращении
