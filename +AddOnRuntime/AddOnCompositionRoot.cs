@@ -112,6 +112,9 @@ namespace drz.AddOnRuntime
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
 
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
+
+            //запрашивает фабрику из словаря при каждом обращении
+            //container.Register<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
         }
 
         #endregion Private Methods
