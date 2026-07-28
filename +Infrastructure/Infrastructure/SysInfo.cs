@@ -12,9 +12,18 @@ namespace drz.Infrastructure.Infrastructure
         #region Private Fields
 
         private const string RegPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
-        private string? _gpuInfo;
-        private string? _processorName;
-        private string? _ramTotal;
+
+        //private static string? _gpuInfo;
+        private static readonly Lazy<string> _gpuInfo = new(GetGpuData);
+
+        //private static  string? _processorName;
+
+        private static readonly Lazy<string> _processorName = new(() => GetWmiValue("Win32_Processor", "Name") ?? "Unknown");
+
+        //private static string? _ramTotal;
+
+        private static readonly Lazy<string> _ramTotal =    new(() => GetRamTotal());
+
 
         #endregion Private Fields
 
@@ -83,13 +92,17 @@ namespace drz.Infrastructure.Infrastructure
         public string BuildLab { get; init; } = "Unknown";
         public string DisplayVersion { get; init; } = "Unknown";
         public string EditionId { get; init; } = "Unknown";
-        public string GpuInfo => _gpuInfo ??= GetGpuData();
+
+        //public string GpuInfo => _gpuInfo ??= GetGpuData();
+        public string GpuInfo => _gpuInfo.Value;
         public string InstallationType { get; init; } = "Unknown";
         public bool IsFallback { get; init; }
         public Version OsVersion { get; init; }
-        public string ProcessorName => _processorName ??= GetWmiValue("Win32_Processor", "Name");
+        //public string ProcessorName => _processorName ??= GetWmiValue("Win32_Processor", "Name");
+        public string ProcessorName => _processorName.Value;
         public string ProductName { get; init; } = "Windows";
-        public string RamTotalGb => _ramTotal ??= GetRamTotal();
+        //public string RamTotalGb => _ramTotal ??= GetRamTotal();
+        public string RamTotalGb => _ramTotal.Value;
         public string VersionString => OsVersion.ToString();
 
         #endregion Public Properties
@@ -166,7 +179,7 @@ namespace drz.Infrastructure.Infrastructure
             return "Unknown";
         }
 
-        private string GetRamTotal()
+        private static string GetRamTotal()
         {
             double.TryParse(GetWmiValue("Win32_ComputerSystem", "TotalPhysicalMemory"), out double ramBytes);
             return $"{(ramBytes / (1024 * 1024 * 1024)):F1} GB";
