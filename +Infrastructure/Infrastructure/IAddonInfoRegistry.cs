@@ -13,7 +13,7 @@ namespace drz.Abstractions.Infrastructure
         /// Регистрирует информацию об аддоне.
         /// Если запись уже существует, возвращает существующий объект.
         /// </summary>
-        IAddOnInfo Register(Assembly assembly);
+        IAddOnInfo GetOrAdd(Assembly assembly);
 
         /// <summary>
         /// Возвращает информацию по полному пути сборки.

@@ -73,7 +73,7 @@ namespace drz.SpecSPDS.Test
 
             var k1 = dd.GetKeys();
 
-            IAddOnInfo info = dd1.Register(typeof(ContainerTransfer).Assembly);
+            IAddOnInfo info = dd1.GetOrAdd(typeof(ContainerTransfer).Assembly);
 
             IAddOnInfo info2;
             bool b = dd1.TryGet(typeof(ContainerTransfer).Assembly.Location, out /*IAddOnInfo*/ info2);

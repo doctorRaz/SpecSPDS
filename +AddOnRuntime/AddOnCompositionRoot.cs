@@ -95,7 +95,7 @@ namespace drz.AddOnRuntime
             container.RegisterInstance(addOnAssembly);
 
             //IAddOnInfo регистрация не нужна
-            //container.Register<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
+            //container.GetOrAdd<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
 
             //инфо о системе, пока экземплярный
             //todo засунуть в статический контейнер
@@ -113,7 +113,7 @@ namespace drz.AddOnRuntime
             //регистрация новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
             container.RegisterSingleton<IAddOnInfo>(() =>
                                                 container.GetInstance<IAddOnInfoRegistry>()
-                                               .Register(addOnAssembly));
+                                               .GetOrAdd(addOnAssembly));
         }
 
         /// <summary>Registers the services.</summary>
@@ -149,7 +149,7 @@ namespace drz.AddOnRuntime
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
 
             //запрашивает фабрику из словаря при каждом обращении
-            //container.Register<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
+            //container.GetOrAdd<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
         }
 
         #endregion Private Methods

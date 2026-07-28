@@ -20,7 +20,7 @@ namespace drz.Infrastructure.Infrastructure
         /// </summary>
         private static readonly ConcurrentDictionary<string, IAddOnInfo> _addons = new();
 
-        public IAddOnInfo Register(Assembly assembly)
+        public IAddOnInfo GetOrAdd(Assembly assembly)
         {
             return _addons.GetOrAdd(assembly.Location /*assembly.FullName*/, key => new AddOnInfo(assembly));
         }
