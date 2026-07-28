@@ -25,6 +25,11 @@ namespace drz.Infrastructure.Infrastructure
             return _addons.GetOrAdd(assembly.Location /*assembly.FullName*/, key => new AddOnInfo(assembly));
         }
 
+        public IAddOnInfo GetOrAdd<T>()
+        {
+            return GetOrAdd(typeof(T).Assembly);
+        }
+
         public bool TryGet(
             string assemblyFullName,
             out IAddOnInfo info)

@@ -20,6 +20,11 @@ namespace drz.Abstractions.Infrastructure
         /// </summary>
         bool TryGet(string assemblyFullName, out IAddOnInfo info);
 
+        /// <summary>Gets the or add.</summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IAddOnInfo GetOrAdd<T>();
+
         /// <summary>
         /// Возвращает все зарегистрированные аддоны.
         /// </summary>
