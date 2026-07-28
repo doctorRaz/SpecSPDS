@@ -20,8 +20,10 @@ AppSettings я б засунул именно в то, что работает �
 */
 
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
+using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services.Message;
+using drz.Infrastructure.Infrastructure;
 using drz.Infrastructure.Services;
 using drz.n.Infrastructure.Services;
 using System;
@@ -49,52 +51,72 @@ namespace drz.SpecSPDS.Test
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                ContainerTransfer ct = new ContainerTransfer();
-                var add = AddOnCtx.AddOnInfo;
+                TestContainer tc = new TestContainer();
                 _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
                 _isLoggerProvider = true;
                 _logger.Info($"Start: {sw.Elapsed}");
+                _msgCmd = AddOnCtx.MsgCmd;
 
-                //todo так делать нехорошо , но для отладки можно(((
-                DocumentService ds = (DocumentService)AddOnCtx.DocService;
+                //********
+                //test sys info
 
-                ds.IsActive = true;//doc yes
-                AddOnCtx.Msg.InfoMessage("test");
+                ISysInfo sysInfo = new SysInfo();
+                 _msgCmd.InfoMessage($"SysInfo: {sysInfo.ToLongString()}");
 
-                ds.IsActive = !ds.IsActive;//doc no
-                AddOnCtx.Msg.InfoMessage(ds.FullPath);//ex
+                ISysInfo sysInfo22 = new SysInfo();
+                 _msgCmd.InfoMessage($"SysInfo: {sysInfo22.ToLongString()}");
 
-                AddOnCtx.MsgCmd.InfoMessage("test");
-                AddOnCtx.MsgGui.InfoMessage("test");
+             
+                ICadInfo cadInfo = new CadInfo();
+                 _msgCmd.InfoMessage($"CadInfo: {cadInfo.ToLongString()}");
+              
 
-                sw.Restart();
+                //******
+                // test message
+                TestMessage tm = new TestMessage();
+
+                ////message cmd to console
+                tm.documentService.IsActive = true;
+
+                tm.RunMsgCmd();
+
+                ////message gui to win
+                tm.RunMsgGui();
+
+                ////router message win to console
+                tm.RunMsg();
+
+                tm.documentService.IsActive = false;
+                tm.RunMsg();
+
+                //*******************
+                //тест проброса объектов и сервисов между библиотеками по цепочке и логгирование
+                //Test.Console->Test.LibA->Test.LibB->
+                //LibA, LibB знают только интерфейсы, Abstractions
+                TestContainerTransfer tct = new TestContainerTransfer();
+                tct.TestContainerTransfer_Run();
             }
             catch (Exception ex)
             {
                 if (_isLoggerProvider) _logger.Fatal(ex, "Продолжение не возможно");
                 AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
-                AddOnCtx.Msg.ErrorMessage(ex);
-                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно");
             }
-
-            //*******************
-            //тест проброса объектов и сервисов между библиотеками по цепочке и логгирование
-            //Test.Console->Test.LibA->Test.LibB->
-            //LibA, LibB знают только интерфейсы, Abstractions
-            /*ct.ContainerTransfer_Run();*/
-
-             AddOnCtx.MsgCmd.InfoMessage("Press any key to exit...");
-            Console.ReadKey();
+            finally
+            {
+                if (_isLoggerProvider) _logger.Info("Terminate");
+                Console.WriteLine("Press any key to exit...");
+                Console.ReadKey();
+            }
         }
 
         #endregion Private Methods
 
         #region Private Fields
 
-
         private static IDrzLogger? _logger;
         private static bool _isLoggerProvider;//логер есть
-
+        private static IMessageService _msg;
+        private static ICommandLineMessageService _msgCmd;
         #endregion Private Fields
     }
 }
