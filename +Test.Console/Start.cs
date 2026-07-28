@@ -25,8 +25,11 @@ using drz.Abstractions.Logger;
 using drz.Abstractions.Services.Message;
 using drz.Infrastructure.Infrastructure;
 using drz.Infrastructure.Services;
+using drz.Lib_A;
 using drz.n.Infrastructure.Services;
+using drz.Updater;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -58,18 +61,35 @@ namespace drz.SpecSPDS.Test
                 _msgCmd = AddOnCtx.MsgCmd;
 
                 //********
+                //test add addon Info
+
+                //
+                TestGetOrADDAddonInfo tgAdd = new TestGetOrADDAddonInfo();
+
+                IAddOnInfo addOnInfo1 = tgAdd.AddAssembly((typeof(TestContainerTransfer).Assembly));
+                IAddOnInfo addOnInfo10 = tgAdd.AddAssembly((typeof(TestContainerTransfer).Assembly));
+                IAddOnInfo addOnInfo2 = tgAdd.AddAssembly((typeof(CommandA).Assembly));
+
+                TestGetOrADDAddonInfo tgAdd2 = new TestGetOrADDAddonInfo();
+
+                IAddOnInfo addOnInfo3 = tgAdd2.AddAssembly((typeof(UpdateManager).Assembly));
+                IAddOnInfo addOnInfo100 = tgAdd2.AddAssembly((typeof(TestContainerTransfer).Assembly));
+
+                IReadOnlyCollection<IAddOnInfo> all = tgAdd.GetAll();
+                IReadOnlyCollection<IAddOnInfo> all2 = tgAdd2.GetAll();
+
+                var k=tgAdd.GetKeys();
+                //********
                 //test sys info
 
                 ISysInfo sysInfo = new SysInfo();
-                 _msgCmd.InfoMessage($"SysInfo: {sysInfo.ToLongString()}");
+                _msgCmd.InfoMessage($"SysInfo: {sysInfo.ToLongString()}");
 
                 ISysInfo sysInfo22 = new SysInfo();
-                 _msgCmd.InfoMessage($"SysInfo: {sysInfo22.ToLongString()}");
+                _msgCmd.InfoMessage($"SysInfo: {sysInfo22.ToLongString()}");
 
-             
                 ICadInfo cadInfo = new CadInfo();
-                 _msgCmd.InfoMessage($"CadInfo: {cadInfo.ToLongString()}");
-              
+                _msgCmd.InfoMessage($"CadInfo: {cadInfo.ToLongString()}");
 
                 //******
                 // test message
@@ -117,6 +137,7 @@ namespace drz.SpecSPDS.Test
         private static bool _isLoggerProvider;//логер есть
         private static IMessageService _msg;
         private static ICommandLineMessageService _msgCmd;
+
         #endregion Private Fields
     }
 }
