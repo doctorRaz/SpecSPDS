@@ -7,33 +7,24 @@ using System.Reflection;
 namespace drz.Infrastructure.Infrastructure
 {
     /// <summary>
-    /// Глобальный реестр информации о загруженных аддонах.
-    ///
+    /// Глобальный реестр информации о загруженных сборках.
     /// Экземпляр существует один на процесс.
     /// Используется ConcurrentDictionary, поэтому безопасен
     /// при регистрации из нескольких потоков.
     /// </summary>
-    public sealed class AddonInfoRegistry : IAddonInfoRegistry
+    public sealed class AddOnInfoRegistry : IAddOnInfoRegistry
     {
         /// <summary>
         /// Хранилище.
-        ///
-        /// Ключ - полное имя сборки
-        /// Example:
-        ///
-        /// SpecSPDS, Version=2.3.0.0,
-        /// Culture=neutral,
-        /// PublicKeyToken=null
+        /// Ключ - полный путь к файлу
         /// </summary>
         private static readonly ConcurrentDictionary<string, IAddOnInfo> _addons = new();
 
-        /// <inheritdoc/>
         public IAddOnInfo Register(Assembly assembly)
         {
             return _addons.GetOrAdd(assembly.Location /*assembly.FullName*/, key => new AddOnInfo(assembly));
         }
 
-        /// <inheritdoc/>
         public bool TryGet(
             string assemblyFullName,
             out IAddOnInfo info)
@@ -43,7 +34,6 @@ namespace drz.Infrastructure.Infrastructure
                 out info!);
         }
 
-        /// <inheritdoc/>
         public IReadOnlyCollection<IAddOnInfo> GetValues()
         {
             return _addons.Values.ToArray();

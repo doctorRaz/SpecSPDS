@@ -4,49 +4,66 @@
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
+using drz.Abstractions.Services.Message;
 using drz.Lib_B;
 
 namespace drz.Lib_A
-
 {
     /// <summary>
     ///
     /// </summary>
-    public class CommandA
+    public class ContainerTransferA
     {
         #region Private Fields
 
+        //логер
         private readonly IDrzLogger _logger;
+
+        //ком строка
+        private readonly ICommandLineMessageService? _msgCmd;
 
         #endregion Private Fields
 
-        //логгер
+        #region Internal Constructors
 
-        //private readonly IAddOnServices _services;
-
-        //private static bool _isAddOnCompositionRoot;//контейнер наполнен
-
-        #region Public Constructors
-
-        /// <summary>Initializes a new instance of the <see cref="CommandA"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ContainerTransferA"/> class.</summary>
         /// <param name="services">The services.</param>
-        public CommandA(IAddOnServices services)
+        internal ContainerTransferA(IAddOnServices services)
         {
-            // экземпляр копии контейнера by ref
+            // экземпляр копии контейнера by ref сахарок
+            //можно просто
+            //  _services=services
+            //      и получать интерфейсы по
+            //          services.Get<T>
             AddOnCtx.Initialize(services);
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(CommandA));
+            string msg = $"{nameof(ContainerTransferA)} Init";
 
-            _logger.InfoCaller("CommandB Initialized");
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransferA));
+            _logger.InfoCaller(msg);
+
+            _msgCmd = AddOnCtx.MsgCmd;
+            _msgCmd.InfoMessage(msg);
         }
 
-        #endregion Public Constructors
+        #endregion Internal Constructors
 
         #region Public Methods
+
+        public static void Run(IAddOnServices services)
+        {
+            ContainerTransferA containerTransferA = new ContainerTransferA(services);
+            containerTransferA.CommandA_Run();
+        }
 
         /// <summary>Commands a run.</summary>
         public void CommandA_Run()
         {
+            string msg = $"{nameof(CommandA_Run)} Init";
+
+            _logger.InfoCaller(msg);
+            _msgCmd.InfoMessage(msg);
+
             System.Exception ex = new System.Exception("Properties is null");
 
             _logger.TraceCaller("TraceCaller");
@@ -64,7 +81,7 @@ namespace drz.Lib_A
             _logger.FatalCaller(ex, "FatalCaller");
             _logger.FatalCaller(ex);
 
-            _logger.Debug("CommandB.Run");
+            _logger.Debug("ContainerTransferB.Run");
             _logger.ForErrorEvent()
                     .Message("Properties is null")
                     .Property("name", 10)
@@ -82,11 +99,12 @@ namespace drz.Lib_A
             //----- SysInfo ------
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
 
-            CommandB c = new CommandB(AddOnCtx.Services);
-            c.CommandB_Run();
+            ContainerTransferB.Run(AddOnCtx.Services);
+              
 
-            _logger.Info("The End A");
-            AddOnCtx.MsgCmd.InfoMessage("The End A");
+            msg = $"{nameof(CommandA_Run)} end";
+            _logger.Info(msg);
+            _msgCmd.InfoMessage(msg);
         }
 
         #endregion Public Methods

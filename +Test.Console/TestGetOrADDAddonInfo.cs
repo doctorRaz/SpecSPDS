@@ -7,12 +7,12 @@ namespace drz.SpecSPDS.Test
 {
     internal class TestGetOrADDAddonInfo
     {
-        private readonly IAddonInfoRegistry _iadR;
+        private readonly IAddOnInfoRegistry _iadR;
 
         internal TestGetOrADDAddonInfo()
         {
             //_assembly = assembly;
-            _iadR = new AddonInfoRegistry();
+            _iadR = new AddOnInfoRegistry();
         }
 
         internal IAddOnInfo AddAssembly(Assembly assembly)

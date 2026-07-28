@@ -7,7 +7,7 @@ namespace drz.Abstractions.Infrastructure
     /// Глобальный реестр информации о загруженных аддонах.
     /// Один экземпляр существует на процесс.
     /// </summary>
-    public interface IAddonInfoRegistry
+    public interface IAddOnInfoRegistry
     {
         /// <summary>
         /// Регистрирует информацию об аддоне.
@@ -16,7 +16,7 @@ namespace drz.Abstractions.Infrastructure
         IAddOnInfo Register(Assembly assembly);
 
         /// <summary>
-        /// Возвращает информацию по полному имени сборки.
+        /// Возвращает информацию по полному пути сборки.
         /// </summary>
         bool TryGet(string assemblyFullName, out IAddOnInfo info);
 
@@ -26,7 +26,7 @@ namespace drz.Abstractions.Infrastructure
         IReadOnlyCollection<IAddOnInfo> GetValues();
 
         /// <summary>
-        /// Возвращает все пути (ключи) кзарегистрированным аддонам
+        /// Возвращает все пути (ключи) к зарегистрированным аддонам
         /// </summary>
         ICollection<string> GetKeys();
     }

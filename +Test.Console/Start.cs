@@ -54,11 +54,37 @@ namespace drz.SpecSPDS.Test
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                TestContainer tc = new TestContainer();
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
-                _isLoggerProvider = true;
-                _logger.Info($"Start: {sw.Elapsed}");
-                _msgCmd = AddOnCtx.MsgCmd;
+                #region ConteinerClone
+
+                //***********************************************************************************************
+                /*
+                тест создания в каждой сборке контейнера
+                проверяем корректность получения AddOnInfo текущей сборки
+                адекватность логера и сервисов сообщений
+                сис инфо переделано на статик, поэтому после первого обращения к:
+                    CPU, GPU, RAM данные кэшируются
+                */
+
+                ConteinerClone.Run();
+
+                //***********************************************************************************************
+
+                #endregion ConteinerClone
+
+                #region TestContainerTransfer
+
+                //***********************************************************************************************
+                /*
+                    тест проброса контейнера между библиотеками по цепочке, логирование и сообщения
+                    Test.Console->Test.LibA->Test.LibB->
+                    LibA, LibB знают только интерфейсы, Abstractions
+                    контейнер на весь аддон один
+                */
+                ContainerTransfer.Run();
+
+                //***********************************************************************************************
+
+                #endregion TestContainerTransfer
 
                 //********
                 //test add addon Info
@@ -66,19 +92,19 @@ namespace drz.SpecSPDS.Test
                 //
                 TestGetOrADDAddonInfo tgAdd = new TestGetOrADDAddonInfo();
 
-                IAddOnInfo addOnInfo1 = tgAdd.AddAssembly((typeof(TestContainerTransfer).Assembly));
-                IAddOnInfo addOnInfo10 = tgAdd.AddAssembly((typeof(TestContainerTransfer).Assembly));
-                IAddOnInfo addOnInfo2 = tgAdd.AddAssembly((typeof(CommandA).Assembly));
+                IAddOnInfo addOnInfo1 = tgAdd.AddAssembly((typeof(ContainerTransfer).Assembly));
+                IAddOnInfo addOnInfo10 = tgAdd.AddAssembly((typeof(ContainerTransfer).Assembly));
+                IAddOnInfo addOnInfo2 = tgAdd.AddAssembly((typeof(ContainerTransferA).Assembly));
 
                 TestGetOrADDAddonInfo tgAdd2 = new TestGetOrADDAddonInfo();
 
                 IAddOnInfo addOnInfo3 = tgAdd2.AddAssembly((typeof(UpdateManager).Assembly));
-                IAddOnInfo addOnInfo100 = tgAdd2.AddAssembly((typeof(TestContainerTransfer).Assembly));
+                IAddOnInfo addOnInfo100 = tgAdd2.AddAssembly((typeof(ContainerTransfer).Assembly));
 
                 IReadOnlyCollection<IAddOnInfo> all = tgAdd.GetAll();
                 IReadOnlyCollection<IAddOnInfo> all2 = tgAdd2.GetAll();
 
-                var k=tgAdd.GetKeys();
+                var k = tgAdd.GetKeys();
                 //********
                 //test sys info
 
@@ -108,13 +134,6 @@ namespace drz.SpecSPDS.Test
 
                 tm.documentService.IsActive = false;
                 tm.RunMsg();
-
-                //*******************
-                //тест проброса объектов и сервисов между библиотеками по цепочке и логгирование
-                //Test.Console->Test.LibA->Test.LibB->
-                //LibA, LibB знают только интерфейсы, Abstractions
-                TestContainerTransfer tct = new TestContainerTransfer();
-                tct.TestContainerTransfer_Run();
             }
             catch (Exception ex)
             {

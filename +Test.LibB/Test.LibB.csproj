@@ -13,7 +13,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>-->
 	<PropertyGroup>
-	<DefineConstants>$(DefineConstants);TEST</DefineConstants>
+	<DefineConstants>$(DefineConstants);TEST;B</DefineConstants>
 </PropertyGroup>
 	<ItemGroup>
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />

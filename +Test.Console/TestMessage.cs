@@ -4,9 +4,8 @@ using System;
 
 namespace drz.SpecSPDS.Test
 {
-    internal class TestMessage
+    public class TestMessage
     {
-
         private readonly IMessageService _msg;
         private readonly IWindowMessageService _msgGui;
         private readonly ICommandLineMessageService _msgCmd;
@@ -16,8 +15,7 @@ namespace drz.SpecSPDS.Test
         private MessageResult _messageResult;
         internal DocumentService documentService => _documentService;
 
-        internal TestMessage()
-
+        public TestMessage()
         {
             _msg = AddOnCtx.Msg;
             _msgCmd = AddOnCtx.MsgCmd;
@@ -27,23 +25,19 @@ namespace drz.SpecSPDS.Test
 
             //todo так делать нехорошо , но для отладки можно(((
             _documentService = (DocumentService)AddOnCtx.DocService;
-
-
         }
 
         /// <summary>route the MSG console or window message</summary>
-        internal void RunMsg()
+        public void RunMsg()
         {
             _msg.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
             _msg.WarningMessage(AddOnCtx.CadInfo.ToString());
             _msg.ErrorMessage(_ex);
             _msg.ErrorMessage(_msgErr, _ex);
-
-
         }
 
         /// <summary>Runs the MSG command.</summary>
-        internal void RunMsgCmd()
+        public void RunMsgCmd()
         {
             _msgCmd.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
             _msgCmd.WarningMessage(AddOnCtx.CadInfo.ToString());
@@ -52,7 +46,7 @@ namespace drz.SpecSPDS.Test
         }
 
         /// <summary>Runs the MSG GUI.</summary>
-        internal void RunMsgGui()
+        public void RunMsgGui()
         {
             //info
             _msgGui.InfoMessage(AddOnCtx.SysInfo.ToString());
@@ -61,12 +55,11 @@ namespace drz.SpecSPDS.Test
             _msgGui.ErrorMessage(_msgErr, _ex);
 
             //return MessageResult
-            _messageResult=_msgGui. AskOkCancel("Test Message", "Caption");
-            _messageResult=_msgGui.AskAbortRetryIgnore("Test Message", "Caption");
-            _messageResult=_msgGui. AskYesNoCancel("Test Message", "Caption");
-            _messageResult=_msgGui.AskYesNo ("Test Message", "Caption");
-            _messageResult=_msgGui.AskRetryCancel("Test Message", "Caption");
-
+            _messageResult = _msgGui.AskOkCancel("Test Message", "Caption");
+            _messageResult = _msgGui.AskAbortRetryIgnore("Test Message", "Caption");
+            _messageResult = _msgGui.AskYesNoCancel("Test Message", "Caption");
+            _messageResult = _msgGui.AskYesNo("Test Message", "Caption");
+            _messageResult = _msgGui.AskRetryCancel("Test Message", "Caption");
         }
     }
 }
