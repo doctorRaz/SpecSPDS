@@ -10,7 +10,7 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<Description>Сервис nanoCAD</Description>
+		<Description>Сервис и инфраструктура nanoCAD</Description>
 	</PropertyGroup>
 	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
