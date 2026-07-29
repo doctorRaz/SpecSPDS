@@ -1,4 +1,5 @@
 ﻿using drz.Abstractions.Infrastructure;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,10 @@ namespace drz.Infrastructure.Infrastructure
             return _addons.GetOrAdd(assembly.Location /*assembly.FullName*/, key => new AddOnInfo(assembly));
         }
 
-        public IAddOnInfo GetOrAdd<T>()
-        {
-            return GetOrAdd(typeof(T).Assembly);
-        }
+        public IAddOnInfo GetOrAdd<T>() => GetOrAdd(typeof(T).Assembly);
+
+        public IAddOnInfo GetOrAdd(Type type) => GetOrAdd(type.Assembly);
+
 
         public bool TryGet(
             string assemblyFullName,

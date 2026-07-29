@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace drz.Abstractions.Infrastructure
@@ -9,21 +10,28 @@ namespace drz.Abstractions.Infrastructure
     /// </summary>
     public interface IAddOnInfoRegistry
     {
+        #region Public Methods
+
+        /// <summary>
+        /// Возвращает все пути (ключи) к зарегистрированным аддонам
+        /// </summary>
+        ICollection<string> GetKeys();
+
         /// <summary>
         /// Регистрирует информацию об аддоне.
         /// Если запись уже существует, возвращает существующий объект.
         /// </summary>
         IAddOnInfo GetOrAdd(Assembly assembly);
 
-        /// <summary>
-        /// Возвращает информацию по полному пути сборки.
-        /// </summary>
-        bool TryGet(string assemblyFullName, out IAddOnInfo info);
-
         /// <summary>Gets the or add.</summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IAddOnInfo GetOrAdd<T>();
+
+        /// <summary>Gets the or add.</summary>
+        /// <param name="type">The type.</param>
+        /// <returns></returns>
+        public IAddOnInfo GetOrAdd(Type type);
 
         /// <summary>
         /// Возвращает все зарегистрированные аддоны.
@@ -31,8 +39,10 @@ namespace drz.Abstractions.Infrastructure
         IReadOnlyCollection<IAddOnInfo> GetValues();
 
         /// <summary>
-        /// Возвращает все пути (ключи) к зарегистрированным аддонам
+        /// Возвращает информацию по полному пути сборки.
         /// </summary>
-        ICollection<string> GetKeys();
+        bool TryGet(string assemblyFullName, out IAddOnInfo info);
+
+        #endregion Public Methods
     }
 }
