@@ -19,6 +19,10 @@ namespace drz.Src.Infrastructure
 
         #region Internal Properties
 
+        /// <summary>Список зарегистрированных аддонов.</summary>
+        /// <value>The add on information registry.</value>
+        internal static IAddOnInfoRegistry AddOnInfoRegistry => Services.Get<IAddOnInfoRegistry>();
+
         /// <summary>Gets the add on information.</summary>
         /// <value>The add on information.</value>
         internal static IAddOnInfo AddOnInfo => Services.Get<IAddOnInfo>();
