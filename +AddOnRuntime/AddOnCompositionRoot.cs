@@ -120,7 +120,13 @@ namespace drz.AddOnRuntime
             //                                   .GetOrAdd(addOnAssembly));
 
             //регистрация новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
-            container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
+            container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
+
+            //old
+            //container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
+
+
+
         }
 
         /// <summary>Registers the services.</summary>
