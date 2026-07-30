@@ -57,7 +57,7 @@ namespace drz.Lib_A
         }
 
         /// <summary>Commands a run.</summary>
-        public void CommandA_Run()
+        internal void CommandA_Run()
         {
             string msg = $"{nameof(CommandA_Run)} Init";
 
@@ -100,7 +100,6 @@ namespace drz.Lib_A
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
 
             ContainerTransferB.Run(AddOnCtx.Services);
-              
 
             msg = $"{nameof(CommandA_Run)} end";
             _logger.Info(msg);

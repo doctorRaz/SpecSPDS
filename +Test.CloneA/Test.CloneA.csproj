@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>		
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.Lib_A</RootNamespace>
+		<Description>1 чистилка bak и копий</Description>
+		<!--отключает транзитивные ссылки-->
+		<!--<DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>-->
+		<AssemblyName>$(SolutionName)_Clone_A</AssemblyName>
+		<Nullable>enable</Nullable>
+		<AssemblyTitle>dRz.Test.CloneA</AssemblyTitle>
+		<Product>CloneA</Product>
+		<InformationalVersion>Cleaner for CloneA</InformationalVersion>
+	</PropertyGroup>
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>-->
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);TEST:A</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		 <Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
+		<ProjectReference Include="..\+Test.CloneB\Test.CloneB.csproj" />		
+		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
+	</ItemGroup>
+</Project>

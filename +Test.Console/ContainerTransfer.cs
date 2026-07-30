@@ -54,7 +54,7 @@ namespace drz.SpecSPDS.Test
                 _msgCmd = AddOnCtx.MsgCmd;
                 _msgCmd.InfoMessage(msg);
 
-                _isAddOnCompositionRoot=true;   
+                _isAddOnCompositionRoot = true;
             }
             catch (Exception ex)
             {
@@ -63,18 +63,11 @@ namespace drz.SpecSPDS.Test
             }
         }
 
-        /// <summary>
-        /// Инициализирует контейнер сервисов AddOn при первом создании экземпляра
-        /// и записывает информацию об успешной инициализации в журнал.
-        /// </summary>
-
         /// <summary>Containers the transfer run.</summary>
         internal void TestContainerTransfer_Run()
         {
-
             string msg = $"{nameof(TestContainerTransfer_Run)} Init";
 
-            _logger.InfoCaller(msg);
             _msgCmd.InfoMessage(msg);
 
             System.Exception ex = new System.Exception("Properties is null");
@@ -114,7 +107,7 @@ namespace drz.SpecSPDS.Test
             _logger.Info(AddOnCtx.SysInfo.ToLongString());
 
             //запускаем цепочку библиотек с передачей друг другу AddOnCtx.Services
-            ContainerTransferA.Run(AddOnCtx.Services); 
+            ContainerTransferA.Run(AddOnCtx.Services);
 
             msg = $"{nameof(TestContainerTransfer_Run)} end";
             _logger.Info(msg);

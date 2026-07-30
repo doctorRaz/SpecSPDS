@@ -4,7 +4,7 @@ using System;
 
 namespace drz.SpecSPDS.Test
 {
-    public class TestMessage
+    public class ContainerrMessage
     {
         private readonly IMessageService _msg;
         private readonly IWindowMessageService _msgGui;
@@ -13,9 +13,9 @@ namespace drz.SpecSPDS.Test
         private readonly System.Exception _ex;
         private const string _msgErr = "Program Error";
         private MessageResult _messageResult;
-        internal DocumentService documentService => _documentService;
+        //internal DocumentService documentService => _documentService;
 
-        public TestMessage()
+        internal ContainerrMessage()
         {
             _msg = AddOnCtx.Msg;
             _msgCmd = AddOnCtx.MsgCmd;
@@ -28,7 +28,7 @@ namespace drz.SpecSPDS.Test
         }
 
         /// <summary>route the MSG console or window message</summary>
-        public void RunMsg()
+        internal void RunMsg()
         {
             _msg.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
             _msg.WarningMessage(AddOnCtx.CadInfo.ToString());
@@ -37,7 +37,7 @@ namespace drz.SpecSPDS.Test
         }
 
         /// <summary>Runs the MSG command.</summary>
-        public void RunMsgCmd()
+        internal void RunMsgCmd()
         {
             _msgCmd.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
             _msgCmd.WarningMessage(AddOnCtx.CadInfo.ToString());
@@ -46,7 +46,7 @@ namespace drz.SpecSPDS.Test
         }
 
         /// <summary>Runs the MSG GUI.</summary>
-        public void RunMsgGui()
+        internal void RunMsgGui()
         {
             //info
             _msgGui.InfoMessage(AddOnCtx.SysInfo.ToString());
@@ -60,6 +60,19 @@ namespace drz.SpecSPDS.Test
             _messageResult = _msgGui.AskYesNoCancel("Test Message", "Caption");
             _messageResult = _msgGui.AskYesNo("Test Message", "Caption");
             _messageResult = _msgGui.AskRetryCancel("Test Message", "Caption");
+        }
+
+        internal static void Run()
+        {
+            ContainerrMessage containerrMessage = new ContainerrMessage();
+            containerrMessage.RunMsgCmd();
+            containerrMessage.RunMsgGui();
+
+            containerrMessage._documentService.IsActive = false;
+            containerrMessage.RunMsg();
+
+            containerrMessage._documentService.IsActive = true;
+            containerrMessage.RunMsg();
         }
     }
 }

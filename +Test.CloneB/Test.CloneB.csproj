@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>		
+		<TargetFramework>net462</TargetFramework>
+		<RootNamespace>drz.Lib_A</RootNamespace>
+		<Description>1 чистилка bak и копий</Description>
+
+		<AssemblyName>$(SolutionName)_Clone_B</AssemblyName>
+		<Nullable>enable</Nullable>
+		<AssemblyTitle>dRz.Test.CloneB</AssemblyTitle>
+		<Product>Lib_A</Product>
+		<InformationalVersion>Cleaner for 1</InformationalVersion>
+	</PropertyGroup>
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>-->
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);TEST:A</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		 <Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+Test.AddOnRuntime\Test.AddOnRuntime.csproj" />		
+		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
+	</ItemGroup>
+</Project>

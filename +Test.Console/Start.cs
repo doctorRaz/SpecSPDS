@@ -20,18 +20,10 @@ AppSettings я б засунул именно в то, что работает �
 */
 
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services.Message;
-using drz.Infrastructure.Infrastructure;
-using drz.Infrastructure.Services;
-using drz.Lib_A;
-using drz.n.Infrastructure.Services;
-using drz.Updater;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows;
 
 namespace drz.SpecSPDS.Test
 {
@@ -45,15 +37,14 @@ namespace drz.SpecSPDS.Test
         [STAThread]
         private static void Main(string[] args)
         {
-            //MessageBoxResult f = MessageBox.Show("text", "caption",MessageBoxButton.YesNo,MessageBoxImage.Exclamation);
-
-            //WindowMessageService_test wt = new WindowMessageService_test(IntPtr.Zero);
-
-            //MessageResult rr = wt.AskYesNo("test","Caption");
-
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
+                goto clone;
+
+            clone:
+                //******
+
                 #region ConteinerClone
 
                 //***********************************************************************************************
@@ -71,7 +62,12 @@ namespace drz.SpecSPDS.Test
 
                 #endregion ConteinerClone
 
-                #region TestContainerTransfer
+                ConsoleReadKey();
+                goto clone;
+                //******
+            transfer:
+
+                #region ContainerTransfer
 
                 //***********************************************************************************************
                 /*
@@ -84,56 +80,22 @@ namespace drz.SpecSPDS.Test
 
                 //***********************************************************************************************
 
-                #endregion TestContainerTransfer
+                #endregion ContainerTransfer
 
-                //********
-                //test add addon Info
-
-                //
-                TestGetOrADDAddonInfo tgAdd = new TestGetOrADDAddonInfo();
-
-                IAddOnInfo addOnInfo1 = tgAdd.AddAssembly((typeof(ContainerTransfer).Assembly));
-                IAddOnInfo addOnInfo10 = tgAdd.AddAssembly((typeof(ContainerTransfer).Assembly));
-                IAddOnInfo addOnInfo2 = tgAdd.AddAssembly((typeof(ContainerTransferA).Assembly));
-
-                TestGetOrADDAddonInfo tgAdd2 = new TestGetOrADDAddonInfo();
-
-                IAddOnInfo addOnInfo3 = tgAdd2.AddAssembly((typeof(UpdateManager).Assembly));
-                IAddOnInfo addOnInfo100 = tgAdd2.AddAssembly((typeof(ContainerTransfer).Assembly));
-
-                IReadOnlyCollection<IAddOnInfo> all = tgAdd.GetAll();
-                IReadOnlyCollection<IAddOnInfo> all2 = tgAdd2.GetAll();
-
-                var k = tgAdd.GetKeys();
-                //********
-                //test sys info
-
-                ISysInfo sysInfo = new SysInfo();
-                _msgCmd.InfoMessage($"SysInfo: {sysInfo.ToLongString()}");
-
-                ISysInfo sysInfo22 = new SysInfo();
-                _msgCmd.InfoMessage($"SysInfo: {sysInfo22.ToLongString()}");
-
-                ICadInfo cadInfo = new CadInfo();
-                _msgCmd.InfoMessage($"CadInfo: {cadInfo.ToLongString()}");
-
+                ConsoleReadKey();
+                goto transfer;
                 //******
-                // test message
-                TestMessage tm = new TestMessage();
+            message:
 
-                ////message cmd to console
-                tm.documentService.IsActive = true;
+                #region TEST MESSAGE
 
-                tm.RunMsgCmd();
+                ContainerrMessage.Run();
 
-                ////message gui to win
-                tm.RunMsgGui();
+                #endregion TEST MESSAGE
 
-                ////router message win to console
-                tm.RunMsg();
-
-                tm.documentService.IsActive = false;
-                tm.RunMsg();
+                ConsoleReadKey();
+                goto message;
+                //******
             }
             catch (Exception ex)
             {
@@ -143,9 +105,14 @@ namespace drz.SpecSPDS.Test
             finally
             {
                 if (_isLoggerProvider) _logger.Info("Terminate");
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
+                ConsoleReadKey();
             }
+        }
+
+        private static ConsoleKeyInfo ConsoleReadKey()
+        {
+            Console.WriteLine("Press any key to exit...");
+            return Console.ReadKey();
         }
 
         #endregion Private Methods

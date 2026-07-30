@@ -2,6 +2,7 @@
 // container transfer test between builds
 
 global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
+using drz.Abstractions.Infrastructure;
 using drz.Abstractions.Logger;
 using drz.Abstractions.Services;
 using drz.Abstractions.Services.Message;
@@ -29,7 +30,7 @@ namespace drz.Lib_B
 
         /// <summary>Initializes a new instance of the <see cref="ContainerTransferB"/> class.</summary>
         /// <param name="services">The services.</param>
-        public ContainerTransferB(IAddOnServices services)
+        internal ContainerTransferB(IAddOnServices services)
         {
             // экземпляр копии контейнера by ref
             AddOnCtx.Initialize(services);
@@ -54,9 +55,10 @@ namespace drz.Lib_B
         }
 
         /// <summary>Commands the b run.</summary>
-        public void CommandB_Run()
+        internal void CommandB_Run()
         {
             string msg = $"{nameof(CommandB_Run)} Init";
+                     
 
             _logger.InfoCaller(msg);
             _msgCmd.InfoMessage(msg);

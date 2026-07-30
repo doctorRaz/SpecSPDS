@@ -1,4 +1,3 @@
-
 ### Предполагаемая структура зависимостей
 
 Chat GPT
@@ -12,7 +11,7 @@ Chat GPT
           │              │       │              │        │      │
           │              │       │              │        │      │
    LogBootstrap   Test.CadServices   Test.Infrastructure │  Test.LibB
-    │     │                                              │                                              
+    │     │                                              │
    NLog   │                                         Test.LibA
           │
           └──────────────┐
