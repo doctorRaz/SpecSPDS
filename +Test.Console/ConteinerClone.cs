@@ -81,7 +81,6 @@ namespace drz.SpecSPDS.Test
             //*******************
             //add other lib info
             Type typeFake = typeof(ConteinerCloneA);
-            addonRegistreds.GetOrAdd(typeFake);
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeFake.Assembly);
 
             //*********************

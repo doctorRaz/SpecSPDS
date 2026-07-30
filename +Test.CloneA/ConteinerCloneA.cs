@@ -69,7 +69,7 @@ namespace drz.Clone_A
             //*******************
             //add other lib info
             Type typeFake = typeof(ContextMarshalException);
-            addonRegistreds.GetOrAdd(typeFake);
+          
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeFake.Assembly);
 
             //*********************

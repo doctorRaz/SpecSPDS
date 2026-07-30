@@ -63,17 +63,16 @@ namespace drz.Clone_B
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
             _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
             //get registrator
-                       
-            
 
-            
+
+
+
 
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать
             //*******************
             //add other lib info
             Type typeFake = typeof(Convert);
-            addonRegistreds.GetOrAdd(typeFake);
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeFake.Assembly);
 
             //*********************
