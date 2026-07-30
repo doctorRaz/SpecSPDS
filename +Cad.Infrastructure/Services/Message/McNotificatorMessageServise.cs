@@ -20,10 +20,10 @@ namespace drz.n.Infrastructure.Services.Message
 
         #region Public Methods
 
-        public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
-        {
-            throw new NotImplementedException();
-        }
+        //public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public void WarningMessage(string message, [CallerMemberName] string caller = null)
         {
