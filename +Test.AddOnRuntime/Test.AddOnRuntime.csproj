@@ -21,7 +21,7 @@
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 		<!--<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj" />-->
 		<ProjectReference Include="..\+Infrastructure\Infrastructure.csproj">
-			<!--<PrivateAssets>all</PrivateAssets>-->
+			<PrivateAssets>all</PrivateAssets>
 		</ProjectReference>
 		<ProjectReference Include="..\+LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\+Test.CadServices\Test.CadServices.csproj" />

@@ -4,7 +4,6 @@ using drz.Abstractions.Services;
 using drz.Abstractions.Services.Message;
 using drz.AddOnRuntime;
 using drz.Clone_A;
-using drz.Infrastructure.Infrastructure;
 using System;
 using System.Reflection;
 
@@ -70,18 +69,12 @@ namespace drz.SpecSPDS.Test
             _msgCmd.InfoMessage(msg);
 
             IAddOnInfoRegistry addonRegistreds = AddOnCtx.AddOnInfoRegistry;
+
             //get count IaddOnInfo
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
             _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
             //get registrator
 
-            //плохо есть доступ к созданию в словаре аддон инфо
-            IAddOnInfo addOnInfoBad = AddOnInfoRegistry.Get(typeof(AddOnCompositionRoot).Assembly);
-            _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
-
-            //хорошо отдельный экземпляр, но только в сборке подключенной к AddOnCompositionRoot
-            IAddOnInfo addOnInfoGood = new AddOnInfo(typeof(ConteinerCloneA).Assembly);
-            _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
 
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать
