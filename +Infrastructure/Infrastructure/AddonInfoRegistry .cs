@@ -13,7 +13,7 @@ namespace drz.Infrastructure.Infrastructure
     /// Используется ConcurrentDictionary, поэтому безопасен
     /// при регистрации из нескольких потоков.
     /// </summary>
-    public  class AddOnInfoRegistry : IAddOnInfoRegistry
+    public class AddOnInfoRegistry : IAddOnInfoRegistry
     {
         #region Private Fields
 
@@ -29,15 +29,9 @@ namespace drz.Infrastructure.Infrastructure
 
         public int Count => _addons.Count;
 
-        public static IAddOnInfo Get(Assembly assembly)
-        {
-            return _addons.GetOrAdd(assembly.Location, key => new AddOnInfo(assembly));
-        }
-
         #endregion Public Properties
 
         #region Public Methods
-   
 
         public ICollection<string> GetKeys()
         {
@@ -58,7 +52,7 @@ namespace drz.Infrastructure.Infrastructure
             return _addons.Values.ToArray();
         }
 
-        public bool TryGet(Assembly  assembly, out IAddOnInfo info)
+        public bool TryGet(Assembly assembly, out IAddOnInfo info)
         {
             return _addons.TryGetValue(
                 assembly.Location,
@@ -98,11 +92,9 @@ namespace drz.Infrastructure.Infrastructure
         /// </returns>
         public bool TryGet(Type type, out IAddOnInfo info)
         {
-
             return TryGet(type.Assembly,
                 out info);
         }
-
 
         #endregion Public Methods
     }

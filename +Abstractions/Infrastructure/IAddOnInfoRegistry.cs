@@ -19,6 +19,8 @@ namespace drz.Abstractions.Infrastructure
         /// </summary>
         ICollection<string> GetKeys();
 
+        // изменение вне контейнера только для тестов
+#if DEBUG1
         /// <summary>
         /// Регистрирует информацию об аддоне.
         /// Если запись уже существует, возвращает существующий объект.
@@ -34,6 +36,8 @@ namespace drz.Abstractions.Infrastructure
         /// <param name="type">The type.</param>
         /// <returns></returns>
         IAddOnInfo GetOrAdd(Type type);
+
+#endif
 
         /// <summary>
         /// Возвращает все зарегистрированные аддоны.

@@ -105,28 +105,28 @@ namespace drz.AddOnRuntime
             //todo засунуть в статический контейнер
             container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
 
-            // AddOnInfoRegistry регистрируем интерфейс создания получения IAddOnInfo
-            // хранятся в ConcurrentDictionary<string, IAddOnInfo> _addons = new();
-            //ключ полный путь к файлу addOnAssembly
-            //полный доступ запись, чтение при получении IAddOnInfoRegistry
-            //todo в боевой сборке этот интерфейс должен быть спрятан
-#if DEBUG
+            // AddOnInfoRegistry регистрируем интерфейс
+            //      создания IAddOnInfo (только в контейнере)
+            //      получения IAddOnInfo
+            //      
+            // хранится в ConcurrentDictionary<string, IAddOnInfo> _addons = new();
+            //      ключ полный путь к файлу addOnAssembly
+            //      
+            //доступ на запись только из контейнера,
+            //чтение при получении в контейнере IAddOnInfoRegistry
             container.RegisterSingleton<IAddOnInfoRegistry, AddOnInfoRegistry>();
-#endif
 
             //old version
             //container.RegisterSingleton<IAddOnInfo>(() =>
             //                                    container.GetInstance<IAddOnInfoRegistry>()
             //                                   .GetOrAdd(addOnAssembly));
 
-            //регистрация новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
+            //регистрация-получение новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
+            // регистрация только из контейнера
             container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
 
             //old
             //container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
-
-
-
         }
 
         /// <summary>Registers the services.</summary>
