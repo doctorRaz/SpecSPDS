@@ -7,6 +7,7 @@
 		<PlatformTarget>x64</PlatformTarget>
 		<Nullable>enable</Nullable>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<UseWPF>true</UseWPF>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>

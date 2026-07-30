@@ -3,13 +3,12 @@
 	<PropertyGroup>
 		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
 		<TargetFramework>net462</TargetFramework>
-
 		<RootNamespace>drz.CadServices</RootNamespace>
 		<Description>Сервис nanoCAD</Description>
 		<AssemblyTitle>dRz.CadServices</AssemblyTitle>
 		<Product>dRz.CadServices</Product>
 		<InformationalVersion>CadServices for nanoCad</InformationalVersion>
-
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<Nullable>disable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>

@@ -6,7 +6,7 @@
 		<Description>1 чистилка bak и копий</Description>
 		<!--отключает транзитивные ссылки-->
 		<!--<DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>-->
-		<AssemblyName>$(SolutionName)_Clone_A</AssemblyName>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<Nullable>enable</Nullable>
 		<AssemblyTitle>dRz.Test.CloneA</AssemblyTitle>
 		<Product>CloneA</Product>

@@ -8,9 +8,8 @@
 		<AssemblyTitle>AddOn.Composition</AssemblyTitle>
 		<Product>AddOn.Composition</Product>
 		<InformationalVersion>AddOn.Composition for All</InformationalVersion>
-
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
-
 	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>-->

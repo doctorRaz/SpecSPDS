@@ -5,7 +5,7 @@
 		<RootNamespace>drz.Lib_A</RootNamespace>
 		<Description>1 чистилка bak и копий</Description>
 
-		<AssemblyName>$(SolutionName)_Clone_B</AssemblyName>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<Nullable>enable</Nullable>
 		<AssemblyTitle>dRz.Test.CloneB</AssemblyTitle>
 		<Product>Lib_A</Product>

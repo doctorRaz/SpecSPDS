@@ -4,8 +4,7 @@
 		<TargetFramework>net462</TargetFramework>
 		<RootNamespace>drz.Lib_A</RootNamespace>
 		<Description>1 чистилка bak и копий</Description>
-
-		<AssemblyName>$(SolutionName)_Lib_A</AssemblyName>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<Nullable>enable</Nullable>
 		<AssemblyTitle>dRz.Lib_A</AssemblyTitle>
 		<Product>Lib_A</Product>
