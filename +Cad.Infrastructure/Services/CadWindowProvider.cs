@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 
-
 #if !TEST
 
 using HostMgd.ApplicationServices;

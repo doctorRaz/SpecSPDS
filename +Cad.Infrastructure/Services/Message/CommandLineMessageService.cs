@@ -3,8 +3,6 @@ using drz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 
-
-
 //все связанное с HostMgd в отдельную сборку CadInfrastructure
 #if !TEST
 
@@ -76,7 +74,7 @@ namespace drz.n.Infrastructure.Services.Message
 
         #region Private Methods
 
-        private void WriteMessage(string prefix, string message,  string caller)
+        private void WriteMessage(string prefix, string message, string caller)
         {
             string formatted =
                    "\n" +

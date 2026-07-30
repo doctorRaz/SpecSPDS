@@ -1,8 +1,6 @@
 ﻿using drz.Abstractions.Services;
 using System;
 using System.IO;
-using System.Xml.Linq;
-
 
 #if !TEST
 
@@ -56,10 +54,10 @@ namespace drz.n.Infrastructure.Services
             {
                 Document doc = Application.DocumentManager.MdiActiveDocument;
                 return doc != null;
-             
             }
         }
-#else        
+#else
+
         /// <summary>The is active</summary>
         private bool _isActive;
 
@@ -71,6 +69,7 @@ namespace drz.n.Infrastructure.Services
             get => _isActive;
             set => _isActive = value;
         }
+
 #endif
 
         #endregion Public Properties
