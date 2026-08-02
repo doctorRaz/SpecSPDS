@@ -1,6 +1,8 @@
 # SpecSPDS
 
-[Описание проекта](https://deepwiki.com/doctorRaz/SpecSPDS) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/doctorRaz/SpecSPDS)
+[Описание проекта En](https://deepwiki.com/doctorRaz/SpecSPDS) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/doctorRaz/SpecSPDS)
+
+[Описание проекта Ru](https://deepwiki-com.translate.goog/doctorRaz/SpecSPDS?_x_tr_sl=en&_x_tr_tl=ru&_x_tr_hl=ru&_x_tr_pto=wapp&_x_tr_hist=true)
 
 Краткое описание
 ----------------
