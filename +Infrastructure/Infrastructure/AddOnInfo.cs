@@ -13,13 +13,10 @@ namespace drz.Infrastructure.Infrastructure
     /// <seealso cref="drz.Abstractions.Infrastructure.IAddOnInfo" />
     public class AddOnInfo : IAddOnInfo
     {
-        #region Private Fields
 
         private readonly Assembly _assembly;
 
-        #endregion Private Fields
-
-        #region Public Constructors
+        private readonly AssemblyMetadata _metadata;
 
         private DateTime? _buildDate;
 
@@ -34,15 +31,6 @@ namespace drz.Infrastructure.Infrastructure
         private bool _isAutoVersion;
 
         private string? _productTitle;
-
-        private readonly AssemblyMetadata _metadata;
-
-        public IEnumerable<string> MetadataKeys =>
-        _metadata.Keys;
-
-        public IEnumerable<KeyValuePair<string, string>> MetadataItems =>
-                _metadata.Items;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AddOnInfo"/> class.
         /// </summary>
@@ -81,8 +69,7 @@ namespace drz.Infrastructure.Infrastructure
                 assemblyName.Version ?? new Version(0, 0, 0, 0);
 
             // 3. Подготовка путей AppData (без Reflection)
-            // ---AppData ---
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+           
 
             if (string.IsNullOrEmpty(appData))
             {
@@ -116,53 +103,6 @@ namespace drz.Infrastructure.Infrastructure
             HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
         }
 
-        /// <summary>Возвращает дату-время компиляции сборки.</summary>
-        /// <value>Дата-время компиляции сборки.</value>
-        public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
-
-        /// <summary>Возвращает информацию о копирайте.</summary>
-        /// <value>Копирайт.</value>
-        public string Copyright => _copyright ??=
-               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
-
-        /// <summary>Возвращает описание сборки.</summary>
-        /// <value>The description.</value>
-        public string Description => _description ??=
-               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
-
-        /// <summary>Возвращает AssemblyFileVersionAttribute.</summary>
-        public string FileVersion => _fileVersion ??=
-                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
-
-        /// <summary>Возвращает AssemblyInformationalVersionAttribute.</summary>
-        public string InformationalVersion => _informationalVersion ??=
-                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-                  ?? "Unknown";
-
-        /// <summary>Признак, что дата сборки получена из версии.</summary>
-        public bool IsAutoVersion
-        {
-            get
-            {
-                if (_buildDate == null) { var _ = BuildDate; } // Триггерим вычисление даты
-                return _isAutoVersion;
-            }
-        }
-
-        /// <summary>Возвращает AssemblyTitleAttribute.</summary>
-        public string ProductTitle => _productTitle ??=
-            _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
-
-        #endregion Public Constructors
-
-        /// <summary>Gets a value indicating whether this instance has package.</summary>
-        /// <value>
-        /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
-        /// </value>
-        public bool HasPackage => PackageFileName != null;
-
-        #region Public Properties
-
         /// <summary>Возвращает путь к журналу данных приложения.</summary>
         /// <value>Путь к журналу данных приложения.</value>
         public string AppDataProductLogPath { get; }
@@ -185,23 +125,66 @@ namespace drz.Infrastructure.Infrastructure
         /// <value>Полный путь к сборке.</value>
         public string AssemblyPath { get; }
 
-        /// <summary>Возвращает версию загруженной сборки.</summary>
-        /// <value>версия сборки.</value>
-        public Version RunningVersion { get; }
+        /// <summary>Возвращает дату-время компиляции сборки.</summary>
+        /// <value>Дата-время компиляции сборки.</value>
+        public DateTime BuildDate => _buildDate ??= ComputeBuildDate(_assembly, out _isAutoVersion);
+
+        /// <summary>Возвращает информацию о копирайте.</summary>
+        /// <value>Копирайт.</value>
+        public string Copyright => _copyright ??=
+               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
+
+        /// <summary>Возвращает описание сборки.</summary>
+        /// <value>The description.</value>
+        public string Description => _description ??=
+               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
 
         /// <summary>Возвращает имя файла сборки без расширения.</summary>
         /// <value>Имя файла сборки без расширения.</value>
         public string FileName { get; }
 
-        /// <summary>Возвращает AssemblyProductAttribute.</summary>
-        public string ProductName { get; }
+        /// <summary>Возвращает AssemblyFileVersionAttribute.</summary>
+        public string FileVersion => _fileVersion ??=
+                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
 
-        /// <summary>Возвращает ProductName+HostCode.</summary>
-        public string ProductFamily => $"{ProductName}{HostCode}";
+        /// <summary>Gets a value indicating whether this instance has package.</summary>
+        /// <value>
+        /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasPackage => PackageFileName != null;
 
-        /// <summary>Возвращает ProductName v.RunningVersion.</summary>
-        public string ProductTitlePrefix { get; }
+        /// <summary>Gets the cad code.</summary>
+        /// <value>The cad code.</value>
+        public string? HostCode { get; }
 
+        /// <summary>Gets the cad family.</summary>
+        /// <value>The cad family.</value>
+        public string? HostFamily { get; }
+
+        /// <summary>Возвращает AssemblyInformationalVersionAttribute.</summary>
+        public string InformationalVersion => _informationalVersion ??=
+                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                  ?? "Unknown";
+
+        /// <summary>Возвращает версию установленной сборки.</summary>
+        /// <value>версия сборки.</value>
+        public Version InstalledVersion => AssemblyName.GetAssemblyName(AssemblyPath).Version ?? new Version(0, 0);
+
+        /// <summary>Признак, что дата сборки получена из версии.</summary>
+        public bool IsAutoVersion
+        {
+            get
+            {
+                if (_buildDate == null) { var _ = BuildDate; } // Триггерим вычисление даты
+                return _isAutoVersion;
+            }
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> MetadataItems =>
+                _metadata.Items;
+
+        public IEnumerable<string> MetadataKeys =>
+                                                                        _metadata.Keys;
         /// <summary>
         /// Возвращает путь к корневому каталогу addon где находится его package
         /// </summary>
@@ -212,25 +195,35 @@ namespace drz.Infrastructure.Infrastructure
         /// <value>Имя файла package.</value>
         public string? PackageFileName { get; }
 
+        /// <summary>Возвращает ProductName+HostCode.</summary>
+        public string ProductFamily => $"{ProductName}{HostCode}";
+
+        /// <summary>Возвращает AssemblyProductAttribute.</summary>
+        public string ProductName { get; }
+
+        /// <summary>Возвращает AssemblyTitleAttribute.</summary>
+        public string ProductTitle => _productTitle ??=
+            _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
+        /// <summary>Возвращает ProductName v.RunningVersion.</summary>
+        public string ProductTitlePrefix { get; }
+
         /// <summary>Gets the repository URL.</summary>
         /// <value>The repository URL.</value>
         public string? RepositoryUrl { get; }
 
-        /// <summary>Gets the cad family.</summary>
-        /// <value>The cad family.</value>
-        public string? HostFamily { get; }
-
-        /// <summary>Gets the cad code.</summary>
-        /// <value>The cad code.</value>
-        public string? HostCode { get; }
-
-        /// <summary>Возвращает версию установленной сборки.</summary>
+        /// <summary>Возвращает версию загруженной сборки.</summary>
         /// <value>версия сборки.</value>
-        public Version InstalledVersion => AssemblyName.GetAssemblyName(AssemblyPath).Version ?? new Version(0, 0);
+        public Version RunningVersion { get; }
 
-        #endregion Public Properties
+        public string? GetMetadata(string key)
+        {
+            return _metadata.Get(key);
+        }
 
-        #region Public Methods
+        public string GetMetadata(string key, string defaultValue)
+        {
+            return _metadata.Get(key, defaultValue);
+        }
 
         /// <summary>Converts to longstring.</summary>
         /// <returns>long string</returns>
@@ -270,10 +263,10 @@ namespace drz.Infrastructure.Infrastructure
         {
             return $"{ProductName} v{RunningVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
+        public bool TryGetMetadata(string key, out string value)
+        {
+            return _metadata.TryGet(key, out value);
+        }
 
         /// <summary>Computes the build date.</summary>
         /// <param name="assembly">The assembly.</param>
@@ -323,34 +316,6 @@ namespace drz.Infrastructure.Infrastructure
                 : fileName;
         }
 
-        /// <summary>
-        /// Tries the get build date.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        private DateTime? TryGetBuildDate(Version version)
-        {
-            if (version == null || version.Build < 0 || version.Revision < 0)
-            {
-                return null;
-            }
-
-            try
-            {
-                // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
-                DateTime baseDate = new(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                DateTime buildDate = baseDate.AddDays(version.Build).AddSeconds(version.Revision * 2);
-
-                // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
-                // а просто какие-то числа от CI/CD системы.
-                return buildDate > DateTime.UtcNow.AddDays(1) ? null : buildDate;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
         //получаем путь к папке ROOT с аддоном, ищем в ней все пакеты
         private FileInfo? FindPackageFile(string startDirectory, string packageName)
         {
@@ -379,21 +344,33 @@ namespace drz.Infrastructure.Infrastructure
             return null;// parent?.FullName ?? current.FullName;
         }
 
-        public string? GetMetadata(string key)
+        /// <summary>
+        /// Tries the get build date.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        private DateTime? TryGetBuildDate(Version version)
         {
-            return _metadata.Get(key);
-        }
+            if (version == null || version.Build < 0 || version.Revision < 0)
+            {
+                return null;
+            }
 
-        public string GetMetadata(string key, string defaultValue)
-        {
-            return _metadata.Get(key, defaultValue);
-        }
+            try
+            {
+                // .NET auto-version: Build = дни с 2000-01-01, Revision = секунды / 2
+                DateTime baseDate = new(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                DateTime buildDate = baseDate.AddDays(version.Build).AddSeconds(version.Revision * 2);
 
-        public bool TryGetMetadata(string key, out string value)
-        {
-            return _metadata.TryGet(key, out value);
+                // Паранойя: если дата получилась из будущего, значит это не авто-версия .NET,
+                // а просто какие-то числа от CI/CD системы.
+                return buildDate > DateTime.UtcNow.AddDays(1) ? null : buildDate;
+            }
+            catch
+            {
+                return null;
+            }
         }
-
         /*
 
 используем FindPackageFile для поиска папки ROOT с аддоном, затем ищем в ней все *.bak и *.~* и удаляем их
@@ -404,6 +381,5 @@ string? root = FindPackageFile(start, "SpecSPDS");
 
   */
 
-        #endregion Private Methods
     }
 }
