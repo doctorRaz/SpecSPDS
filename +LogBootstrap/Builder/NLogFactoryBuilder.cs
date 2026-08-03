@@ -109,7 +109,7 @@ namespace drz.LogBootstrap.Builder
 
             //путь к Diagnostic.Mode
             // фабрика сама определяет ккак называть файлы
-            string logName =$"{_addOnInfo.Product}{_addOnInfo.HostCode}";// ${shortdate}_{logName}.log;
+            string logName =_addOnInfo.ProductFamily;
 
             // сама решает в какой каталог складывать логи
             string logsDir = Path.Combine( _addOnInfo.ProductDataDirectory,"logs");// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -310,7 +310,7 @@ namespace drz.LogBootstrap.Builder
                 evt
                     .Message("LogFactory initialized")
                     .Property("ProductName", productName)
-                    .Property("ProductFamily", logName)
+                    .Property("ProductFamily", _addOnInfo.ProductFamily)
                     .Property("LogsDirectory", logDir)
                     .Property("LogName", $"YYYY-MM-DD_{logName}.log")
                     .Property("ConfigSource", isFallback ? "Fallback (programmatic)" : $"External ({GetConfigurationFile(factory)})")

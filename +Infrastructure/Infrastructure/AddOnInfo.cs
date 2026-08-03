@@ -98,6 +98,7 @@ namespace drz.Infrastructure.Infrastructure
             HostFamily = GetMetadata(AssemblyMetadataKeys.HostFamily, "");
 
             HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
+            ProductFamily = GetMetadata(AssemblyMetadataKeys.ProductFamily, Product);
         }
 
         /// <summary>Возвращает путь к данным приложения.</summary>
@@ -191,9 +192,17 @@ namespace drz.Infrastructure.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string Product { get; }
 
+        /// <summary>
+        /// Возвращает ProductName+HostCode<br />
+        /// идентификатор приложения в контексте хоста <br />
+        /// например, для AutoCAD: "SpecSPDSa<br />
+        /// например, для nanoCAD: "SpecSPDSn<br />
+        /// не зависит от названия сборки, берется из метадаты<br />
+        /// </summary>
+        public string ProductFamily { get; }
+
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
-        public string ProductTitle => _productTitle ??=
-            _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
+        public string ProductTitle => _productTitle ??= _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
 
         /// <summary>Возвращает Product v.RunningVersion.</summary>
         public string ProductTitlePrefix { get; }
@@ -225,7 +234,7 @@ namespace drz.Infrastructure.Infrastructure
   Product: {Product}
   ProductTitlePrefix: {ProductTitlePrefix}
   HostFamily: {HostFamily}
-  HostCode: {HostCode}
+  ProductFamily: {ProductFamily}
   RunningVersion: {RunningVersion}
   InformationalVersion: {InformationalVersion}
   FileName: {FileName}
