@@ -19,15 +19,15 @@
 		<Description>Загрузчик модулей $(SolutionName) под версию CAD</Description>
 		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
 		<!--metadata-->
-		<CadFamily>NC</CadFamily>
-		<CadCode>n</CadCode>
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
 
 	</PropertyGroup>
 	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>-->
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);$(CadFamily)</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
@@ -41,8 +41,8 @@
 	</ItemGroup>
 		<!--metadata assemble-->
 	<ItemGroup>
-		<AssemblyMetadata Include="CadFamily" Value="$(CadFamily)" />
-		<AssemblyMetadata Include="CadCode" Value="$(CadCode)" />
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
 	</ItemGroup>
 	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
 		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs" Overwrite="true" Lines="&#xD;&#xA;namespace drz.Loader&#xD;&#xA;{&#xD;&#xA;    public static class GeneratedCompile&#xD;&#xA;    {&#xD;&#xA;        public const int MinVersion = $(MinVersion)%3B&#xD;&#xA;        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B&#xD;&#xA;    }&#xD;&#xA;}" />

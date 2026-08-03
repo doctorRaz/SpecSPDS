@@ -14,12 +14,12 @@
 		<Description>Спецификация из универсального маркера, nanoCAD 23-25</Description>
 		<AssemblyTitle>SpecSPDS.NET.23</AssemblyTitle>
 		<!--metadata-->
-		<CadFamily>NC</CadFamily>
-		<CadCode>n</CadCode>
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
 
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);$(CadFamily)</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -28,8 +28,8 @@
 	</ItemGroup>
 	<!--metadata assemble-->
 	<ItemGroup>
-		<AssemblyMetadata Include="CadFamily" Value="$(CadFamily)" />
-		<AssemblyMetadata Include="CadCode" Value="$(CadCode)" />
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
 	</ItemGroup>
 
 </Project>

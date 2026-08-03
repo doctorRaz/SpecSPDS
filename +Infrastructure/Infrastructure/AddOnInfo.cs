@@ -101,9 +101,9 @@ namespace drz.Infrastructure.Infrastructure
 
             RepositoryUrl = GetMetadata("RepositoryUrl") ?? "https://github.com/doctorRaz";
 
-         /   HostFamily = GetMetadata("CadFamily") ?? "";
+            HostFamily = GetMetadata("HostFamily") ?? "";
 
-          /  HostCode = GetMetadata("CadCode") ?? "";
+            HostCode = GetMetadata("HostCode") ?? "";
         }
 
         /// <summary>Возвращает дату-время компиляции сборки.</summary>
@@ -232,8 +232,8 @@ namespace drz.Infrastructure.Infrastructure
   ProductName: {ProductName}
   ProductFamily: {ProductFamily}
   ProductTitlePrefix: {ProductTitlePrefix}
-  CadFamily: {HostFamily}
-  CadCode: {HostCode}
+  HostFamily: {HostFamily}
+  HostCode: {HostCode}
   RunningVersion: {RunningVersion}
   InformationalVersion: {InformationalVersion}
   FileName: {FileName}

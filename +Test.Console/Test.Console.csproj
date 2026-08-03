@@ -21,12 +21,12 @@
 		<AssemblyTitle>$(SolutionName).Cmd</AssemblyTitle>
 
 		<!--metadata-->
-		<CadFamily>TEST</CadFamily>
-		<CadCode>t</CadCode>
+		<HostFamily>TEST</HostFamily>
+		<HostCode>t</HostCode>
 
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);$(CadFamily)</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
@@ -38,8 +38,8 @@
 	</ItemGroup>
 	<!--metadata assemble-->
 	<ItemGroup>
-		<AssemblyMetadata Include="CadFamily" Value="$(CadFamily)" />
-		<AssemblyMetadata Include="CadCode" Value="$(CadCode)" />
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
 	</ItemGroup>
 	<!-- Генерация класса с константой MinVersion перед сборкой -->
 	<!--https://chatgpt.com/c/69bf9254-02bc-832c-bfb7-5da312cc712a-->
