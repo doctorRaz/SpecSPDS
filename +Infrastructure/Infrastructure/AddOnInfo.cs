@@ -101,9 +101,9 @@ namespace drz.Infrastructure.Infrastructure
 
             RepositoryUrl = GetMetadata("RepositoryUrl") ?? "https://github.com/doctorRaz";
 
-            CadFamily = GetMetadata("CadFamily") ?? "";
+         /   HostFamily = GetMetadata("CadFamily") ?? "";
 
-            CadCode = GetMetadata("CadCode") ?? "";
+          /  HostCode = GetMetadata("CadCode") ?? "";
         }
 
         /// <summary>Возвращает дату-время компиляции сборки.</summary>
@@ -187,8 +187,8 @@ namespace drz.Infrastructure.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string ProductName { get; }
 
-        /// <summary>Возвращает ProductName+CadCode.</summary>
-        public string ProductFamily => $"{ProductName}{CadCode}";
+        /// <summary>Возвращает ProductName+HostCode.</summary>
+        public string ProductFamily => $"{ProductName}{HostCode}";
 
         /// <summary>Возвращает ProductName v.RunningVersion.</summary>
         public string ProductTitlePrefix { get; }
@@ -209,11 +209,11 @@ namespace drz.Infrastructure.Infrastructure
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
-        public string? CadFamily { get; }
+        public string? HostFamily { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
-        public string? CadCode { get; }
+        public string? HostCode { get; }
 
         /// <summary>Возвращает версию установленной сборки.</summary>
         /// <value>версия сборки.</value>
@@ -232,8 +232,8 @@ namespace drz.Infrastructure.Infrastructure
   ProductName: {ProductName}
   ProductFamily: {ProductFamily}
   ProductTitlePrefix: {ProductTitlePrefix}
-  CadFamily: {CadFamily}
-  CadCode: {CadCode}
+  CadFamily: {HostFamily}
+  CadCode: {HostCode}
   RunningVersion: {RunningVersion}
   InformationalVersion: {InformationalVersion}
   FileName: {FileName}

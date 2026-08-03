@@ -79,7 +79,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         string ProductName { get; }
 
-        /// <summary>Возвращает ProductName+CadCode.</summary>
+        /// <summary>Возвращает ProductName+HostCode.</summary>
         string ProductFamily { get; }
 
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
@@ -94,11 +94,11 @@ namespace drz.Abstractions.Infrastructure
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
-        string CadFamily { get; }
+        string HostFamily { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
-        string CadCode { get; }
+        string HostCode { get; }
 
         #endregion Public Properties
     }
