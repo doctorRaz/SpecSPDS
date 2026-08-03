@@ -97,7 +97,8 @@ namespace drz.Infrastructure.Infrastructure
 
             HostFamily = GetMetadata(AssemblyMetadataKeys.HostFamily, "");
 
-            HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
+            //HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
+
             ProductFamily = GetMetadata(AssemblyMetadataKeys.ProductFamily, Product);
         }
 
@@ -148,15 +149,14 @@ namespace drz.Infrastructure.Infrastructure
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
-        public string? HostCode { get; }
+        //public string? HostCode { get; }
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
         public string? HostFamily { get; }
 
         /// <summary>Возвращает AssemblyInformationalVersionAttribute.</summary>
-        public string InformationalVersion => _informationalVersion ??=
-                  _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        public string InformationalVersion => _informationalVersion ??= _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
                   ?? "Unknown";
 
         /// <summary>Возвращает версию установленной сборки.</summary>
@@ -173,11 +173,9 @@ namespace drz.Infrastructure.Infrastructure
             }
         }
 
-        public IEnumerable<KeyValuePair<string, string>> MetadataItems =>
-                _metadata.Items;
+        public IEnumerable<KeyValuePair<string, string>> MetadataItems => _metadata.Items;
 
-        public IEnumerable<string> MetadataKeys =>
-                                                                        _metadata.Keys;
+        public IEnumerable<string> MetadataKeys => _metadata.Keys;
 
         /// <summary>
         /// Возвращает путь к корневому каталогу addon где находится его package
