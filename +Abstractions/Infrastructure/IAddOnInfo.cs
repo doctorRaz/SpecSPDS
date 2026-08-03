@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace drz.Abstractions.Infrastructure
 {
@@ -92,13 +93,41 @@ namespace drz.Abstractions.Infrastructure
         /// <value>The repository URL.</value>
         string RepositoryUrl { get; }
 
-        /// <summary>Gets the cad family.</summary>
-        /// <value>The cad family.</value>
+        /// <summary>
+        /// Семейство хоста, для которого собрана сборка
+        /// </summary>
         string HostFamily { get; }
 
-        /// <summary>Gets the cad code.</summary>
-        /// <value>The cad code.</value>
+        /// <summary>
+        /// Короткий код хоста для условной компиляции, логов и имен файлов
+        /// </summary>
         string HostCode { get; }
+
+        /// <summary>
+        /// Все доступные ключи метаданных.
+        /// </summary>
+        IEnumerable<string> MetadataKeys { get; }
+
+        /// <summary>
+        /// Все пары ключ-значение метаданных.
+        /// Используется для диагностики и вывода информации.
+        /// </summary>
+        IEnumerable<KeyValuePair<string, string>> MetadataItems { get; }
+
+        /// <summary>
+        /// Получить значение метаданных.
+        /// </summary>
+        string? GetMetadata(string key);
+
+        /// <summary>
+        /// Получить значение метаданных с заданным значением по умолчанию.
+        /// </summary>
+        string GetMetadata(string key, string defaultValue);
+
+        /// <summary>
+        /// Попытаться получить значение метаданных.
+        /// </summary>
+        bool TryGetMetadata(string key, out string value);
 
         #endregion Public Properties
     }

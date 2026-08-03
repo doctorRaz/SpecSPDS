@@ -1,5 +1,6 @@
 ﻿using drz.Abstractions.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,6 +35,14 @@ namespace drz.Infrastructure.Infrastructure
 
         private string? _productTitle;
 
+        private readonly AssemblyMetadata _metadata;
+
+        public IEnumerable<string> MetadataKeys =>
+        _metadata.Keys;
+
+        public IEnumerable<KeyValuePair<string, string>> MetadataItems =>
+                _metadata.Items;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AddOnInfo"/> class.
         /// </summary>
@@ -66,7 +75,6 @@ namespace drz.Infrastructure.Infrastructure
                 FileName =
                     assemblyName.Name ?? "Unknown";
             }
-                    
 
             // 2. Данные версии (GetName тоже относительно быстр, но вызываем 1 раз)
             RunningVersion =
@@ -99,11 +107,13 @@ namespace drz.Infrastructure.Infrastructure
 
             PackageFileName = package?.Name;
 
-            RepositoryUrl = GetMetadata("RepositoryUrl") ?? "https://github.com/doctorRaz";
+            _metadata = new AssemblyMetadata(_assembly);
 
-            HostFamily = GetMetadata("HostFamily") ?? "";
+            RepositoryUrl = GetMetadata(AssemblyMetadataKeys.RepositoryUrl, "https://github.com/doctorRaz");
 
-            HostCode = GetMetadata("HostCode") ?? "";
+            HostFamily = GetMetadata(AssemblyMetadataKeys.HostFamily, "");
+
+            HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
         }
 
         /// <summary>Возвращает дату-время компиляции сборки.</summary>
@@ -183,7 +193,6 @@ namespace drz.Infrastructure.Infrastructure
         /// <value>Имя файла сборки без расширения.</value>
         public string FileName { get; }
 
-    
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string ProductName { get; }
 
@@ -194,7 +203,7 @@ namespace drz.Infrastructure.Infrastructure
         public string ProductTitlePrefix { get; }
 
         /// <summary>
-        /// Возвращает путь к корневому каталогу ад дона где находится package
+        /// Возвращает путь к корневому каталогу addon где находится его package
         /// </summary>
         /// <value>путь к корневому каталогу ад дона</value>
         public string PackageDirectory { get; }
@@ -265,17 +274,6 @@ namespace drz.Infrastructure.Infrastructure
         #endregion Public Methods
 
         #region Private Methods
-
-        /// <summary>
-        /// Возвращает значение AssemblyMetadata по указанному ключу.
-        /// </summary>
-        private string? GetMetadata(string key)
-        {
-            return _assembly
-                .GetCustomAttributes<AssemblyMetadataAttribute>()
-                .FirstOrDefault(a => string.Equals(a.Key, key, StringComparison.OrdinalIgnoreCase))
-                ?.Value;
-        }
 
         /// <summary>Computes the build date.</summary>
         /// <param name="assembly">The assembly.</param>
@@ -379,6 +377,21 @@ namespace drz.Infrastructure.Infrastructure
 
             // Если пакет не найден, по умолчанию считаем корнем родительский каталог
             return null;// parent?.FullName ?? current.FullName;
+        }
+
+        public string? GetMetadata(string key)
+        {
+            return _metadata.Get(key);
+        }
+
+        public string GetMetadata(string key, string defaultValue)
+        {
+            return _metadata.Get(key, defaultValue);
+        }
+
+        public bool TryGetMetadata(string key, out string value)
+        {
+            return _metadata.TryGet(key, out value);
         }
 
         /*

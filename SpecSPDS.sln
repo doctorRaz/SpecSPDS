@@ -65,6 +65,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneA", "+Test.CloneA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneB", "+Test.CloneB\Test.CloneB.csproj", "{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Raw", "+Test.Raw\Test.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF8AF0DF-CD64-4380-9493-4996AE058CD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8AF0DF-CD64-4380-9493-4996AE058CD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8AF0DF-CD64-4380-9493-4996AE058CD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8AF0DF-CD64-4380-9493-4996AE058CD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -203,6 +209,7 @@ Global
 		{4B23F954-EFF1-10A4-3030-A8D8CC17808B} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{5B8210A8-1830-BAE1-8DE0-D732C91C8BC7} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
 		{80CFDCAD-6818-45A3-16AE-DED0EE0BE495} = {CC3B1C57-DFAC-4370-9274-E6218C28054C}
+		{FF8AF0DF-CD64-4380-9493-4996AE058CD3} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}
