@@ -20,7 +20,7 @@ namespace drz.LogBootstrap
         public static IDrzLoggerFactory GetLoggerFactory(IAddOnInfo addOnInfo)
         {
             return _factories.GetOrAdd(
-                addOnInfo.ProductName, _ =>
+                addOnInfo.Product, _ =>
                 {
                     NLogFactoryBuilder builder = new(addOnInfo);
                     LogFactory logFactory = builder.Build();

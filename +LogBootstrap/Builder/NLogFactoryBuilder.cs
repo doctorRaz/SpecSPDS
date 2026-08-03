@@ -10,6 +10,7 @@ using NLog.Targets.Wrappers;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 
 namespace drz.LogBootstrap.Builder
 {
@@ -104,13 +105,14 @@ namespace drz.LogBootstrap.Builder
         internal LogFactory Build()
         {
             string assemblyDirectory = _addOnInfo.AssemblyDirectory;
-            string productName = _addOnInfo.ProductName;
+            string productName = _addOnInfo.Product;
 
             //путь к Diagnostic.Mode
+            // фабрика сама определяет ккак называть файлы
+            string logName =$"{_addOnInfo.Product}{_addOnInfo.HostCode}";// ${shortdate}_{logName}.log;
 
-            string logName = _addOnInfo.ProductFamily;// ${shortdate}_{logName}.log;
-
-            string logsDir = _addOnInfo.AppDataProductLogPath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            // сама решает в какой каталог складывать логи
+            string logsDir = Path.Combine( _addOnInfo.ProductDataDirectory,"logs");// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                                               // productName, "logs"); // _appDataProductLogPathProvider();
             string baseDirDiagnostyc = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
 
@@ -308,7 +310,7 @@ namespace drz.LogBootstrap.Builder
                 evt
                     .Message("LogFactory initialized")
                     .Property("ProductName", productName)
-                    .Property("ProductFamily", _addOnInfo.ProductFamily)
+                    .Property("ProductFamily", logName)
                     .Property("LogsDirectory", logDir)
                     .Property("LogName", $"YYYY-MM-DD_{logName}.log")
                     .Property("ConfigSource", isFallback ? "Fallback (programmatic)" : $"External ({GetConfigurationFile(factory)})")

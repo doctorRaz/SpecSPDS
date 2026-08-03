@@ -88,7 +88,7 @@ public class CadInfo : ICadInfo
     private string _longString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +
        $"{(string.IsNullOrWhiteSpace(FileDescription) ? ProductName : FileDescription)}" +
-       $"{ProductVersion} {FileVersion} [{HostArchitecture}] CompanyName:{CompanyName} Copyright:{Copyright} ProductName:{ProductName}";
+       $"{ProductVersion} {FileVersion} [{HostArchitecture}] CompanyName:{CompanyName} Copyright:{Copyright} Product:{ProductName}";
 
     private string _shortString =>
        $"{(IsFallback ? "CAD (fallback):" : "CAD:")}" +

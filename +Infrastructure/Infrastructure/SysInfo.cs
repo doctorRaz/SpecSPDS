@@ -52,7 +52,7 @@ namespace drz.Infrastructure.Infrastructure
 
                 if (key != null)
                 {
-                    ProductName = GetString(key, "ProductName", ProductName);
+                    ProductName = GetString(key, "Product", ProductName);
                     DisplayVersion = GetString(key, "DisplayVersion") ?? GetString(key, "ReleaseId") ?? DisplayVersion;
                     EditionId = GetString(key, "EditionID", EditionId);
                     InstallationType = GetString(key, "InstallationType", InstallationType);

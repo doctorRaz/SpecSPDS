@@ -13,8 +13,10 @@ namespace drz.Infrastructure.Infrastructure
     /// <seealso cref="drz.Abstractions.Infrastructure.IAddOnInfo" />
     public class AddOnInfo : IAddOnInfo
     {
-
         private readonly Assembly _assembly;
+
+        // ---AppData ---
+        private readonly string _appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
         private readonly AssemblyMetadata _metadata;
 
@@ -31,6 +33,7 @@ namespace drz.Infrastructure.Infrastructure
         private bool _isAutoVersion;
 
         private string? _productTitle;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AddOnInfo"/> class.
         /// </summary>
@@ -38,8 +41,7 @@ namespace drz.Infrastructure.Infrastructure
         /// <exception cref="System.ArgumentNullException">assembly</exception>
         public AddOnInfo(Assembly assembly)
         {
-            _assembly =
-                assembly ?? throw new ArgumentNullException(nameof(assembly));
+            _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
 
             // 1. Базовые данные о путях (работа со строками — это быстро)
             AssemblyPath = _assembly.Location ?? string.Empty;
@@ -50,18 +52,15 @@ namespace drz.Infrastructure.Infrastructure
 
             if (!string.IsNullOrEmpty(AssemblyPath))
             {
-                AssemblyDirectory =
-                    Path.GetDirectoryName(AssemblyPath) ?? string.Empty;
+                AssemblyDirectory = Path.GetDirectoryName(AssemblyPath) ?? string.Empty;
 
-                FileName =
-                    Path.GetFileNameWithoutExtension(AssemblyPath);
+                FileName = Path.GetFileNameWithoutExtension(AssemblyPath);
             }
             else
             {
                 AssemblyDirectory = string.Empty;
 
-                FileName =
-                    assemblyName.Name ?? "Unknown";
+                FileName = assemblyName.Name ?? "Unknown";
             }
 
             // 2. Данные версии (GetName тоже относительно быстр, но вызываем 1 раз)
@@ -69,26 +68,24 @@ namespace drz.Infrastructure.Infrastructure
                 assemblyName.Version ?? new Version(0, 0, 0, 0);
 
             // 3. Подготовка путей AppData (без Reflection)
-           
 
-            if (string.IsNullOrEmpty(appData))
+            if (string.IsNullOrEmpty(_appData))
             {
-                appData = Path.GetTempPath(); // fallback
+                _appData = Path.GetTempPath(); // fallback
             }
 
-            // Внимание: ProductName здесь берется лениво ниже,
-            // поэтому для путей используем FilePrefix или вычисляем ProductName сразу, если он критичен.
-            // Но лучше ProductName вычислить в конструкторе, так как он нужен для путей:
-            ProductName =
-                assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? ExtractProductPrefix(FileName);
+            // Внимание: Product здесь берется лениво ниже,
+            // поэтому для путей используем FilePrefix или вычисляем Product сразу, если он критичен.
+            // Но лучше Product вычислить в конструкторе, так как он нужен для путей:
+            Product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product ?? ExtractProductPrefix(FileName);
 
-            AppDataProductPath = Path.Combine(appData, ProductName);
+            Company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "dRz";
 
-            AppDataProductLogPath = Path.Combine(AppDataProductPath, "Logs");
+            ProductDataDirectory = Path.Combine(_appData, Company, Product);
 
-            ProductTitlePrefix = $"{ProductName} v.{RunningVersion} : ";
+            ProductTitlePrefix = $"{Product} v.{RunningVersion} : ";
 
-            FileInfo? package = FindPackageFile(AssemblyDirectory, ProductName);
+            FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 
             PackageDirectory = package?.DirectoryName ?? AssemblyDirectory;
 
@@ -103,13 +100,11 @@ namespace drz.Infrastructure.Infrastructure
             HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
         }
 
-        /// <summary>Возвращает путь к журналу данных приложения.</summary>
-        /// <value>Путь к журналу данных приложения.</value>
-        public string AppDataProductLogPath { get; }
-
         /// <summary>Возвращает путь к данным приложения.</summary>
         /// <value>Путь к данным приложения.</value>
-        public string AppDataProductPath { get; }
+        public string ProductDataDirectory { get; }
+
+        public string Company { get; }
 
         /// <summary>
         /// "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений
@@ -131,21 +126,18 @@ namespace drz.Infrastructure.Infrastructure
 
         /// <summary>Возвращает информацию о копирайте.</summary>
         /// <value>Копирайт.</value>
-        public string Copyright => _copyright ??=
-               _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
+        public string Copyright => _copyright ??= _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
 
         /// <summary>Возвращает описание сборки.</summary>
         /// <value>The description.</value>
-        public string Description => _description ??=
-               _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
+        public string Description => _description ??= _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
 
         /// <summary>Возвращает имя файла сборки без расширения.</summary>
         /// <value>Имя файла сборки без расширения.</value>
         public string FileName { get; }
 
         /// <summary>Возвращает AssemblyFileVersionAttribute.</summary>
-        public string FileVersion => _fileVersion ??=
-                   _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
+        public string FileVersion => _fileVersion ??= _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
         /// <value>
@@ -185,6 +177,7 @@ namespace drz.Infrastructure.Infrastructure
 
         public IEnumerable<string> MetadataKeys =>
                                                                         _metadata.Keys;
+
         /// <summary>
         /// Возвращает путь к корневому каталогу addon где находится его package
         /// </summary>
@@ -195,16 +188,14 @@ namespace drz.Infrastructure.Infrastructure
         /// <value>Имя файла package.</value>
         public string? PackageFileName { get; }
 
-        /// <summary>Возвращает ProductName+HostCode.</summary>
-        public string ProductFamily => $"{ProductName}{HostCode}";
-
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
-        public string ProductName { get; }
+        public string Product { get; }
 
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         public string ProductTitle => _productTitle ??=
             _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
-        /// <summary>Возвращает ProductName v.RunningVersion.</summary>
+
+        /// <summary>Возвращает Product v.RunningVersion.</summary>
         public string ProductTitlePrefix { get; }
 
         /// <summary>Gets the repository URL.</summary>
@@ -229,10 +220,9 @@ namespace drz.Infrastructure.Infrastructure
         /// <returns>long string</returns>
         public string ToLongString()
         {
-            return @$"{ProductName} v{RunningVersion}
+            return @$"{Product} v{RunningVersion}
   ProductTitle: {ProductTitle}
-  ProductName: {ProductName}
-  ProductFamily: {ProductFamily}
+  Product: {Product}
   ProductTitlePrefix: {ProductTitlePrefix}
   HostFamily: {HostFamily}
   HostCode: {HostCode}
@@ -241,8 +231,6 @@ namespace drz.Infrastructure.Infrastructure
   FileName: {FileName}
   File: {AssemblyPath}
   AssemblyDirectory: {AssemblyDirectory}
-  AppDataProductPath: {AppDataProductPath}
-  AppDataProductLogPath: {AppDataProductLogPath}
   Copyright:{Copyright}
   Description: {Description}
   FileVersion: {FileVersion}
@@ -261,8 +249,9 @@ namespace drz.Infrastructure.Infrastructure
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return $"{ProductName} v{RunningVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
+            return $"{Product} v{RunningVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
         }
+
         public bool TryGetMetadata(string key, out string value)
         {
             return _metadata.TryGet(key, out value);
@@ -371,6 +360,7 @@ namespace drz.Infrastructure.Infrastructure
                 return null;
             }
         }
+
         /*
 
 используем FindPackageFile для поиска папки ROOT с аддоном, затем ищем в ней все *.bak и *.~* и удаляем их
@@ -380,6 +370,5 @@ string start = Path.GetDirectoryName(typeof(Updater).Assembly.Location)!;
 string? root = FindPackageFile(start, "SpecSPDS");
 
   */
-
     }
 }

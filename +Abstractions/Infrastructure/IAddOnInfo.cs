@@ -8,13 +8,15 @@ namespace drz.Abstractions.Infrastructure
     {
         #region Public Properties
 
-        /// <summary> Возвращает путь к журналу данных приложения.</summary>
-        /// <value>Путь к журналу данных приложения.</value>
-        string AppDataProductLogPath { get; }
+        /// <summary>Возвращает путь к настройкм аддона <br/>
+        /// Логично коль общий путь зависит от компании и названия продукта<br/>
+        /// хранить его в метаданных сборки </summary>
+        /// <value>The product data directory.</value>
+        string ProductDataDirectory { get; }
 
-        /// <summary> Возвращает путь к данным приложения.</summary>
-        /// <value> Путь к данным приложения. </value>
-        string AppDataProductPath { get; }
+        /// <summary>Gets the company.</summary>
+        /// <value>The company.</value>
+        string Company { get; }
 
         /// <summary>Возвращает путь к корневому каталогу ад дона где находится package</summary>
         /// <value>путь к корневому каталогу ад дона</value>
@@ -75,13 +77,8 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Признак, что дата сборки получена из версии.</summary>
         bool IsAutoVersion { get; }
 
-        //string NLogConfigPath { get; }
-
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
-        string ProductName { get; }
-
-        /// <summary>Возвращает ProductName+HostCode.</summary>
-        string ProductFamily { get; }
+        string Product { get; }
 
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         string ProductTitle { get; }

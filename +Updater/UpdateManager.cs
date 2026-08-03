@@ -28,7 +28,7 @@ namespace drz.Updater
 
             _logger.Debug("Updater");
 
-            _messageServices.InfoMessage(addOnInfo.ProductName);
+            _messageServices.InfoMessage(addOnInfo.Product);
 
             Run();
         }
@@ -93,7 +93,7 @@ namespace drz.Updater
         {
             _logger.Debug("Run");
             _logger.DebugCaller("Архив создан");
-            _messageServices.InfoMessage(_addOnInfo.ProductName + ".Run");
+            _messageServices.InfoMessage(_addOnInfo.Product + ".Run");
             return true;
         }
     }
