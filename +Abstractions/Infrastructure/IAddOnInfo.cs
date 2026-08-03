@@ -80,6 +80,14 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         string Product { get; }
 
+        /// <summary>Возвращает ProductName+HostCode<br/>
+        ///идентификатор приложения в контексте хоста <br/>
+        ///например, для AutoCAD: "SpecSPDSa<br/>
+        ///например, для nanoCAD: "SpecSPDSn<br/>
+        ///не зависит от названия сборки, берется из метадаты<br/>
+        /// </summary>
+        string ProductFamily { get; }//
+
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         string ProductTitle { get; }
 
@@ -98,7 +106,7 @@ namespace drz.Abstractions.Infrastructure
         /// <summary>
         /// Короткий код хоста для условной компиляции, логов и имен файлов
         /// </summary>
-        string HostCode { get; }
+        //string HostCode { get; }
 
         /// <summary>
         /// Все доступные ключи метаданных.
