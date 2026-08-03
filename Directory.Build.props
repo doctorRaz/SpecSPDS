@@ -1,63 +1,152 @@
 ﻿<Project>
-	<!-- <Import Project="d:\@Developers\Programmers\!NET\Shared\Directory.Build\Directory.Build.props"/> -->
+	<!-- <Import Project="d:\@Developers\Programmers\!NET\Shared\Directory.Build\Directory.Build.props" /> -->
 	<PropertyGroup>
-		<!-- ***************** общие свойства всех решений ***************** -->
+		<!-- ================================================================= -->
+		<!--общие свойства всех решений-->
+		<!-- ================================================================= -->
 		<!-- root решения относительно этого файла -->
 		<!--<RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>-->
 		<!-- root решения относительно каталога решения, более верно -->
-		<!--************* только при сборке из решения ******************-->
+		<!--!!!!!!!!!!!!!!! ТОЛЬКО ПРИ СБОРКЕ ИЗ РЕШЕНИЯ !!!!!!!!!!!!!!!!!!!!-->
 		<RepoRoot>$(SolutionDir)</RepoRoot>
 		<!-- позволяет проекты размещать в одном каталоге -->
 		<!-- выходной каталог obj в каталоге решения -->
 		<BaseIntermediateOutputPath>$(RepoRoot)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+
+		<!-- ================================================================= -->
+		<!-- Основные параметры проекта                                                   -->
+		<!-- ================================================================= -->
+
+		<!-- Короткий идентификатор разработчика -->
+		<Vendor>dRz</Vendor>
+
+		<!--RootNamespace default-->
+		<RootNamespace>$(Vendor).$(SolutionName)</RootNamespace>
+
+		<!-- Версия языка -->
 		<LangVersion>latest</LangVersion>
-		<!--<DateTime -->
-		<StartYear>2014</StartYear>
-		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
-		<!--<Version />-->
-		<!-- <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute> -->
-		<!--<Version />-->
-		<!-- ***********путь сборки -->
+
+		<!-- Nullable Reference Types -->
+		<Nullable>enable</Nullable>
+
+		<!-- Не добавлять TargetFramework в путь вывода -->
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
+		<!-- путь сборки в каталоге решения общий bin -->
 		<BaseOutputPath>..\bin\</BaseOutputPath>
 		<OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
-		<!-- *******************Description *************-->
-		<!-- ***************** Постоянные свойства ***************** -->
-		<!-- CompanyName -->
-		<Company>doctorRaz@gmail.com</Company>
-		<!-- LegalCopyright -->
-		<Copyright>Разыграев Андрей</Copyright>
-		<!-- LegalTrademarks -->
-		<Trademark>©doctorRaz $(StartYear)-$(CurrentYear)</Trademark>
-		<!-- ***************** Переопределяются в проекте ***************** -->
-		<!-- ProductName -->
-		<Product>$(SolutionName)</Product>
-		<!-- FileDescription он жэж Title-->
-		<!-- если все закоментить то в титул пойдет имя сборки -->
-		<!-- <AssemblyTitle>PlotSPDS</AssemblyTitle> -->
-		<!-- Comments -->
-		<!-- ProductVersion он жэж AssemblyInformationalVersion-->
-		<InformationalVersion>$(SolutionName) for nanoCAD</InformationalVersion>
-		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-		<NeutralLanguage>ru-RU</NeutralLanguage>
-		<!-- ***************** ХЗ где используется ***************** -->
-		<!-- <PackageProjectUrl>http://doctorraz.blogspot.com/2022/10/PlotSPDS.NET.html</PackageProjectUrl> -->
-		<!-- <ProductVersion>ProductVersion</ProductVersion> -->
-		<!-- <AssemblyProductVersion>AssemblyProductVersion</AssemblyProductVersion> -->
-		<!-- <AssemblyInformationalVersionAttribute>AssemblyInformationalVersionAttribute</AssemblyInformationalVersionAttribute> -->
-		<!-- ***************** индивидуальные свойства решения *****************-->
-		<!-- с WPF аккуратно, теряет ресурсы если root другой, -->
-		<RootNamespace>drz.SpecSPDS</RootNamespace>
-		<Deterministic>false</Deterministic>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-		<AssemblyVersion>0.1.*</AssemblyVersion>
-		<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
-		<RepositoryUrl>https://github.com/doctorRaz</RepositoryUrl>
-		<MinVersion>23</MinVersion>
+
+		<!-- Сборка не является детерминированной (необходимо при использовании AssemblyVersion=*) -->
+		<!--<Deterministic>false</Deterministic>-->
+
+		<!--название файла сборки-->
+		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
 	</PropertyGroup>
 
+	<!-- ================================================================= -->
+	<!-- Версия сборки                                                     -->
+	<!-- ================================================================= -->
+	<PropertyGroup>
+
+		<!-- Базовая версия продукта -->
+		<Version>0.1</Version>
+
+		<!--
+			Версия аналогична механизму AssemblyVersion=0.1.*
+			Build  = количество дней от 01.01.2000
+			Revision = секунды от начала суток / 2
+		-->
+		<Build>$([System.DateTime]::Now.Subtract($([System.DateTime]::Parse('2000-01-01'))).Days)</Build>
+		<Revision>$([MSBuild]::Divide($([System.DateTime]::Now.TimeOfDay.TotalSeconds), 2).ToString("F0"))</Revision>
+
+		<!-- Полная версия CLR -->
+		<AssemblyVersion>$(Version).$(Build).$(Revision)</AssemblyVersion>
+
+		<!-- Версия файла Windows -->
+		<FileVersion>$(Version).$(Build).$(Revision)</FileVersion>
+
+		<!-- Версия продукта для пользователя -->
+		<!-- ProductVersion он жэж AssemblyInformationalVersion-->
+		<InformationalVersion>$(Version).$(Build).$(Revision)</InformationalVersion>
+
+		<!-- Не добавлять Git commit hash в InformationalVersion -->
+		<!--<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>-->
+
+		<!-- Не генерировать второй AssemblyFileVersion -->
+		<!--<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>-->
+	</PropertyGroup>
+	<!-- ***************************************************************** -->
+	<!-- Информация о продукте                                             -->
+	<!-- ***************************************************************** -->
+	<PropertyGroup>
+
+		<!-- ProductName -->
+		<Product>$(SolutionName)</Product>
+
+		<AssemblyTitle>$(SolutionName)</AssemblyTitle>
+
+		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
+
+		<Company>doctorRaz Technologies</Company>
+
+		<Trademark>doctorRaz</Trademark>
+
+		<StartYear>2014</StartYear>
+		<CurrentYear>$([System.DateTime]::Now.Year)</CurrentYear>
+
+		<!-- Авторские права -->
+		<Copyright>©Разыграев Андрей $(StartYear)-$(CurrentYear)</Copyright>
+
+		<!-- Домашняя страница проекта -->
+		<RepositoryUrl>https://github.com/doctorRaz</RepositoryUrl>
+
+		<NeutralLanguage>ru-RU</NeutralLanguage>
+	</PropertyGroup>
+	<!-- ================================================================= -->
+	<!-- Дополнительные метаданные сборки                                  -->
+	<!-- ================================================================= -->
+	<ItemGroup>
+
+		<!--
+			ContactEmail
+			ContactEmailBackup
+			SupportEmail
+			LicenseEmail
+			VendorEmail
+		-->
+
+		<!-- Контактная информация -->
+		<AssemblyMetadata Include="ContactEmail" Value="razygraev@gmail.com" />
+		<AssemblyMetadata Include="SupportEmail" Value="doctorRaz@gmail.com" />
+		<AssemblyMetadata Include="VendorEmail" Value="doctorRaz@yandex.ry" />
+
+		<!--домашняя страница-->
+		<AssemblyMetadata Include="HomePage" Value="https://doctorraz.blogspot.com" />
+
+		<!-- Семейство Host -->
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+
+		<!-- Код Host -->
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
+
+		<!--Product может быть красивым названием, а ProductFamily удобно использовать программно.-->
+		<AssemblyMetadata Include="ProductFamily" Value="$(SolutionName)$(HostCode)" />
+
+		<AssemblyMetadata Include="Vendor" Value="$(Vendor)" />
+	</ItemGroup>
+
+	<!-- ================================================================= -->
+	<!-- Дополнительные настройки Release                                  -->
+	<!-- ================================================================= -->
 	<PropertyGroup Condition="'$(Configuration)'!= 'Debug'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>
+	<!-- ================================================================= -->
+	<!-- чисто для отладки                                                 -->
+	<!-- ================================================================= -->
+	<PropertyGroup>
+		<!--минимальная версия кад которую поддерживает программа-->
+		<!--для отладки фейков, достаточно включить в загрузчик-->
+		<MinVersion>23</MinVersion>
 	</PropertyGroup>
 </Project>

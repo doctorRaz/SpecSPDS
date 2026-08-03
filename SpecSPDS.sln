@@ -65,7 +65,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneA", "+Test.CloneA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneB", "+Test.CloneB\Test.CloneB.csproj", "{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Raw", "+Test.Raw\Test.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.Raw", "+Test.Raw\n.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
