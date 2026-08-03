@@ -80,7 +80,7 @@ namespace drz.Abstractions.Infrastructure
         string ProductName { get; }
 
         /// <summary>Возвращает ProductName+CadCode.</summary>
-        string ProductFamily { get; }
+        string ProductFamily { get; }// идентификатор пилажения в контексте хоста
 
         /// <summary>Возвращает AssemblyTitleAttribute.</summary>
         string ProductTitle { get; }
