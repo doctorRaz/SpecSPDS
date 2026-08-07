@@ -22,7 +22,7 @@ using dRz.Abstractions.Infrastructure;
 
 using drz.SpecSpds;
 
-#elif NC
+#elif NC || NC23
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;

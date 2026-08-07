@@ -1,0 +1,32 @@
+﻿<Project>
+	<PropertyGroup>
+		<PlatformTarget>x64</PlatformTarget>
+		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
+	</ItemGroup>
+
+
+	<!--колдунство но на выходе так-->
+	<!--
+	namespace dRz.Loader
+	{
+		public static class GeneratedCompile
+		{
+			public const int MinVersion = 23;
+			public const string CommandSuf = "SpecSPDS";
+		}
+	}
+	-->
+	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
+		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs" Overwrite="true" Lines="&#xD;&#xA;namespace dRz.Loader&#xD;&#xA;{&#xD;&#xA;    public static class GeneratedCompile&#xD;&#xA;    {&#xD;&#xA;        public const int MinVersion = $(MinVersion)%3B&#xD;&#xA;        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B&#xD;&#xA;    }&#xD;&#xA;}" />
+
+	</Target>
+	<ItemGroup>
+		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
+		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+</Project>

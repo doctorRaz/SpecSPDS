@@ -1,16 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="Shared.props" Condition="Exists('Shared.props')"/>
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
-		<PlatformTarget>x64</PlatformTarget>
-		<!--<AssemblyName>$(SolutionName)n</AssemblyName>-->
-		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
-		
-		<!--фиксированное намеспайсе, сборка участвует в разных проектах-->
-		<!--<RootNamespace>$(Vendor).$(MSBuildProjectName)</RootNamespace>-->
+
 		<RootNamespace>$(Vendor).Loader</RootNamespace>
-		<!--<Nullable>enable</Nullable>
-		<ImplicitUsings>disable</ImplicitUsings>-->
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>
 
@@ -19,41 +13,17 @@
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
-		<Description>Загрузчик модулей $(SolutionName) под версию CAD</Description>
-		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
+		<Description>Загрузчик модулей $(SolutionName) под версию nanoCAD ≤ 22</Description>
+		<AssemblyTitle>$(SolutionName)$(MSBuildProjectName)</AssemblyTitle>
 		<!--metadata-->
 		<HostFamily>NC</HostFamily>
 		<HostCode>n</HostCode>
-
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>-->
+
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
 		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
-		<!-- <PackageReference Include="SimpleInjector" Version="5.5.0" /> -->
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\+AddOnRuntime\AddOnRuntime.csproj" />
-		<!--<ProjectReference Include="..\+EnvironmentInfo\EnvironmentInfo.csproj" />-->
-	</ItemGroup>
-		<!--metadata assemble-->
-	<ItemGroup>
-		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
-		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
-	</ItemGroup>
-	<Target Name="GeneratedCompile" BeforeTargets="PrepareForBuild">
-		<WriteLinesToFile File="$(IntermediateOutputPath)GeneratedCompile.cs" Overwrite="true" Lines="&#xD;&#xA;namespace dRz.Loader&#xD;&#xA;{&#xD;&#xA;    public static class GeneratedCompile&#xD;&#xA;    {&#xD;&#xA;        public const int MinVersion = $(MinVersion)%3B&#xD;&#xA;        public const string CommandSuf = &quot;$(SolutionNameSafe)&quot;%3B&#xD;&#xA;    }&#xD;&#xA;}" />
-
-	</Target>
-
-	<ItemGroup>
-		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
-		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 </Project>
