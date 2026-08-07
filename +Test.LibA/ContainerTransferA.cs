@@ -1,11 +1,11 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
+global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using drz.Lib_B;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
 
 namespace drz.Lib_A
 {

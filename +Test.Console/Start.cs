@@ -19,13 +19,14 @@ AppSettings я б засунул именно в то, что работает �
 
 */
 
-global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services.Message;
+global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+using drz.SpecSPDS.Test;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
 using System;
 using System.Diagnostics;
 
-namespace drz.SpecSPDS.Test
+namespace dRz.SpecSPDS.Test
 {
     /// <summary>
     /// Start

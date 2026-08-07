@@ -1,10 +1,10 @@
-﻿global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
-using drz.AddOnRuntime;
+﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using drz.Clone_B;
+using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
+using dRz.AddOnRuntime;
 using System;
 using System.Reflection;
 

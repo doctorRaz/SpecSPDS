@@ -1,5 +1,5 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Infrastructure.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Infrastructure.Infrastructure;
 using System;
 
 namespace dRz.SpecSPDS

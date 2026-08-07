@@ -1,8 +1,8 @@
-﻿using drz.Abstractions.Services.Message;
-using drz.n.Infrastructure.Services;
+﻿using dRz.Abstractions.Services.Message;
+using dRz.n.Infrastructure.Services;
 using System;
 
-namespace drz.SpecSPDS.Test
+namespace dRz.SpecSPDS.Test
 {
     public class ContainerrMessage
     {

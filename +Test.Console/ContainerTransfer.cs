@@ -1,16 +1,16 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
-using drz.AddOnRuntime;
 using drz.Lib_A;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
+using dRz.AddOnRuntime;
 using System;
 
-//using static drz.Src.Infrastructure.AddOnContext;
+//using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace drz.SpecSPDS.Test
+namespace dRz.SpecSPDS.Test
 
 {
     /// <summary>
