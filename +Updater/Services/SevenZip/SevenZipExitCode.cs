@@ -1,4 +1,4 @@
-﻿namespace drz.Updater.Services.SevenZip
+﻿namespace dRz.Updater.Services.SevenZip
 {
     /// <summary>
     /// Коды завершения 7-Zip.

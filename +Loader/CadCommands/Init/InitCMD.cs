@@ -1,8 +1,8 @@
-﻿using drz.Loader;
-using static drz.Src.Infrastructure.AddOnContext;
+﻿using dRz.Loader;
+using static dRz.Src.Infrastructure.AddOnContext;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
-namespace drz.Loader.CadCommands.Init
+namespace dRz.Loader.CadCommands.Init
 {
     public class InitCMD
     {

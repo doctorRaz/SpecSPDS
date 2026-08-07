@@ -1,9 +1,9 @@
 ﻿using System;
 using Teigha.Runtime;
-using static drz.Src.Infrastructure.AddOnContext;
+using static dRz.Src.Infrastructure.AddOnContext;
 
 
-namespace drz.Loader.CadCommands.NewCmd
+namespace dRz.Loader.CadCommands.NewCmd
 {
     public class NewInfoCmd
     {

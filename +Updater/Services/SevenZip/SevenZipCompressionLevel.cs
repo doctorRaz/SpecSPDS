@@ -1,4 +1,4 @@
-﻿namespace drz.Updater.Services.SevenZip
+﻿namespace dRz.Updater.Services.SevenZip
 {
     /// <summary>
     /// Уровень сжатия архива 7-Zip.

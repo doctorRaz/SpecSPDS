@@ -1,4 +1,4 @@
-﻿namespace drz.Abstractions.Infrastructure
+﻿namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>Предоставляет методы для строкового представления объекта.</summary>
     public interface IStringConvertible

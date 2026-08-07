@@ -1,7 +1,7 @@
-﻿using drz.Abstractions.Services;
+﻿using dRz.Abstractions.Services;
 using SimpleInjector;
 
-namespace drz.AddOnRuntime
+namespace dRz.AddOnRuntime
 {
     /// <summary>
     /// Реализация <see cref="IAddOnServices"/>,

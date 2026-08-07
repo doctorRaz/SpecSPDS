@@ -1,11 +1,11 @@
-﻿using drz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace drz.Infrastructure.Infrastructure
+namespace dRz.Infrastructure.Infrastructure
 {
     /// <summary>
     /// Глобальный реестр информации о загруженных сборках.

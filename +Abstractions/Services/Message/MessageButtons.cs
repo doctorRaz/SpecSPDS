@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace drz.Abstractions.Services.Message
+namespace dRz.Abstractions.Services.Message
 {
     [Flags]
     public enum MessageButtons : uint

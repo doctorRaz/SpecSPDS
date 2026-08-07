@@ -1,6 +1,6 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.LogBootstrap.Diagnostics;
-using drz.LogBootstrap.drzNLog;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.LogBootstrap.Diagnostics;
+using dRz.LogBootstrap.drzNLog;
 using NLog;
 using NLog.Common;
 using NLog.Config;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime;
 
-namespace drz.LogBootstrap.Builder
+namespace dRz.LogBootstrap.Builder
 {
     /// <summary>
     /// Создает NLog фабрику

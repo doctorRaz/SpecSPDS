@@ -1,7 +1,7 @@
 ﻿//https://replit.com/@razygraev/Log-Service-interface
 using System;
 
-namespace drz.Abstractions.Logger
+namespace dRz.Abstractions.Logger
 {
     /// <summary>
     /// Фабрика логеров. (Logger factory)

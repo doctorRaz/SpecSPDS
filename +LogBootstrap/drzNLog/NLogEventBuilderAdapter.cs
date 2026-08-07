@@ -1,8 +1,8 @@
-﻿using drz.Abstractions.Logger;
+﻿using dRz.Abstractions.Logger;
 using System;
 using System.Collections.Generic;
 
-namespace drz.LogBootstrap.drzNLog
+namespace dRz.LogBootstrap.drzNLog
 {
     internal sealed class NLogEventBuilderAdapter : ILogEventBuilder
     {

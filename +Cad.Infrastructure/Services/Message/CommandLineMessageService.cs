@@ -1,5 +1,5 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -10,7 +10,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace drz.n.Infrastructure.Services.Message
+namespace dRz.n.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {

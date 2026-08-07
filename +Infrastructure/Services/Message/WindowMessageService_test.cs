@@ -1,10 +1,10 @@
-﻿using drz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-namespace drz.Infrastructure.Services;
+namespace dRz.Infrastructure.Services;
 
 /// <summary>
 /// Реализация сервиса сообщений на основе WinAPI MessageBoxW.

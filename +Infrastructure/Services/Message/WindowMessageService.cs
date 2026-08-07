@@ -1,13 +1,13 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
 using System;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
-namespace drz.Infrastructure.Services.Message
+namespace dRz.Infrastructure.Services.Message
 {
     public class WindowMessageService : IMessageService, IWindowMessageService
     {

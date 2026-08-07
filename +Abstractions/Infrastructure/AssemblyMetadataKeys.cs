@@ -1,4 +1,4 @@
-﻿namespace drz.Abstractions.Infrastructure
+﻿namespace dRz.Abstractions.Infrastructure
 {
     public static class AssemblyMetadataKeys
 

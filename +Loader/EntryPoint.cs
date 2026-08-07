@@ -5,18 +5,18 @@
  * http://bushman-andrey.blogspot.ru/2014/06/dll-autocad.html
  */
 
-global using AddOnCtx = drz.Src.Infrastructure.AddOnContext;
+global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-//using static drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Logger;
-using drz.AddOnRuntime;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
-using drz.Abstractions.Infrastructure;
+//using static dRz.Src.Infrastructure.AddOnContext;
+using dRz.Abstractions.Logger;
+using dRz.AddOnRuntime;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Infrastructure;
 
 #if TEST
 
@@ -26,13 +26,13 @@ using drz.SpecSpds;
 
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using drz.Loader;
+using dRz.Loader;
 using Rtm = Teigha.Runtime;
 
 [assembly: Rtm.ExtensionApplication(typeof(EntryPoint))]
 #endif
 
-namespace drz.Loader
+namespace dRz.Loader
 {
     /// <summary>
     /// Задачей данного класса является поиск и загрузка в AutoCAD наиболее
@@ -84,8 +84,8 @@ namespace drz.Loader
 
                 TryAddOnCompositionRoot();//получаем окружение
 
-                AddOnCtx.MsgCmd.InfoMessage(_sysInfo.ToLongString());
-                _message.InfoMessage(_sysInfo.ToLongString());
+                //todo AddOnCtx.MsgCmd.InfoMessage(_sysInfo.ToLongString());
+                //_message.InfoMessage(_sysInfo.ToLongString());
                 //nlog
                 //обертка инит логера, если ех на старте, то отловим в месадж
                 //TryLoggerProvider();

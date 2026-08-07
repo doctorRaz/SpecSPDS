@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace drz.Abstractions.Services.Message
+namespace dRz.Abstractions.Services.Message
 {
     /// <summary>Сервис сообщений ком строка 
     /// добавлен метод </summary>

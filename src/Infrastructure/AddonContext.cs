@@ -1,10 +1,10 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
 using System;
 
-namespace drz.Src.Infrastructure
+namespace dRz.Src.Infrastructure
 {
     /// <summary>
     /// Класс чисто для укорочения вызовов service or infrastructure в коде, чтобы не писать Services.Get&lt;IService&gt;()

@@ -1,7 +1,7 @@
 ﻿using Teigha.Runtime;
-using static drz.Src.Infrastructure.AddOnContext;
+using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Loader.CadCommands.DocInfo
+namespace dRz.Loader.CadCommands.DocInfo
 {
     public class DocInfoLineCmd
     {

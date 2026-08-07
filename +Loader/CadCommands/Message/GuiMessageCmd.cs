@@ -1,7 +1,7 @@
 ﻿using Teigha.Runtime;
-using static drz.Src.Infrastructure.AddOnContext;
+using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace drz.Loader.CadCommands.Message
+namespace dRz.Loader.CadCommands.Message
 {
     public class GuiMessageCmd
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace drz.Updater.Services
+namespace dRz.Updater.Services
 {
     /// <summary>
     /// Installer

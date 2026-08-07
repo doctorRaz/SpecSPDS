@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace drz.Abstractions.Logger
+namespace dRz.Abstractions.Logger
 {
     /// <summary>
     /// Extensions подробный вывод message<br/>

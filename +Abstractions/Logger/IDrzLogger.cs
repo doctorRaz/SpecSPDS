@@ -1,7 +1,7 @@
 ﻿//https://replit.com/@razygraev/Log-Service-interface
 using System;
 
-namespace drz.Abstractions.Logger
+namespace dRz.Abstractions.Logger
 {
     /// <summary> Provides logging interface and utility functions. </summary>
     public interface IDrzLogger

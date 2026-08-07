@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace drz.Abstractions.Infrastructure
+namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>
     /// Глобальный реестр информации о загруженных аддонах<br/>

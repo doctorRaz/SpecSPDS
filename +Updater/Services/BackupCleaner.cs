@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace drz.Updater.Services
+namespace dRz.Updater.Services
 {
     /// <summary>
     /// Выполняет очистку каталога от резервных файлов и удаляет пустые папки.

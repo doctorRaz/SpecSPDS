@@ -1,5 +1,5 @@
-﻿using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace drz.Infrastructure.Services.Message
+namespace dRz.Infrastructure.Services.Message
 {
     /// <summary>
     /// Универсальный сервис сообщений.

@@ -1,4 +1,4 @@
-﻿namespace drz.Updater.Services
+﻿namespace dRz.Updater.Services
 {
     /// <summary>
     /// проброс в фабрику ProductName и получение логера для продукта

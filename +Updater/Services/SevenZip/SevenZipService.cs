@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace drz.Updater.Services.SevenZip
+namespace dRz.Updater.Services.SevenZip
 {
     /// <summary>
     /// Сервис работы с архивами 7z через консольный модуль 7-Zip.

@@ -1,4 +1,4 @@
-﻿using drz.Abstractions.Services;
+﻿using dRz.Abstractions.Services;
 using System;
 using System.IO;
 
@@ -8,7 +8,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace drz.n.Infrastructure.Services
+namespace dRz.n.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {

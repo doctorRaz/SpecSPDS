@@ -1,11 +1,11 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Logger;
-using drz.LogBootstrap.Builder;
-using drz.LogBootstrap.drzNLog;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using dRz.LogBootstrap.Builder;
+using dRz.LogBootstrap.drzNLog;
 using NLog;
 using System.Collections.Concurrent;
 
-namespace drz.LogBootstrap
+namespace dRz.LogBootstrap
 {
     /// <summary>
     /// найти или создать IDrzLoggerFactory

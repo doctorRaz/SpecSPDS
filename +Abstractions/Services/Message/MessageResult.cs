@@ -1,4 +1,4 @@
-﻿namespace drz.Abstractions.Services.Message
+﻿namespace dRz.Abstractions.Services.Message
 {
     public enum MessageResult
     {

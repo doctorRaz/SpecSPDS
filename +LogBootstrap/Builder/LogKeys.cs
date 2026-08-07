@@ -1,4 +1,4 @@
-﻿namespace drz.LogBootstrap.Builder
+﻿namespace dRz.LogBootstrap.Builder
 {
     /// <summary>
     /// константы названий файлов <br/>

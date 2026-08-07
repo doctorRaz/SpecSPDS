@@ -1,4 +1,4 @@
-﻿namespace drz.Updater.Services
+﻿namespace dRz.Updater.Services
 {
     /// <summary>
     /// Режим проверки обновлений

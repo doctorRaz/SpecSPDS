@@ -3,7 +3,7 @@
 
 using System;
 
-namespace drz.Abstractions.Infrastructure
+namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>Информация о системе </summary>
     public interface ISysInfo : IStringConvertible

@@ -1,10 +1,10 @@
-﻿using drz.Abstractions.Logger;
+﻿using dRz.Abstractions.Logger;
 using NLog;
 using System;
 
 //https://replit.com/@razygraev/Log-Service-interface
 
-namespace drz.LogBootstrap.drzNLog
+namespace dRz.LogBootstrap.drzNLog
 {
     /// <summary>
     /// Log Factory

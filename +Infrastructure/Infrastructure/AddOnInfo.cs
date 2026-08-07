@@ -1,16 +1,16 @@
-﻿using drz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace drz.Infrastructure.Infrastructure
+namespace dRz.Infrastructure.Infrastructure
 {
     /// <summary>
     /// AddOnInfo
     /// </summary>
-    /// <seealso cref="drz.Abstractions.Infrastructure.IAddOnInfo" />
+    /// <seealso cref="dRz.Abstractions.Infrastructure.IAddOnInfo" />
     public class AddOnInfo : IAddOnInfo
     {
         private readonly Assembly _assembly;

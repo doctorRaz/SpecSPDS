@@ -1,10 +1,10 @@
 ﻿//https://replit.com/@razygraev/Log-Service-interface
 
-using drz.Abstractions.Logger;
+using dRz.Abstractions.Logger;
 using NLog;
 using System;
 
-namespace drz.LogBootstrap.drzNLog
+namespace dRz.LogBootstrap.drzNLog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {

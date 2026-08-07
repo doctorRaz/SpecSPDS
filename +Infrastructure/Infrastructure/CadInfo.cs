@@ -1,11 +1,11 @@
-﻿using drz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace drz.Infrastructure.Infrastructure;
+namespace dRz.Infrastructure.Infrastructure;
 
 /// <summary>
 /// CadInfo

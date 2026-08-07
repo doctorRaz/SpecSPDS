@@ -1,11 +1,11 @@
-﻿using drz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management; // Не забудьте добавить ссылку
 
-namespace drz.Infrastructure.Infrastructure
+namespace dRz.Infrastructure.Infrastructure
 {
     public class SysInfo : ISysInfo
     {

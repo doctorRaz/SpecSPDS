@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace drz.LogBootstrap.Diagnostics
+namespace dRz.LogBootstrap.Diagnostics
 {
     /// <summary>
     ///

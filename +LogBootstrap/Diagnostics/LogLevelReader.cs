@@ -1,7 +1,7 @@
 ﻿using NLog;
 using System.IO;
 
-namespace drz.LogBootstrap.Diagnostics
+namespace dRz.LogBootstrap.Diagnostics
 {
     internal static class LogLevelReader
     {

@@ -1,12 +1,12 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services;
-using drz.Abstractions.Services.Message;
-using drz.Infrastructure.Infrastructure;
-using drz.Infrastructure.Services.Message;
-using drz.LogBootstrap;
-using drz.n.Infrastructure.Services;
-using drz.n.Infrastructure.Services.Message;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services;
+using dRz.Abstractions.Services.Message;
+using dRz.Infrastructure.Infrastructure;
+using dRz.Infrastructure.Services.Message;
+using dRz.LogBootstrap;
+using dRz.n.Infrastructure.Services;
+using dRz.n.Infrastructure.Services.Message;
 
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
@@ -15,7 +15,7 @@ using System.Reflection;
 
 //using Container = SimpleInjector.Container;
 
-namespace drz.AddOnRuntime
+namespace dRz.AddOnRuntime
 {
     /// <summary> Наполнение SimpleInjector объектами </summary>
     /// <seealso cref="System.IDisposable" />

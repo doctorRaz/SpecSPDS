@@ -1,9 +1,9 @@
-﻿using drz.Abstractions.Infrastructure;
-using drz.Abstractions.Logger;
-using drz.Abstractions.Services.Message;
-using drz.Updater.Services;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
+using dRz.Updater.Services;
 
-namespace drz.Updater
+namespace dRz.Updater
 {
     /// <summary>
     /// Менеджер обновлений

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace drz.Infrastructure.Infrastructure
+namespace dRz.Infrastructure.Infrastructure
 {
     /// <summary>
     /// получает метаданные из атрибутов сборки и хранит их в словаре
