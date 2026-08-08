@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="Shared.props" Condition="Exists('Shared.props')"/>
+	<Import Project="Shared.props" Condition="Exists('Shared.props')" />
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<!--<TargetFramework>net462</TargetFramework>-->

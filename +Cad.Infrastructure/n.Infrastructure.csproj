@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
@@ -19,7 +20,7 @@
 		<DefineConstants>$(DefineConstants);NC</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
+		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
 		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
 	<ItemGroup>
