@@ -2,7 +2,8 @@
 	<Import Project="Shared.props" Condition="Exists('Shared.props')"/>
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 
 		<RootNamespace>$(Vendor).Loader</RootNamespace>
 		<!-- значение по умолчанию мин версии-->
@@ -24,6 +25,11 @@
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="nanoCAD.Platform.NET" Version="21.0.5699.3427" />
+		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
 	</ItemGroup>
+	<PropertyGroup>
+		<!--минимальная версия кад которую поддерживает программа-->
+		<!--для отладки фейков, достаточно включить в загрузчик-->
+		<MinVersion>23</MinVersion>
+	</PropertyGroup>
 </Project>

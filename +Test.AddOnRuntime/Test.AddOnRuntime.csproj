@@ -2,7 +2,8 @@
 
 	<PropertyGroup>
 		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.AddOn.Composition</RootNamespace>
 		<Description>точка создания контейнера</Description>
 		<AssemblyTitle>AddOn.Composition</AssemblyTitle>

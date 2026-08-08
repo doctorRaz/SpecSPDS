@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
@@ -18,22 +19,15 @@
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
 	</ItemGroup>
-	<!--<ItemGroup>
-	  <Reference Include="System.Management">
-	    <HintPath>..\..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
-		  <Private>True</Private>
-	  </Reference>
-	</ItemGroup>-->
-	<ItemGroup>
-		<Reference Include="System.Management">
-		</Reference>
-	</ItemGroup>
 	<!-- внешние библиотеки NET-->
 	<!--<ItemGroup>
 		<Reference Include="System.Management">
-			<HintPath>..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
-			<Private>True</Private>
 		</Reference>
 	</ItemGroup>-->
-
+	<ItemGroup>
+		<Reference Include="System.Management">
+			<HintPath>..\..\..\SDK\System.Management\4.700\System.Management.dll</HintPath>
+			<Private>True</Private>
+		</Reference>
+	</ItemGroup>
 </Project>

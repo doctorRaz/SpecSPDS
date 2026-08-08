@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>		
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.Lib_A</RootNamespace>
 		<Description>1 чистилка bak и копий</Description>
 

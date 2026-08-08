@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<TargetFramework>net462</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>

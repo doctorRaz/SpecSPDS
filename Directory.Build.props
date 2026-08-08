@@ -141,12 +141,4 @@
 	<PropertyGroup Condition="'$(Configuration)'!= 'Debug'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
-	<!-- ================================================================= -->
-	<!-- чисто для отладки                                                 -->
-	<!-- ================================================================= -->
-	<PropertyGroup>
-		<!--минимальная версия кад которую поддерживает программа-->
-		<!--для отладки фейков, достаточно включить в загрузчик-->
-		<MinVersion>23</MinVersion>
-	</PropertyGroup>
 </Project>
