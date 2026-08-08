@@ -106,7 +106,7 @@ namespace dRz.Loader
 
                     _logger.Error(ex, message);
                 }
-                if (_isAddOnCompositionRoot)
+                if (_isMessageProvider)
                 {
                     _message.ErrorMessage(message, ex);
                 }
@@ -225,7 +225,7 @@ namespace dRz.Loader
 
                 //string fileDescription = RT.Cad.FileDescription;
 
-                _logger.Debug($"Обнаружен: {_cadInfo}");
+                _logger.Trace($"Обнаружен: {_cadInfo}");
 
                 string fileFullName = GetType().Assembly.Location;//брать из аддон инфо
                 //косяк   string fileFullName = _addOnInfo.FilePrefix;
@@ -234,7 +234,7 @@ namespace dRz.Loader
 
                 Version minVersion = new Version(minMajor, 0);
 
-                _logger.Debug($"minVersion {minVersion}");
+                _logger.Trace($"minVersion {minVersion}");
 
                 FileInfo? targetDllFullName = FindFile(/*fileFullName,*/ version, minVersion);
 
@@ -249,7 +249,7 @@ namespace dRz.Loader
                     return false;
                 }
 
-                _logger.Debug($"Адаптер найден в: {targetDllFullName}");//найден адаптер
+                _logger.Trace($"Адаптер найден в: {targetDllFullName}");//найден адаптер
 
                 // Если найден файл, соответствующий нашей версии CAD, то
                 // загружаем его.
@@ -260,7 +260,7 @@ namespace dRz.Loader
                     {
                         //string mesag = $"Загружается адаптер для: {fileDescription} v{version}, целевая сборка: {targetDllFullName.FullName}";
 
-                        _logger.Debug($"Загружается адаптер для: {_cadInfo}, целевая сборка: {targetDllFullName.FullName}");
+                        _logger.Trace($"Загружается адаптер для: {_cadInfo}, целевая сборка: {targetDllFullName.FullName}");
 
                         asm = Assembly.LoadFile(targetDllFullName.FullName);
                     }
@@ -274,7 +274,7 @@ namespace dRz.Loader
                         throw exception;
                     }
 
-                    _logger.Debug($"Адаптер для {_cadInfo} загружен");
+                    _logger.Trace($"Адаптер для {_cadInfo} загружен");
                 }
                 catch (Exception ex)
                 {
@@ -494,7 +494,7 @@ namespace dRz.Loader
         {
             try
             {
-                _logger.Debug("Terminate");
+                _logger.Trace("Terminate");
             }
             catch { } // смысла нет что то показывать при закрытии наны
         }
