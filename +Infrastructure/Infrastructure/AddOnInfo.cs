@@ -106,6 +106,8 @@ namespace dRz.Infrastructure.Infrastructure
         /// <value>Путь к данным приложения.</value>
         public string ProductDataDirectory { get; }
 
+        /// <summary>Gets the company.</summary>
+        /// <value>The company.</value>
         public string Company { get; }
 
         /// <summary>
@@ -173,8 +175,13 @@ namespace dRz.Infrastructure.Infrastructure
             }
         }
 
+        /// <summary>
+        /// Все пары ключ-значение метаданных.
+        /// Используется для диагностики и вывода информации.
+        /// </summary>
         public IEnumerable<KeyValuePair<string, string>> MetadataItems => _metadata.Items;
 
+        /// <summary>Все доступные ключи метаданных.</summary>
         public IEnumerable<string> MetadataKeys => _metadata.Keys;
 
         /// <summary>
@@ -213,11 +220,18 @@ namespace dRz.Infrastructure.Infrastructure
         /// <value>версия сборки.</value>
         public Version RunningVersion { get; }
 
+        /// <summary>Получить значение метаданных.</summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public string? GetMetadata(string key)
         {
             return _metadata.Get(key);
         }
 
+        /// <summary>Получить значение метаданных с заданным значением по умолчанию.</summary>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
         public string GetMetadata(string key, string defaultValue)
         {
             return _metadata.Get(key, defaultValue);
@@ -259,6 +273,10 @@ namespace dRz.Infrastructure.Infrastructure
             return $"{Product} v{RunningVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
         }
 
+        /// <summary>Попытаться получить значение метаданных.</summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetMetadata(string key, out string value)
         {
             return _metadata.TryGet(key, out value);
