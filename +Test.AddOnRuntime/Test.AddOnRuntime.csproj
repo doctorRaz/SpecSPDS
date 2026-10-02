@@ -15,7 +15,7 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>-->
 	<ItemGroup>
-		<Compile Include="..\+AddOnRuntime\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\+AddOnRuntime\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />

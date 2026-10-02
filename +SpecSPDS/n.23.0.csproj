@@ -9,9 +9,9 @@
 		<!--<ImplicitUsings>disable</ImplicitUsings>-->
 		<UseWindowsForms>false</UseWindowsForms>
 		<UseWPF>true</UseWPF>
-		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******************-->
-		<Description>Спецификация из универсального маркера, nanoCAD 23-25</Description>
+		<Description>Спецификация из универсального маркера, nanoCAD 23-26</Description>
 		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
 		<!--metadata-->
 		<HostFamily>NC</HostFamily>

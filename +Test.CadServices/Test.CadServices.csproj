@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
-		<TargetFramework>net462</TargetFramework>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<!--<TargetFramework>net462</TargetFramework>-->
 		<RootNamespace>drz.CadServices</RootNamespace>
 		<Description>Сервис nanoCAD</Description>
 		<AssemblyTitle>dRz.CadServices</AssemblyTitle>
@@ -19,7 +19,7 @@
 		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\+Cad.Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\+Cad.Infrastructure\Services\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
