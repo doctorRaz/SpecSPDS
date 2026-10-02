@@ -12,8 +12,8 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>-->
 	<ItemGroup>
-		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
-		<PackageReference Include="NLog" Version="6.1.3" />
+		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
+		<!--<PackageReference Include="NLog" Version="6.1.3" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />
