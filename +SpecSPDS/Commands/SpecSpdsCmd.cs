@@ -1,10 +1,10 @@
 ﻿using drz.SpecSPDS.CadServices;
-using drz.SpecSPDS.Core.Enums;
-using drz.SpecSPDS.Core.Extensions;
-using drz.SpecSPDS.Core.Models;
-using drz.SpecSPDS.Core.Services;
-using drz.SpecSPDS.Core.Settings;
 using drz.SpecSPDS.Services;
+using dRz.Core.Enums;
+using dRz.Core.Extensions;
+using dRz.Core.Models;
+using dRz.Core.Services;
+using dRz.Core.Settings;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using NLog;

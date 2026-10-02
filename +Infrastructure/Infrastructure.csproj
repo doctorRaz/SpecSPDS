@@ -3,15 +3,15 @@
 	<PropertyGroup>
 		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
-		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
-		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
-		<ImplicitUsings>disable</ImplicitUsings>
-		<Nullable>enable</Nullable>
+		<!--<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>-->
+		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
+		<!--<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>-->
+		<!--<ImplicitUsings>disable</ImplicitUsings>-->
+		<!--<Nullable>enable</Nullable>-->
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
 		<Description>Инфраструктура</Description>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 	</PropertyGroup>
 	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>

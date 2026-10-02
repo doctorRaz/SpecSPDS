@@ -1,6 +1,6 @@
-﻿using drz.SpecSPDS.Core.Enums;
-using drz.SpecSPDS.Core.Models;
-using drz.SpecSPDS.Core.Settings;
+﻿using dRz.Core.Enums;
+using dRz.Core.Models;
+using dRz.Core.Settings;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;

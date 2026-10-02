@@ -3,14 +3,14 @@
 	<PropertyGroup>
 		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>
-		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
-		<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>
-		<ImplicitUsings>disable</ImplicitUsings>
+		<!--<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>-->
+		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
+		<!--<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>-->
+		<!--<ImplicitUsings>disable</ImplicitUsings>-->
 
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
-		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 		<Description>Сервис и инфраструктура nanoCAD</Description>
 	</PropertyGroup>
 	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,7 +21,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
-		<!--<PackageReference Include="SimpleInjector" Version="5.5.0" />-->
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\+Abstractions\Abstractions.csproj" />

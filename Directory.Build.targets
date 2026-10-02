@@ -1,30 +1,15 @@
 ﻿<Project>
-	
-	<!--<PropertyGroup>
-		-->
-	<!-- Общая папка с конфигурацией -->
-	<!--
-		<SharedConfigDir>$(MSBuildThisFileDirectory)Shared</SharedConfigDir>
-		-->
-	<!--папка решения-->
-	<!--
-		-->
-	<!--<SharedConfigDir>$(SolutionDir)Shared</SharedConfigDir>-->
-	<!--
+	<PropertyGroup>
+		<!-- Полная версия CLR -->
+		<AssemblyVersion>$(Version).$(Build).$(Revision)</AssemblyVersion>
+		<!-- Версия файла Windows -->
+		<FileVersion>$(Version).$(Build).$(Revision)</FileVersion>
+		<!-- Версия продукта для пользователя -->
+		<!-- ProductVersion он жэж AssemblyInformationalVersion-->
+		<InformationalVersion>$(Version).$(Build).$(Revision)</InformationalVersion>
+		<!-- Не добавлять Git commit hash в InformationalVersion -->
+		<!--<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>-->
 	</PropertyGroup>
-
-	<Target Name="CopyNLogConfig"
-			AfterTargets="Build"
-			Inputs="$(SharedConfigDir)\NLogLoader.$(Configuration).config"
-			Outputs="$(OutDir)NLog.config"
-			Condition="Exists('$(SharedConfigDir)\NLogLoader.$(Configuration).config')">
-
-		<Copy
-		  SourceFiles="$(SharedConfigDir)\NLogLoader.$(Configuration).config"
-		  DestinationFiles="$(OutDir)NLog.config"
-		  SkipUnchangedFiles="true" />
-
-	</Target>-->
 	<!-- что бы в каждый проект не добавлять -->
 	<ItemGroup>
 		<!-- Удаляем ВСЕ из _draft -->
@@ -38,48 +23,4 @@
 		<None Remove="**/_experimental/**"/>
 		<Content Remove="**/_experimental/**"/>
 	</ItemGroup>
-
-
-	<!--ПРИБИТЬ ФАЙЛЫ UPDATE-->
-	<!-- <Target Name="DeleteUpdateFiles" BeforeTargets="BeforeBuild"> -->
-		<!-- <ItemGroup> -->
-			<!-- <UpdateFiles Include="$(TargetDir)update.*"/> -->
-		<!-- </ItemGroup> -->
-
-		<!-- <Delete Files="@(UpdateFiles)" -->
-				<!-- ContinueOnError="true" /> -->
-	<!-- </Target> -->
-	<!--ini-->
-	<!-- <Target Name="WriteUpdateInfoINI" AfterTargets="Build"> -->
-
-		<!-- <GetAssemblyIdentity AssemblyFiles="$(TargetPath)"> -->
-			<!-- <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/> -->
-		<!-- </GetAssemblyIdentity> -->
-
-		<!-- <WriteLinesToFile -->
-			<!-- File="$(TargetDir)update.ini" -->
-			<!-- Overwrite="false" -->
-			<!-- Lines=" -->
-<!-- [$(MSBuildProjectName)] -->
-<!-- Name=$(AssemblyName) -->
-<!-- Version=%(AssemblyInfo.Version) -->
-<!-- "/> -->
-		<!--json-->
-	<!-- </Target> -->
-	<!-- <Target Name="WriteUpdateInfoJson" AfterTargets="Build"> -->
-
-		<!-- <GetAssemblyIdentity AssemblyFiles="$(TargetPath)"> -->
-			<!-- <Output TaskParameter="Assemblies" ItemName="AssemblyInfo"/> -->
-		<!-- </GetAssemblyIdentity> -->
-		<!-- <PropertyGroup> -->
-			<!-- <Major>$([System.Version]::Parse('%(AssemblyInfo.Version)').Major)</Major> -->
-			<!-- <Minor>$([System.Version]::Parse('%(AssemblyInfo.Version)').Minor)</Minor> -->
-			<!-- <Build>$([System.Version]::Parse('%(AssemblyInfo.Version)').Build)</Build> -->
-			<!-- <Revision>$([System.Version]::Parse('%(AssemblyInfo.Version)').Revision)</Revision> -->
-		<!-- </PropertyGroup> -->
-		<!-- <WriteLinesToFile -->
-			<!-- File="$(TargetDir)update.json" -->
-			<!-- Overwrite="false" -->
-			<!-- Lines='{"Project":"$(AssemblyName)","Major":$(Major),"Minor":$(Minor),"Build":$(Build),"Revision":$(Revision)}' /> -->
-	<!-- </Target> -->
 </Project>

@@ -1,17 +1,11 @@
-﻿using System;
+﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+using System;
 using System.ComponentModel;
 using drz.SpecSPDS.Services;
 using drz.SpecSPDS.Interfaces;
 using drz.SpecSPDS;
-using static drz.Src.Infrastructure.AddOnContext;
-using drz.Abstractions.Logger;
-using drz.Src.Services;
-using drz.Updater.Services;
-
-
-
-
-
+using dRz.Abstractions.Logger;
+using dRz.Updater.Services;
 
 #if AC
 
@@ -55,7 +49,7 @@ namespace drz.SpecSPDS
             //если нет библиотек или еще какой косяк
             try
             {
-            //todo нет симплеинжектора, все валится
+                //todo нет симплеинжектора, все валится
 
                 //если ех тут то все пропало
                 TryMessageService();
@@ -123,8 +117,6 @@ namespace drz.SpecSPDS
 
         private void CleanBackups()
         {
-          
-
             try//игнорим ошибки
             {
                 BackupCleaner.DeleteBackupFiles(AddonInfo.AssemblyDirectory);
