@@ -1,0 +1,21 @@
+﻿<Project>
+	<PropertyGroup>
+	</PropertyGroup>
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>-->
+	<ItemGroup>
+		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Core\Core.csproj" />
+		<ProjectReference Include="..\Updater\Updater.csproj" />
+		<!--<ProjectReference Include="..\EnvironmentInfo\EnvironmentInfo.csproj" />-->
+		
+		<ProjectReference Include="..\AddOnRuntime\AddOnRuntime.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+</Project>

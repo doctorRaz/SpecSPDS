@@ -44,7 +44,7 @@
 	<PropertyGroup>
 		<!-- ProductName -->
 		<Product>$(SolutionName)</Product>
-		<AssemblyTitle>$(SolutionName)</AssemblyTitle>
+		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
 		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
 		<Company>doctorRaz Technologies</Company>
 		<Trademark>doctorRaz</Trademark>

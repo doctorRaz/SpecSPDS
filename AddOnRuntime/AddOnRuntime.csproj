@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<PropertyGroup>
+		<!--<TargetFramework>net462</TargetFramework>-->
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<!--<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>-->
+		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
+		<!--<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>-->
+		<Description>точка создания контейнера</Description>
+		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+		<!--<ImplicitUsings>disable</ImplicitUsings>-->
+	</PropertyGroup>
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	</PropertyGroup>-->
+	<ItemGroup>
+		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Cad.Infrastructure\NC.Infrastructure.csproj" />
+		<!--<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />-->
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+			<!--<PrivateAssets>all</PrivateAssets>-->
+		</ProjectReference>
+		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="SimpleInjector" Version="5.5.0" >
+			<Private>True</Private>
+		</PackageReference>
+	</ItemGroup>
+</Project>

@@ -1,47 +1,47 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.8.34330.188
+# Visual Studio Version 18
+VisualStudioVersion = 18.10.12224.181 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC", "+SpecSPDS\NC.csproj", "{3DFBB0EA-C68B-4199-BBA3-BC283D1E57AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC", "SpecSPDS\NC.csproj", "{3DFBB0EA-C68B-4199-BBA3-BC283D1E57AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "+Core\Core.csproj", "{30DA407B-5FC8-11FC-85D2-10FC0C9DB794}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{30DA407B-5FC8-11FC-85D2-10FC0C9DB794}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Console", "+Test.Console\Test.Console.csproj", "{AA3267D2-F4AB-4273-B85F-A19A33223B62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Console", "Test.Console\Test.Console.csproj", "{AA3267D2-F4AB-4273-B85F-A19A33223B62}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SpecSPDS", "SpecSPDS", "{9E0ED28F-095F-4CFA-8174-E6155B1992C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "+Abstractions\Abstractions.csproj", "{70AA779C-D1C6-41C4-9CF5-77789BBF664A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abstractions", "Abstractions\Abstractions.csproj", "{70AA779C-D1C6-41C4-9CF5-77789BBF664A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "+Infrastructure\Infrastructure.csproj", "{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{08D4631D-D60C-4E07-9CF0-EB0D20CECF6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{7CCE4940-DFE5-40C3-B602-431E5B71DEAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{AF1AD432-E96F-4209-B9D6-A1C82AE212CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.LibA", "+Test.LibA\Test.LibA.csproj", "{956EB4E1-9869-7DE8-DC51-F970C5EE7BF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.LibA", "Test.LibA\Test.LibA.csproj", "{956EB4E1-9869-7DE8-DC51-F970C5EE7BF1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.LibB", "+Test.LibB\Test.LibB.csproj", "{2E94BBA3-7ECA-3174-18F3-41B8E05C8744}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.LibB", "Test.LibB\Test.LibB.csproj", "{2E94BBA3-7ECA-3174-18F3-41B8E05C8744}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogBootstrap", "+LogBootstrap\LogBootstrap.csproj", "{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogBootstrap", "LogBootstrap\LogBootstrap.csproj", "{1BCCD2B3-10BF-7AFD-149D-9D9726F571F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddOnRuntime", "+AddOnRuntime\AddOnRuntime.csproj", "{7801E79B-15AF-D923-10DB-578167B1C0EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddOnRuntime", "AddOnRuntime\AddOnRuntime.csproj", "{7801E79B-15AF-D923-10DB-578167B1C0EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{CC3B1C57-DFAC-4370-9274-E6218C28054C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "+Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AddOnRuntime", "+Test.AddOnRuntime\Test.AddOnRuntime.csproj", "{B5B734A2-5273-49C8-8074-9238F078CFA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AddOnRuntime", "Test.AddOnRuntime\Test.AddOnRuntime.csproj", "{B5B734A2-5273-49C8-8074-9238F078CFA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "+Test.CadServices\Test.CadServices.csproj", "{D4C9E7E6-B843-4DB9-AAFC-0880480987D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "Test.CadServices\Test.CadServices.csproj", "{D4C9E7E6-B843-4DB9-AAFC-0880480987D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.Infrastructure", "+Cad.Infrastructure\NC.Infrastructure.csproj", "{4B23F954-EFF1-10A4-3030-A8D8CC17808B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.Infrastructure", "Cad.Infrastructure\NC.Infrastructure.csproj", "{4B23F954-EFF1-10A4-3030-A8D8CC17808B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneA", "+Test.CloneA\Test.CloneA.csproj", "{5B8210A8-1830-BAE1-8DE0-D732C91C8BC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneA", "Test.CloneA\Test.CloneA.csproj", "{5B8210A8-1830-BAE1-8DE0-D732C91C8BC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneB", "+Test.CloneB\Test.CloneB.csproj", "{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneB", "Test.CloneB\Test.CloneB.csproj", "{80CFDCAD-6818-45A3-16AE-DED0EE0BE495}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "n.Raw", "+Test.Raw\n.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.Raw", "Test.Raw\NC.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
