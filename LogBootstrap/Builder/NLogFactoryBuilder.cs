@@ -157,8 +157,6 @@ namespace dRz.LogBootstrap.Builder
             {
                 FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
 
-                //ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
-
                 ArchiveEvery = FileArchivePeriod.Day,
 
                 ArchiveSuffixFormat = ".{0}",
