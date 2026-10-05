@@ -3,12 +3,12 @@
 namespace dRz.Abstractions.Logger
 {
     /// <summary>
-    /// Extensions подробный вывод message<br/>
+    /// Дополнительные методы логирования с указанием вызывающего метода и строки.<br/>
     ///  [{memberName}:{line}] {message}
     /// </summary>
     public static class LoggerExtensions
     {
-        /// <summary>Debugs the caller.</summary>
+        /// <summary>Logs a debug message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="memberName">Name of the member.</param>
@@ -22,7 +22,7 @@ namespace dRz.Abstractions.Logger
             logger.Debug(FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Traces the caller.</summary>
+        /// <summary>Logs a trace message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="memberName">Name of the member.</param>
@@ -36,7 +36,7 @@ namespace dRz.Abstractions.Logger
             logger.Trace(FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Informations the caller.</summary>
+        /// <summary>Logs an information message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="memberName">Name of the member.</param>
@@ -50,7 +50,7 @@ namespace dRz.Abstractions.Logger
             logger.Info(FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Warns the caller.</summary>
+        /// <summary>Logs a warning message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="memberName">Name of the member.</param>
@@ -64,7 +64,7 @@ namespace dRz.Abstractions.Logger
             logger.Warn(FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Errors the caller.</summary>
+        /// <summary>Logs an error message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
@@ -80,7 +80,7 @@ namespace dRz.Abstractions.Logger
             logger.Error(FormatCaller(message, memberName, line), exception);
         }
 
-        /// <summary>Errors the caller.</summary>
+        /// <summary>Logs an error message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
@@ -96,7 +96,7 @@ namespace dRz.Abstractions.Logger
             logger.Error(exception, FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Fatals the caller.</summary>
+        /// <summary>Logs a fatal message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
@@ -112,7 +112,7 @@ namespace dRz.Abstractions.Logger
             logger.Fatal(FormatCaller(message, memberName, line), exception);
         }
 
-        /// <summary>Fatals the caller.</summary>
+        /// <summary>Logs a fatal message with caller information.</summary>
         /// <param name="logger">The logger.</param>
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
@@ -128,11 +128,11 @@ namespace dRz.Abstractions.Logger
             logger.Fatal(exception, FormatCaller(message, memberName, line));
         }
 
-        /// <summary>Formats the caller.</summary>
+        /// <summary>Formats a message with caller information.</summary>
         /// <param name="message">The message.</param>
         /// <param name="memberName">Name of the member.</param>
         /// <param name="line">The line.</param>
-        /// <returns></returns>
+        /// <returns>Message with the caller information prefix.</returns>
         internal static string FormatCaller(
                                 string message,
                                 string memberName,
