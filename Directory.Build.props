@@ -16,7 +16,7 @@
 		<!-- <BaseOutputPath>..\bin\</BaseOutputPath> -->
 		<!-- <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath> -->
 		<!--название файла сборки-->
-		<!-- <AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName> -->
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
 	<!-- ================================================================= -->
 	<!-- Версия сборки                                                     -->
