@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
-		<UseWindowsForms>false</UseWindowsForms>
+		<UseWindowsForms>true</UseWindowsForms>
 		<UseWPF>true</UseWPF>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<Description>Спецификация из универсального маркера, nanoCAD 23-26</Description>

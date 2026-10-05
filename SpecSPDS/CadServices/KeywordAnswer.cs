@@ -1,8 +1,6 @@
-﻿using HostMgd.ApplicationServices;
+﻿using dRz.Core.Services;
+using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using System;
-using System.Collections.Generic;
-using dRz.Core.Services;
 
 namespace drz.SpecSPDS.CadServices
 {
@@ -14,7 +12,7 @@ namespace drz.SpecSPDS.CadServices
       /// <param name="keywordsList">The keywords list.</param>
       /// <param name="message">The message.</param>
       /// <returns></returns>
-        public static Enum KeywordAnswer(Document doc, List< Keywords> keywordsList, string message)
+        public static Enum KeywordAnswer(Document doc, List<Keywords> keywordsList, string message)
         {
             PromptKeywordOptions options = new PromptKeywordOptions(message);
 
@@ -39,7 +37,7 @@ namespace drz.SpecSPDS.CadServices
                 return null;
             }
 
-             Keywords? keyItem = keywordsList.Find(p => p.GlobalName == res.StringResult);
+            Keywords? keyItem = keywordsList.Find(p => p.GlobalName == res.StringResult);
 
             if (keyItem == null)//невозможно , но хз его знает)))
             {
