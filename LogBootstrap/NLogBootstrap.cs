@@ -12,8 +12,6 @@ namespace dRz.LogBootstrap
     /// </summary>
     public class NLogBootstrap
     {
-        private static readonly ConcurrentDictionary<string, Lazy<IDrzLoggerFactory>> _factories = new();
-
         /// <summary>Gets the logger factory.</summary>
         /// <param name="addOnInfo">The add on information.</param>
         /// <returns></returns>
@@ -39,5 +37,7 @@ namespace dRz.LogBootstrap
 
             return lazyFactory.Value;
         }
+
+        private static readonly ConcurrentDictionary<string, Lazy<IDrzLoggerFactory>> _factories = new();
     }
 }

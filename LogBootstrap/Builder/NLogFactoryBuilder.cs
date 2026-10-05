@@ -15,20 +15,6 @@ namespace dRz.LogBootstrap.Builder
     internal class NLogFactoryBuilder
     {
 
-        private readonly string _assemblyDirectory;
-        private readonly string _productName;
-        private readonly string _productFamily;
-        private readonly string _logsDir;
-
-        #region КОНТРАКТ
-
-        // NLogFactoryBuilder не должен зависеть от всего IAddOnInfo.
-        // Ему нужны только четыре значения: каталог сборки, имя продукта,
-        // семейство продукта и каталог логов.
-        // Передача этих параметров напрямую изолирует builder от контракта IAddOnInfo.
-
-        #endregion КОНТРАКТ
-
         /// <summary>Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.</summary>
         /// <param name="assemblyDirectory">The assembly directory.</param>
         /// <param name="productName">Name of the product.</param>
@@ -46,6 +32,7 @@ namespace dRz.LogBootstrap.Builder
             _productFamily = productFamily;
             _logsDir = logsDir;
         }
+
         /// _logsDir;<summary>Builds this instance.</summary>
         /// <returns></returns>
         internal LogFactory Build()
@@ -76,6 +63,58 @@ namespace dRz.LogBootstrap.Builder
             LoggingFactoryInfo(factory);
 
             return factory;
+        }
+
+        private readonly string _assemblyDirectory;
+        private readonly string _productName;
+        private readonly string _productFamily;
+        private readonly string _logsDir;
+        /// <summary>
+        /// XML layout
+        /// </summary>
+        /// <returns></returns>
+        private static XmlLayout CreateXmlLayout()
+        {
+            return new XmlLayout
+            {
+                IncludeEventProperties = true,
+                IndentXml = true,
+                MaxRecursionLimit = 10,
+                ElementName = "logevent",
+
+                Attributes =
+                {
+                    new XmlAttribute("time", "${longdate}"),
+                    new XmlAttribute("level", "${level:uppercase=true}"),
+                    new XmlAttribute("logger", "${logger}"),
+                    new XmlAttribute("pid", "${processid}"),
+                    new XmlAttribute("fullName", "${processname:fullName=true}"),
+                },
+
+                Elements =
+                {
+                    new XmlElement("message", "${message}"),
+                    new XmlElement("exception", "${exception:format=ToString:innerFormat=ToString:maxInnerExceptionLevel=10}")
+                }
+            };
+        }
+
+        /// <summary>
+        /// Gets the effective minimum level.
+        /// </summary>
+        /// <param name="logger">The log.</param>
+        /// <returns></returns>
+        private static LogLevel GetEffectiveMinLevel(Logger logger)
+        {
+            foreach (LogLevel level in LogLevel.AllLevels) // Trace → Fatal
+            {
+                if (logger.IsEnabled(level))
+                {
+                    return level;
+                }
+            }
+
+            return LogLevel.Off;
         }
 
         /// <summary>
@@ -161,54 +200,6 @@ namespace dRz.LogBootstrap.Builder
                     .Log();
             }
             catch { }// Никогда не роняем приложение из-за диагностики логгера
-        }
-
-        /// <summary>
-        /// XML layout
-        /// </summary>
-        /// <returns></returns>
-        private static XmlLayout CreateXmlLayout()
-        {
-            return new XmlLayout
-            {
-                IncludeEventProperties = true,
-                IndentXml = true,
-                MaxRecursionLimit = 10,
-                ElementName = "logevent",
-
-                Attributes =
-                {
-                    new XmlAttribute("time", "${longdate}"),
-                    new XmlAttribute("level", "${level:uppercase=true}"),
-                    new XmlAttribute("logger", "${logger}"),
-                    new XmlAttribute("pid", "${processid}"),
-                    new XmlAttribute("fullName", "${processname:fullName=true}"),
-                },
-
-                Elements =
-                {
-                    new XmlElement("message", "${message}"),
-                    new XmlElement("exception", "${exception:format=ToString:innerFormat=ToString:maxInnerExceptionLevel=10}")
-                }
-            };
-        }
-
-        /// <summary>
-        /// Gets the effective minimum level.
-        /// </summary>
-        /// <param name="logger">The log.</param>
-        /// <returns></returns>
-        private static LogLevel GetEffectiveMinLevel(Logger logger)
-        {
-            foreach (LogLevel level in LogLevel.AllLevels) // Trace → Fatal
-            {
-                if (logger.IsEnabled(level))
-                {
-                    return level;
-                }
-            }
-
-            return LogLevel.Off;
         }
     }
 }
