@@ -23,6 +23,7 @@ global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Test.Console;
 using System;
 using System.Diagnostics;
 
@@ -41,7 +42,15 @@ namespace dRz.SpecSPDS.Test
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                goto clone;
+                goto nlog;
+
+
+            nlog:
+                ConteinerNlog.Run();
+
+                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
+                _isLoggerProvider= true;
+                return;
 
             clone:
                 //******
