@@ -43,7 +43,7 @@ namespace dRz.Infrastructure.Infrastructure
             // 1. Базовые данные о путях (работа со строками — это быстро)
             AssemblyPath = _assembly.Location ?? string.Empty;
 
-            AssembleFullName = _assembly.FullName;
+            AssembleFullName = _assembly.FullName?? string.Empty;
 
             AssemblyName assemblyName = _assembly.GetName();
 
@@ -189,7 +189,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Возвращает имя файла package.</summary>
         /// <value>Имя файла package.</value>
-        public string PackageFileName { get; }
+        public string? PackageFileName { get; }
 
         /// <summary>Возвращает AssemblyProductAttribute.</summary>
         public string Product { get; }

@@ -21,7 +21,7 @@
 
         /// <summary>Возвращает имя файла package.</summary>
         /// <value>Имя файла package.</value>
-        string PackageFileName { get; }
+        string? PackageFileName { get; }
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
         /// <value>
