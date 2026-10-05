@@ -15,7 +15,7 @@ namespace dRz.LogBootstrap.Builder
     /// </summary>
     internal class NLogFactoryBuilder
     {
-        private readonly IAddOnInfo _addOnInfo;
+        private readonly IAddOnInfo _addOnInfo;//todo передавать только нужные параметры
 
         #region help
         //todo не передавать весь addOnInfo, а только строки
@@ -104,7 +104,7 @@ namespace dRz.LogBootstrap.Builder
             string productName = _addOnInfo.Product;
 
             //путь к Diagnostic.Mode
-            // фабрика сама определяет ккак называть файлы
+            // фабрика сама определяет как называть файлы
             string logName = _addOnInfo.ProductFamily;
 
             // сама решает в какой каталог складывать логи
@@ -120,9 +120,9 @@ namespace dRz.LogBootstrap.Builder
 
             LogFactory factory = null;
 
-            LoggingConfiguration config = null;
+            //LoggingConfiguration config = null;
 
-            bool isFallback = false;
+            //bool isFallback = false;
 
             try
             {
@@ -131,13 +131,13 @@ namespace dRz.LogBootstrap.Builder
                                            //будет использован конфиг рядом с библиотекой
              //   factory.Setup().LoadConfigurationFromFile(assemblyDirectory+ "\\dRzNLog.dll.nlog-",false);
 
-                config = factory.Configuration;
+                //config = factory.Configuration;
             }
             catch (NLogConfigurationException ex)
             {
                 configException = ex; //потом запишем в лог этой фабрики
 
-                config = null;
+                //config = null;
             }
 
             //путь к Log.Level
@@ -145,10 +145,10 @@ namespace dRz.LogBootstrap.Builder
 
             LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel);
 
-            if (config == null || config.AllTargets.Count == 0 || config.LoggingRules.Count == 0)//тут проверка конфига на нулл, конфиг если есть подгружается сам
+            if (factory != null /*config == null || config.AllTargets.Count == 0 || config.LoggingRules.Count == 0*/)//фабрика получена, паранойя
             {
                 //конфг из файла не подтянулся или битый
-                isFallback = true;
+                //isFallback = true;
 
                 factory.Configuration = CreateConfiguration(logName, logsDir, currentLevel);
             }
@@ -161,7 +161,7 @@ namespace dRz.LogBootstrap.Builder
 
             // писать в лог результат создания фабрики
             // 🔴 ВАЖНО: только после того как конфиг установлен
-            LoggingFactoryInfo(factory, productName, logName, logsDir, isFallback, configException);
+            LoggingFactoryInfo(factory, productName, logName, logsDir, configException);
 
             return factory;
         }
@@ -294,7 +294,7 @@ namespace dRz.LogBootstrap.Builder
                                              string productName,
                                              string logName,
                                              string logDir,
-                                             bool isFallback,
+                                            
                                              Exception configException)
         {
             try
@@ -302,9 +302,9 @@ namespace dRz.LogBootstrap.Builder
                 Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName);
 
                 //  метод создания события на основе условий
-                LogEventBuilder evt = configException != null ? log.ForErrorEvent() :
-                                 isFallback ? log.ForWarnEvent() :
-                                                           log.ForInfoEvent();
+                LogEventBuilder evt = configException != null ?  
+                    log.ForErrorEvent() :
+                    log.ForInfoEvent();
 
                 evt
                     .Message("LogFactory initialized")
@@ -312,7 +312,6 @@ namespace dRz.LogBootstrap.Builder
                     .Property("ProductFamily", _addOnInfo.ProductFamily)
                     .Property("LogsDirectory", logDir)
                     .Property("LogName", $"YYYY-MM-DD_{logName}.log")
-                    .Property("ConfigSource", isFallback ? "Fallback (programmatic)" : $"External ({GetConfigurationFile(factory)})")
                     .Property("LogLevel", GetEffectiveMinLevel(log));
 
                 if (InternalLogger.LogLevel != LogLevel.Off)

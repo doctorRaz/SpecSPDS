@@ -46,24 +46,5 @@
         public const string LogsDir = "LogsDir";
 
         #endregion GDC
-
-        #region var
-
-        /// <summary>
-        /// имя лога var
-        /// </summary>
-        public const string FinalAppTitle = "FinalAppTitle";
-
-        /// <summary>
-        /// level для Var
-        /// </summary>
-        public const string FinalLevel = "FinalLevel";
-
-        /// <summary>
-        /// каталог логов var
-        /// </summary>
-        public const string FinalLogsDir = "FinalLogsDir";
-
-        #endregion var
     }
 }
