@@ -171,6 +171,8 @@ namespace dRz.LogBootstrap.Builder
 
                 ArchiveEvery = FileArchivePeriod.Day,
 
+                ArchiveNumbering = ArchiveNumberingMode.Rolling,
+
                 MaxArchiveFiles = 10,
 
                 KeepFileOpen = false,
