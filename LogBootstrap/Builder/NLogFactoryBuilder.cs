@@ -167,11 +167,11 @@ namespace dRz.LogBootstrap.Builder
             {
                 FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
 
-                ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
+                //ArchiveFileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.{{#}}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
 
-                ArchiveNumbering = ArchiveNumberingMode.Rolling,
+                ArchiveSuffixFormat = ".{0}",
 
                 MaxArchiveFiles = 10,
 
