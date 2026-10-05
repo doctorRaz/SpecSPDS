@@ -153,6 +153,7 @@ jobs:
           SUBPROJECTS_JSON: ${{ steps.config.outputs.subprojects_json }}
           BUILD: ${{ steps.version.outputs.build }}
           REVISION: ${{ steps.version.outputs.revision }}
+          PRODUCT: ${{ steps.config.outputs.product }}
         run: ./.github/scripts/Publish-Projects.ps1
 
       - name: Determine release type
