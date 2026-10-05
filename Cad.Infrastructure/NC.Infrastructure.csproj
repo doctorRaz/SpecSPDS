@@ -2,8 +2,6 @@
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<UseWPF>true</UseWPF>
-		<UseWindowForms>true</UseWindowForms>
 		<Description>Сервис и инфраструктура nanoCAD</Description>
 	</PropertyGroup>
 	<PropertyGroup>

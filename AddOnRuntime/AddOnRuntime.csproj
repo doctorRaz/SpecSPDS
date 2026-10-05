@@ -7,10 +7,10 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Cad.Infrastructure\NC.Infrastructure.csproj" />
+		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
 			<PrivateAssets>all</PrivateAssets>
 		</ProjectReference>
-		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="SimpleInjector" Version="5.5.0" >
