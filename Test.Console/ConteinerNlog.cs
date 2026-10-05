@@ -1,13 +1,7 @@
-﻿using drz.SpecSPDS.Test;
-using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.Test.Console
 {
@@ -22,7 +16,10 @@ namespace dRz.Test.Console
 
             try
             {
-                if (_isAddOnCompositionRoot) return;
+                if (_isAddOnCompositionRoot)
+                {
+                    return;
+                }
 
                 //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
                 // один раз в точке входа /Rtm.IExtensionApplication/
