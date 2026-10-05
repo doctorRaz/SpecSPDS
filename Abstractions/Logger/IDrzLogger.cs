@@ -1,4 +1,3 @@
-﻿//https://replit.com/@razygraev/Log-Service-interface
 namespace dRz.Abstractions.Logger
 {
     /// <summary> Provides logging interface and utility functions. </summary>
@@ -34,7 +33,7 @@ namespace dRz.Abstractions.Logger
 
         #region Public Methods
 
-        /// <summary>Debugs the specified message.</summary>
+        /// <summary>Logs a debug message.</summary>
         /// <param name="message">The message.</param>
         void Debug(string message);
 
@@ -48,49 +47,49 @@ namespace dRz.Abstractions.Logger
         /// <param name="message">The message.</param>
         void Error(Exception exception, string message = null);
 
-        /// <summary>Fatals the specified exception.</summary>
+        /// <summary>Logs a fatal message with the specified exception.</summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
         void Fatal(Exception exception, string message = null);
 
-        /// <summary>Fatals the specified message.</summary>
+        /// <summary>Logs a fatal message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
         void Fatal(string message, Exception exception = null);
 
-        /// <summary>Fors the debug event.</summary>
+        /// <summary>Creates a builder for a debug event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForDebugEvent();
 
-        /// <summary>Fors the error event.</summary>
+        /// <summary>Creates a builder for an error event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForErrorEvent();
 
-        /// <summary>Fors the fatal event.</summary>
+        /// <summary>Creates a builder for a fatal event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForFatalEvent();
 
-        /// <summary>Fors the information event.</summary>
+        /// <summary>Creates a builder for an information event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForInfoEvent();
 
-        /// <summary>Fors the trace event.</summary>
+        /// <summary>Creates a builder for a trace event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForTraceEvent();
 
-        /// <summary>Fors the warning event.</summary>
+        /// <summary>Creates a builder for a warning event.</summary>
         /// <returns></returns>
         ILogEventBuilder ForWarnEvent();
 
-        /// <summary>Informations the specified message.</summary>
+        /// <summary>Logs an information message.</summary>
         /// <param name="message">The message.</param>
         void Info(string message);
 
-        /// <summary>Traces the specified message.</summary>
+        /// <summary>Logs a trace message.</summary>
         /// <param name="message">The message.</param>
         void Trace(string message);
 
-        /// <summary>Warns the specified message.</summary>
+        /// <summary>Logs a warning message.</summary>
         /// <param name="message">The message.</param>
         void Warn(string message);
 
