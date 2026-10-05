@@ -1,5 +1,4 @@
 ﻿using NLog;
-using System.IO;
 
 namespace dRz.LogBootstrap.Diagnostics
 {
@@ -15,7 +14,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// <param name="path">Name of the file.</param>`
         /// <param name="fallbackLevelName">The default level.</param>
         /// <returns></returns>
-        internal static LogLevel GetLevelFromFile(string path , string fallbackLevelName = "Trace")
+        internal static LogLevel GetLevelFromFile(string path, string fallbackLevelName = "Trace")
         {
             //передавать каталог ассембле сборки
             //получать уровни для диагностики и для логера

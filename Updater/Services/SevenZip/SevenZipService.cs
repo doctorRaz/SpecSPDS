@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 
 namespace dRz.Updater.Services.SevenZip
 {
@@ -48,9 +47,11 @@ namespace dRz.Updater.Services.SevenZip
             string? password = null)
         {
             if (!File.Exists(archivePath))
+            {
                 throw new FileNotFoundException(
                     "Архив не найден",
                     archivePath);
+            }
 
             string arguments =
                 $"t \"{archivePath}\" -y";
@@ -89,9 +90,11 @@ namespace dRz.Updater.Services.SevenZip
             string? password = null)
         {
             if (!File.Exists(archivePath))
+            {
                 throw new FileNotFoundException(
                     "Архив не найден",
                     archivePath);
+            }
 
             Directory.CreateDirectory(destination);
 
@@ -136,8 +139,10 @@ namespace dRz.Updater.Services.SevenZip
             SevenZipCompressionLevel compressionLevel = SevenZipCompressionLevel.Ultra)
         {
             if (!Directory.Exists(sourceDirectory))
+            {
                 throw new DirectoryNotFoundException(
                     sourceDirectory);
+            }
 
             string arguments =
                 $"a \"{archivePath}\" \"{sourceDirectory}\\*\" -t7z  -mx={(int)compressionLevel} -y";
@@ -174,7 +179,7 @@ namespace dRz.Updater.Services.SevenZip
         /// </exception>
         private SevenZipExitCode Execute(string arguments)
         {
-            var psi = new ProcessStartInfo
+            ProcessStartInfo psi = new ProcessStartInfo
             {
                 // Исполняемый файл 7-Zip.
                 FileName = _sevenZipPath,
@@ -198,7 +203,7 @@ namespace dRz.Updater.Services.SevenZip
                 RedirectStandardError = true
             };
 
-            using var process = new Process
+            using Process process = new Process
             {
                 StartInfo = psi
             };

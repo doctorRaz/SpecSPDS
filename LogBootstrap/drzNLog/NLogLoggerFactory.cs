@@ -1,6 +1,5 @@
 ﻿using dRz.Abstractions.Logger;
 using NLog;
-using System;
 
 //https://replit.com/@razygraev/Log-Service-interface
 

@@ -1,9 +1,5 @@
 ﻿using NLog;
 using NLog.Common;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace dRz.LogBootstrap.Diagnostics
 {

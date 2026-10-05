@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace dRz.Updater.Services
+﻿namespace dRz.Updater.Services
 {
     /// <summary>
     /// Installer
@@ -15,7 +12,9 @@ namespace dRz.Updater.Services
         public static void MoveWithBackup(string sourceFile, string targetDirectory)
         {
             if (!File.Exists(sourceFile))
+            {
                 throw new FileNotFoundException("Файл не найден", sourceFile);
+            }
 
             Directory.CreateDirectory(targetDirectory);
 
@@ -46,7 +45,9 @@ namespace dRz.Updater.Services
             string backup = Path.Combine(directory, name + ".bak");
 
             if (!File.Exists(backup))
+            {
                 return backup;
+            }
 
             // file(1).bak ... file(10).bak
             for (int i = 1; ; i++)
@@ -56,7 +57,9 @@ namespace dRz.Updater.Services
                     $"{name}({i}).bak");
 
                 if (!File.Exists(backup))
+                {
                     return backup;
+                }
             }
         }
 
@@ -68,9 +71,11 @@ namespace dRz.Updater.Services
         string targetDirectory)
         {
             if (!Directory.Exists(sourceDirectory))
+            {
                 return false;
+            }
 
-            foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
                 string relative = file.RelativeTo(sourceDirectory);
 
@@ -111,10 +116,10 @@ namespace dRz.Updater.Services
         /// <returns></returns>
         public static string GetRelativePath(string basePath, string path)
         {
-            var baseUri = new Uri(
+            Uri baseUri = new Uri(
                 AppendDirectorySeparator(basePath));
 
-            var pathUri = new Uri(path);
+            Uri pathUri = new Uri(path);
 
             return Uri.UnescapeDataString(
                 baseUri.MakeRelativeUri(pathUri).ToString()
@@ -127,7 +132,9 @@ namespace dRz.Updater.Services
         private static string AppendDirectorySeparator(string path)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            {
                 return path + Path.DirectorySeparatorChar;
+            }
 
             return path;
         }

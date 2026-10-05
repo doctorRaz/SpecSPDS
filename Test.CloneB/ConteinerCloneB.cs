@@ -18,7 +18,10 @@ namespace drz.Clone_B
         {
             try
             {
-                if (_isAddOnCompositionRoot) return;
+                if (_isAddOnCompositionRoot)
+                {
+                    return;
+                }
 
                 //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
                 // один раз в точке входа /Rtm.IExtensionApplication/
@@ -99,9 +102,9 @@ namespace drz.Clone_B
                 _msgCmd.InfoMessage(addonFake.ToString());
             }
 
-            var ser = AddOnCtx.Services;
+            IAddOnServices ser = AddOnCtx.Services;
             //console all addons
-            foreach (var addon in addonRegistreds.GetValues())
+            foreach (IAddOnInfo addon in addonRegistreds.GetValues())
             {
                 _msgCmd.InfoMessage(addon.ToString());
             }

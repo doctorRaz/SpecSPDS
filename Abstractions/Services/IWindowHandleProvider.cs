@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace dRz.Abstractions.Services
+﻿namespace dRz.Abstractions.Services
 {
     /// <summary>Указатель на окно кад </summary>
     public interface IWindowHandleProvider

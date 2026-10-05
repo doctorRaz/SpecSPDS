@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace dRz.Infrastructure.Infrastructure
 {
@@ -32,7 +29,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         public string? Get(string key)
         {
-            return _metadata.TryGetValue(key, out var value)
+            return _metadata.TryGetValue(key, out string? value)
                 ? value
                 : null;
         }
@@ -41,7 +38,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         public string Get(string key, string defaultValue)
         {
-            return _metadata.TryGetValue(key, out var value)
+            return _metadata.TryGetValue(key, out string? value)
                 ? value
                 : defaultValue;
         }

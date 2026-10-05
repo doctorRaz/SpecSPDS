@@ -24,7 +24,6 @@ using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Test.Console;
-using System;
 using System.Diagnostics;
 
 namespace dRz.SpecSPDS.Test
@@ -49,7 +48,7 @@ namespace dRz.SpecSPDS.Test
                 ConteinerNlog.Run();
 
                 _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
-                _isLoggerProvider= true;
+                _isLoggerProvider = true;
                 return;
 
             clone:
@@ -74,7 +73,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto clone;
-                //******
+            //******
             transfer:
 
                 #region ContainerTransfer
@@ -94,7 +93,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto transfer;
-                //******
+            //******
             message:
 
                 #region TEST MESSAGE
@@ -109,12 +108,20 @@ namespace dRz.SpecSPDS.Test
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider) _logger.Fatal(ex, "Продолжение не возможно");
+                if (_isLoggerProvider)
+                {
+                    _logger.Fatal(ex, "Продолжение не возможно");
+                }
+
                 AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
             }
             finally
             {
-                if (_isLoggerProvider) _logger.Info("Terminate");
+                if (_isLoggerProvider)
+                {
+                    _logger.Info("Terminate");
+                }
+
                 ConsoleReadKey();
             }
         }
