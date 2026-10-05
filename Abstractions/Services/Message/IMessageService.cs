@@ -25,7 +25,7 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code>
         /// </example>
-        void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string caller = null);
+        void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null);
 
         /// <summary> Сообщение об исключении. Как правило, блокирует дальнейшее выполнение кода </summary>
         /// <param name="ex">Полное описание ошибки</param>
@@ -45,7 +45,7 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code>
         /// </example>
-        void ErrorMessage(Exception ex, [CallerMemberName] string caller = null);
+        void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null);
 
         /// <summary> Информационное сообщение для CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
@@ -58,7 +58,7 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code>
         /// </example>
-        void InfoMessage(string message, [CallerMemberName] string caller = null);
+        void InfoMessage(string message, [CallerMemberName] string? caller = null);
 
         /// <summary> Сообщение об ошибке, не вызывающей критическую остановку выполнения кода </summary>
         /// <param name="message">Выводимое сообщение</param>
@@ -71,7 +71,7 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code>
         /// </example>
-        void WarningMessage(string message, [CallerMemberName] string caller = null);
+        void WarningMessage(string message, [CallerMemberName] string? caller = null);
         #endregion Public Methods
     }
 }
