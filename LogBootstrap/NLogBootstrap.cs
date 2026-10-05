@@ -12,20 +12,25 @@ namespace dRz.LogBootstrap
     /// </summary>
     public class NLogBootstrap
     {
-        private static readonly ConcurrentDictionary<string, IDrzLoggerFactory> _factories = new();
+        private static readonly ConcurrentDictionary<string, Lazy<IDrzLoggerFactory>> _factories = new();
 
         /// <summary>Gets the logger factory.</summary>
         /// <param name="addOnInfo">The add on information.</param>
         /// <returns></returns>
         public static IDrzLoggerFactory GetLoggerFactory(IAddOnInfo addOnInfo)
         {
-            return _factories.GetOrAdd(
-                addOnInfo.Product, _ =>
-                {
-                    NLogFactoryBuilder builder = new(addOnInfo);
-                    LogFactory logFactory = builder.Build();
-                    return new NLogLoggerFactory(logFactory);
-                });
+            Lazy<IDrzLoggerFactory> lazyFactory = _factories.GetOrAdd(
+                addOnInfo.Product,
+                _ => new Lazy<IDrzLoggerFactory>(
+                    () =>
+                    {
+                        NLogFactoryBuilder builder = new(addOnInfo);
+                        LogFactory logFactory = builder.Build();
+                        return new NLogLoggerFactory(logFactory);
+                    },
+                    LazyThreadSafetyMode.ExecutionAndPublication));
+
+            return lazyFactory.Value;
         }
     }
 }
