@@ -17,77 +17,14 @@ namespace dRz.LogBootstrap.Builder
     {
         private readonly IAddOnInfo _addOnInfo;//todo передавать только нужные параметры
 
-        #region ПЕРЕДЕЛАТЬ ТАК
+        #region КОНТРАКТ
 
-        //todo не передавать весь addOnInfo, а только строки
-        /*
-        нужны только:
-            string assemblyDirectory = _addOnInfo.AssemblyDirectory;
-            string productName = _addOnInfo.ProductName;
-            string logName = _addOnInfo.ProductFamily;
-            string logsDir = _addOnInfo.AppDataProductLogPath;
-        */
-        //варианты
-        // Если метод можно изменить (Лучший подход)
-        /*
-  // Регистрация в контейнере
-        container.RegisterSingleton<IDrzLoggerFactory>(() =>
-        {
-            var addOnInfo = container.GetInstance<IAddOnInfo>();
-            return NLogBootstrap.GetLoggerFactory(
-                addOnInfo.AssemblyDirectory,
-                addOnInfo.ApplicationName,
-                addOnInfo.Environment
-            );
-        });
+        // NLogFactoryBuilder не должен зависеть от всего IAddOnInfo.
+        // Ему нужны только четыре значения: каталог сборки, имя продукта,
+        // семейство продукта и каталог логов.
+        // Передача этих параметров напрямую изолирует builder от контракта IAddOnInfo.
 
-        // Сигнатура метода
-        public static IDrzLoggerFactory GetLoggerFactory(string dir, string appName, string env)
-        {
-            // Логика инициализации
-        }
-        */
-        //Передача через DTO-класс (Для чистоты кода)
-        //Если параметров становится больше 3-4, передавать их списком неудобно.
-        //Объедините их в структуру или record:
-        /*
-        // Объявляем компактный рекорд
-
-            public record LoggerConfig(string Directory, string AppName, string Env);
-
-            // Регистрация в контейнере
-            container.RegisterSingleton<IDrzLoggerFactory>(() =>
-            {
-                var addOnInfo = container.GetInstance<IAddOnInfo>();
-                var config = new LoggerConfig(addOnInfo.AssemblyDirectory, addOnInfo.ApplicationName, addOnInfo.Environment);
-
-                return NLogBootstrap.GetLoggerFactory(config);
-            });
-
-            // Сигнатура метода
-            public static IDrzLoggerFactory GetLoggerFactory(LoggerConfig config)
-            {
-                // Использование: config.Directory, config.AppName
-            }
-        */
-        //Вариант 3. Использование кортежа / Tuple (Без создания новых классов)
-        //Если не хочется создавать новый класс LoggerConfig, можно передать параметры в виде именованного кортежа:
-        /*
-            // Регистрация в контейнере
-            container.RegisterSingleton<IDrzLoggerFactory>(() =>
-            {
-                var addOnInfo = container.GetInstance<IAddOnInfo>();
-                return NLogBootstrap.GetLoggerFactory((addOnInfo.AssemblyDirectory, addOnInfo.ApplicationName));
-            });
-
-            // Сигнатура метода принимает кортеж
-            public static IDrzLoggerFactory GetLoggerFactory((string Directory, string AppName) config)
-            {
-                var path = config.Directory;
-            }
-        */
-
-        #endregion help
+        #endregion КОНТРАКТ
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.
