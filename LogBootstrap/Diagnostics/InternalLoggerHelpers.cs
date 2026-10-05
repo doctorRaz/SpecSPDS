@@ -1,38 +1,11 @@
 ﻿using NLog;
 using NLog.Common;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace dRz.LogBootstrap.Diagnostics
 {
-    /// <summary>
-    ///
-    /// </summary>
+
     public static class InternalLoggerHelpers
     {
-        #region Private Fields
-
-        //private const string logName = "nlog-drzTools-internal";
-        private const int MaxArchiveFiles = 5;
-
-        private const int MaxFileSizeBytes = 10 * 1024 * 1024;
-        private static readonly object _lock = new();
-        private static bool _initialized = false;
-        private static string _logDir;
-
-        #endregion Private Fields
-
-        #region Public Methods
-
-        /// <summary>Gets the log dir.</summary>
-        /// <value>The log dir.</value>
-        internal static string LogDir => _logDir;
-
-        /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
-        /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
-        internal static bool Initialized => _initialized;
 
         // 10 MB
         /// <summary>
@@ -99,10 +72,21 @@ namespace dRz.LogBootstrap.Diagnostics
             }
         }
 
-        #endregion Public Methods
+        /// <summary>Gets the log dir.</summary>
+        /// <value>The log dir.</value>
+        internal static string LogDir => _logDir;
 
-        #region Private Methods
+        /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
+        /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
+        internal static bool Initialized => _initialized;
 
+        //private const string logName = "nlog-drzTools-internal";
+        private const int MaxArchiveFiles = 5;
+
+        private const int MaxFileSizeBytes = 10 * 1024 * 1024;
+        private static readonly object _lock = new();
+        private static bool _initialized = false;
+        private static string _logDir;
         /// <summary>
         /// Checks the size of the current file.
         /// </summary>
@@ -144,17 +128,14 @@ namespace dRz.LogBootstrap.Diagnostics
                                          .ToList();
 
                 // Если файлов больше 5, удаляем лишние
-                //if (files.Count > arhivedFilesCount)
-                //{
                 foreach (FileInfo file in files.Skip(MaxArchiveFiles))
                 {
                     file.Delete();
                 }
-                //}
+
             }
             catch { }
         }
 
-        #endregion Private Methods
     }
 }

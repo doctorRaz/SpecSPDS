@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Text;
 
 namespace dRz.LogBootstrap.Diagnostics
@@ -10,16 +9,11 @@ namespace dRz.LogBootstrap.Diagnostics
     /// <seealso cref="TextWriter" />
     public sealed class OutputDebugTextWriter : TextWriter
     {
-        #region Public Properties
 
         /// <summary>
         /// При переопределении в производном классе возвращает кодировку символов, в которой записаны выходные данные.
         /// </summary>
         public override Encoding Encoding => Encoding.UTF8;
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         /// <summary>
         /// Асинхронно записывает строку в текстовую строку или поток.
@@ -39,6 +33,5 @@ namespace dRz.LogBootstrap.Diagnostics
             Debug.WriteLine(value);
         }
 
-        #endregion Public Methods
     }
 }

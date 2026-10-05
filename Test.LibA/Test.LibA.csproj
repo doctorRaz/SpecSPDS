@@ -1,27 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>		
+	<PropertyGroup>
 		<TargetFramework>net462</TargetFramework>
-		<RootNamespace>drz.Lib_A</RootNamespace>
 		<Description>1 чистилка bak и копий</Description>
-		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
-		<Nullable>enable</Nullable>
-		<AssemblyTitle>dRz.Lib_A</AssemblyTitle>
 		<Product>Lib_A</Product>
-		<InformationalVersion>Cleaner for 1</InformationalVersion>
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>-->
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);TEST:A</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		 <Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\Test.LibB\Test.LibB.csproj" />		
-		<!--<ProjectReference Include="..\EnvironmentInfo\EnvironmentInfo.csproj" />-->
+		<ProjectReference Include="..\Test.LibB\Test.LibB.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,6 +1,4 @@
-﻿
-using System;
-namespace dRz.Abstractions.Services.Message
+﻿namespace dRz.Abstractions.Services.Message
 {
     [Flags]
     public enum MessageIcon : uint

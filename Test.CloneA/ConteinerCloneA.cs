@@ -5,7 +5,6 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
-using System;
 using System.Reflection;
 
 namespace drz.Clone_A
@@ -24,7 +23,10 @@ namespace drz.Clone_A
         {
             try
             {
-                if (_isAddOnCompositionRoot) return;
+                if (_isAddOnCompositionRoot)
+                {
+                    return;
+                }
 
                 //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
                 // один раз в точке входа /Rtm.IExtensionApplication/
@@ -62,14 +64,14 @@ namespace drz.Clone_A
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
             _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
             //get registrator
-                      
+
 
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать
             //*******************
             //add other lib info
             Type typeFake = typeof(ContextMarshalException);
-          
+
             AddOnCompositionRoot root = new AddOnCompositionRoot(typeFake.Assembly);
 
             //*********************
@@ -97,9 +99,9 @@ namespace drz.Clone_A
                 _msgCmd.InfoMessage(addonFake.ToString());
             }
 
-            var ser = AddOnCtx.Services;
+            IAddOnServices ser = AddOnCtx.Services;
             //console all addons
-            foreach (var addon in addonRegistreds.GetValues())
+            foreach (IAddOnInfo addon in addonRegistreds.GetValues())
             {
                 _msgCmd.InfoMessage(addon.ToString());
             }

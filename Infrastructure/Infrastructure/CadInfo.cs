@@ -1,5 +1,4 @@
 ﻿using dRz.Abstractions.Infrastructure;
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -22,7 +21,10 @@ public class CadInfo : ICadInfo
 
             string? path = GetExePath();
 
-            if (string.IsNullOrEmpty(path)) throw new FileNotFoundException("Path not found");
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new FileNotFoundException("Path not found");
+            }
 
             ExePath = path!;
 

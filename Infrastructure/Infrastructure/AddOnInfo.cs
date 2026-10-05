@@ -1,8 +1,5 @@
 ﻿using dRz.Abstractions.Infrastructure;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace dRz.Infrastructure.Infrastructure
@@ -170,7 +167,7 @@ namespace dRz.Infrastructure.Infrastructure
         {
             get
             {
-                if (_buildDate == null) { var _ = BuildDate; } // Триггерим вычисление даты
+                if (_buildDate == null) { DateTime _ = BuildDate; } // Триггерим вычисление даты
                 return _isAutoVersion;
             }
         }
@@ -341,7 +338,9 @@ namespace dRz.Infrastructure.Infrastructure
             foreach (DirectoryInfo? dir in new[] { parent, current })
             {
                 if (dir == null)
+                {
                     continue;
+                }
 
                 FileInfo? package = dir.EnumerateFiles("*.package",
                                                        SearchOption.TopDirectoryOnly)

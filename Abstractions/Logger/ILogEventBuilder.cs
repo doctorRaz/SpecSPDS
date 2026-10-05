@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace dRz.Abstractions.Logger
+﻿namespace dRz.Abstractions.Logger
 {
     /// <summary>
     ///  Предоставляет интерфейс Fluent API для построения и записи событий логирования.

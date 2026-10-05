@@ -1,18 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<!--<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>-->
-		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
-		<!--<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>-->
-		<!--<ImplicitUsings>disable</ImplicitUsings>-->
-		<!--<Nullable>enable</Nullable>-->
 		<Description>Обновляет приложения, чистит  bak файлы</Description>
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 	</ItemGroup>
@@ -20,13 +11,10 @@
 		<SharedConfigDir>$(MSBuildProjectDirectory)\Shared\7z_32\</SharedConfigDir>
 	</PropertyGroup>
 	<ItemGroup>
-		<SharedFiles Include="$(SharedConfigDir)\**\*.*"
-		Exclude="$(SharedConfigDir)\*.ion"/>
+		<Content Include="$(SharedConfigDir)\**\*.*"
+				 Exclude="$(SharedConfigDir)\*.ion">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+		</Content>
 	</ItemGroup>
-	<Target Name="Copy7z32"
-	        AfterTargets="Build">
-		<Copy SourceFiles="@(SharedFiles)"
-		      DestinationFiles="$(OutDir)%(RecursiveDir)%(Filename)%(Extension)"
-		      SkipUnchangedFiles="true"/>
-	</Target>
 </Project>

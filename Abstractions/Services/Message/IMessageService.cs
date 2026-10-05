@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace dRz.Abstractions.Services.Message
 {
@@ -26,7 +25,7 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code>
         /// </example>
-        void ErrorMessage(string message,Exception ex =null, [CallerMemberName] string caller = null);
+        void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string caller = null);
 
         /// <summary> Сообщение об исключении. Как правило, блокирует дальнейшее выполнение кода </summary>
         /// <param name="ex">Полное описание ошибки</param>

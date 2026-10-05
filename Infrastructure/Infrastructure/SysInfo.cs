@@ -1,8 +1,5 @@
 ﻿using dRz.Abstractions.Infrastructure;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management; // Не забудьте добавить ссылку
 
 namespace dRz.Infrastructure.Infrastructure
@@ -22,7 +19,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         //private static string? _ramTotal;
 
-        private static readonly Lazy<string> _ramTotal =    new(() => GetRamTotal());
+        private static readonly Lazy<string> _ramTotal = new(() => GetRamTotal());
 
 
         #endregion Private Fields

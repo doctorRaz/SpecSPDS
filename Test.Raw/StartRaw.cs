@@ -1,6 +1,5 @@
 ﻿using dRz.Abstractions.Infrastructure;
 using dRz.Infrastructure.Infrastructure;
-using System;
 
 namespace dRz.SpecSPDS
 {
@@ -17,14 +16,14 @@ namespace dRz.SpecSPDS
 
             IAddOnInfo addOnInfo = new AddOnInfo(typeof(StartRaw).Assembly);
 
-            var vendor = addOnInfo.GetMetadata(AssemblyMetadataKeys.Vendor);
-            var url = addOnInfo.GetMetadata(AssemblyMetadataKeys.RepositoryUrl);
-            var empt = addOnInfo.GetMetadata("");
-            var empt2 = addOnInfo.GetMetadata("", "def");
+            string? vendor = addOnInfo.GetMetadata(AssemblyMetadataKeys.Vendor);
+            string? url = addOnInfo.GetMetadata(AssemblyMetadataKeys.RepositoryUrl);
+            string? empt = addOnInfo.GetMetadata("");
+            string empt2 = addOnInfo.GetMetadata("", "def");
 
             string ret;
 
-            var tryg = addOnInfo.TryGetMetadata("HomePage", out ret);
+            bool tryg = addOnInfo.TryGetMetadata("HomePage", out ret);
             Console.WriteLine(addOnInfo.ToLongString());
         }
     }

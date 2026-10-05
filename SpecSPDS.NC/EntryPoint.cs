@@ -12,6 +12,7 @@ using dRz.Updater.Services;
 #if NC
 
 using HostMgd.ApplicationServices;
+using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 
@@ -98,7 +99,7 @@ namespace dRz.NC
 
                     message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
 
-                    Document document = Application.DocumentManager.MdiActiveDocument;
+                    Document document = App.Application.DocumentManager.MdiActiveDocument;
                     if (document != null)
                     {
                         Editor editor = document.Editor;
@@ -107,7 +108,7 @@ namespace dRz.NC
                     }
                     else
                     {
-                        Application.ShowAlertDialog(message);
+                        App.Application.ShowAlertDialog(message);
                     }
 #endif
                 }

@@ -10,10 +10,10 @@ using HostMgd.EditorInput;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
+
+using App = HostMgd.ApplicationServices;
 
 namespace drz.SpecSPDS.Commands
 {
@@ -38,7 +38,7 @@ namespace drz.SpecSPDS.Commands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -180,7 +180,7 @@ namespace drz.SpecSPDS.Commands
         [Description("отладка лог")]
         public static void dRz_log()
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
+            Document doc = App.Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;

@@ -3,32 +3,24 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
-		<!--<RootNamespace>dRz.$(MSBuildProjectName)</RootNamespace>-->
-		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
-		<!--<ImplicitUsings>disable</ImplicitUsings>-->
-		<!--<Nullable>disable</Nullable>-->
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
-		<!--<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>-->
-		<!--<BaseOutputPath>$(MSBuildThisFileDirectory)bin</BaseOutputPath>-->
-		<!--**********-->
 		<Description>SpecSPDS ядро</Description>
-		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
+		<!--metadata-->
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>-->
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);NC</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<!--<Private>true</Private>-->
-		<!--</PackageReference>-->
-		<!--<PackageReference Include="drzNLog" Version="6.1.0-drz" />-->
 		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
+	</ItemGroup>
 </Project>

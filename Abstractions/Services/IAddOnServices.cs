@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace dRz.Abstractions.Services
+﻿namespace dRz.Abstractions.Services
 {
     /// <summary>
     /// Предоставляет доступ к сервисам, зарегистрированным в контейнере аддона.

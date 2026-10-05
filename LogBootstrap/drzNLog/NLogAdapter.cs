@@ -2,25 +2,11 @@
 
 using dRz.Abstractions.Logger;
 using NLog;
-using System;
 
 namespace dRz.LogBootstrap.drzNLog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {
-        #region Private Fields
-
-        private readonly Logger _inner;
-
-        #endregion Private Fields
-
-        #region Internal Constructors
-
-        internal NLogAdapter(Logger inner) => _inner = inner;
-
-        #endregion Internal Constructors
-
-        #region Public Properties
 
         public bool IsDebugEnabled => _inner.IsDebugEnabled;
         public bool IsErrorEnabled => _inner.IsErrorEnabled;
@@ -28,11 +14,6 @@ namespace dRz.LogBootstrap.drzNLog
         public bool IsInfoEnabled => _inner.IsInfoEnabled;
         public bool IsTraceEnabled => _inner.IsTraceEnabled;
         public bool IsWarnEnabled => _inner.IsWarnEnabled;
-
-        #endregion Public Properties
-
-        #region Public Methods
-
         public void Debug(string message) => _inner.Debug(message);
 
         public void Error(string message, Exception exception = null) => _inner.Error(exception, message);
@@ -61,6 +42,8 @@ namespace dRz.LogBootstrap.drzNLog
 
         public void Warn(string message) => _inner.Warn(message);
 
-        #endregion Public Methods
+        internal NLogAdapter(Logger inner) => _inner = inner;
+
+        private readonly Logger _inner;
     }
 }

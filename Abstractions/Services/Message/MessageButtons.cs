@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace dRz.Abstractions.Services.Message
+﻿namespace dRz.Abstractions.Services.Message
 {
     [Flags]
     public enum MessageButtons : uint

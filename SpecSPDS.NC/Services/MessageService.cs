@@ -1,6 +1,5 @@
 ﻿using drz.SpecSPDS.Interfaces;
 using HostMgd.ApplicationServices;
-using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Application = HostMgd.ApplicationServices.Application;

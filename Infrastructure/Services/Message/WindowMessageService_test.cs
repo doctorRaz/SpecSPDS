@@ -1,8 +1,6 @@
 ﻿using dRz.Abstractions.Services.Message;
-using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows;
 
 namespace dRz.Infrastructure.Services;
 
@@ -48,7 +46,7 @@ public sealed class WindowMessageService_test : IMessageService, IWindowMessageS
         //Иконка: Warning (Предупреждение) или Error (если операция полностью заблокирована до исправления).Смысл: «Не удалось подключиться к серверу. Попробовать еще раз?»
     }
 
-    public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller  = null)
+    public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
         //ℹ️ Information / Asterisk (Синий кружок с буквой «i») — Основной вариант. Отлично подходит для стандартных операций, чтобы подчеркнуть, что происходит штатный процесс (например, экспорт данных или отправка формы).Примеры: «Сгенерированный файл будет сохранен в папку Загрузки. Продолжить?», «Будет произведена отправка 5 писем».❓ Question (Синий знак вопроса) — Альтернативный вариант. Используется, если операция подразумевает выбор пути, но не несет рисков для данных.Примеры: «Установить обновления сейчас?», «Запустить сканирование системы?»
@@ -66,7 +64,7 @@ public sealed class WindowMessageService_test : IMessageService, IWindowMessageS
         throw new NotImplementedException();
     }
 
-    public void ErrorMessage(string message ,Exception? ex = null, [CallerMemberName] string? caller = null)
+    public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
     {
         throw new NotImplementedException();
     }

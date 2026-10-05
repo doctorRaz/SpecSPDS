@@ -1,11 +1,6 @@
 ﻿using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace dRz.Infrastructure.Services.Message
 {
@@ -79,9 +74,9 @@ namespace dRz.Infrastructure.Services.Message
             Current.ErrorMessage(ex, caller);
         }
 
-        public void ErrorMessage(string message,Exception ex =null, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string? caller = null)
         {
-            Current.ErrorMessage(  message, ex,caller);
+            Current.ErrorMessage(message, ex, caller);
         }
 
         public void InfoMessage(string message, [CallerMemberName] string? caller = null)

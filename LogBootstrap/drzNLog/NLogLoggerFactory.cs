@@ -1,6 +1,5 @@
 ﻿using dRz.Abstractions.Logger;
 using NLog;
-using System;
 
 //https://replit.com/@razygraev/Log-Service-interface
 
@@ -12,8 +11,6 @@ namespace dRz.LogBootstrap.drzNLog
     /// <seealso cref="IDrzLoggerFactory" />
     public sealed class NLogLoggerFactory : IDrzLoggerFactory
     {
-        private readonly LogFactory _factory;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogLoggerFactory"/> class.
         /// </summary>
@@ -45,5 +42,7 @@ namespace dRz.LogBootstrap.drzNLog
 
             return new NLogAdapter(_factory.GetLogger(type.FullName));
         }
+
+        private readonly LogFactory _factory;
     }
 }

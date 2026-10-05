@@ -2,7 +2,6 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
-using System;
 
 namespace dRz.Src.Infrastructure
 {
@@ -90,10 +89,14 @@ namespace dRz.Src.Infrastructure
         internal static void Initialize(IAddOnServices services)
         {
             if (services == null)
+            {
                 throw new ArgumentNullException(nameof(services));
+            }
 
             if (_services != null)
+            {
                 throw new InvalidOperationException("AddOnContext уже инициализирован.");
+            }
 
             _services = services;
         }

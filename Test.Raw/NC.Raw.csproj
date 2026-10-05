@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!--<TargetFramework>net6.0-windows</TargetFramework>-->
-		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<PlatformTarget>x64</PlatformTarget>
-		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
 		<UseWPF>true</UseWPF>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
@@ -14,15 +11,11 @@
 		<SolutionNameSafe Condition="'$(SolutionName)'==''">NoSolution</SolutionNameSafe>
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<!--*******-->
-
 		<Description>Отладка в консоли</Description>
-		<!--<RootNamespace>$(Vendor).$(MSBuildProjectName)</RootNamespace>-->
-		<AssemblyTitle>$(SolutionName).RAW</AssemblyTitle>
 
 		<!--metadata-->
 		<HostFamily>RawData</HostFamily>
 		<HostCode>rd</HostCode>
-
 	</PropertyGroup>
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>

@@ -1,23 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<!--<RootNamespace>drz.$(MSBuildProjectName)</RootNamespace>-->
-		<!--<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>-->
-		<!--<InformationalVersion>$(MSBuildProjectName) for All</InformationalVersion>-->
-		<!--<ImplicitUsings>disable</ImplicitUsings>-->
-
-		<UseWPF>true</UseWPF>
-		<UseWindowForms>true</UseWindowForms>
-		<!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
 		<Description>Сервис и инфраструктура nanoCAD</Description>
+		<!--metadata-->
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
 	</PropertyGroup>
-	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-	</PropertyGroup>-->
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);NC</DefineConstants>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
@@ -25,5 +16,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 	</ItemGroup>
-
+	<ItemGroup>
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
+	</ItemGroup>
 </Project>

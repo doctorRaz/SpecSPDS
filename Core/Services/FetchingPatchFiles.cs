@@ -1,10 +1,6 @@
 ﻿using dRz.Core.Enums;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace dRz.Core.Services
 {
@@ -129,7 +125,7 @@ namespace dRz.Core.Services
                     return new List<string>();
                 }
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
                 //todo ВСЕ диалоги переделать на интерфейс сообщений
 #if NC || AC

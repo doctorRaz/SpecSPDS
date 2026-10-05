@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace dRz.Updater.Services
 {
@@ -50,7 +47,9 @@ namespace dRz.Updater.Services
         public static void DeleteBackupFiles(string directoryPath)
         {
             if (!Directory.Exists(directoryPath))
+            {
                 return;
+            }
 
             try
             {
@@ -67,7 +66,7 @@ namespace dRz.Updater.Services
                         {
                             File.Delete(filePath);
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
                             //todo : добавить логирование ошибок удаления файлов
                             //Logger.Warn(ex);
@@ -94,17 +93,21 @@ namespace dRz.Updater.Services
         public static void DeleteEmptyDirectories(string directoryPath)
         {
             if (!Directory.Exists(directoryPath))
+            {
                 return;
+            }
 
-            foreach (var directory in Directory.EnumerateDirectories(directoryPath))
+            foreach (string directory in Directory.EnumerateDirectories(directoryPath))
             {
                 DeleteEmptyDirectories(directory);
                 try
                 {
                     if (!Directory.EnumerateFileSystemEntries(directory).Any())
+                    {
                         Directory.Delete(directory);
+                    }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //todo : добавить логирование ошибок удаления каталогов
                     //Logger.Warn(ex);
