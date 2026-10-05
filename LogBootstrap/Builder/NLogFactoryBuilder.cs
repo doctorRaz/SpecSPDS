@@ -83,11 +83,9 @@ namespace dRz.LogBootstrap.Builder
         /// <param name="appDataProductLogPath">The application data product log path.</param>
         /// <param name="currentLevel">The current level.</param>
         /// <returns></returns>
-        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath, LogLevel currentLevel)
+        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath, LogLevel level)
         {
             LoggingConfiguration config = new LoggingConfiguration();
-
-            LogLevel level = currentLevel;
 
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("file")
