@@ -129,7 +129,7 @@
         /// <summary>
         /// Попытаться получить значение метаданных.
         /// </summary>
-        bool TryGetMetadata(string key, out string value);
+        bool TryGetMetadata(string key, out string? value);
 
         #endregion Public Properties
     }
