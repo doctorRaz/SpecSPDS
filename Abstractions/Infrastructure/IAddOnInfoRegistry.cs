@@ -45,7 +45,7 @@ namespace dRz.Abstractions.Infrastructure
         /// <summary>
         /// Возвращает информацию по полному пути сборки.
         /// </summary>
-        bool TryGet(Assembly assembly, out IAddOnInfo info);
+        bool TryGet(Assembly assembly, out IAddOnInfo? info);
 
         /// <summary>
         /// Пытается получить информацию об аддоне по типу.
@@ -59,7 +59,7 @@ namespace dRz.Abstractions.Infrastructure
         /// <returns>
         /// <see langword="true"/>, если информация найдена; иначе <see langword="false"/>.
         /// </returns>
-        bool TryGet<T>(out IAddOnInfo info);
+        bool TryGet<T>(out IAddOnInfo? info);
 
         /// <summary>
         /// Пытается получить информацию об аддоне по типу.
@@ -73,7 +73,7 @@ namespace dRz.Abstractions.Infrastructure
         /// <returns>
         /// <see langword="true"/>, если информация найдена; иначе <see langword="false"/>.
         /// </returns>
-        bool TryGet(Type type, out IAddOnInfo info);
+        bool TryGet(Type type, out IAddOnInfo? info);
 
         /// <summary>Количество зарегистрированных IAddOnInfo</summary>
         /// <value>The count.</value>

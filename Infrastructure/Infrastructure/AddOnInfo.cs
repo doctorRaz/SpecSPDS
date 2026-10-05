@@ -43,7 +43,7 @@ namespace dRz.Infrastructure.Infrastructure
             // 1. Базовые данные о путях (работа со строками — это быстро)
             AssemblyPath = _assembly.Location ?? string.Empty;
 
-            AssembleFullName = _assembly.FullName;
+            AssembleFullName = _assembly.FullName?? string.Empty;
 
             AssemblyName assemblyName = _assembly.GetName();
 
@@ -111,7 +111,7 @@ namespace dRz.Infrastructure.Infrastructure
         /// "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений
         /// </summary>
         /// <value>"Полное Имя" сборки.</value>
-        public string? AssembleFullName { get; }
+        public string AssembleFullName { get; }
 
         /// <summary>Возвращает директорию сборки.</summary>
         /// <value>Директория сборки.</value>
@@ -152,7 +152,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
-        public string? HostFamily { get; }
+        public string HostFamily { get; }
 
         /// <summary>Возвращает AssemblyInformationalVersionAttribute.</summary>
         public string InformationalVersion => _informationalVersion ??= _assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
@@ -211,7 +211,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Gets the repository URL.</summary>
         /// <value>The repository URL.</value>
-        public string? RepositoryUrl { get; }
+        public string RepositoryUrl { get; }
 
         /// <summary>Возвращает версию загруженной сборки.</summary>
         /// <value>версия сборки.</value>
@@ -274,7 +274,7 @@ namespace dRz.Infrastructure.Infrastructure
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetMetadata(string key, out string value)
+        public bool TryGetMetadata(string key, out string? value)
         {
             return _metadata.TryGet(key, out value);
         }

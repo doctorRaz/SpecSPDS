@@ -74,7 +74,7 @@ namespace dRz.Infrastructure.Services.Message
             Current.ErrorMessage(ex, caller);
         }
 
-        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
             Current.ErrorMessage(message, ex, caller);
         }

@@ -13,7 +13,7 @@ namespace dRz.n.Infrastructure.Services.Message
     {
         #region Private Fields
 
-        private static readonly MethodInfo _createMessage = FindCreateMessage();
+        private static readonly MethodInfo? _createMessage = FindCreateMessage();
 
         #endregion Private Fields
 
@@ -24,22 +24,22 @@ namespace dRz.n.Infrastructure.Services.Message
         //    throw new NotImplementedException();
         //}
 
-        public void WarningMessage(string message, [CallerMemberName] string caller = null)
+        public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ErrorMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
 
-        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
             throw new NotImplementedException();
         }
@@ -72,7 +72,7 @@ namespace dRz.n.Infrastructure.Services.Message
         /// <returns>
         /// <see cref="MethodInfo"/> метода CreateMessage или <c>null</c> если не найден.
         /// </returns>
-        private static MethodInfo FindCreateMessage()
+        private static MethodInfo? FindCreateMessage()
         {
             Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
 
@@ -80,7 +80,7 @@ namespace dRz.n.Infrastructure.Services.Message
             {
                 try
                 {
-                    Type type =
+                    Type? type =
                         assembly.GetType("Multicad.ApplicationServices.McNotificator")
                      ?? assembly.GetType("Multicad.AplicationServices.McNotificator");
 

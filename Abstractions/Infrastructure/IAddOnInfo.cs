@@ -21,7 +21,7 @@
 
         /// <summary>Возвращает имя файла package.</summary>
         /// <value>Имя файла package.</value>
-        string PackageFileName { get; }
+        string? PackageFileName { get; }
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
         /// <value>
@@ -129,7 +129,7 @@
         /// <summary>
         /// Попытаться получить значение метаданных.
         /// </summary>
-        bool TryGetMetadata(string key, out string value);
+        bool TryGetMetadata(string key, out string? value);
 
         #endregion Public Properties
     }

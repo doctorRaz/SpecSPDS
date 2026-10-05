@@ -19,7 +19,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// Асинхронно записывает строку в текстовую строку или поток.
         /// </summary>
         /// <param name="value">Строка для записи.</param>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             Debug.Write(value);
         }
@@ -28,7 +28,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// Записывает в текстовую строку или поток строку, за которой следует признак конца строки.
         /// </summary>
         /// <param name="value">Строка для записи. Если <paramref name="value" /> имеет значение null, записывается только признак конца строки.</param>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             Debug.WriteLine(value);
         }

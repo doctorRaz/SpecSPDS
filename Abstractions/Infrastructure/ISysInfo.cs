@@ -1,7 +1,4 @@
-﻿//GPT
-// https://chatgpt.com/c/69c44adf-7f6c-8331-80de-c905a35fea87
-
-namespace dRz.Abstractions.Infrastructure
+﻿namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>Информация о системе </summary>
     public interface ISysInfo : IStringConvertible

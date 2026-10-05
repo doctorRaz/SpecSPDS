@@ -13,7 +13,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// Internal logger → Output file.log<br/>
         /// Internal logger → Output Console<br/>
         /// </summary>
-        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string logDir = null)
+        public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string? logDir = null)
         {
             lock (_lock)
             {
@@ -86,7 +86,7 @@ namespace dRz.LogBootstrap.Diagnostics
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
         private static bool _initialized = false;
-        private static string _logDir;
+        private static string _logDir= string.Empty;
         /// <summary>
         /// Checks the size of the current file.
         /// </summary>
@@ -98,7 +98,7 @@ namespace dRz.LogBootstrap.Diagnostics
                 FileInfo file = new FileInfo(filePath);
                 if (file.Exists && file.Length > MaxFileSizeBytes)
                 {
-                    string dir = Path.GetDirectoryName(filePath);
+                    string dir = Path.GetDirectoryName(filePath) ?? string.Empty;
                     string newName = $"{Path.GetFileNameWithoutExtension(filePath)}_{DateTime.Now:HHmmss}.log";
                     file.MoveTo(Path.Combine(dir, newName));
                 }

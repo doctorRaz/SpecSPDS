@@ -1,25 +1,24 @@
-﻿//https://replit.com/@razygraev/Log-Service-interface
 namespace dRz.Abstractions.Logger
 {
     /// <summary>
-    /// Фабрика логеров. (Logger factory)
+    /// Фабрика логгеров.
     /// </summary>
     public interface IDrzLoggerFactory
     {
         #region Public Methods
 
         /// <summary>
-        /// Gets the logger.
+        /// Возвращает логгер для указанного типа.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">Тип, для которого создаётся логгер.</typeparam>
+        /// <returns>Логгер для указанного типа.</returns>
         IDrzLogger GetLogger<T>();
 
         /// <summary>
-        /// Gets the logger.
+        /// Возвращает логгер для указанного типа.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
+        /// <param name="type">Тип, для которого создаётся логгер.</param>
+        /// <returns>Логгер для указанного типа.</returns>
         IDrzLogger GetLogger(Type type);
 
         #endregion Public Methods

@@ -30,17 +30,17 @@ namespace dRz.n.Infrastructure.Services.Message
 
         #region Public Methods
 
-        public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
+        public void ConsoleMessage(string message, [CallerMemberName] string? caller = null)
         {
             WriteMessage("", message, caller);
         }
 
-        public void WarningMessage(string message, [CallerMemberName] string caller = null)
+        public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
             WriteMessage("Error", message, caller);
         }
 
-        public void ErrorMessage(Exception ex, [CallerMemberName] string caller = null)
+        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
             WriteMessage("Exception", $"{ex.Message}\n{ex.StackTrace}", caller);
         }
@@ -51,9 +51,12 @@ namespace dRz.n.Infrastructure.Services.Message
         /// <param name="message">сообщение</param>
         /// <param name="ex">Исключение</param>
         /// <param name="caller">Вызывающий метод</param>
-        public void ErrorMessage(string message, Exception ex = null, [CallerMemberName] string caller = null)
+        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
-            WriteMessage("Exception", $"{message}\n{ex.Message}\n{ex.StackTrace.ToString()}", caller);
+            WriteMessage("Exception",
+            ex==null
+            ? message
+            :$"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         /// <summary>Информационное сообщение для CAD</summary>
@@ -64,7 +67,7 @@ namespace dRz.n.Infrastructure.Services.Message
         /// IMessageService msgService = new MyMessageService();
         /// msgService.InfoMessage("Информационное сообщение. Может быть, в аналог MessageBox");
         /// ]]></code></example>
-        public void InfoMessage(string message, [CallerMemberName] string caller = null)
+        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
             WriteMessage("Info", message, caller);
         }
@@ -73,7 +76,7 @@ namespace dRz.n.Infrastructure.Services.Message
 
         #region Private Methods
 
-        private void WriteMessage(string prefix, string message, string caller)
+        private void WriteMessage(string prefix, string message, string? caller)
         {
             string formatted =
                    "\n" +

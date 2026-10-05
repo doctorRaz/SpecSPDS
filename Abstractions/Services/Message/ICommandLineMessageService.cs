@@ -20,6 +20,6 @@ namespace dRz.Abstractions.Services.Message
         /// ]]>
         /// </code></example>
         /// <remarks>В зависимости от основной CAD-системы может понадобиться в реализации обрамлять сообщение символами перевода строки (\n)</remarks>
-        void ConsoleMessage(string message, [CallerMemberName] string caller = null);
+        void ConsoleMessage(string message, [CallerMemberName] string? caller = null);
     }
 }

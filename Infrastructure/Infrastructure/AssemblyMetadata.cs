@@ -22,7 +22,7 @@ namespace dRz.Infrastructure.Infrastructure
                     StringComparer.OrdinalIgnoreCase);
         }
 
-        public bool TryGet(string key, out string value)
+        public bool TryGet(string key, out string? value)
         {
             return _metadata.TryGetValue(key, out value);
         }

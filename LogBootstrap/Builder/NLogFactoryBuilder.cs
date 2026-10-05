@@ -57,7 +57,7 @@ namespace dRz.LogBootstrap.Builder
             LogFactory factory = new LogFactory();
 
             //настраиваем фабрику
-            factory.Configuration = CreateConfiguration(_productFamily, _logsDir, currentLevel);
+            factory.Configuration = CreateConfiguration(currentLevel);
 
             // писать в лог конфигурация фабрики
             LoggingFactoryInfo(factory);
@@ -124,14 +124,14 @@ namespace dRz.LogBootstrap.Builder
         /// <param name="appDataProductLogPath">The application data product log path.</param>
         /// <param name="currentLevel">The current level.</param>
         /// <returns></returns>
-        private LoggingConfiguration CreateConfiguration(string filePrefix, string appDataProductLogPath, LogLevel level)
+        private LoggingConfiguration CreateConfiguration(LogLevel level)
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("file")
             {
-                FileName = Path.Combine(appDataProductLogPath, $"${{shortdate}}_{filePrefix}.log"),
+                FileName = Path.Combine(_logsDir, $"${{shortdate}}_{_productFamily}.log"),
 
                 ArchiveEvery = FileArchivePeriod.Day,
 
@@ -174,7 +174,7 @@ namespace dRz.LogBootstrap.Builder
         {
             try
             {
-                Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName);
+                Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName?? nameof(NLogLoggerFactory));
 
                 //  метод создания события на основе условий
                 LogEventBuilder evt = log.ForInfoEvent();

@@ -40,7 +40,7 @@ namespace dRz.LogBootstrap.drzNLog
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return new NLogAdapter(_factory.GetLogger(type.FullName));
+            return new NLogAdapter(_factory.GetLogger(type.FullName?? type.Name));
         }
 
         private readonly LogFactory _factory;

@@ -49,11 +49,11 @@ namespace dRz.Infrastructure.Infrastructure
             return _addons.Values.ToArray();
         }
 
-        public bool TryGet(Assembly assembly, out IAddOnInfo info)
+        public bool TryGet(Assembly assembly, out IAddOnInfo? info)
         {
             return _addons.TryGetValue(
                 assembly.Location,
-                out info!);
+                out info);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace dRz.Infrastructure.Infrastructure
         /// <returns>
         /// <see langword="true"/>, если информация найдена; иначе <see langword="false"/>.
         /// </returns>
-        public bool TryGet<T>(out IAddOnInfo info)
+        public bool TryGet<T>(out IAddOnInfo? info)
         {
             return TryGet(
                 typeof(T).Assembly,
@@ -87,7 +87,7 @@ namespace dRz.Infrastructure.Infrastructure
         /// <returns>
         /// <see langword="true"/>, если информация найдена; иначе <see langword="false"/>.
         /// </returns>
-        public bool TryGet(Type type, out IAddOnInfo info)
+        public bool TryGet(Type type, out IAddOnInfo? info)
         {
             return TryGet(type.Assembly,
                 out info);
