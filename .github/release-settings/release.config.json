@@ -1,0 +1,19 @@
+{
+    "solution": "docProps.sln",
+    "publish": [
+        {
+            "name": "docProps.NC",
+            "projects": [
+                "docProps.NC/docProps.NC.csproj"
+            ]
+        }
+    ],
+    "modules": [
+    ],
+    "subProjects": [
+    ],
+    "publicHere": true,
+    "remote": [
+        "doctorRaz/docProps"
+    ]
+}
