@@ -6,6 +6,7 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<Description>Спецификация из универсального маркера, nanoCAD 23-26</Description>
 		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
+		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 		<!--metadata-->
 		<HostFamily>NC</HostFamily>
 		<HostCode>n</HostCode>
