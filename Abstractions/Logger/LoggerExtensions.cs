@@ -93,7 +93,7 @@ namespace dRz.Abstractions.Logger
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int line = 0)
         {
-            logger.Error(exception, FormatCaller(message, memberName, line));
+            logger.Error(FormatCaller(message, memberName, line), exception);
         }
 
         /// <summary>Logs a fatal message with caller information.</summary>
@@ -125,7 +125,7 @@ namespace dRz.Abstractions.Logger
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int line = 0)
         {
-            logger.Fatal(exception, FormatCaller(message, memberName, line));
+            logger.Fatal(FormatCaller(message, memberName, line), exception);
         }
 
         /// <summary>Formats a message with caller information.</summary>
