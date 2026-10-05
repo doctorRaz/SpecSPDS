@@ -103,7 +103,8 @@ function Publish-ReleaseProject {
         --output "$projectDirectory" `
         --self-contained false `
         -p:Build=$env:BUILD `
-        -p:Revision=$env:REVISION
+        -p:Revision=$env:REVISION `
+        -p:SolutionName=$env:PRODUCT
 
     if ($LASTEXITCODE -ne 0) {
         throw "dotnet publish failed for $ProjectPath with exit code $LASTEXITCODE"
