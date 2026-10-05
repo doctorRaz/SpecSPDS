@@ -18,7 +18,7 @@ namespace dRz.LogBootstrap.Builder
         /// <summary>Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.</summary>
         /// <param name="assemblyDirectory">The assembly directory.</param>
         /// <param name="productName">Name of the product.</param>
-        /// <param name="productFamily">Name of the log.</param>
+        /// <param name="productFamily">Product family used in the log file name.</param>
         /// <param name="logsDir">The logs dir.</param>
         internal NLogFactoryBuilder(
                                     string assemblyDirectory, //string assemblyDirectory = _addOnInfo.AssemblyDirectory;
