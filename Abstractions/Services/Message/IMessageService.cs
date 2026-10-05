@@ -16,11 +16,11 @@ namespace dRz.Abstractions.Services.Message
         /// IMessageService msgService = new MyMessageService();
         /// try
         /// {
-        /// var res = (/ 50.0 0.0);
+        /// var res = 50.0 / 0.0;
         /// }
         /// catch (Exception ex)
         /// {
-        /// msgService.ExceptionMessage(ex);
+        /// msgService.ErrorMessage(ex);
         /// }
         /// ]]>
         /// </code>
@@ -36,11 +36,11 @@ namespace dRz.Abstractions.Services.Message
         /// IMessageService msgService = new MyMessageService();
         /// try
         /// {
-        /// var res = (/ 50.0 0.0);
+        /// var res = 50.0 / 0.0;
         /// }
         /// catch (Exception ex)
         /// {
-        /// msgService.ExceptionMessage(ex);
+        /// msgService.ErrorMessage(ex);
         /// }
         /// ]]>
         /// </code>
