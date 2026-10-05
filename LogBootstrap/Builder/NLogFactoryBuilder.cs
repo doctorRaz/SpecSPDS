@@ -116,7 +116,7 @@ namespace dRz.LogBootstrap.Builder
             string baseDirDiagnostic = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
 
             //уровень интернал лога, по умолчанию OFF
-            LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostic);
+            LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostic, LogLevel.Off);
 
             //настраиваем интернал логгер
             InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{productName}]", internalLogLevel, logName, logsDir);
@@ -125,7 +125,7 @@ namespace dRz.LogBootstrap.Builder
             string baseDirLogLevel = Path.Combine(assemblyDirectory, LogKeys.LogLevel);
 
             //уровень фабрики лога, по умолчанию Innfo
-            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel);
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel, LogLevel.Info);
 
             //фабрика
             LogFactory factory = new LogFactory();
@@ -150,17 +150,7 @@ namespace dRz.LogBootstrap.Builder
         {
             LoggingConfiguration config = new LoggingConfiguration();
 
-            // Если currentLevel-OFF значит не найдены  файлы ни Log.Level нии конфиг
-            // принудительно задаем уровень — Info.
-            LogLevel level = LogLevel.Info;
-
-            // Если файла уровня нет — Off (ничего не делаем).
-            // Если файл создан, но пустой — Trace (максимум инфы)
-            // иначе уровень из файла.
-            if (currentLevel != LogLevel.Off)
-            {
-                level = currentLevel;
-            }
+            LogLevel level = currentLevel;
 
             // Настройка целевого файла
             FileTarget fileTarget = new FileTarget("file")
