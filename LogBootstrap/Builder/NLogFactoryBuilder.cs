@@ -1,5 +1,4 @@
-﻿using dRz.Abstractions.Infrastructure;
-using dRz.LogBootstrap.Diagnostics;
+﻿using dRz.LogBootstrap.Diagnostics;
 using dRz.LogBootstrap.drzNLog;
 using NLog;
 using NLog.Common;
@@ -15,7 +14,11 @@ namespace dRz.LogBootstrap.Builder
     /// </summary>
     internal class NLogFactoryBuilder
     {
-        private readonly IAddOnInfo _addOnInfo;//todo передавать только нужные параметры
+
+        private readonly string _assemblyDirectory;
+        private readonly string _productName;
+        private readonly string _productFamily;
+        private readonly string _logsDir;
 
         #region КОНТРАКТ
 
@@ -26,52 +29,51 @@ namespace dRz.LogBootstrap.Builder
 
         #endregion КОНТРАКТ
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.
-        /// </summary>
-        /// <param name="addOnInfo">The add on information.</param>
-        internal NLogFactoryBuilder(IAddOnInfo addOnInfo)
+        /// <summary>Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.</summary>
+        /// <param name="assemblyDirectory">The assembly directory.</param>
+        /// <param name="productName">Name of the product.</param>
+        /// <param name="productFamily">Name of the log.</param>
+        /// <param name="logsDir">The logs dir.</param>
+        internal NLogFactoryBuilder(
+                                    string assemblyDirectory, //string assemblyDirectory = _addOnInfo.AssemblyDirectory;
+                                    string productName, //string productName = _addOnInfo.Product;
+                                    string productFamily, // _addOnInfo.ProductFamily
+                                    string logsDir //string logsDir = Path.Combine(_addOnInfo.ProductDataDirectory, "logs");
+                                    )
         {
-            _addOnInfo = addOnInfo;
+            _assemblyDirectory = assemblyDirectory;
+            _productName = productName;
+            _productFamily = productFamily;
+            _logsDir = logsDir;
         }
-
-        /// <summary>Builds this instance.</summary>
+        /// _logsDir;<summary>Builds this instance.</summary>
         /// <returns></returns>
         internal LogFactory Build()
         {
-            string assemblyDirectory = _addOnInfo.AssemblyDirectory;
-            string productName = _addOnInfo.Product;
 
             //путь к Diagnostic.Mode
-            // фабрика сама определяет как называть файлы
-            string logName = _addOnInfo.ProductFamily;
-
-            // сама решает в какой каталог складывать логи
-            string logsDir = Path.Combine(_addOnInfo.ProductDataDirectory, "logs");
-
-            //путь к Diagnostic.Mode
-            string baseDirDiagnostic = Path.Combine(assemblyDirectory, LogKeys.DiagnosticMode);
+            string diagnosticModePath = Path.Combine(_assemblyDirectory, LogKeys.DiagnosticMode);
 
             //уровень интернал лога, по умолчанию OFF
-            LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(baseDirDiagnostic, LogLevel.Off);
+            LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(diagnosticModePath, LogLevel.Off);
 
             //настраиваем интернал логгер
-            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{productName}]", internalLogLevel, logName, logsDir);
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{_productName}]", internalLogLevel, _productFamily, _logsDir);
 
             //путь к Log.Level
-            string baseDirLogLevel = Path.Combine(assemblyDirectory, LogKeys.LogLevel);
+            string internalLogLevelPath = Path.Combine(_assemblyDirectory, LogKeys.LogLevel);
 
             //уровень фабрики лога, по умолчанию Innfo
-            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(baseDirLogLevel, LogLevel.Info);
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(internalLogLevelPath, LogLevel.Info);
 
             //фабрика
             LogFactory factory = new LogFactory();
 
             //настраиваем фабрику
-            factory.Configuration = CreateConfiguration(logName, logsDir, currentLevel);
+            factory.Configuration = CreateConfiguration(_productFamily, _logsDir, currentLevel);
 
             // писать в лог конфигурация фабрики
-            LoggingFactoryInfo(factory, productName, logName, logsDir);
+            LoggingFactoryInfo(factory);
 
             return factory;
         }
@@ -129,10 +131,7 @@ namespace dRz.LogBootstrap.Builder
         /// <param name="logDir">The log dir.</param>
         /// <param name="isFallback">if set to <c>true</c> [is fallback].</param>
         /// <param name="configException">The configuration exception.</param>
-        private void LoggingFactoryInfo(LogFactory factory,
-                                             string productName,
-                                             string logName,
-                                             string logDir)
+        private void LoggingFactoryInfo(LogFactory factory)
         {
             try
             {
@@ -141,19 +140,19 @@ namespace dRz.LogBootstrap.Builder
                 //  метод создания события на основе условий
                 LogEventBuilder evt = log.ForInfoEvent();
 
-                evt
+                _ = evt
                     .Message("LogFactory initialized")
-                    .Property("ProductName", productName)
-                    .Property("ProductFamily", _addOnInfo.ProductFamily)
-                    .Property("LogsDirectory", logDir)
-                    .Property("LogName", $"YYYY-MM-DD_{logName}.log")
+                    .Property("ProductName", _productName)
+                    .Property("ProductFamily", _productFamily)
+                    .Property("LogsDirectory", _logsDir)
+                    .Property("LogName", $"YYYY-MM-DD_{_productFamily}.log")
                     .Property("LogLevel", GetEffectiveMinLevel(log));
 
                 if (InternalLogger.LogLevel != LogLevel.Off)
                 {
-                    evt
+                    _ = evt
                     .Property("InternalLogsDirectory", Path.GetDirectoryName(InternalLogger.LogFile))
-                    .Property("InternalLogName", $"YYYY-MM-DD_{logName}_internal.log");
+                    .Property("InternalLogName", $"YYYY-MM-DD_{_productFamily}_internal.log");
                 }
 
                 evt

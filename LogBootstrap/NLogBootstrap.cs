@@ -24,9 +24,16 @@ namespace dRz.LogBootstrap
                 _ => new Lazy<IDrzLoggerFactory>(
                     () =>
                     {
-                        NLogFactoryBuilder builder = new(addOnInfo);
+                        NLogFactoryBuilder builder = new(addOnInfo.AssemblyDirectory,
+                                                        addOnInfo.Product,
+                                                        addOnInfo.ProductFamily,
+                                                        Path.Combine(addOnInfo.ProductDataDirectory, "logs")
+                                                        );
+
                         LogFactory logFactory = builder.Build();
+
                         return new NLogLoggerFactory(logFactory);
+
                     },
                     LazyThreadSafetyMode.ExecutionAndPublication));
 
