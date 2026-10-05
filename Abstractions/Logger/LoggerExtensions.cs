@@ -73,7 +73,7 @@ namespace dRz.Abstractions.Logger
         public static void ErrorCaller(
                 this IDrzLogger logger,
                 Exception exception,
-                string message = null,
+                string? message = null,
                 [CallerMemberName] string memberName = "",
                 [CallerLineNumber] int line = 0)
         {
@@ -89,7 +89,7 @@ namespace dRz.Abstractions.Logger
         public static void ErrorCaller(
         this IDrzLogger logger,
         string message,
-        Exception exception = null,
+        Exception? exception = null,
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int line = 0)
         {
@@ -105,7 +105,7 @@ namespace dRz.Abstractions.Logger
         public static void FatalCaller(
         this IDrzLogger logger,
         Exception exception,
-        string message = null,
+        string? message = null,
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int line = 0)
         {
@@ -121,7 +121,7 @@ namespace dRz.Abstractions.Logger
         public static void FatalCaller(
         this IDrzLogger logger,
         string message,
-        Exception exception = null,
+        Exception? exception = null,
         [CallerMemberName] string memberName = "",
         [CallerLineNumber] int line = 0)
         {
@@ -134,7 +134,7 @@ namespace dRz.Abstractions.Logger
         /// <param name="line">The line.</param>
         /// <returns>Message with the caller information prefix.</returns>
         internal static string FormatCaller(
-                                string message,
+                                string? message,
                                 string memberName,
                                 int line)
         {
