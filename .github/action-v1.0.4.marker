@@ -3,4 +3,4 @@
 - почищен лишний код drzTools-dev-oil #58
 - Добавлена проверка publicHere при публикации в remote drzTools-dev-oil #42
 - submodules: true
-- 
+- -p:SolutionName=$env:PRODUCT передается в сборку
