@@ -4,66 +4,45 @@ namespace dRz.LogBootstrap.Diagnostics
 {
     internal static class LogLevelReader
     {
-        #region Public Methods
-
         /// <summary>
         /// Читает LogLevel из файла.
-        /// Если файла нет — возвращает [defaultLevel = LogLevel.Off].
-        /// Если файл пустой или текст некорректный — возвращает fallbackIfEmpty.
+        /// При отсутствии файла, ошибке чтения, пустом или некорректном значении
+        /// возвращает заданный уровень по умолчанию.
         /// </summary>
-        /// <param name="path">Name of the file.</param>`
-        /// <param name="fallbackLevelName">The default level.</param>
-        /// <returns></returns>
-        internal static LogLevel GetLevelFromFile(string path, string fallbackLevelName = "Trace")
+        /// <param name="path">Путь к файлу настройки.</param>
+        /// <param name="defaultLevel">Уровень по умолчанию.</param>
+        /// <returns>Уровень из файла или <paramref name="defaultLevel"/>.</returns>
+        internal static LogLevel GetLevelFromFile(string path, LogLevel defaultLevel)
         {
-            //передавать каталог ассембле сборки
-            //получать уровни для диагностики и для логера
-
-            //если файла diagnostic.mode нет
-            LogLevel defaultLevel = LogLevel.Off;
-
-            //файл diagnostic.mode есть, но уровень определить не удалось
-            LogLevel fallbackIfEmpty = TryFromString(fallbackLevelName, LogLevel.Trace);
-
             try
             {
-                //путь к файлу настроек
-
-                //string pp=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-                //string path = Path.Combine(pp /*InfoDll.AssemblyDirectory*/, fileName);
-
                 if (!File.Exists(path))
                 {
-                    //файла нет
                     return defaultLevel;
                 }
 
-                using FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using FileStream fs = new FileStream(
+                    path,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.ReadWrite);
 
                 using StreamReader sr = new StreamReader(fs);
 
-                string text = sr.ReadLine()?.Trim();
+                string? text = sr.ReadLine()?.Trim();
 
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    //файл есть, но пустой
-                    return fallbackIfEmpty;
+                    return defaultLevel;
                 }
 
-                // пытаемся конвертнуть в LogLevel, если не вышло вернем умолчание
-                return TryFromString(text!, fallbackIfEmpty);
+                return TryFromString(text, defaultLevel);
             }
             catch
             {
-                //хз что за ошибка , на всякий случай офф
                 return defaultLevel;
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private static LogLevel TryFromString(string levelName, LogLevel defaultLevel)
         {
@@ -76,7 +55,5 @@ namespace dRz.LogBootstrap.Diagnostics
                 return defaultLevel;
             }
         }
-
-        #endregion Private Methods
     }
 }
