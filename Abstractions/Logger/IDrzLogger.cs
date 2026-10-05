@@ -40,22 +40,22 @@ namespace dRz.Abstractions.Logger
         /// <summary>Logs an error message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
-        void Error(string message, Exception exception = null);
+        void Error(string message, Exception? exception = null);
 
         /// <summary>Logs an error exception.</summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
-        void Error(Exception exception, string message = null);
+        void Error(Exception exception, string? message = null);
 
         /// <summary>Logs a fatal message with the specified exception.</summary>
         /// <param name="exception">The exception.</param>
         /// <param name="message">The message.</param>
-        void Fatal(Exception exception, string message = null);
+        void Fatal(Exception exception, string? message = null);
 
         /// <summary>Logs a fatal message.</summary>
         /// <param name="message">The message.</param>
         /// <param name="exception">The exception.</param>
-        void Fatal(string message, Exception exception = null);
+        void Fatal(string message, Exception? exception = null);
 
         /// <summary>Creates a builder for a debug event.</summary>
         /// <returns></returns>
