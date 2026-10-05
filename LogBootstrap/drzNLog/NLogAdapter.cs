@@ -16,13 +16,13 @@ namespace dRz.LogBootstrap.drzNLog
         public bool IsWarnEnabled => _inner.IsWarnEnabled;
         public void Debug(string message) => _inner.Debug(message);
 
-        public void Error(string message, Exception exception = null) => _inner.Error(exception, message);
+        public void Error(string message, Exception? exception = null) => _inner.Error(exception, message);
 
-        public void Error(Exception exception, string message = null) => _inner.Error(exception, message);
+        public void Error(Exception exception, string? message = null) => _inner.Error(exception, message?? string.Empty);
 
-        public void Fatal(Exception exception, string message = null) => _inner.Fatal(exception, message);
+        public void Fatal(Exception exception, string? message = null) => _inner.Fatal(exception, message?? string.Empty);
 
-        public void Fatal(string message, Exception exception = null) => _inner.Fatal(exception, message);
+        public void Fatal(string message, Exception? exception = null) => _inner.Fatal(exception, message);
 
         public ILogEventBuilder ForDebugEvent() => new NLogEventBuilderAdapter(_inner.ForDebugEvent());
 
