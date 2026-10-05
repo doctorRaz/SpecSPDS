@@ -1,6 +1,7 @@
 ﻿<Project>
 	<!-- <Import Project="d:\@Developers\Programmers\!NET\Shared\Directory.Build\Directory.Build.props" /> -->
 	<PropertyGroup>
+		<SpecSPDSDirectoryBuildImported>true</SpecSPDSDirectoryBuildImported>
 		<!-- Короткий идентификатор разработчика -->
 		<Vendor>dRz</Vendor>
 		<!--RootNamespace default-->
