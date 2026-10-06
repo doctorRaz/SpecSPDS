@@ -96,7 +96,6 @@
                 return false;
             }
         }
-    }
 
     /// <summary>
     /// Проверяет, что относительный путь не выходит за пределы каталога установки.
@@ -113,6 +112,8 @@
             throw new InvalidDataException("Архив содержит путь за пределами каталога установки.");
 
         return target;
+    }
+
     }
 
     public static class PathEx
