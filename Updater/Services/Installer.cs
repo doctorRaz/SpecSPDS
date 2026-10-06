@@ -78,8 +78,7 @@
             foreach (string file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
                 string relative = file.RelativeTo(sourceDirectory);
-
-                string target = Path.Combine(targetDirectory, relative);
+                string target = GetSafeTargetPath(targetDirectory, relative);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
 
@@ -97,6 +96,23 @@
                 return false;
             }
         }
+    }
+
+    /// <summary>
+    /// Проверяет, что относительный путь не выходит за пределы каталога установки.
+    /// </summary>
+    private static string GetSafeTargetPath(string targetDirectory, string relativePath)
+    {
+        string root = Path.GetFullPath(targetDirectory)
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+            + Path.DirectorySeparatorChar;
+
+        string target = Path.GetFullPath(Path.Combine(root, relativePath));
+
+        if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidDataException("Архив содержит путь за пределами каталога установки.");
+
+        return target;
     }
 
     public static class PathEx
