@@ -14,7 +14,7 @@
 
         /// <summary>The repository URL предопределенный 
         /// SDK</summary>
-        public const string RepositoryUrl = "RepositoryUrl";
+        public const string RepositoryUrl = nameof(RepositoryUrl);
 
 
 
