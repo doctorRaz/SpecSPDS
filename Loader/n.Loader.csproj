@@ -14,8 +14,8 @@
 		<SolutionNameSafe Condition="'$(SolutionName)'!=''">$(SolutionName)</SolutionNameSafe>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<!--******-->
-		<Description>Загрузчик модулей $(SolutionName) под версию nanoCAD ≤ 22</Description>
-		<AssemblyTitle>$(SolutionName)$(MSBuildProjectName)</AssemblyTitle>
+		<Description>Загрузчик модулей $(SolutionName) под версию nanoCAD >= 23</Description>
+
 		<!--metadata-->
 		<HostFamily>NC</HostFamily>
 		<HostCode>n</HostCode>
