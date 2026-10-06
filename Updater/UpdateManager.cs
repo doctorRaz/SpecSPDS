@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Updater.Models;
 using dRz.Updater.Services;
 
 namespace dRz.Updater
@@ -103,7 +104,29 @@ namespace dRz.Updater
                         return false;
                 }
 
-                // TODO: Скачать пакет обновления, проверить и установить.
+                string assetFile = Path.Combine(
+                    tempDirectory,
+                    "update" + Path.GetExtension(update.Asset));
+
+                string assetUrl = ResolveUrl(request.UpdateUrl, update.Asset);
+
+                await _downloader.DownloadAsync(
+                    assetUrl,
+                    assetFile,
+                    cancellationToken);
+
+                if (!FileVerifier.Verify(
+                    assetFile,
+                    update.Size,
+                    update.Sha256))
+                {
+                    throw new InvalidDataException(
+                        "Проверка размера или SHA-256 пакета обновления не пройдена.");
+                }
+
+                MarkOfTheWebRemover.Remove(assetFile);
+
+                // TODO: Распаковка и установка пакета.
                 return true;
             }
             finally
@@ -118,6 +141,23 @@ namespace dRz.Updater
                     // Временный каталог не должен маскировать результат операции.
                 }
             }
+        }
+
+        /// <summary>
+        /// Формирует URL ресурса относительно URL update.json.
+        /// </summary>
+        private static string ResolveUrl(string baseUrl, string resource)
+        {
+            if (string.IsNullOrWhiteSpace(resource))
+                throw new InvalidDataException("В update.json не указан asset.");
+
+            if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri? baseUri))
+                throw new InvalidDataException("Некорректный URL update.json.");
+
+            if (Uri.TryCreate(resource, UriKind.Absolute, out Uri? absoluteUri))
+                return absoluteUri.ToString();
+
+            return new Uri(baseUri, resource).ToString();
         }
 
         /// <summary>
