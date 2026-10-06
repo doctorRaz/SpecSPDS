@@ -13,7 +13,7 @@ namespace dRz.Infrastructure.Services.Message
     ///
     /// Пользователь класса не должен знать, куда будет выведено сообщение.
     /// </summary>
-    public sealed class MessageService : IMessageService
+    public sealed class MessageService : IMessageService, IMessagePromptService
     {
         #region Private Fields
 
@@ -66,7 +66,6 @@ namespace dRz.Infrastructure.Services.Message
 
         #endregion Private Properties
 
-
         #region Public Methods
 
         public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
@@ -87,6 +86,11 @@ namespace dRz.Infrastructure.Services.Message
         public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
             Current.WarningMessage(message, caller);
+        }
+
+        public MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null)
+        {
+            return _window.AskYesNo(message, title, caller);
         }
 
         #endregion Public Methods
