@@ -2,6 +2,7 @@
 using dRz.Abstractions.Services.Message;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
+using dRz.Updater.Services.SevenZip;
 
 namespace dRz.Updater
 {
@@ -106,9 +107,11 @@ namespace dRz.Updater
 
                 string assetFile = Path.Combine(
                     tempDirectory,
-                    "update" + Path.GetExtension(update.Asset));
+                    "update" + Path.GetExtension(GetAssetName(update)));
 
-                string assetUrl = ResolveUrl(request.UpdateUrl, update.Asset);
+                string assetUrl = ResolveUrl(
+                    request.UpdateUrl,
+                    GetAsset(update));
 
                 await _downloader.DownloadAsync(
                     assetUrl,
@@ -117,8 +120,8 @@ namespace dRz.Updater
 
                 if (!FileVerifier.Verify(
                     assetFile,
-                    update.Size,
-                    update.Sha256))
+                    GetAssetSize(update),
+                    GetAssetSha256(update)))
                 {
                     throw new InvalidDataException(
                         "Проверка размера или SHA-256 пакета обновления не пройдена.");
@@ -126,7 +129,34 @@ namespace dRz.Updater
 
                 MarkOfTheWebRemover.Remove(assetFile);
 
-                // TODO: Распаковка и установка пакета.
+                string extractedDirectory = Path.Combine(
+                    tempDirectory,
+                    "extracted");
+
+                SevenZipService sevenZip = new SevenZipService(
+                    request.AddOnDirectory);
+
+                SevenZipExitCode extractResult = sevenZip.Extract(
+                    assetFile,
+                    extractedDirectory,
+                    GetAssetPassword(update));
+
+                if (extractResult != SevenZipExitCode.Success)
+                {
+                    throw new InvalidDataException(
+                        $"Не удалось распаковать пакет обновления. Код 7-Zip: {extractResult}.");
+                }
+
+                // После успешной проверки и распаковки можно менять установленный аддон.
+                Cleanup(request.AddOnDirectory);
+
+                if (!Installer.MoveDirectoryFilesWithBackup(
+                    extractedDirectory,
+                    request.AddOnDirectory))
+                {
+                    throw new IOException("Не удалось установить пакет обновления.");
+                }
+
                 return true;
             }
             finally
@@ -141,6 +171,39 @@ namespace dRz.Updater
                     // Временный каталог не должен маскировать результат операции.
                 }
             }
+        }
+
+        /// <summary>
+        /// Возвращает описание защищённого пакета, если оно задано.
+        /// </summary>
+        private static ProtectedPackageInfo? GetProtected(UpdateInfo update)
+        {
+            return update.Protected;
+        }
+
+        private static string GetAsset(UpdateInfo update)
+        {
+            return GetProtected(update)?.Asset ?? update.Asset;
+        }
+
+        private static string GetAssetName(UpdateInfo update)
+        {
+            return GetAsset(update);
+        }
+
+        private static long GetAssetSize(UpdateInfo update)
+        {
+            return GetProtected(update)?.Size ?? update.Size;
+        }
+
+        private static string GetAssetSha256(UpdateInfo update)
+        {
+            return GetProtected(update)?.Sha256 ?? update.Sha256;
+        }
+
+        private static string? GetAssetPassword(UpdateInfo update)
+        {
+            return GetProtected(update)?.Password;
         }
 
         /// <summary>
