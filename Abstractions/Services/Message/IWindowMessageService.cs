@@ -4,12 +4,12 @@ namespace dRz.Abstractions.Services.Message
 {
     /// <summary>Сервис сообщений, окно</summary>
     /// <seealso cref="IMessageService" />
-    public interface IWindowMessageService : IMessageService
+    public interface IWindowMessageService : IMessageService, IMessagePromptService
     {
         MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller = null);
         MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null);
         MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null);
         MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null);
         MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string? caller = null);
-    }
+    } 
 }
