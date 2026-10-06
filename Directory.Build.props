@@ -24,7 +24,7 @@
 	<!-- ================================================================= -->
 	<PropertyGroup>
 		<!-- Базовая версия продукта -->
-		<Version>0.1</Version>
+		<Version Condition="'$(Version)' == ''">0.4</Version>
 		<!--
 			Версия аналогична механизму AssemblyVersion=0.1.*
 			Build  = количество дней от 01.01.2000
@@ -45,7 +45,7 @@
 	<PropertyGroup>
 		<!-- ProductName -->
 		<Product>$(SolutionName)</Product>
-		<AssemblyTitle>$(SolutionName).$(MSBuildProjectName)</AssemblyTitle>
+		<AssemblyTitle>$(SolutionName) $(MSBuildProjectName)</AssemblyTitle>
 		<Description>Спецификация из универсального маркера, CAD + Multicad</Description>
 		<Company>doctorRaz Technologies</Company>
 		<Trademark>doctorRaz</Trademark>
