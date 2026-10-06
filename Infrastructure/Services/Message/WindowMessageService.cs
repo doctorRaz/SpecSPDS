@@ -87,7 +87,23 @@ namespace dRz.Infrastructure.Services.Message
 
         public MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            if (_cadWindowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(_cadWindowHandle);
+            }
+
+            var result = MessageBox.Show(
+                (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
+                title,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            return result switch
+            {
+                MessageBoxResult.Yes => MessageResult.Yes,
+                MessageBoxResult.No => MessageResult.No,
+                _ => MessageResult.None
+            };
         }
 
         public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null)
