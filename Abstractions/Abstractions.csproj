@@ -3,6 +3,6 @@
 	        Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Description>абстракции, интерфейсы</Description>
+		<Description>Абстракции, интерфейсы</Description>
 	</PropertyGroup>
 </Project>

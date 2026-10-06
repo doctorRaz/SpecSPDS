@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props"
+	        Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<Description>точка создания контейнера</Description>
+		<Description>Точка создания контейнера</Description>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\Cad.Infrastructure\NC.Infrastructure.csproj" />
 		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
+		<ProjectReference Include="..\Cad.Infrastructure\NC.Infrastructure.csproj" />
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
 			<PrivateAssets>all</PrivateAssets>
 		</ProjectReference>
