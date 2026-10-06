@@ -149,8 +149,9 @@ namespace dRz.AddOnRuntime
             //сервис маршрутизации сообщений,
             //  документ есть ->ком строка
             //  документа нет -> Win
-            container.Register<IMessageService, MessageService>(Lifestyle.Singleton);
-            container.Register<IMessagePromptService, MessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<MessageService>();
+            container.Register<IMessageService>(() => container.GetInstance<MessageService>());
+            container.Register<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
             // сервисс документов
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
