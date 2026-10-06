@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props"
+	        Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<UseWindowForms>true</UseWindowForms>
-		<Description>Инфраструктура</Description>
+		<Description>Инфраструктура и сервисы</Description>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />

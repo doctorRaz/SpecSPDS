@@ -86,7 +86,7 @@ namespace dRz.LogBootstrap.Diagnostics
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
         private static bool _initialized = false;
-        private static string _logDir= string.Empty;
+        private static string _logDir = string.Empty;
         /// <summary>
         /// Checks the size of the current file.
         /// </summary>

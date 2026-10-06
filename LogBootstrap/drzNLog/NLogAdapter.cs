@@ -18,9 +18,9 @@ namespace dRz.LogBootstrap.drzNLog
 
         public void Error(string message, Exception? exception = null) => _inner.Error(exception, message);
 
-        public void Error(Exception exception, string? message = null) => _inner.Error(exception, message?? string.Empty);
+        public void Error(Exception exception, string? message = null) => _inner.Error(exception, message ?? string.Empty);
 
-        public void Fatal(Exception exception, string? message = null) => _inner.Fatal(exception, message?? string.Empty);
+        public void Fatal(Exception exception, string? message = null) => _inner.Fatal(exception, message ?? string.Empty);
 
         public void Fatal(string message, Exception? exception = null) => _inner.Fatal(exception, message);
 

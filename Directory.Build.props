@@ -1,6 +1,7 @@
 ﻿<Project>
 	<!-- <Import Project="d:\@Developers\Programmers\!NET\Shared\Directory.Build\Directory.Build.props" /> -->
 	<PropertyGroup>
+		<SpecSPDSDirectoryBuildImported>true</SpecSPDSDirectoryBuildImported>
 		<!-- Короткий идентификатор разработчика -->
 		<Vendor>dRz</Vendor>
 		<!--RootNamespace default-->
@@ -73,7 +74,7 @@
 		<AssemblyMetadata Include="SupportEmail"
 		                  Value="doctorRaz@gmail.com"/>
 		<AssemblyMetadata Include="VendorEmail"
-		                  Value="doctorRaz@yandex.ry"/>
+		                  Value="doctorRaz@yandex.ru"/>
 		<!--домашняя страница-->
 		<AssemblyMetadata Include="HomePage"
 		                  Value="https://doctorraz.blogspot.com"/>

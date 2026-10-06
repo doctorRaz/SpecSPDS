@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props"
+	        Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
-		<Description>Сервис и инфраструктура nanoCAD</Description>
+		<Description>Инфраструктура и сервисы nanoCAD</Description>
 		<!--metadata-->
 		<HostFamily>NC</HostFamily>
 		<HostCode>n</HostCode>
@@ -15,9 +16,5 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-	</ItemGroup>
-	<ItemGroup>
-		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)" />
-		<AssemblyMetadata Include="HostCode" Value="$(HostCode)" />
 	</ItemGroup>
 </Project>

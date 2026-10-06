@@ -54,10 +54,11 @@ namespace dRz.LogBootstrap.Builder
             LogLevel currentLevel = LogLevelReader.GetLevelFromFile(internalLogLevelPath, LogLevel.Info);
 
             //фабрика
-            LogFactory factory = new LogFactory();
-
-            //настраиваем фабрику
-            factory.Configuration = CreateConfiguration(currentLevel);
+            LogFactory factory = new()
+            {
+                //настраиваем фабрику
+                Configuration = CreateConfiguration(currentLevel)
+            };
 
             // писать в лог конфигурация фабрики
             LoggingFactoryInfo(factory);
@@ -126,10 +127,10 @@ namespace dRz.LogBootstrap.Builder
         /// <returns></returns>
         private LoggingConfiguration CreateConfiguration(LogLevel level)
         {
-            LoggingConfiguration config = new LoggingConfiguration();
+            LoggingConfiguration config = new();
 
             // Настройка целевого файла
-            FileTarget fileTarget = new FileTarget("file")
+            FileTarget fileTarget = new("file")
             {
                 FileName = Path.Combine(_logsDir, $"${{shortdate}}_{_productFamily}.log"),
 
@@ -149,7 +150,7 @@ namespace dRz.LogBootstrap.Builder
             // ---------------------------
             // Async wrapper
             // ---------------------------
-            AsyncTargetWrapper asyncTarget = new AsyncTargetWrapper(fileTarget)
+            AsyncTargetWrapper asyncTarget = new(fileTarget)
             {
                 QueueLimit = 10000,              // размер очереди
                 OverflowAction = AsyncTargetWrapperOverflowAction.Block,
@@ -174,7 +175,7 @@ namespace dRz.LogBootstrap.Builder
         {
             try
             {
-                Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName?? nameof(NLogLoggerFactory));
+                Logger log = factory.GetLogger(typeof(NLogLoggerFactory).FullName ?? nameof(NLogLoggerFactory));
 
                 //  метод создания события на основе условий
                 LogEventBuilder evt = log.ForInfoEvent();

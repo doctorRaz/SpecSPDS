@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Directory.Build.props"
+	        Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Description>абстракции, интерфейсы</Description>
+		<Description>Абстракции, интерфейсы</Description>
 	</PropertyGroup>
 </Project>

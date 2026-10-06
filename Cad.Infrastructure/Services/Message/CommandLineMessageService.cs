@@ -54,9 +54,9 @@ namespace dRz.n.Infrastructure.Services.Message
         public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
             WriteMessage("Exception",
-            ex==null
+            ex == null
             ? message
-            :$"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
+            : $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         /// <summary>Информационное сообщение для CAD</summary>
