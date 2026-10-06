@@ -81,9 +81,19 @@ namespace dRz.Updater
 
                 UpdateInfo update = UpdateJsonReader.Read(updateJsonPath);
 
-                bool? updateRequired = UpdateVersionChecker.Check(
-                    request.CurrentVersion,
-                    update);
+                bool? updateRequired;
+
+                try
+                {
+                    updateRequired = UpdateVersionChecker.Check(
+                        request.CurrentVersion,
+                        update);
+                }
+                catch (MinimumVersionException ex)
+                {
+                    _messageServices.WarningMessage(ex.Message);
+                    return false;
+                }
 
                 if (updateRequired is null)
                     return false;
@@ -155,6 +165,12 @@ namespace dRz.Updater
                     request.AddOnDirectory))
                 {
                     throw new IOException("Не удалось установить пакет обновления.");
+                }
+
+                if (installAutomatically)
+                {
+                    _messageServices.InfoMessage(
+                        $"Обновление до версии {update.Version} установлено.");
                 }
 
                 return true;
