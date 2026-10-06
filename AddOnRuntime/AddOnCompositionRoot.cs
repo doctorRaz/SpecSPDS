@@ -150,6 +150,7 @@ namespace dRz.AddOnRuntime
             //  документ есть ->ком строка
             //  документа нет -> Win
             container.Register<IMessageService, MessageService>(Lifestyle.Singleton);
+            container.Register<IMessagePromptService, MessageService>(Lifestyle.Singleton);
 
             // сервисс документов
             container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
