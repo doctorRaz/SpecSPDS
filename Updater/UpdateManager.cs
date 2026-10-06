@@ -26,6 +26,18 @@ namespace dRz.Updater
         }
 
         /// <summary>
+        /// Очищает каталог аддона от резервных копий и пустых каталогов.
+        /// </summary>
+        /// <param name="addOnDirectory">Полный путь к каталогу аддона.</param>
+        public void Cleanup(string addOnDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(addOnDirectory))
+                throw new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+
+            BackupCleaner.DeleteBackupFiles(addOnDirectory);
+        }
+
+        /// <summary>
         /// Выполняет проверку и установку обновления согласно переданным параметрам.
         /// </summary>
         /// <param name="request">Параметры обновления, сформированные основным аддоном.</param>
