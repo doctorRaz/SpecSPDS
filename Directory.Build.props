@@ -74,7 +74,7 @@
 		<AssemblyMetadata Include="SupportEmail"
 		                  Value="doctorRaz@gmail.com"/>
 		<AssemblyMetadata Include="VendorEmail"
-		                  Value="doctorRaz@yandex.ry"/>
+		                  Value="doctorRaz@yandex.ru"/>
 		<!--домашняя страница-->
 		<AssemblyMetadata Include="HomePage"
 		                  Value="https://doctorraz.blogspot.com"/>
