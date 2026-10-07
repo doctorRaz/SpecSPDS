@@ -10,6 +10,10 @@ namespace drz.MulticadInterop
     /// </summary>
     public static class MulticadNotificator
     {
+        private static readonly MethodInfo CreateMessageMethod = FindCreateMessage();
+        private static readonly MethodInfo CreateMessageWithTypeMethod =
+            MulticadNotificatorReflection.FindCreateMessage(NotificationType.Info);
+
         /// <summary>
         /// Выводит сообщение в командную строку NanoCAD.
         /// </summary>
@@ -29,11 +33,38 @@ namespace drz.MulticadInterop
             CreateMessageMethod.Invoke(null, new object[] { message });
         }
 
-        private static readonly MethodInfo CreateMessageMethod = FindCreateMessage();
+        /// <summary>
+        /// Создаёт уведомление указанного типа.
+        /// </summary>
+        /// <param name="message">Текст сообщения.</param>
+        /// <param name="type">Тип уведомления.</param>
+        /// <returns>Идентификатор созданного уведомления.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Возникает, если подходящая перегрузка McNotificator.CreateMessage
+        /// не найдена в загруженных сборках.
+        /// </exception>
+        public static UIntPtr CreateMessage(string message, NotificationType type)
+        {
+            MethodInfo method = MulticadNotificatorReflection.FindCreateMessage(type);
+
+            if (method == null)
+            {
+                throw new InvalidOperationException(
+                    "McNotificator.CreateMessage с типом уведомления не найден");
+            }
+
+            Type enumType = method.GetParameters()[1].ParameterType;
+            object enumValue = Enum.ToObject(enumType, (int)type);
+
+            object result = method.Invoke(
+                null,
+                new object[] { message, enumValue });
+
+            return (UIntPtr)result;
+        }
 
         /// <summary>
-        /// Находит метод McNotificator.CreateMessage в загруженных сборках.
-        /// Поддерживаются оба написания namespace, встречающиеся в версиях Multicad.
+        /// Находит однопараметрическую перегрузку McNotificator.CreateMessage.
         /// </summary>
         private static MethodInfo FindCreateMessage()
         {
