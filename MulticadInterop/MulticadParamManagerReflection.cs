@@ -45,6 +45,28 @@ namespace drz.MulticadInterop
         }
 
         /// <summary>
+        /// Находит перегрузку SetParam с сигнатурой (ref object, int).
+        /// </summary>
+        public static MethodInfo FindSetParam()
+        {
+            MethodInfo[] methods = GetMethods("SetParam");
+
+            foreach (MethodInfo method in methods)
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+
+                if (parameters.Length == 2 &&
+                    parameters[0].ParameterType == typeof(object).MakeByRefType() &&
+                    parameters[1].ParameterType == typeof(int))
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Находит тип McParamManager в загруженных сборках.
         /// Поддерживаются оба написания namespace, встречающиеся в версиях Multicad.
         /// </summary>
