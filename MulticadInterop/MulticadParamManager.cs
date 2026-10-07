@@ -53,31 +53,50 @@ namespace drz.MulticadInterop
             MulticadParamManagerReflection.FindSetParamWithStandarts();
 
         /// <summary>
-        /// Вызов диалога настроек.
+        /// Вызов диалога настроек с владельцем окна в виде объекта Form.
         /// </summary>
+        /// <param name="helpIndexName">Имя раздела справки настроек.</param>
+        /// <param name="sender">Окно-владелец диалога.</param>
         public static void CallOptions(string helpIndexName, object sender)
         {
             InvokeVoid(CallOptionsFormMethod, helpIndexName, sender);
         }
 
         /// <summary>
-        /// Вызов диалога настроек.
+        /// Вызов диалога настроек по дескриптору окна.
         /// </summary>
+        /// <param name="helpIndexName">Имя раздела справки настроек.</param>
+        /// <param name="handle">Дескриптор окна-владельца диалога.</param>
         public static void CallOptions(string helpIndexName, IntPtr handle)
         {
             InvokeVoid(CallOptionsHandleMethod, helpIndexName, handle);
         }
 
+        /// <summary>
+        /// Получает логический параметр Multicad.
+        /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение параметра.</returns>
         public static bool GetBoolParam(int idParam)
         {
             return (bool)Invoke(GetBoolParamMethod, idParam);
         }
 
+        /// <summary>
+        /// Получает параметр Multicad типа Color.
+        /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение цвета.</returns>
         public static Color GetColorParam(int idParam)
         {
             return (Color)Invoke(GetColorParamMethod, idParam);
         }
 
+        /// <summary>
+        /// Получает параметр Multicad типа double.
+        /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение параметра.</returns>
         public static double GetDoubleParam(int idParam)
         {
             return (double)Invoke(GetDoubleParamMethod, idParam);
@@ -91,6 +110,11 @@ namespace drz.MulticadInterop
             return (int)Invoke(GetInt32ParamMethod, idParam);
         }
 
+        /// <summary>
+        /// Получает параметр Multicad типа long.
+        /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение параметра.</returns>
         public static long GetInt64Param(int idParam)
         {
             return (long)Invoke(GetInt64ParamMethod, idParam);
@@ -105,16 +129,34 @@ namespace drz.MulticadInterop
             return (string)Invoke(GetProfiledLayerNameMethod, layerName);
         }
 
+        /// <summary>
+        /// Получает строковый параметр Multicad.
+        /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение параметра.</returns>
         public static string GetStringParam(int idParam)
         {
             return (string)Invoke(GetStringParamMethod, idParam);
         }
 
+        /// <summary>
+        /// Устанавливает параметр Multicad.
+        /// </summary>
+        /// <param name="param">Новое значение параметра.</param>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>true, если параметр установлен успешно.</returns>
         public static bool SetParam(object param, int idParam)
         {
             return (bool)Invoke(SetParamMethod, param, idParam);
         }
 
+        /// <summary>
+        /// Устанавливает параметр Multicad с указанием стандартов оформления.
+        /// </summary>
+        /// <param name="param">Новое значение параметра.</param>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <param name="std">Стандарты оформления.</param>
+        /// <returns>true, если параметр установлен успешно.</returns>
         public static bool SetParam(object param, int idParam, Standarts std)
         {
             if (SetParamWithStandartsMethod == null)
