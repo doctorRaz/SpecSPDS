@@ -25,10 +25,6 @@ namespace drz.MulticadInterop
     /// </summary>
     public static class MulticadNotificatorReflection
     {
-        /// <summary>
-        /// Получает все перегрузки McNotificator.CreateMessage
-        /// из загруженных сборок Multicad.
-        /// </summary>
         public static MethodInfo[] GetCreateMessageMethods()
         {
             Type type = FindNotificatorType();
@@ -52,11 +48,12 @@ namespace drz.MulticadInterop
             return result.ToArray();
         }
 
-        /// <summary>
-        /// Находит перегрузку CreateMessage с текстом сообщения
-        /// и параметром типа NotificationEnumMgd.
-        /// </summary>
         public static MethodInfo FindCreateMessage(NotificationType type)
+        {
+            return FindCreateMessage(type, false);
+        }
+
+        public static MethodInfo FindCreateMessage(NotificationType type, bool withParentId)
         {
             MethodInfo[] methods = GetCreateMessageMethods();
 
@@ -64,9 +61,16 @@ namespace drz.MulticadInterop
             {
                 ParameterInfo[] parameters = method.GetParameters();
 
-                if (parameters.Length != 2 ||
+                int expectedCount = withParentId ? 3 : 2;
+
+                if (parameters.Length != expectedCount ||
                     parameters[0].ParameterType != typeof(string) ||
                     !parameters[1].ParameterType.IsEnum)
+                {
+                    continue;
+                }
+
+                if (withParentId && parameters[2].ParameterType != typeof(UIntPtr))
                 {
                     continue;
                 }
