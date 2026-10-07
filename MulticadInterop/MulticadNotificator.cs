@@ -11,8 +11,6 @@ namespace drz.MulticadInterop
     public static class MulticadNotificator
     {
         private static readonly MethodInfo CreateMessageMethod = FindCreateMessage();
-        private static readonly MethodInfo CreateMessageWithTypeMethod =
-            MulticadNotificatorReflection.FindCreateMessage(NotificationType.Info);
 
         /// <summary>
         /// Выводит сообщение в командную строку NanoCAD.
@@ -31,6 +29,24 @@ namespace drz.MulticadInterop
             }
 
             CreateMessageMethod.Invoke(null, new object[] { message });
+        }
+
+        /// <summary>
+        /// Создаёт обычное уведомление.
+        /// </summary>
+        /// <param name="message">Текст сообщения.</param>
+        /// <returns>Идентификатор созданного уведомления.</returns>
+        public static UIntPtr CreateMessage(string message)
+        {
+            if (CreateMessageMethod == null)
+            {
+                throw new InvalidOperationException(
+                    "McNotificator.CreateMessage не найден");
+            }
+
+            return (UIntPtr)CreateMessageMethod.Invoke(
+                null,
+                new object[] { message });
         }
 
         /// <summary>
@@ -56,11 +72,9 @@ namespace drz.MulticadInterop
             Type enumType = method.GetParameters()[1].ParameterType;
             object enumValue = Enum.ToObject(enumType, (int)type);
 
-            object result = method.Invoke(
+            return (UIntPtr)method.Invoke(
                 null,
                 new object[] { message, enumValue });
-
-            return (UIntPtr)result;
         }
 
         /// <summary>
