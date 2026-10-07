@@ -45,9 +45,53 @@ namespace drz.MulticadInterop
         }
 
         /// <summary>
-        /// Находит перегрузку SetParam с сигнатурой (ref object, int).
+        /// Находит метод McParamManager по имени и типам параметров.
+        /// </summary>
+        public static MethodInfo FindMethod(string methodName, params Type[] parameterTypes)
+        {
+            MethodInfo[] methods = GetMethods(methodName);
+
+            foreach (MethodInfo method in methods)
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+
+                if (parameters.Length != parameterTypes.Length)
+                {
+                    continue;
+                }
+
+                bool match = true;
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    if (parameters[i].ParameterType != parameterTypes[i])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Находит метод SetParam с сигнатурой (object, int).
         /// </summary>
         public static MethodInfo FindSetParam()
+        {
+            return FindMethod("SetParam", typeof(object), typeof(int));
+        }
+
+        /// <summary>
+        /// Находит метод SetParam с сигнатурой (object, int, Standarts).
+        /// </summary>
+        public static MethodInfo FindSetParamWithStandarts()
         {
             MethodInfo[] methods = GetMethods("SetParam");
 
@@ -55,9 +99,11 @@ namespace drz.MulticadInterop
             {
                 ParameterInfo[] parameters = method.GetParameters();
 
-                if (parameters.Length == 2 &&
-                    parameters[0].ParameterType == typeof(object).MakeByRefType() &&
-                    parameters[1].ParameterType == typeof(int))
+                if (parameters.Length == 3 &&
+                    parameters[0].ParameterType == typeof(object) &&
+                    parameters[1].ParameterType == typeof(int) &&
+                    parameters[2].ParameterType.IsEnum &&
+                    parameters[2].ParameterType.Name == "Standarts")
                 {
                     return method;
                 }
@@ -92,7 +138,6 @@ namespace drz.MulticadInterop
                 catch
                 {
                     // Нативные и смешанные сборки могут не поддерживать GetType.
-                    // Они не относятся к API Multicad и должны быть пропущены.
                 }
             }
 
