@@ -25,8 +25,11 @@ namespace drz.MulticadInterop
         /// Возникает, если McNotificator.CreateMessage не найден
         /// в загруженных сборках.
         /// </exception>
+        [Obsolete ("use CreateMessage",false)]
         public static void WriteMessage(string message)
         {
+            //https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/attributes/general
+
             if (CreateMessageMethod == null)
             {
                 throw new InvalidOperationException(
