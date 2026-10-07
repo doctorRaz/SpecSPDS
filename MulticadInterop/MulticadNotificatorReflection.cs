@@ -12,7 +12,7 @@ namespace drz.MulticadInterop
     {
         Info = 0,
         Warning = 1,
-        Error = 2
+        Error = 4
     }
 
     /// <summary>
@@ -61,13 +61,27 @@ namespace drz.MulticadInterop
                 ParameterInfo[] parameters = method.GetParameters();
 
                 if (parameters.Length != 2 ||
-                    parameters[0].ParameterType != typeof(string).MakeByRefType() ||
+                    parameters[0].ParameterType != typeof(string) ||
                     !parameters[1].ParameterType.IsEnum)
                 {
                     continue;
                 }
 
-                return method;
+                object enumValue;
+
+                try
+                {
+                    enumValue = Enum.ToObject(parameters[1].ParameterType, (int)type);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                if (Convert.ToInt32(enumValue) == (int)type)
+                {
+                    return method;
+                }
             }
 
             return null;
