@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
-using System.Windows.Forms;
 
 namespace drz.MulticadInterop
 {
@@ -14,7 +13,7 @@ namespace drz.MulticadInterop
     {
         private static readonly MethodInfo CallOptionsFormMethod =
             MulticadParamManagerReflection.FindMethod(
-                "CallOptions", typeof(string), typeof(Form));
+                "CallOptions", typeof(string), typeof(object));
 
         private static readonly MethodInfo CallOptionsHandleMethod =
             MulticadParamManagerReflection.FindMethod(
@@ -57,7 +56,7 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Вызов диалога настроек.
         /// </summary>
-        public static void CallOptions(string helpIndexName, Form sender)
+        public static void CallOptions(string helpIndexName, object sender)
         {
             InvokeVoid(CallOptionsFormMethod, helpIndexName, sender);
         }
