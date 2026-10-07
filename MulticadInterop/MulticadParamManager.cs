@@ -12,8 +12,7 @@ namespace drz.MulticadInterop
     public static class MulticadParamManager
     {
         private static readonly MethodInfo CallOptionsFormMethod =
-            MulticadParamManagerReflection.FindMethod(
-                "CallOptions", typeof(string), typeof(object));
+            MulticadParamManagerReflection.FindCallOptionsForm();
 
         private static readonly MethodInfo CallOptionsHandleMethod =
             MulticadParamManagerReflection.FindMethod(
