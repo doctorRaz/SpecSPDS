@@ -13,6 +13,7 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Возвращает все публичные методы McParamManager.
         /// </summary>
+        /// <returns>Массив информации о найденных методах.</returns>
         public static MethodInfo[] GetMethods()
         {
             Type type = FindParamManagerType();
@@ -28,6 +29,8 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Возвращает методы McParamManager с указанным именем.
         /// </summary>
+        /// <param name="methodName">Имя метода.</param>
+        /// <returns>Массив найденных методов.</returns>
         public static MethodInfo[] GetMethods(string methodName)
         {
             MethodInfo[] methods = GetMethods();
@@ -47,6 +50,9 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Находит метод McParamManager по имени и типам параметров.
         /// </summary>
+        /// <param name="methodName">Имя метода.</param>
+        /// <param name="parameterTypes">Типы параметров метода.</param>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindMethod(string methodName, params Type[] parameterTypes)
         {
             MethodInfo[] methods = GetMethods(methodName);
@@ -84,6 +90,7 @@ namespace drz.MulticadInterop
         /// Находит перегрузку CallOptions с Form без compile-time зависимости
         /// от System.Windows.Forms.
         /// </summary>
+        /// <returns>Найденный метод или null, если перегрузка не найдена.</returns>
         public static MethodInfo FindCallOptionsForm()
         {
             MethodInfo[] methods = GetMethods("CallOptions");
@@ -106,6 +113,7 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Находит метод SetParam с сигнатурой (object, int).
         /// </summary>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindSetParam()
         {
             return FindMethod("SetParam", typeof(object), typeof(int));
@@ -114,6 +122,7 @@ namespace drz.MulticadInterop
         /// <summary>
         /// Находит метод SetParam с сигнатурой (object, int, Standarts).
         /// </summary>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindSetParamWithStandarts()
         {
             MethodInfo[] methods = GetMethods("SetParam");
