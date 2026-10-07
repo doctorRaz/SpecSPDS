@@ -7,7 +7,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.n.Infrastructure.Services
+namespace dRz.NC.Infrastructure.Services
 {
     public class DocumentService : IDocumentService
     {

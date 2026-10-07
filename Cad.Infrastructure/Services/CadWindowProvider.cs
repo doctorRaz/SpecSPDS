@@ -7,7 +7,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.n.Infrastructure.Services
+namespace dRz.NC.Infrastructure.Services
 {
     /// <summary>
     /// Указатель на окно отвязан от Cad

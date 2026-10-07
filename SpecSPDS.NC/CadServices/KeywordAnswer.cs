@@ -2,7 +2,7 @@
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
-namespace drz.SpecSPDS.CadServices
+namespace dRz.NC.CadServices
 {
     public class CadService
     { /// <summary>

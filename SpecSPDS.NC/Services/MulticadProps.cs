@@ -10,7 +10,7 @@ using System.Diagnostics;
 //using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace drz.SpecSPDS.Services;
+namespace dRz.NC.Services;
 
 /// <summary>
 /// получаем универсальный маркер

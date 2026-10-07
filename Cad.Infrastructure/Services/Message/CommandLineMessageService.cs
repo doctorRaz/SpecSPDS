@@ -9,7 +9,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.n.Infrastructure.Services.Message
+namespace dRz.NC.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {

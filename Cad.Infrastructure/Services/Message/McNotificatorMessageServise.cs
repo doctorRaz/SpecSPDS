@@ -2,7 +2,7 @@
 using dRz.Abstractions.Services.Message;
 using System.Runtime.CompilerServices;
 
-namespace dRz.n.Infrastructure.Services.Message
+namespace dRz.NC.Infrastructure.Services.Message
 {
     /// <summary>
     /// Обёртка над McNotificator NanoCad для вывода сообщений в командную строку.
