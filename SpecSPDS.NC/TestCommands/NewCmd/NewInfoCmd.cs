@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if DEBUG
+using System;
 using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
@@ -41,3 +42,4 @@ namespace dRz.NC.TestCommands.NewCmd
         }
     }
 }
+#endif

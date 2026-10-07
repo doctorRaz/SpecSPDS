@@ -1,4 +1,5 @@
-﻿using Teigha.Runtime;
+﻿#if DEBUG
+using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
 namespace dRz.NC.TestCommands.Message
@@ -11,11 +12,6 @@ namespace dRz.NC.TestCommands.Message
             MsgGui.InfoMessage("Info message");
 
         }
-        [CommandMethod($"SPEC-info-noti", CommandFlags.Session)]
-        public static void InfoMessageNoti()
-        {
-            MsgMcN.InfoMessage("Info message");
-
-        }
     }
 }
+#endif

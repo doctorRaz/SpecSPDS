@@ -1,4 +1,5 @@
-﻿using static dRz.Src.Infrastructure.AddOnContext;
+﻿#if DEBUG
+using static dRz.Src.Infrastructure.AddOnContext;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
 namespace dRz.NC.TestCommands.Init
@@ -27,3 +28,4 @@ namespace dRz.NC.TestCommands.Init
 
     }
 }
+#endif

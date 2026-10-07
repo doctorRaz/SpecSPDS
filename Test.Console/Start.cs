@@ -47,6 +47,13 @@ namespace dRz.SpecSPDS.Test
             nlog:
                 ConteinerNlog.Run();
 
+                _msg = AddOnCtx.MsgGui;
+
+                _msg.InfoMessage("test");
+                _msg.ErrorMessage("test");
+                _msg.WarningMessage("test");
+                
+
                 _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
                 _isLoggerProvider = true;
                 return;

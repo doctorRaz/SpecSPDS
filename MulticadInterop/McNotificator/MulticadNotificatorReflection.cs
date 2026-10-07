@@ -8,12 +8,39 @@ namespace drz.MulticadInterop.McNotificator
     /// </summary>
     public enum NotificationType
     {
+        /// <summary>
+        /// без иконки
+        /// </summary>
         neSimple = -1,
+
+        /// <summary>
+        /// "страница"
+        /// </summary>
         neUsual = 0,
+
+        /// <summary>
+        /// "воскл. знак"
+        /// </summary>
         neWarning = 1,
+
+        /// <summary>
+        /// "крест"
+        /// </summary>
         neCure = 2,
+
+        /// <summary>
+        /// "лампа"
+        /// </summary>
         neHint = 3,
+
+        /// <summary>
+        /// "ошибка"
+        /// </summary>
         neError = 4,
+
+        /// <summary>
+        /// "справка"
+        /// </summary>
         neHelp = 5
     }
 

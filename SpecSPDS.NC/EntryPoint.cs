@@ -71,7 +71,7 @@ namespace dRz.NC
             try
             {
                 // регистрируемся
-                //MulticadNotificatorDiagnostic.DumpCreateMessage();
+              
                 TryAddOnCompositionRoot();//получаем окружение
 
                 //стартуем очистку копий и bak

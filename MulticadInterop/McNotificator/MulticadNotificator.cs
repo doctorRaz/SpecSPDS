@@ -18,28 +18,6 @@ namespace drz.MulticadInterop.McNotificator
             CreateMessageWithParentMethods = FindCreateMessageWithParentMethods();
 
         /// <summary>
-        /// Выводит сообщение в командную строку NanoCAD.
-        /// </summary>
-        /// <param name="message">Текст сообщения.</param>
-        /// <exception cref="InvalidOperationException">
-        /// Возникает, если McNotificator.CreateMessage не найден
-        /// в загруженных сборках.
-        /// </exception>
-        [Obsolete("use CreateMessage", false)]
-        public static void WriteMessage(string message)
-        {
-            //https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/attributes/general
-
-            if (CreateMessageMethod == null)
-            {
-                throw new InvalidOperationException(
-                    "McNotificator.CreateMessage не найден");
-            }
-
-            CreateMessageMethod.Invoke(null, new object[] { message });
-        }
-
-        /// <summary>
         /// Создаёт обычное уведомление.
         /// </summary>
         /// <param name="message">Текст сообщения.</param>

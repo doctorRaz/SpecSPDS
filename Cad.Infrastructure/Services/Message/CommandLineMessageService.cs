@@ -97,7 +97,7 @@ namespace dRz.NC.Infrastructure.Services.Message
                 try
                 {
                     //todo для нотифай отдельный метод и интерфейс
-                    McNotificatorMessageServise.WriteMessage(formatted);
+                    McNotificatorMessageServise.WriteMessage(formatted, caller);
                 }
                 catch
                 {

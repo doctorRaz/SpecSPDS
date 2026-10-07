@@ -10,41 +10,56 @@ namespace dRz.NC.Infrastructure.Services.Message
     /// </summary>
     public class McNotificatorMessageServise : IMcNotificatorMessageService
     {
-        //public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neWarning, message, caller);
         }
 
         public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neError, $"{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neError,
+                            ex == null
+                            ? message
+                            : $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
-            WriteMessage(message);
+            WriteMessage(NotificationType.neUsual, message, caller);
         }
 
         /// <summary>
-        /// Выводит сообщение в командную строку NanoCad.
+        /// Выводит сообщение Multicad.
         /// </summary>
         /// <param name="message">Текст сообщения.</param>
         /// <exception cref="InvalidOperationException">
         /// Выбрасывается если McNotificator.CreateMessage не найден в загруженных сборках.
         /// </exception>
-        public static void WriteMessage(string message)
+        public static void WriteMessage(NotificationType notificationType, string message, string? caller)
         {
-            MulticadNotificator.WriteMessage(message);
+            MulticadNotificator.CreateMessage(Formatted(message, caller), notificationType);
+        }
+
+        /// <summary>Выводит сообщение Multicad. <br/>
+        /// fallback для консоли
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="caller">The caller.</param>
+        public static void WriteMessage(string message, string? caller)
+        {
+            MulticadNotificator.CreateMessage(Formatted(message, caller), NotificationType.neCure);
+        }
+
+        private static string Formatted(string message, string? caller)
+        {
+            string format = (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message;
+
+            return format;
         }
     }
 }

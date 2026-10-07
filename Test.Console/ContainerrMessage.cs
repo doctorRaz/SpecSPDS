@@ -1,5 +1,5 @@
 ﻿using dRz.Abstractions.Services.Message;
-using dRz.n.Infrastructure.Services;
+using dRz.NC.Infrastructure.Services;
 
 namespace dRz.SpecSPDS.Test
 {
