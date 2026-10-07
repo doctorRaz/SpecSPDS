@@ -10,9 +10,13 @@ namespace drz.MulticadInterop
     /// </summary>
     public enum NotificationType
     {
-        Info = 0,
-        Warning = 1,
-        Error = 4
+        neSimple = -1,
+        neUsual = 0,
+        neWarning = 1,
+        neCure = 2,
+        neHint = 3,
+        neError = 4,
+        neHelp = 5
     }
 
     /// <summary>

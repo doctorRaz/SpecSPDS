@@ -8,6 +8,8 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
 using dRz.Updater.Services;
+using drz.MulticadInterop;
+
 
 #if NC
 
@@ -69,7 +71,7 @@ namespace dRz.NC
             try
             {
                 // регистрируемся
-
+                MulticadNotificatorDiagnostic.DumpCreateMessage();
                 TryAddOnCompositionRoot();//получаем окружение
 
                 //стартуем очистку копий и bak
