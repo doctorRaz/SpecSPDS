@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace drz.MulticadInterop
+namespace drz.MulticadInterop.McNotificator
 {
     /// <summary>
     /// Предоставляет доступ к McNotificator без compile-time зависимости
@@ -25,7 +25,7 @@ namespace drz.MulticadInterop
         /// Возникает, если McNotificator.CreateMessage не найден
         /// в загруженных сборках.
         /// </exception>
-        [Obsolete ("use CreateMessage",false)]
+        [Obsolete("use CreateMessage", false)]
         public static void WriteMessage(string message)
         {
             //https://learn.microsoft.com/ru-ru/dotnet/csharp/language-reference/attributes/general

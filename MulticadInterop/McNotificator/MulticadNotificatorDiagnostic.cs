@@ -1,8 +1,7 @@
-using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace drz.MulticadInterop
+namespace drz.MulticadInterop.McNotificator
 {
     /// <summary>
     /// Диагностика reflection-доступа к McNotificator.CreateMessage.

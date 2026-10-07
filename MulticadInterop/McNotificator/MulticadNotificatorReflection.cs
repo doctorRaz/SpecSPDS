@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 
-namespace drz.MulticadInterop
+namespace drz.MulticadInterop.McNotificator
 {
     /// <summary>
     /// Тип уведомления Multicad.

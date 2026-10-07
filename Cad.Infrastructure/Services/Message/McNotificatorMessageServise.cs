@@ -1,4 +1,4 @@
-﻿using drz.MulticadInterop;
+﻿using drz.MulticadInterop.McNotificator;
 using dRz.Abstractions.Services.Message;
 using System.Runtime.CompilerServices;
 

@@ -1,4 +1,4 @@
-﻿using drz.MulticadInterop;
+﻿using drz.MulticadInterop.McNotificator;
 using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
