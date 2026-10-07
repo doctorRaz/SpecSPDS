@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -11,6 +12,8 @@ namespace drz.MulticadInterop
     public static class MulticadNotificator
     {
         private static readonly MethodInfo CreateMessageMethod = FindCreateMessage();
+        private static readonly Dictionary<NotificationType, MethodInfo>
+            CreateMessageMethods = FindCreateMessageMethods();
 
         /// <summary>
         /// Выводит сообщение в командную строку NanoCAD.
@@ -61,9 +64,7 @@ namespace drz.MulticadInterop
         /// </exception>
         public static UIntPtr CreateMessage(string message, NotificationType type)
         {
-            MethodInfo method = MulticadNotificatorReflection.FindCreateMessage(type);
-
-            if (method == null)
+            if (!CreateMessageMethods.TryGetValue(type, out MethodInfo method))
             {
                 throw new InvalidOperationException(
                     "McNotificator.CreateMessage с типом уведомления не найден");
@@ -75,6 +76,28 @@ namespace drz.MulticadInterop
             return (UIntPtr)method.Invoke(
                 null,
                 new object[] { message, enumValue });
+        }
+
+        /// <summary>
+        /// Кэширует перегрузки CreateMessage для поддерживаемых типов уведомлений.
+        /// </summary>
+        private static Dictionary<NotificationType, MethodInfo> FindCreateMessageMethods()
+        {
+            Dictionary<NotificationType, MethodInfo> result =
+                new Dictionary<NotificationType, MethodInfo>();
+
+            foreach (NotificationType type in Enum.GetValues(typeof(NotificationType)))
+            {
+                MethodInfo method =
+                    MulticadNotificatorReflection.FindCreateMessage(type);
+
+                if (method != null)
+                {
+                    result[type] = method;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
