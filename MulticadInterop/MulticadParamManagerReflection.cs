@@ -81,6 +81,29 @@ namespace drz.MulticadInterop
         }
 
         /// <summary>
+        /// Находит перегрузку CallOptions с Form без compile-time зависимости
+        /// от System.Windows.Forms.
+        /// </summary>
+        public static MethodInfo FindCallOptionsForm()
+        {
+            MethodInfo[] methods = GetMethods("CallOptions");
+
+            foreach (MethodInfo method in methods)
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+
+                if (parameters.Length == 2 &&
+                    parameters[0].ParameterType == typeof(string) &&
+                    parameters[1].ParameterType.FullName == "System.Windows.Forms.Form")
+                {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Находит метод SetParam с сигнатурой (object, int).
         /// </summary>
         public static MethodInfo FindSetParam()
