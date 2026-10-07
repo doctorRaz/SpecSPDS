@@ -5,6 +5,17 @@ using System.Reflection;
 namespace drz.MulticadInterop
 {
     /// <summary>
+    /// Тип уведомления Multicad.
+    /// Числовые значения соответствуют NotificationEnumMgd.
+    /// </summary>
+    public enum NotificationType
+    {
+        Info = 0,
+        Warning = 1,
+        Error = 2
+    }
+
+    /// <summary>
     /// Предоставляет reflection-доступ к перегрузкам McNotificator.CreateMessage
     /// без compile-time зависимости от конкретной версии Multicad.
     /// </summary>
@@ -14,11 +25,55 @@ namespace drz.MulticadInterop
         /// Получает все перегрузки McNotificator.CreateMessage
         /// из загруженных сборок Multicad.
         /// </summary>
-        /// <returns>
-        /// Массив найденных перегрузок. Если McNotificator не найден,
-        /// возвращается пустой массив.
-        /// </returns>
         public static MethodInfo[] GetCreateMessageMethods()
+        {
+            Type type = FindNotificatorType();
+
+            if (type == null)
+            {
+                return Array.Empty<MethodInfo>();
+            }
+
+            MethodInfo[] methods = type.GetMethods();
+            List<MethodInfo> result = new List<MethodInfo>();
+
+            foreach (MethodInfo method in methods)
+            {
+                if (method.Name == "CreateMessage")
+                {
+                    result.Add(method);
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Находит перегрузку CreateMessage с текстом сообщения
+        /// и параметром типа NotificationEnumMgd.
+        /// </summary>
+        public static MethodInfo FindCreateMessage(NotificationType type)
+        {
+            MethodInfo[] methods = GetCreateMessageMethods();
+
+            foreach (MethodInfo method in methods)
+            {
+                ParameterInfo[] parameters = method.GetParameters();
+
+                if (parameters.Length != 2 ||
+                    parameters[0].ParameterType != typeof(string).MakeByRefType() ||
+                    !parameters[1].ParameterType.IsEnum)
+                {
+                    continue;
+                }
+
+                return method;
+            }
+
+            return null;
+        }
+
+        private static Type FindNotificatorType()
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -32,24 +87,10 @@ namespace drz.MulticadInterop
                             "Multicad.AplicationServices.McNotificator",
                             false);
 
-                    if (type == null)
+                    if (type != null)
                     {
-                        continue;
+                        return type;
                     }
-
-                    MethodInfo[] methods = type.GetMethods();
-
-                    List<MethodInfo> result = new List<MethodInfo>();
-
-                    foreach (MethodInfo method in methods)
-                    {
-                        if (method.Name == "CreateMessage")
-                        {
-                            result.Add(method);
-                        }
-                    }
-
-                    return result.ToArray();
                 }
                 catch
                 {
@@ -57,7 +98,7 @@ namespace drz.MulticadInterop
                 }
             }
 
-            return Array.Empty<MethodInfo>();
+            return null;
         }
     }
 }
