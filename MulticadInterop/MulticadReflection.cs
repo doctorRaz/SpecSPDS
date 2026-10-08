@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace drz.MulticadInterop
@@ -7,6 +9,11 @@ namespace drz.MulticadInterop
     /// </summary>
     internal static class MulticadReflection
     {
+        /// <summary>
+        /// Находит указанный тип в загруженных сборках.
+        /// </summary>
+        /// <param name="typeNames">Полные имена типа, допустимые для разных версий Multicad.</param>
+        /// <returns>Найденный тип или null, если тип не найден.</returns>
         public static Type FindType(params string[] typeNames)
         {
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -32,6 +39,12 @@ namespace drz.MulticadInterop
             return null;
         }
 
+        /// <summary>
+        /// Возвращает методы указанного типа с заданным именем.
+        /// </summary>
+        /// <param name="type">Тип, в котором выполняется поиск.</param>
+        /// <param name="methodName">Имя метода.</param>
+        /// <returns>Массив найденных методов.</returns>
         public static MethodInfo[] GetMethods(Type type, string methodName)
         {
             if (type == null)
@@ -52,6 +65,13 @@ namespace drz.MulticadInterop
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Находит метод по имени и точному набору типов параметров.
+        /// </summary>
+        /// <param name="type">Тип, в котором выполняется поиск.</param>
+        /// <param name="methodName">Имя метода.</param>
+        /// <param name="parameterTypes">Ожидаемые типы параметров.</param>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindMethod(
             Type type,
             string methodName,
