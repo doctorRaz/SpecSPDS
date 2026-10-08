@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace drz.MulticadInterop
@@ -10,87 +9,27 @@ namespace drz.MulticadInterop
     /// </summary>
     public static class MulticadParamManagerReflection
     {
-        /// <summary>
-        /// Возвращает все публичные методы McParamManager.
-        /// </summary>
-        /// <returns>Массив информации о найденных методах.</returns>
+        private static readonly Type ParamManagerType =
+            MulticadReflection.FindType(
+                "Multicad.ApplicationServices.McParamManager",
+                "Multicad.AplicationServices.McParamManager");
+
         public static MethodInfo[] GetMethods()
         {
-            Type type = FindParamManagerType();
-
-            if (type == null)
-            {
-                return Array.Empty<MethodInfo>();
-            }
-
-            return type.GetMethods();
+            return ParamManagerType?.GetMethods() ?? Array.Empty<MethodInfo>();
         }
 
-        /// <summary>
-        /// Возвращает методы McParamManager с указанным именем.
-        /// </summary>
-        /// <param name="methodName">Имя метода.</param>
-        /// <returns>Массив найденных методов.</returns>
         public static MethodInfo[] GetMethods(string methodName)
         {
-            MethodInfo[] methods = GetMethods();
-            List<MethodInfo> result = new List<MethodInfo>();
-
-            foreach (MethodInfo method in methods)
-            {
-                if (method.Name == methodName)
-                {
-                    result.Add(method);
-                }
-            }
-
-            return result.ToArray();
+            return MulticadReflection.GetMethods(ParamManagerType, methodName);
         }
 
-        /// <summary>
-        /// Находит метод McParamManager по имени и типам параметров.
-        /// </summary>
-        /// <param name="methodName">Имя метода.</param>
-        /// <param name="parameterTypes">Типы параметров метода.</param>
-        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindMethod(string methodName, params Type[] parameterTypes)
         {
-            MethodInfo[] methods = GetMethods(methodName);
-
-            foreach (MethodInfo method in methods)
-            {
-                ParameterInfo[] parameters = method.GetParameters();
-
-                if (parameters.Length != parameterTypes.Length)
-                {
-                    continue;
-                }
-
-                bool match = true;
-
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    if (parameters[i].ParameterType != parameterTypes[i])
-                    {
-                        match = false;
-                        break;
-                    }
-                }
-
-                if (match)
-                {
-                    return method;
-                }
-            }
-
-            return null;
+            return MulticadReflection.FindMethod(
+                ParamManagerType, methodName, parameterTypes);
         }
 
-        /// <summary>
-        /// Находит перегрузку CallOptions с Form без compile-time зависимости
-        /// от System.Windows.Forms.
-        /// </summary>
-        /// <returns>Найденный метод или null, если перегрузка не найдена.</returns>
         public static MethodInfo FindCallOptionsForm()
         {
             MethodInfo[] methods = GetMethods("CallOptions");
@@ -110,19 +49,11 @@ namespace drz.MulticadInterop
             return null;
         }
 
-        /// <summary>
-        /// Находит метод SetParam с сигнатурой (object, int).
-        /// </summary>
-        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindSetParam()
         {
             return FindMethod("SetParam", typeof(object), typeof(int));
         }
 
-        /// <summary>
-        /// Находит метод SetParam с сигнатурой (object, int, Standarts).
-        /// </summary>
-        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindSetParamWithStandarts()
         {
             MethodInfo[] methods = GetMethods("SetParam");
@@ -138,38 +69,6 @@ namespace drz.MulticadInterop
                     parameters[2].ParameterType.Name == "Standarts")
                 {
                     return method;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Находит тип McParamManager в загруженных сборках.
-        /// Поддерживаются оба написания namespace, встречающиеся в версиях Multicad.
-        /// </summary>
-        private static Type FindParamManagerType()
-        {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    Type type =
-                        assembly.GetType(
-                            "Multicad.ApplicationServices.McParamManager",
-                            false)
-                        ?? assembly.GetType(
-                            "Multicad.AplicationServices.McParamManager",
-                            false);
-
-                    if (type != null)
-                    {
-                        return type;
-                    }
-                }
-                catch
-                {
-                    // Нативные и смешанные сборки могут не поддерживать GetType.
                 }
             }
 
