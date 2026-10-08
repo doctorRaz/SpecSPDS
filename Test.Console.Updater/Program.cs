@@ -34,13 +34,15 @@ namespace dRz.SpecSPDS.Test
 
                 updateManager.Cleanup(AddOnCtx.AddOnInfo.PackageDirectory);
 
-                string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl+"/"+AddOnCtx.AddOnInfo.Product+"/releases/latest/download/update.json";
+                string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
+                    AddOnCtx.AddOnInfo.Product +
+                    "/releases/latest/download/";
 
                 UpdateRequest request = new UpdateRequest
                 {
                     CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
 
-                    UpdateUrl = AddOnCtx.AddOnInfo.RepositoryUrl,
+                    UpdateUrl = updateUrl,
 
                     Mode = UpdateMode.CheckAndInstall,
 
