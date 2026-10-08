@@ -3,6 +3,10 @@ using dRz.Abstractions.Services.Message;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace dRz.Updater
 {

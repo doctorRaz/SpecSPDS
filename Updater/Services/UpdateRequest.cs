@@ -1,4 +1,6 @@
-﻿namespace dRz.Updater.Services
+﻿using System;
+
+namespace dRz.Updater.Services
 {
     /// <summary>
     /// Входные параметры для проверки и установки обновления.

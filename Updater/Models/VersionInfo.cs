@@ -1,4 +1,6 @@
-﻿namespace dRz.Updater.Models
+﻿using System;
+
+namespace dRz.Updater.Models
 {
     /// <summary>
     /// Четыре компонента версии из update.json.

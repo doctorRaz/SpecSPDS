@@ -1,4 +1,6 @@
-﻿namespace dRz.Updater.Services
+﻿using System.IO;
+
+namespace dRz.Updater.Services
 {
     /// <summary>
     /// Удаляет Mark of the Web у загруженного файла.
