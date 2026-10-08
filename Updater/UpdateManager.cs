@@ -179,6 +179,11 @@ namespace dRz.Updater
 
                 return true;
             }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                return false;
+            }
             finally
             {
                 try
