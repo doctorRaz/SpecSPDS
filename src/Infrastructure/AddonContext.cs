@@ -34,6 +34,10 @@ namespace dRz.Src.Infrastructure
         /// <summary>Gets the document service.</summary>
         /// <value>The document service.</value>
         internal static IDocumentService DocService => Services.Get<IDocumentService>();
+        
+        /// <summary>Gets the system information.</summary>
+        /// <value>The system information.</value>
+        internal static ISysInfo SysInfo => Services.Get<ISysInfo>();
 
         /// <summary>
         /// явный вызов ком строки
@@ -51,11 +55,20 @@ namespace dRz.Src.Infrastructure
         /// </exception>
         internal static IMcNotificatorMessageService MsgMcN => Services.Get<IMcNotificatorMessageService>();
 
-        // общий вызов сервиса сообщений
-        // реализация в классе DefaultMessageService?
-        // вернет IWindowMessageService или ICommandLineMessageService
-        //если документ есть отдаст консоль иначе окошко
+               
+        /// <summary>общий вызов сервиса сообщений <br/>
+        /// реализация в классе DefaultMessageService?<br/>
+        /// вернет:<br/>
+        /// IWindowMessageService или<br/>
+        /// ICommandLineMessageService <br/>
+        /// для запросов вернет IMessagePromptService
+        /// если документ есть отдаст консоль иначе окошко </summary>
+        /// <value>The MSG.</value>
         internal static IMessageService Msg => Services.Get<IMessageService>();
+
+        /// <summary>Вызов сервиса ASK сообщений</summary>
+        /// <value>The MSG PRT.</value>
+        internal static IMessagePromptService MsgPrt => Services.Get<IMessagePromptService>();
 
         // наследник IMessageService,IWindowMessageService расширен диалоговыми окнами: да нет пропустить дальше
         //todo internal static IWindowMessageServiceAsk MsgGUIAsc => Services.Get<IWindowMessageServiceIWindowMessageServiceAsk>();
@@ -65,9 +78,6 @@ namespace dRz.Src.Infrastructure
         /// </summary>
         internal static IDrzLoggerFactory NLogFactory => Services.Get<IDrzLoggerFactory>();
 
-        /// <summary>Gets the system information.</summary>
-        /// <value>The system information.</value>
-        internal static ISysInfo SysInfo => Services.Get<ISysInfo>();
 
         #endregion Internal Properties
 
