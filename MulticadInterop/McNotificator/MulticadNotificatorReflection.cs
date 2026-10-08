@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace drz.MulticadInterop.McNotificator
@@ -8,39 +10,12 @@ namespace drz.MulticadInterop.McNotificator
     /// </summary>
     public enum NotificationType
     {
-        /// <summary>
-        /// без иконки
-        /// </summary>
         neSimple = -1,
-
-        /// <summary>
-        /// "страница"
-        /// </summary>
         neUsual = 0,
-
-        /// <summary>
-        /// "воскл. знак"
-        /// </summary>
         neWarning = 1,
-
-        /// <summary>
-        /// "крест"
-        /// </summary>
         neCure = 2,
-
-        /// <summary>
-        /// "лампа"
-        /// </summary>
         neHint = 3,
-
-        /// <summary>
-        /// "ошибка"
-        /// </summary>
         neError = 4,
-
-        /// <summary>
-        /// "справка"
-        /// </summary>
         neHelp = 5
     }
 
@@ -50,27 +25,15 @@ namespace drz.MulticadInterop.McNotificator
     /// </summary>
     public static class MulticadNotificatorReflection
     {
+        private static readonly Type NotificatorType =
+            MulticadReflection.FindType(
+                "Multicad.ApplicationServices.McNotificator",
+                "Multicad.AplicationServices.McNotificator");
+
         public static MethodInfo[] GetCreateMessageMethods()
         {
-            Type type = FindNotificatorType();
-
-            if (type == null)
-            {
-                return Array.Empty<MethodInfo>();
-            }
-
-            MethodInfo[] methods = type.GetMethods();
-            List<MethodInfo> result = new List<MethodInfo>();
-
-            foreach (MethodInfo method in methods)
-            {
-                if (method.Name == "CreateMessage")
-                {
-                    result.Add(method);
-                }
-            }
-
-            return result.ToArray();
+            return MulticadReflection.GetMethods(
+                NotificatorType, "CreateMessage");
         }
 
         public static MethodInfo FindCreateMessage(NotificationType type)
@@ -85,7 +48,6 @@ namespace drz.MulticadInterop.McNotificator
             foreach (MethodInfo method in methods)
             {
                 ParameterInfo[] parameters = method.GetParameters();
-
                 int expectedCount = withParentId ? 3 : 2;
 
                 if (parameters.Length != expectedCount ||
@@ -114,34 +76,6 @@ namespace drz.MulticadInterop.McNotificator
                 if (Convert.ToInt32(enumValue) == (int)type)
                 {
                     return method;
-                }
-            }
-
-            return null;
-        }
-
-        private static Type FindNotificatorType()
-        {
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    Type type =
-                        assembly.GetType(
-                            "Multicad.ApplicationServices.McNotificator",
-                            false)
-                        ?? assembly.GetType(
-                            "Multicad.AplicationServices.McNotificator",
-                            false);
-
-                    if (type != null)
-                    {
-                        return type;
-                    }
-                }
-                catch
-                {
-                    // Пропускаем сборки, которые нельзя корректно отразить.
                 }
             }
 
