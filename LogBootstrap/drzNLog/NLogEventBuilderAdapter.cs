@@ -1,4 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
+using System;
+using System.Collections.Generic;
 
 namespace dRz.LogBootstrap.drzNLog
 {

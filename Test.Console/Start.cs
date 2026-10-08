@@ -24,6 +24,7 @@ using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Test.Console;
+using System;
 using System.Diagnostics;
 
 namespace dRz.SpecSPDS.Test
@@ -52,7 +53,7 @@ namespace dRz.SpecSPDS.Test
                 _msg.InfoMessage("test");
                 _msg.ErrorMessage("test");
                 _msg.WarningMessage("test");
-                
+
 
                 _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
                 _isLoggerProvider = true;

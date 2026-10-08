@@ -1,6 +1,4 @@
 ﻿#if DEBUG
-using drz.MulticadInterop.McNotificator;
-using dRz.Abstractions.Services.Message;
 using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
@@ -9,7 +7,7 @@ namespace dRz.NC.TestCommands.Message
     public class NotifayMessage
     {
 
-    static  System.Exception ex = new System.Exception("Properties is null");
+        static System.Exception ex = new System.Exception("Properties is null");
 
         [CommandMethod($"SPEC-noti1", CommandFlags.Session)]
         public static void noti1()
@@ -21,7 +19,7 @@ namespace dRz.NC.TestCommands.Message
         public static void noti2()
         {
 
-            MsgMcN.ErrorMessage("С иконкой err",ex);
+            MsgMcN.ErrorMessage("С иконкой err", ex);
         }
 
         [CommandMethod($"SPEC-noti20", CommandFlags.Session)]

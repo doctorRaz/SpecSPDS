@@ -10,10 +10,10 @@ using HostMgd.EditorInput;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
-
-using App = HostMgd.ApplicationServices;
 
 namespace dRz.NC.Commands
 {

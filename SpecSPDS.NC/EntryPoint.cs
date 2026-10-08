@@ -8,7 +8,8 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
 using dRz.Updater.Services;
-using drz.MulticadInterop;
+using System;
+
 
 
 #if NC
@@ -71,7 +72,7 @@ namespace dRz.NC
             try
             {
                 // регистрируемся
-              
+
                 TryAddOnCompositionRoot();//получаем окружение
 
                 //стартуем очистку копий и bak

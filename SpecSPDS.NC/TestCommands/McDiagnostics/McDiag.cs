@@ -65,19 +65,19 @@ namespace dRz.NC.TestCommands.McDiagnostics
         [CommandMethod($"SPEC-GetStringParam3", CommandFlags.Session)]
         public static void ParamMethods3()
         {
-               
+
             //тянем имя профиля
             string combobox_profile = MulticadParamManager.GetStringParam(25005);
             Msg.InfoMessage(combobox_profile);
 
 
-           
-            var combobox_bool = MulticadParamManager.GetBoolParam(1048);
+
+            bool combobox_bool = MulticadParamManager.GetBoolParam(1048);
             Msg.InfoMessage($"combobox_profile: {combobox_bool.ToString()}");
 
-             //MulticadParamManager.CallOptions("",IntPtr.Zero);
+            //MulticadParamManager.CallOptions("",IntPtr.Zero);
 
-            var combobox_lineweight = MulticadParamManager.GetDoubleParam(2335);
+            double combobox_lineweight = MulticadParamManager.GetDoubleParam(2335);
             Msg.InfoMessage($"combobox_lineweight: {combobox_lineweight.ToString()}");
 
             Color combobox_color = MulticadParamManager.GetColorParam(11135);

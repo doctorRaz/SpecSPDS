@@ -1,3 +1,5 @@
+using System;
+
 namespace dRz.Abstractions.Logger
 {
     /// <summary>

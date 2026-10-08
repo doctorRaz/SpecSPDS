@@ -1,4 +1,7 @@
-﻿namespace dRz.Abstractions.Infrastructure
+﻿using System;
+using System.Collections.Generic;
+
+namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>Информация о сборке </summary>
     public interface IAddOnInfo : IStringConvertible

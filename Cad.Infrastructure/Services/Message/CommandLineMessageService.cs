@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Services.Message;
+using System;
 using System.Runtime.CompilerServices;
 
 //все связанное с HostMgd в отдельную сборку CadInfrastructure
