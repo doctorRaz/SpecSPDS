@@ -77,9 +77,10 @@ namespace dRz.Updater
                 // update.json нужен даже в Disabled, чтобы mandatory update
                 // оставался обнаруживаемым.
                 string updateJsonPath = Path.Combine(tempDirectory, "update.json");
+                string updateJsonUrl = ResolveUrl(request.UpdateUrl, "update.json");
 
                 await _downloader.DownloadAsync(
-                    request.UpdateUrl,
+                    updateJsonUrl,
                     updateJsonPath,
                     cancellationToken);
 
@@ -232,20 +233,26 @@ namespace dRz.Updater
         }
 
         /// <summary>
-        /// Формирует URL ресурса относительно URL update.json.
+        /// Формирует URL ресурса относительно базового URL обновлений.
         /// </summary>
         private static string ResolveUrl(string baseUrl, string resource)
         {
             if (string.IsNullOrWhiteSpace(resource))
-                throw new InvalidDataException("В update.json не указан asset.");
+                throw new InvalidDataException("В update.json не указан ресурс.");
 
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri? baseUri))
-                throw new InvalidDataException("Некорректный URL update.json.");
+                throw new InvalidDataException("Некорректный базовый URL обновлений.");
 
             if (Uri.TryCreate(resource, UriKind.Absolute, out Uri? absoluteUri))
                 return absoluteUri.ToString();
 
-            return new Uri(baseUri, resource).ToString();
+            string normalizedBaseUrl = baseUri.AbsoluteUri.EndsWith(
+                "/",
+                StringComparison.Ordinal)
+                ? baseUri.AbsoluteUri
+                : baseUri.AbsoluteUri + "/";
+
+            return new Uri(new Uri(normalizedBaseUrl), resource).ToString();
         }
 
         /// <summary>
@@ -257,7 +264,7 @@ namespace dRz.Updater
                 throw new ArgumentException("Не указана текущая версия.", nameof(request));
 
             if (string.IsNullOrWhiteSpace(request.UpdateUrl))
-                throw new ArgumentException("Не указан URL проверки обновления.", nameof(request));
+                throw new ArgumentException("Не указан базовый URL обновлений.", nameof(request));
 
             if (string.IsNullOrWhiteSpace(request.AddOnDirectory))
                 throw new ArgumentException("Не указан каталог аддона.", nameof(request));
