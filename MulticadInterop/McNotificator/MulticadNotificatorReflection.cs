@@ -36,6 +36,12 @@ namespace drz.MulticadInterop.McNotificator
                 NotificatorType, "CreateMessage");
         }
 
+        public static MethodInfo FindCreateMessage()
+        {
+            return MulticadReflection.FindMethod(
+                NotificatorType, "CreateMessage", typeof(string));
+        }
+
         public static MethodInfo FindCreateMessage(NotificationType type)
         {
             return FindCreateMessage(type, false);
