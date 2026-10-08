@@ -8,12 +8,19 @@ namespace drz.MulticadInterop.McNotificator
     /// </summary>
     public enum NotificationType
     {
+        /// <summary>Без иконки.</summary>
         neSimple = -1,
+        /// <summary>Стандартное уведомление.</summary>
         neUsual = 0,
+        /// <summary>Предупреждение.</summary>
         neWarning = 1,
+        /// <summary>Ошибка в виде крестика.</summary>
         neCure = 2,
+        /// <summary>Подсказка.</summary>
         neHint = 3,
+        /// <summary>Ошибка.</summary>
         neError = 4,
+        /// <summary>Справочная информация.</summary>
         neHelp = 5
     }
 
@@ -28,23 +35,34 @@ namespace drz.MulticadInterop.McNotificator
                 "Multicad.ApplicationServices.McNotificator",
                 "Multicad.AplicationServices.McNotificator");
 
+        /// <summary>Возвращает все перегрузки CreateMessage.</summary>
+        /// <returns>Массив найденных методов.</returns>
         public static MethodInfo[] GetCreateMessageMethods()
         {
             return MulticadReflection.GetMethods(
                 NotificatorType, "CreateMessage");
         }
 
+        /// <summary>Находит перегрузку CreateMessage(string).</summary>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindCreateMessage()
         {
             return MulticadReflection.FindMethod(
                 NotificatorType, "CreateMessage", typeof(string));
         }
 
+        /// <summary>Находит перегрузку CreateMessage с указанным типом уведомления.</summary>
+        /// <param name="type">Тип уведомления.</param>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindCreateMessage(NotificationType type)
         {
             return FindCreateMessage(type, false);
         }
 
+        /// <summary>Находит перегрузку CreateMessage с указанным типом уведомления и, при необходимости, parentId.</summary>
+        /// <param name="type">Тип уведомления.</param>
+        /// <param name="withParentId">Признак поиска перегрузки с идентификатором родительского уведомления.</param>
+        /// <returns>Найденный метод или null, если метод не найден.</returns>
         public static MethodInfo FindCreateMessage(NotificationType type, bool withParentId)
         {
             MethodInfo[] methods = GetCreateMessageMethods();
