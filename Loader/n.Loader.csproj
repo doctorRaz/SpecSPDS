@@ -2,9 +2,8 @@
 	<Import Project="Shared.props" Condition="Exists('Shared.props')" />
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
 	<PropertyGroup>
-		<!--<TargetFramework>net462</TargetFramework>-->
 		<TargetFramework>net6.0-windows</TargetFramework>
-
+		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>$(Vendor).Loader</RootNamespace>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">23</MinVersion>

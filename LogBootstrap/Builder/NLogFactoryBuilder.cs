@@ -6,6 +6,7 @@ using NLog.Config;
 using NLog.Layouts;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
+using System.IO;
 
 namespace dRz.LogBootstrap.Builder
 {

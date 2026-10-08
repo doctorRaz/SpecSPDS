@@ -1,4 +1,7 @@
-﻿namespace dRz.Updater.Services
+﻿using System;
+using System.IO;
+
+namespace dRz.Updater.Services
 {
     /// <summary>
     /// Installer

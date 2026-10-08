@@ -1,4 +1,6 @@
-﻿namespace dRz.Core.Extensions
+﻿using System.Collections.Generic;
+
+namespace dRz.Core.Extensions
 {
     public static class Declension
     {

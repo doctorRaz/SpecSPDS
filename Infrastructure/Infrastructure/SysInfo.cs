@@ -1,5 +1,8 @@
 ﻿using dRz.Abstractions.Infrastructure;
 using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management; // Не забудьте добавить ссылку
 
 namespace dRz.Infrastructure.Infrastructure

@@ -1,10 +1,11 @@
-﻿using drz.SpecSPDS.Interfaces;
+﻿using dRz.NC.Interfaces;
 using HostMgd.ApplicationServices;
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Application = HostMgd.ApplicationServices.Application;
 
-namespace drz.SpecSPDS.Services
+namespace dRz.NC.Services
 {
     internal class MessageService : IMessageService
     {

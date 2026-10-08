@@ -1,9 +1,9 @@
-﻿using dRz.Abstractions.Services.Message;
-using System.Diagnostics;
-using System.Reflection;
+﻿using drz.MulticadInterop.McNotificator;
+using dRz.Abstractions.Services.Message;
+using System;
 using System.Runtime.CompilerServices;
 
-namespace dRz.n.Infrastructure.Services.Message
+namespace dRz.NC.Infrastructure.Services.Message
 {
     /// <summary>
     /// Обёртка над McNotificator NanoCad для вывода сообщений в командную строку.
@@ -11,99 +11,56 @@ namespace dRz.n.Infrastructure.Services.Message
     /// </summary>
     public class McNotificatorMessageServise : IMcNotificatorMessageService
     {
-        #region Private Fields
-
-        private static readonly MethodInfo? _createMessage = FindCreateMessage();
-
-        #endregion Private Fields
-
-        #region Public Methods
-
-        //public void ConsoleMessage(string message, [CallerMemberName] string caller = null)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neWarning, message, caller);
         }
 
         public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neError, $"{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neError,
+                            ex == null
+                            ? message
+                            : $"{message}\n{ex.Message}\n{ex.StackTrace}", caller);
         }
 
         public void InfoMessage(string message, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            WriteMessage(NotificationType.neUsual, message, caller);
         }
 
         /// <summary>
-        /// Выводит сообщение в командную строку NanoCad.
+        /// Выводит сообщение Multicad.
         /// </summary>
         /// <param name="message">Текст сообщения.</param>
         /// <exception cref="InvalidOperationException">
         /// Выбрасывается если McNotificator.CreateMessage не найден в загруженных сборках.
         /// </exception>
-        public static void WriteMessage(string message)
+        public static void WriteMessage(NotificationType notificationType, string message, string? caller)
         {
-            if (_createMessage == null)
-            {
-                throw new InvalidOperationException("McNotificator.CreateMessage не найден");
-            }
-
-            _createMessage.Invoke(null, new object[] { message });
+            MulticadNotificator.CreateMessage(Formatted(message, caller), notificationType);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        /// <summary>
-        /// Ищет метод CreateMessage в загруженных сборках NanoCad.
-        /// Поддерживает оба варианта пространства имён — до и начиная с версии 26.
+        /// <summary>Выводит сообщение Multicad. <br/>
+        /// fallback для консоли
         /// </summary>
-        /// <returns>
-        /// <see cref="MethodInfo"/> метода CreateMessage или <c>null</c> если не найден.
-        /// </returns>
-        private static MethodInfo? FindCreateMessage()
+        /// <param name="message">The message.</param>
+        /// <param name="caller">The caller.</param>
+        public static void WriteMessage(string message, string? caller)
         {
-            Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
-
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                try
-                {
-                    Type? type =
-                        assembly.GetType("Multicad.ApplicationServices.McNotificator")
-                     ?? assembly.GetType("Multicad.AplicationServices.McNotificator");
-
-                    if (type != null)
-                    {
-                        sw.Stop();
-                        System.Diagnostics.Debug.WriteLine(
-                            $"McNotificator найден за {sw.ElapsedMilliseconds} мс"
-                        );
-
-                        return type.GetMethod("CreateMessage", new[] { typeof(string) });
-                    }
-                }
-                catch { } // Пропускаем нативные и смешанные сборки
-            }
-
-            sw.Stop();
-            System.Diagnostics.Debug.WriteLine(
-                $"McNotificator не найден, поиск занял {sw.ElapsedMilliseconds} мс");
-
-            return null;
+            MulticadNotificator.CreateMessage(Formatted(message, caller), NotificationType.neCure);
         }
 
-        #endregion Private Methods
+        private static string Formatted(string message, string? caller)
+        {
+            string format = (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message;
+
+            return format;
+        }
     }
 }

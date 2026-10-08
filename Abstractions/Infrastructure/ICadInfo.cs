@@ -1,4 +1,6 @@
-﻿namespace dRz.Abstractions.Infrastructure
+﻿using System;
+
+namespace dRz.Abstractions.Infrastructure
 {
     /// <summary>
     /// Info CAd host

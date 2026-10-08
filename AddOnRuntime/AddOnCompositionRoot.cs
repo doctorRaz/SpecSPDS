@@ -5,11 +5,12 @@ using dRz.Abstractions.Services.Message;
 using dRz.Infrastructure.Infrastructure;
 using dRz.Infrastructure.Services.Message;
 using dRz.LogBootstrap;
-using dRz.n.Infrastructure.Services;
-using dRz.n.Infrastructure.Services.Message;
+using dRz.NC.Infrastructure.Services;
+using dRz.NC.Infrastructure.Services.Message;
 
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
+using System;
 using System.Reflection;
 
 //using Container = SimpleInjector.Container;

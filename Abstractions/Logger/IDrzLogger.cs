@@ -1,3 +1,5 @@
+using System;
+
 namespace dRz.Abstractions.Logger
 {
     /// <summary> Provides logging interface and utility functions. </summary>

@@ -5,12 +5,16 @@ using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;
 using NLog;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+
 
 //using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace drz.SpecSPDS.Services;
+namespace dRz.NC.Services;
 
 /// <summary>
 /// получаем универсальный маркер

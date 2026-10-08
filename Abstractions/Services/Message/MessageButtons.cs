@@ -1,4 +1,6 @@
-﻿namespace dRz.Abstractions.Services.Message
+﻿using System;
+
+namespace dRz.Abstractions.Services.Message
 {
     [Flags]
     public enum MessageButtons : uint
