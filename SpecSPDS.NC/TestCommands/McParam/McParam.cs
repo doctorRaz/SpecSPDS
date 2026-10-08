@@ -7,9 +7,9 @@ using System.Drawing;
 using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace dRz.NC.TestCommands.McDiagnostics
+namespace dRz.NC.TestCommands.McParam
 {
-    public class McDiag
+    public class McParam
     {
         Document doc => Application.DocumentManager.MdiActiveDocument;
         Editor ed => doc.Editor;

@@ -2,9 +2,9 @@
 using Teigha.Runtime;
 using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace dRz.NC.TestCommands.Message
+namespace dRz.NC.TestCommands.McNotifay
 {
-    public class NotifayMessage
+    public class NotifayMsgMcN
     {
 
         static System.Exception ex = new System.Exception("Properties is null");
