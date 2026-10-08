@@ -105,6 +105,8 @@ namespace drz.MulticadInterop.McParamManager
         /// <summary>
         /// Получение параметра с автоматическим приведением типа.
         /// </summary>
+        /// <param name="idParam">Идентификатор параметра.</param>
+        /// <returns>Значение параметра.</returns>
         public static int GetInt32Param(int idParam)
         {
             return (int)Invoke(GetInt32ParamMethod, idParam);
@@ -124,6 +126,8 @@ namespace drz.MulticadInterop.McParamManager
         /// Получение имени слоя, начинающегося с префикса текущего профиля.
         /// Если переданное имя слоя уже начинается с одного из префиксов, оно не изменяется.
         /// </summary>
+        /// <param name="layerName">Имя слоя.</param>
+        /// <returns>Имя слоя с префиксом текущего профиля.</returns>
         public static string GetProfiledLayerName(string layerName)
         {
             return (string)Invoke(GetProfiledLayerNameMethod, layerName);
@@ -198,24 +202,43 @@ namespace drz.MulticadInterop.McParamManager
     [Flags]
     public enum Standarts
     {
+        /// <summary>ГОСТ.</summary>
         GOST = 1,
+        /// <summary>СПДС.</summary>
         SPDS = 2,
+        /// <summary>ISO.</summary>
         ISO = 4,
+        /// <summary>ISO для машиностроения.</summary>
         ISO_MECH = 4,
+        /// <summary>DIN.</summary>
         DIN = 8,
+        /// <summary>CSN.</summary>
         CSN = 16,
+        /// <summary>PN.</summary>
         PN = 32,
+        /// <summary>JUS.</summary>
         JUS = 64,
+        /// <summary>GB.</summary>
         GB = 128,
+        /// <summary>NF.</summary>
         NF = 256,
+        /// <summary>IS.</summary>
         IS = 512,
+        /// <summary>ISO для архитектуры.</summary>
         ISO_ARCH = 1024,
+        /// <summary>Все архитектурные стандарты.</summary>
         ALL_ARCH = 1026,
+        /// <summary>ANSI.</summary>
         ANSI = 2048,
+        /// <summary>Все машиностроительные стандарты.</summary>
         ALL_MECH = 3069,
+        /// <summary>Все иностранные стандарты.</summary>
         ALL_FOREIGN = 4092,
+        /// <summary>Все стандарты без СПДС.</summary>
         ALL_NO_SPDS = 4093,
+        /// <summary>Все стандарты.</summary>
         ALL = 4095,
+        /// <summary>Пользовательские стандарты.</summary>
         CUSTOM = 32768
     }
 }
