@@ -1,7 +1,6 @@
-using System;
 using System.Reflection;
 
-namespace drz.MulticadInterop
+namespace drz.MulticadInterop.McParamManager
 {
     /// <summary>
     /// Предоставляет reflection-доступ к McParamManager

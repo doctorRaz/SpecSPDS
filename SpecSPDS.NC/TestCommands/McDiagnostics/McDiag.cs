@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-using drz.MulticadInterop;
+using drz.MulticadInterop.McParamManager;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
@@ -80,7 +80,7 @@ namespace dRz.NC.TestCommands.McDiagnostics
             var combobox_lineweight = MulticadParamManager.GetDoubleParam(2335);
             Msg.InfoMessage($"combobox_lineweight: {combobox_lineweight.ToString()}");
 
-            Color combobox_color = MulticadParamManager.GetColorParam(1043);
+            Color combobox_color = MulticadParamManager.GetColorParam(11135);
             Msg.InfoMessage($"combobox_color: {combobox_color.ToString()}");
 
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 
-namespace drz.MulticadInterop
+namespace drz.MulticadInterop.McParamManager
 {
     /// <summary>
     /// Предоставляет API-обёртку над McParamManager
