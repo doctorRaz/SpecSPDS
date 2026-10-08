@@ -27,7 +27,8 @@ namespace dRz.Updater.Services
                 return false;
 
             using FileStream stream = File.OpenRead(filePath);
-            byte[] hash = SHA256.HashData(stream);
+            using SHA256 sha256 = SHA256.Create();
+            byte[] hash = sha256.ComputeHash(stream);
             string actualHash = Convert.ToHexString(hash);
 
             return string.Equals(
