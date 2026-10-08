@@ -1,4 +1,5 @@
 ﻿using NLog;
+using System.IO;
 
 namespace dRz.LogBootstrap.Diagnostics
 {

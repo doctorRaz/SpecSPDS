@@ -14,6 +14,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\MulticadInterop\MulticadInterop.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -8,8 +8,9 @@
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />
 		<ProjectReference Include="..\Updater\Updater.csproj" />
+		<ProjectReference Include="..\MulticadInterop\MulticadInterop.csproj" />
 		<!--<ProjectReference Include="..\EnvironmentInfo\EnvironmentInfo.csproj" />-->
-		
+
 		<ProjectReference Include="..\AddOnRuntime\AddOnRuntime.csproj" />
 	</ItemGroup>
 	<ItemGroup>

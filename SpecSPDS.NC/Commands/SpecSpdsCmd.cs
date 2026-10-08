@@ -1,21 +1,21 @@
-﻿using drz.SpecSPDS.CadServices;
-using drz.SpecSPDS.Services;
-using dRz.Core.Enums;
+﻿using dRz.Core.Enums;
 using dRz.Core.Extensions;
 using dRz.Core.Models;
 using dRz.Core.Services;
 using dRz.Core.Settings;
+using dRz.NC.CadServices;
+using dRz.NC.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using NLog;
 using NLog.Config;
 using NLog.Layouts;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
 
-using App = HostMgd.ApplicationServices;
-
-namespace drz.SpecSPDS.Commands
+namespace dRz.NC.Commands
 {
     /// <summary>
     /// получение маркеров.. выбором с пространства с документа с нескольких документов
@@ -38,7 +38,7 @@ namespace drz.SpecSPDS.Commands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -180,7 +180,7 @@ namespace drz.SpecSPDS.Commands
         [Description("отладка лог")]
         public static void dRz_log()
         {
-            Document doc = App.Application.DocumentManager.MdiActiveDocument;
+            Document doc = Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;

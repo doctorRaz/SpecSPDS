@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Services.Message;
+using System;
 using System.Runtime.CompilerServices;
 
 //все связанное с HostMgd в отдельную сборку CadInfrastructure
@@ -9,7 +10,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.n.Infrastructure.Services.Message
+namespace dRz.NC.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {
@@ -97,7 +98,7 @@ namespace dRz.n.Infrastructure.Services.Message
                 try
                 {
                     //todo для нотифай отдельный метод и интерфейс
-                    McNotificatorMessageServise.WriteMessage(formatted);
+                    McNotificatorMessageServise.WriteMessage(formatted, caller);
                 }
                 catch
                 {

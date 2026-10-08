@@ -2,6 +2,7 @@
 
 using dRz.Abstractions.Logger;
 using NLog;
+using System;
 
 namespace dRz.LogBootstrap.drzNLog
 {

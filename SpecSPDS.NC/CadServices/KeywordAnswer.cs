@@ -1,8 +1,10 @@
 ﻿using dRz.Core.Services;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
+using System;
+using System.Collections.Generic;
 
-namespace drz.SpecSPDS.CadServices
+namespace dRz.NC.CadServices
 {
     public class CadService
     { /// <summary>
