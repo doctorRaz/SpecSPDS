@@ -165,25 +165,44 @@ namespace dRz.Updater
                         $"Не удалось распаковать пакет обновления. Код 7-Zip: {extractResult}.");
                 }
 
-                // После успешной проверки и распаковки можно менять установленный аддон.
-                Cleanup(request.PackageDirectory);
-
-                string sourсeDirectory = Path.Combine(extractedDirectory, update.Product);
+                string sourceDirectory = Path.Combine(extractedDirectory, update.Product);
 
                 if (!request.IsPackage)
                 {
-                    string moduleDirectory = Path.GetFileName(Path.TrimEndingDirectorySeparator(request.PackageDirectory));
-                    sourсeDirectory = Path.Combine(sourсeDirectory, moduleDirectory);
+                    string moduleDirectory = Path.GetFileName(
+                        Path.TrimEndingDirectorySeparator(request.PackageDirectory));
+                    sourceDirectory = Path.Combine(sourceDirectory, moduleDirectory);
+                }
+
+                // Проверяем структуру архива до очистки и изменения установленного аддона.
+                if (!Directory.Exists(sourceDirectory))
+                {
+                    throw new InvalidDataException(
+                        $"В архиве не найден каталог обновления: {sourceDirectory}");
+                }
+
+                bool fullUpdate =
+                    update.Mandatory ||
+                    update.Version.ToVersion().Major > request.CurrentVersion.Major;
+
+                // Удаляем резервные копии предыдущего запуска до создания новых.
+                Cleanup(request.PackageDirectory);
+
+                if (fullUpdate &&
+                    !Installer.RenameDirectoryFilesWithBackup(request.PackageDirectory))
+                {
+                    throw new IOException(
+                        "Не удалось создать резервные копии файлов перед полным обновлением.");
                 }
 
                 if (!Installer.MoveDirectoryFilesWithBackup(
-                    sourсeDirectory,
+                    sourceDirectory,
                     request.PackageDirectory))
                 {
                     throw new IOException("Не удалось установить пакет обновления.");
                 }
 
-                if (installAutomatically)
+                if (installAutomatically)//todo не уверен, что здесь нужно условие
                 {
                     _messageServices.InfoMessage(
                         $"{update.Product} обновлен с версии {request.CurrentVersion.ToString()} до версии {update.Version.ToVersion()}\n Что бы изменения вступили в силу необходима перезагрузка.");

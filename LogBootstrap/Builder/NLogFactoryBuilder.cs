@@ -15,7 +15,6 @@ namespace dRz.LogBootstrap.Builder
     /// </summary>
     internal class NLogFactoryBuilder
     {
-
         /// <summary>Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.</summary>
         /// <param name="assemblyDirectory">The assembly directory.</param>
         /// <param name="productName">Name of the product.</param>
@@ -38,7 +37,6 @@ namespace dRz.LogBootstrap.Builder
         /// <returns></returns>
         internal LogFactory Build()
         {
-
             //путь к Diagnostic.Mode
             string diagnosticModePath = Path.Combine(_assemblyDirectory, LogKeys.DiagnosticMode);
 
@@ -51,8 +49,15 @@ namespace dRz.LogBootstrap.Builder
             //путь к Log.Level
             string internalLogLevelPath = Path.Combine(_assemblyDirectory, LogKeys.LogLevel);
 
-            //уровень фабрики лога, по умолчанию Innfo
-            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(internalLogLevelPath, LogLevel.Info);
+            //уровень фабрики лога, по умолчанию:
+            //      release - Info
+            //      debug - Trace
+#if DEBUG
+            var loglevel = LogLevel.Trace;
+#else
+            var loglevel = LogLevel.Info;
+#endif
+            LogLevel currentLevel = LogLevelReader.GetLevelFromFile(internalLogLevelPath, loglevel);
 
             //фабрика
             LogFactory factory = new()
@@ -71,6 +76,7 @@ namespace dRz.LogBootstrap.Builder
         private readonly string _productName;
         private readonly string _productFamily;
         private readonly string _logsDir;
+
         /// <summary>
         /// XML layout
         /// </summary>
