@@ -202,7 +202,7 @@ namespace dRz.Updater
                     throw new IOException("Не удалось установить пакет обновления.");
                 }
 
-                if (installAutomatically)
+                if (installAutomatically)//todo не уверен, что здесь нужно условие
                 {
                     _messageServices.InfoMessage(
                         $"{update.Product} обновлен с версии {request.CurrentVersion.ToString()} до версии {update.Version.ToVersion()}\n Что бы изменения вступили в силу необходима перезагрузка.");
