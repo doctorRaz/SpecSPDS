@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ApplicationPackage
+    xmlns="hostApplicationPackage/v01"
+    Name="PlotSPDSn">
+    <Components>
+        <ComponentEntry
+            AppName="PlotSPDSn"
+            ModuleName="/PlotSPDS.NC/PlotSPDS.NC.dll"
+            ModuleType="MGD"/>
+        <ConfigEntry
+            FileName="//Resources/PlotSPDS_menu.cfg"
+            FileType="CFG"/>
+    </Components>
+</ApplicationPackage>
