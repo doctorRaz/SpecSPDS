@@ -113,7 +113,7 @@ namespace dRz.Updater
                 if (!installAutomatically)
                 {
                     MessageResult result = _promptService.AskYesNo(
-                        $"Доступно обновление версии {update.Version}. Установить его?",
+                        $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?",
                         "Обновление");
 
                     if (result != MessageResult.Yes)
