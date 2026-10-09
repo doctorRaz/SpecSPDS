@@ -5,6 +5,7 @@ using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
 using System;
 using System.IO;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -86,28 +87,19 @@ namespace dRz.Updater
 
                 UpdateInfo update = UpdateJsonReader.Read(updateJsonPath);
 
-                bool? updateRequired;
+                UpdateKind? updateKind = UpdateVersionChecker.Check(
+                    request.CurrentVersion,
+                    update);
 
-                try
-                {
-                    updateRequired = UpdateVersionChecker.Check(
-                        request.CurrentVersion,
-                        update);
-                }
-                catch (MinimumVersionException ex)
-                {
-                    _messageServices.WarningMessage(ex.Message);
-                    return false;
-                }
-
-                if (updateRequired is null)
+                if (updateKind is null)
                     return false;
 
-                if (request.Mode == UpdateMode.Disabled && updateRequired == false)
+                // Disabled запрещает необязательные обновления, но не mandatory.
+                if (request.Mode == UpdateMode.Disabled && !update.Mandatory)
                     return false;
 
                 bool installAutomatically =
-                    updateRequired == true ||
+                    update.Mandatory ||
                     request.Mode == UpdateMode.CheckAndInstall;
 
                 if (!installAutomatically)
@@ -181,19 +173,47 @@ namespace dRz.Updater
                         $"В архиве не найден каталог обновления: {sourceDirectory}");
                 }
 
-                bool fullUpdate =
-                    update.Mandatory ||
-                    update.Version.ToVersion().Major > request.CurrentVersion.Major;
+                bool fullUpdate = updateKind == UpdateKind.Full;
 
                 // Удаляем резервные копии предыдущего запуска до создания новых.
                 Cleanup(request.PackageDirectory);
 
-                if (!Installer.MoveDirectoryFilesWithBackup(
-                    sourceDirectory,
-                    request.PackageDirectory,
-                    fullUpdate))
+                try
                 {
-                    throw new IOException("Не удалось установить пакет обновления.");
+                    if (!Installer.MoveDirectoryFilesWithBackup(
+                        sourceDirectory,
+                        request.PackageDirectory,
+                        fullUpdate))
+                    {
+                        throw new IOException("Не удалось установить пакет обновления.");
+                    }
+                }
+                catch (UpdateRollbackException ex)
+                {
+                    // Откат не завершён: логируем обе первичные ошибки и не повторяем установку.
+                    _logger.Error(ex.InstallException);
+                    _logger.Error(ex.RollbackException);
+
+                    _messageServices.WarningMessage(
+                        $"Не удалось установить обновление {update.Version.ToVersion()}, и восстановление завершилось ошибкой. " +
+                        $"Аддон может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов. " +
+                        $"Открыть страницу релиза?");
+
+                    OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
+                    return false;
+                }
+                catch (Exception installException)
+                {
+                    // Installer выбросил исходную ошибку только после успешного отката.
+                    _logger.Error(installException);
+
+                    _messageServices.WarningMessage(
+                        $"Не удалось установить обновление {update.Version.ToVersion()}; прежнее состояние восстановлено. " +
+                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную. " +
+                        $"Открыть страницу релиза?");
+
+                    OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
+                    return false;
                 }
 
                 if (installAutomatically)//todo не уверен, что здесь нужно условие
@@ -221,6 +241,60 @@ namespace dRz.Updater
                     // Временный каталог не должен маскировать результат операции.
                 }
             }
+        }
+
+        /// <summary>
+        /// Предлагает открыть страницу опубликованного релиза и открывает её при подтверждении.
+        /// </summary>
+        private void OpenReleaseIfRequested(string updateUrl, string tag)
+        {
+            string releaseUrl = BuildReleaseUrl(updateUrl, tag);
+            MessageResult result = _promptService.AskYesNo(
+                $"Открыть страницу релиза?\n{releaseUrl}",
+                "Восстановление обновления");
+
+            if (result != MessageResult.Yes)
+                return;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(releaseUrl)
+                {
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                _messageServices.WarningMessage(
+                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}");
+            }
+        }
+
+        /// <summary>
+        /// Преобразует URL каталога загрузки в URL страницы конкретного релиза.
+        /// </summary>
+        private static string BuildReleaseUrl(string updateUrl, string tag)
+        {
+            if (Uri.TryCreate(updateUrl, UriKind.Absolute, out Uri? uri))
+            {
+                const string downloadSuffix = "/releases/latest/download/";
+                string path = uri.AbsolutePath;
+
+                if (path.EndsWith(downloadSuffix, StringComparison.OrdinalIgnoreCase))
+                {
+                    string repositoryPath = path.Substring(0, path.Length - downloadSuffix.Length);
+                    return new UriBuilder(uri)
+                    {
+                        Path = repositoryPath + "/releases/tag/" + Uri.EscapeDataString(tag),
+                        Query = string.Empty,
+                        Fragment = string.Empty
+                    }.Uri.ToString();
+                }
+            }
+
+            // Если формат URL нестандартный, хотя бы предлагаем исходный URL источника обновлений.
+            return updateUrl;
         }
 
         /// <summary>
