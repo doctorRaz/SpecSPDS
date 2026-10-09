@@ -59,7 +59,7 @@ namespace dRz.NC.Infrastructure.Services
 #else
 
         /// <summary>The is active</summary>
-        private bool _isActive;
+        private bool _isActive=true;
 
         /// <summary>Активен ли документ
         /// меняем руками  через свойства
