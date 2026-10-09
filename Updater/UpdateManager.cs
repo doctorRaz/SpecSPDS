@@ -188,16 +188,10 @@ namespace dRz.Updater
                 // Удаляем резервные копии предыдущего запуска до создания новых.
                 Cleanup(request.PackageDirectory);
 
-                if (fullUpdate &&
-                    !Installer.RenameDirectoryFilesWithBackup(request.PackageDirectory))
-                {
-                    throw new IOException(
-                        "Не удалось создать резервные копии файлов перед полным обновлением.");
-                }
-
                 if (!Installer.MoveDirectoryFilesWithBackup(
                     sourceDirectory,
-                    request.PackageDirectory))
+                    request.PackageDirectory,
+                    fullUpdate))
                 {
                     throw new IOException("Не удалось установить пакет обновления.");
                 }
