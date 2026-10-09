@@ -148,8 +148,11 @@ namespace dRz.Updater
                     tempDirectory,
                     "extracted");
 
+                //7z.exe всегда лежит рядом с updater
+                string sevenZipDirectory = Path.GetDirectoryName(typeof(UpdateManager).Assembly.Location)!;
+
                 SevenZipService sevenZip = new SevenZipService(
-                    request.AddOnDirectory);
+                    sevenZipDirectory);
 
                 SevenZipExitCode extractResult = sevenZip.Extract(
                     assetFile,
