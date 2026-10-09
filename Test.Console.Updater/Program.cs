@@ -26,7 +26,7 @@ namespace dRz.SpecSPDS.Test
             {
                 ConteinerCtx.Run();
 
-                _logger!.Info("Start");
+                _logger.Debug("Start debug updater");
 
                 AddOnCtx.Msg.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
 
@@ -49,10 +49,8 @@ namespace dRz.SpecSPDS.Test
                     AddOnDirectory = AddOnCtx.AddOnInfo.PackageDirectory
                 };
 
-
-
-                Task<bool> ff = updateManager.RunAsync(request);
-
+                //что с ним делать дальше????
+                Task<bool> task = updateManager.RunAsync(request);
             }
             catch (Exception ex)
             {
@@ -80,7 +78,7 @@ namespace dRz.SpecSPDS.Test
             return Console.ReadKey();
         }
 
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
+        private static IDrzLogger _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
         private static bool _isLoggerProvider;//логер есть
         private static IMessageService _msg;
         private static ICommandLineMessageService _msgCmd;

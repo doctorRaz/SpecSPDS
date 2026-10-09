@@ -24,8 +24,11 @@ namespace dRz.Updater.Services
         public UpdateMode Mode { get; init; }
 
         /// <summary>
-        /// Полный путь к каталогу установленного аддона.
+        /// Полный путь к каталогу установленного аддона.<br/>
+        /// Может быть на уровень выше аддона, включая файл paсkage
         /// </summary>
         public string AddOnDirectory { get; init; } = string.Empty;
+
+
     }
 }
