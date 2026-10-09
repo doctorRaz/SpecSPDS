@@ -168,8 +168,9 @@ namespace dRz.Updater
                 // После успешной проверки и распаковки можно менять установленный аддон.
                 Cleanup(request.AddOnDirectory);
 
+                string sourсeDirectory = Path.Combine(extractedDirectory, update.Product);
                 if (!Installer.MoveDirectoryFilesWithBackup(
-                    extractedDirectory,
+                    sourсeDirectory,
                     request.AddOnDirectory))
                 {
                     throw new IOException("Не удалось установить пакет обновления.");
