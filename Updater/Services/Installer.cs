@@ -80,7 +80,8 @@ namespace dRz.Updater.Services
 
             foreach (string file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
             {
-                string relative = file.RelativeTo(sourceDirectory);
+                string relative = Path.GetRelativePath(sourceDirectory, file);
+
                 string target = GetSafeTargetPath(targetDirectory, relative);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(target)!);
@@ -100,63 +101,21 @@ namespace dRz.Updater.Services
             }
         }
 
-    /// <summary>
-    /// Проверяет, что относительный путь не выходит за пределы каталога установки.
-    /// </summary>
-    private static string GetSafeTargetPath(string targetDirectory, string relativePath)
-    {
-        string root = Path.GetFullPath(targetDirectory)
-            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-            + Path.DirectorySeparatorChar;
-
-        string target = Path.GetFullPath(Path.Combine(root, relativePath));
-
-        if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidDataException("Архив содержит путь за пределами каталога установки.");
-
-        return target;
-    }
-
-    }
-
-    public static class PathEx
-    {
-        /// <summary>Relatives to.</summary>
-        /// <param name="path">The path.</param>
-        /// <param name="basePath">The base path.</param>
-        /// <returns></returns>
-        public static string RelativeTo(this string path, string basePath)
+        /// <summary>
+        /// Проверяет, что относительный путь не выходит за пределы каталога установки.
+        /// </summary>
+        private static string GetSafeTargetPath(string targetDirectory, string relativePath)
         {
-            return GetRelativePath(basePath, path);
-        }
+            string root = Path.GetFullPath(targetDirectory)
+                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
 
-        /// <summary>Gets the relative path.</summary>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="path">The path.</param>
-        /// <returns></returns>
-        public static string GetRelativePath(string basePath, string path)
-        {
-            Uri baseUri = new Uri(
-                AppendDirectorySeparator(basePath));
+            string target = Path.GetFullPath(Path.Combine(root, relativePath));
 
-            Uri pathUri = new Uri(path);
+            if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("Архив содержит путь за пределами каталога установки.");
 
-            return Uri.UnescapeDataString(
-                baseUri.MakeRelativeUri(pathUri).ToString()
-            ).Replace('/', Path.DirectorySeparatorChar);
-        }
-
-        /// <summary>Appends the directory separator.</summary>
-        /// <param name="path">The path.</param>
-        /// <returns></returns>
-        private static string AppendDirectorySeparator(string path)
-        {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                return path + Path.DirectorySeparatorChar;
-            }
-
-            return path;
+            return target;
         }
     }
 }
