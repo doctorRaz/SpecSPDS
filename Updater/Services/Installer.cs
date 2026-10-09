@@ -209,9 +209,9 @@ namespace dRz.Updater.Services
             }
             catch (Exception installException)
             {
-                List<Exception> rollbackErrors = new();
-
                 // Откатываем в обратном порядке: сначала новые файлы, затем старые.
+                // Первая ошибка отката означает, что дальнейшие действия небезопасны:
+                // прекращаем восстановление и передаём обе ошибки вызывающему коду.
                 for (int i = changes.Count - 1; i >= 0; i--)
                 {
                     FileChange change = changes[i];
@@ -236,20 +236,17 @@ namespace dRz.Updater.Services
                     }
                     catch (Exception rollbackException)
                     {
-                        rollbackErrors.Add(new IOException(
+                        Exception firstRollbackError = new IOException(
                             $"Не удалось откатить изменение файла '{change.Target}'. Резервная копия: '{change.Backup ?? "(нет)"}'.",
-                            rollbackException));
+                            rollbackException);
+
+                        throw new AggregateException(
+                            "Установка обновления завершилась ошибкой; откат прерван после первой ошибки.",
+                            new[] { installException, firstRollbackError });
                     }
                 }
 
-                if (rollbackErrors.Count > 0)
-                {
-                    rollbackErrors.Insert(0, installException);
-                    throw new AggregateException(
-                        "Установка обновления завершилась ошибкой; при откате возникли дополнительные ошибки.",
-                        rollbackErrors);
-                }
-
+                // Откат завершён успешно — сохраняем исходную ошибку установки.
                 throw;
             }
 
