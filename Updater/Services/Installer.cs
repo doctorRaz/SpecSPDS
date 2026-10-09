@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace dRz.Updater.Services
@@ -63,6 +64,58 @@ namespace dRz.Updater.Services
                 {
                     return backup;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Переименовывает все файлы каталога в резервные копии, сохраняя структуру каталогов.
+        /// При ошибке пытается вернуть уже переименованные файлы исходным именам.
+        /// </summary>
+        /// <param name="directory">Каталог установленного пакета или модуля.</param>
+        /// <returns><see langword="true"/>, если все файлы переименованы; иначе <see langword="false"/>.</returns>
+        public static bool RenameDirectoryFilesWithBackup(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                return false;
+            }
+
+            // Материализуем список до изменения имён файлов.
+            string[] files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
+            List<(string Original, string Backup)> renamedFiles = new();
+
+            try
+            {
+                foreach (string file in files)
+                {
+                    string backup = GetBackupName(file);
+                    File.Move(file, backup);
+                    renamedFiles.Add((file, backup));
+                }
+
+                return true;
+            }
+            catch
+            {
+                // Откатываем переименования в обратном порядке.
+                for (int i = renamedFiles.Count - 1; i >= 0; i--)
+                {
+                    (string original, string backup) = renamedFiles[i];
+
+                    try
+                    {
+                        if (File.Exists(backup) && !File.Exists(original))
+                        {
+                            File.Move(backup, original);
+                        }
+                    }
+                    catch
+                    {
+                        // Сохраняем исходную ошибку; неудачный откат требует диагностики.
+                    }
+                }
+
+                return false;
             }
         }
 
