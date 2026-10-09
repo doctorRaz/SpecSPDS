@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,7 +9,20 @@ namespace dRz.Updater.Services
     /// </summary>
     public static class Installer
     {
-        /// <summary>Moves the with backup.</summary>
+        private sealed class FileChange
+        {
+            public FileChange(string target, string? backup)
+            {
+                Target = target;
+                Backup = backup;
+            }
+
+            public string Target { get; }
+            public string? Backup { get; }
+            public bool Installed { get; set; }
+        }
+
+        /// <summary>Moves a file to the target directory, backing up an existing file first.</summary>
         /// <param name="sourceFile">The source file.</param>
         /// <param name="targetDirectory">The target directory.</param>
         /// <exception cref="System.IO.FileNotFoundException">Файл не найден</exception>
@@ -22,44 +35,34 @@ namespace dRz.Updater.Services
 
             Directory.CreateDirectory(targetDirectory);
 
-            string targetFile = Path.Combine(
-                targetDirectory,
-                Path.GetFileName(sourceFile));
+            string targetFile = Path.Combine(targetDirectory, Path.GetFileName(sourceFile));
 
-            if (File.Exists(targetFile))//todo переименование вынести в метод
+            if (File.Exists(targetFile))
             {
                 string backupFile = GetBackupName(targetFile);
-
-                File.Move(targetFile, backupFile);//rename
+                File.Move(targetFile, backupFile);
             }
 
-            File.Move(sourceFile, targetFile);//move
+            File.Move(sourceFile, targetFile);
         }
 
-        /// <summary>Gets the name of the backup.</summary>
-        /// <param name="file">The file.</param>
-        /// <returns></returns>
+        /// <summary>Gets a unique name for a backup file.</summary>
+        /// <param name="file">The original file path.</param>
+        /// <returns>A path that does not currently exist.</returns>
         private static string GetBackupName(string file)
         {
             string directory = Path.GetDirectoryName(file)!;
-
             string name = Path.GetFileName(file);
 
-            // file.bak
             string backup = Path.Combine(directory, name + ".bak");
-
             if (!File.Exists(backup))
             {
                 return backup;
             }
 
-            // file(1).bak ... file(10).bak
             for (int i = 1; ; i++)
             {
-                backup = Path.Combine(
-                    directory,
-                    $"{name}({i}).bak");
-
+                backup = Path.Combine(directory, $"{name}({i}).bak");
                 if (!File.Exists(backup))
                 {
                     return backup;
@@ -80,7 +83,6 @@ namespace dRz.Updater.Services
                 return false;
             }
 
-            // Материализуем список до изменения имён файлов.
             string[] files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
             List<(string Original, string Backup)> renamedFiles = new();
 
@@ -97,7 +99,6 @@ namespace dRz.Updater.Services
             }
             catch
             {
-                // Откатываем переименования в обратном порядке.
                 for (int i = renamedFiles.Count - 1; i >= 0; i--)
                 {
                     (string original, string backup) = renamedFiles[i];
@@ -119,39 +120,142 @@ namespace dRz.Updater.Services
             }
         }
 
-        /// <summary>Moves the directory files with backup.</summary>
-        /// <param name="sourceDirectory">The source directory.</param>
-        /// <param name="targetDirectory">The target directory.</param>
+        /// <summary>
+        /// Переносит файлы из распакованного обновления с резервированием заменяемых файлов.
+        /// При ошибке откатывает все изменения, выполненные в рамках этой установки.
+        /// </summary>
+        /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
+        /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
+        /// <returns><see langword="true"/>, если все файлы перенесены; иначе <see langword="false"/>.</returns>
         public static bool MoveDirectoryFilesWithBackup(
-        string sourceDirectory,
-        string targetDirectory)
+            string sourceDirectory,
+            string targetDirectory)
+        {
+            return MoveDirectoryFilesWithBackup(sourceDirectory, targetDirectory, false);
+        }
+
+        /// <summary>
+        /// Переносит файлы обновления как одну операцию с возможностью отката.
+        /// При полном обновлении сначала резервируются все старые файлы, в том числе отсутствующие
+        /// в новой версии.
+        /// </summary>
+        /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
+        /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
+        /// <param name="fullUpdate">Если <see langword="true"/>, резервируются все старые файлы.</param>
+        /// <returns><see langword="true"/>, если все файлы перенесены; иначе <see langword="false"/>.</returns>
+        public static bool MoveDirectoryFilesWithBackup(
+            string sourceDirectory,
+            string targetDirectory,
+            bool fullUpdate)
         {
             if (!Directory.Exists(sourceDirectory))
             {
                 return false;
             }
 
-            foreach (string file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-            {
-                string relative = Path.GetRelativePath(sourceDirectory, file);
+            string[] sourceFiles = Directory.GetFiles(
+                sourceDirectory,
+                "*",
+                SearchOption.AllDirectories);
 
-                string target = GetSafeTargetPath(targetDirectory, relative);
-
-                Directory.CreateDirectory(Path.GetDirectoryName(target)!);
-
-                MoveWithBackup(file, Path.GetDirectoryName(target)!);
-            }
+            List<FileChange> changes = new();
 
             try
             {
-                //delete  source Directory recursively
-                Directory.Delete(sourceDirectory, true);
-                return true;
+                if (fullUpdate && Directory.Exists(targetDirectory))
+                {
+                    // Сначала резервируем весь установленный набор файлов.
+                    string[] targetFiles = Directory.GetFiles(
+                        targetDirectory,
+                        "*",
+                        SearchOption.AllDirectories);
+
+                    foreach (string targetFile in targetFiles)
+                    {
+                        string backup = GetBackupName(targetFile);
+                        File.Move(targetFile, backup);
+                        changes.Add(new FileChange(targetFile, backup));
+                    }
+                }
+
+                foreach (string sourceFile in sourceFiles)
+                {
+                    string relative = Path.GetRelativePath(sourceDirectory, sourceFile);
+                    string target = GetSafeTargetPath(targetDirectory, relative);
+                    string targetParent = Path.GetDirectoryName(target)!;
+
+                    Directory.CreateDirectory(targetParent);
+
+                    string? backup = null;
+
+                    if (File.Exists(target))
+                    {
+                        if (fullUpdate)
+                        {
+                            throw new IOException(
+                                $"Целевой файл уже существует после резервирования: {target}");
+                        }
+
+                        backup = GetBackupName(target);
+                        File.Move(target, backup);
+                    }
+
+                    FileChange change = new(target, backup);
+                    changes.Add(change);
+
+                    File.Move(sourceFile, target);
+                    change.Installed = true;
+                }
             }
-            catch
+            catch (Exception installException)
             {
-                return false;
+                List<Exception> rollbackErrors = new();
+
+                // Откатываем в обратном порядке: сначала новые файлы, затем старые.
+                for (int i = changes.Count - 1; i >= 0; i--)
+                {
+                    FileChange change = changes[i];
+
+                    try
+                    {
+                        if (change.Installed && File.Exists(change.Target))
+                        {
+                            File.Delete(change.Target);
+                        }
+
+                        if (change.Backup is not null && File.Exists(change.Backup))
+                        {
+                            if (File.Exists(change.Target))
+                            {
+                                throw new IOException(
+                                    $"Нельзя восстановить резервную копию: целевой файл существует: {change.Target}");
+                            }
+
+                            File.Move(change.Backup, change.Target);
+                        }
+                    }
+                    catch (Exception rollbackException)
+                    {
+                        rollbackErrors.Add(new IOException(
+                            $"Не удалось откатить изменение файла '{change.Target}'. Резервная копия: '{change.Backup ?? "(нет)"}'.",
+                            rollbackException));
+                    }
+                }
+
+                if (rollbackErrors.Count > 0)
+                {
+                    rollbackErrors.Insert(0, installException);
+                    throw new AggregateException(
+                        "Установка обновления завершилась ошибкой; при откате возникли дополнительные ошибки.",
+                        rollbackErrors);
+                }
+
+                throw;
             }
+
+            // Исходный каталог находится во временной директории UpdateManager и будет удалён
+            // в его finally. Не считаем очистку временных файлов частью установки.
+            return true;
         }
 
         /// <summary>
@@ -166,7 +270,9 @@ namespace dRz.Updater.Services
             string target = Path.GetFullPath(Path.Combine(root, relativePath));
 
             if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+            {
                 throw new InvalidDataException("Архив содержит путь за пределами каталога установки.");
+            }
 
             return target;
         }
