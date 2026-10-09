@@ -178,7 +178,7 @@ namespace dRz.Updater
                 if (installAutomatically)
                 {
                     _messageServices.InfoMessage(
-                        $"Обновление до версии {update.Version} установлено.");
+                        $"{update.Product} обновлен с версии {request.CurrentVersion.ToString()} до версии {update.Version.ToVersion()}\n\t Что бы изменения вступили в силу необходима перезагрузка.");
                 }
 
                 return true;
