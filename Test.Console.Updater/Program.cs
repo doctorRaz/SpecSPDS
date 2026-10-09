@@ -46,7 +46,9 @@ namespace dRz.SpecSPDS.Test
 
                     Mode = UpdateMode.CheckAndInstall,
 
-                    AddOnDirectory = AddOnCtx.AddOnInfo.PackageDirectory
+                    PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
+
+                    IsPackage=AddOnCtx.AddOnInfo.HasPackage,
                 };
 
                 //что с ним делать дальше????

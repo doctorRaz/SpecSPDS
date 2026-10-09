@@ -27,7 +27,11 @@ namespace dRz.Updater.Services
         /// Полный путь к каталогу установленного аддона.<br/>
         /// Может быть на уровень выше аддона, включая файл paсkage
         /// </summary>
-        public string AddOnDirectory { get; init; } = string.Empty;
+        public string PackageDirectory { get; init; } = string.Empty;
+
+        /// <summary>Gets a value indicating whether this instance has package.</summary>
+        /// <value><c>true</c> if this instance has package; otherwise, <c>false</c>.</value>
+        public bool IsPackage { get; init; } = false;  
 
 
     }

@@ -166,12 +166,19 @@ namespace dRz.Updater
                 }
 
                 // После успешной проверки и распаковки можно менять установленный аддон.
-                Cleanup(request.AddOnDirectory);
+                Cleanup(request.PackageDirectory);
 
                 string sourсeDirectory = Path.Combine(extractedDirectory, update.Product);
+
+                if (!request.IsPackage)
+                {
+                    string moduleDirectory = Path.GetFileName(Path.TrimEndingDirectorySeparator(request.PackageDirectory));
+                    sourсeDirectory = Path.Combine(sourсeDirectory, moduleDirectory);
+                }
+
                 if (!Installer.MoveDirectoryFilesWithBackup(
                     sourсeDirectory,
-                    request.AddOnDirectory))
+                    request.PackageDirectory))
                 {
                     throw new IOException("Не удалось установить пакет обновления.");
                 }
@@ -270,7 +277,7 @@ namespace dRz.Updater
             if (string.IsNullOrWhiteSpace(request.UpdateUrl))
                 throw new ArgumentException("Не указан базовый URL обновлений.", nameof(request));
 
-            if (string.IsNullOrWhiteSpace(request.AddOnDirectory))
+            if (string.IsNullOrWhiteSpace(request.PackageDirectory))
                 throw new ArgumentException("Не указан каталог аддона.", nameof(request));
         }
     }
