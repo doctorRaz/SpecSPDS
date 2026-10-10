@@ -246,7 +246,7 @@ namespace dRz.Updater
         /// <summary>
         /// Предлагает открыть страницу опубликованного релиза и открывает её при подтверждении.
         /// </summary>
-        private void OpenReleaseIfRequested(string updateUrl, string tag)
+        private void OpenReleaseIfRequested(string updateUrl, string tag)//todo вынести в инфраструктуру??
         {
             string releaseUrl = BuildReleaseUrl(updateUrl, tag);
             MessageResult result = _promptService.AskYesNo(
