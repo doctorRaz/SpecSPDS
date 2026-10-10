@@ -142,16 +142,10 @@ namespace dRz.Updater
 
                 SevenZipService sevenZip = new SevenZipService();
 
-                SevenZipExitCode extractResult = sevenZip.Extract(
+                sevenZip.Extract(
                     assetFile,
                     extractedDirectory,
                     GetAssetPassword(update));
-
-                if (extractResult != SevenZipExitCode.Success)
-                {
-                    throw new InvalidDataException(
-                        $"Не удалось распаковать пакет обновления. Код 7-Zip: {extractResult}.");
-                }
 
                 string sourceDirectory = Path.Combine(extractedDirectory, update.Product);
 
