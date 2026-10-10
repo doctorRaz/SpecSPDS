@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticadInterop", "Multicad
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Console.Updater", "Test.Console.Updater\Test.Console.Updater.csproj", "{1A6A154A-2E82-46FD-81F9-F4922FE339EB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Console.SevenZipExtractor", "Test.Console.SevenZipExtractor\Test.Console.SevenZipExtractor.csproj", "{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{1A6A154A-2E82-46FD-81F9-F4922FE339EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A6A154A-2E82-46FD-81F9-F4922FE339EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A6A154A-2E82-46FD-81F9-F4922FE339EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{FF8AF0DF-CD64-4380-9493-4996AE058CD3} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 		{7BD9B2EC-744D-45AF-92FC-E60B8B1704A8} = {7CCE4940-DFE5-40C3-B602-431E5B71DEAF}
 		{1A6A154A-2E82-46FD-81F9-F4922FE339EB} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
+		{A7C7B4E2-9D8A-4D2A-9A62-53D9F43F6C21} = {AF1AD432-E96F-4209-B9D6-A1C82AE212CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F67B1F6F-D9F5-4C43-A787-B533595D7FC7}
