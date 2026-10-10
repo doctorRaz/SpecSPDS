@@ -22,7 +22,7 @@ namespace dRz.Updater
         private readonly Downloader _downloader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateManager"/> class.
+        /// Создаёт менеджер обновлений.
         /// </summary>
         /// <param name="messageServices">Сервис сообщений.</param>
         /// <param name="promptService">Сервис интерактивных запросов.</param>
