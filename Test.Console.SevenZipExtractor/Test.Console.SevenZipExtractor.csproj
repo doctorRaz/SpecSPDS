@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Exe</OutputType>
     <PlatformTarget>x64</PlatformTarget>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <Description>Проверка SevenZipExtractor на архивах 7z с паролем и шифрованными заголовками</Description>
+    <Description>Проверка SharpSevenZip на архивах 7z с паролем и шифрованными заголовками</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SevenZipExtractor" Version="1.0.19" />
+    <PackageReference Include="SharpSevenZip" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
