@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using SevenZipExtractor;
+using SharpSevenZip;
 
 namespace dRz.Test.Console.SevenZipExtractor
 {
@@ -8,7 +8,7 @@ namespace dRz.Test.Console.SevenZipExtractor
     {
         private static int Main(string[] args)
         {
-            Console.WriteLine("Тест SevenZipExtractor");
+            Console.WriteLine("Тест SharpSevenZip");
             Console.WriteLine($"Разрядность процесса: {(IntPtr.Size == 8 ? "x64" : "x86")}");
 
             string archivePath = args.Length > 0
@@ -17,10 +17,10 @@ namespace dRz.Test.Console.SevenZipExtractor
 
             string outputPath = args.Length > 1
                 ? args[1]
-                : Path.Combine(Path.GetTempPath(), "SevenZipExtractor-Test");
+                : Path.Combine(Path.GetTempPath(), "SharpSevenZip-Test");
 
-            Console.Write("Пароль архива (ввод отображается): ");
-            string password = Console.ReadLine() ?? string.Empty;
+            Console.Write("Пароль архива: ");
+            string password = ReadPassword();
 
             try
             {
@@ -33,18 +33,20 @@ namespace dRz.Test.Console.SevenZipExtractor
                 Console.WriteLine($"Архив: {archivePath}");
                 Console.WriteLine($"Каталог распаковки: {outputPath}");
 
-                using (var archive = new ArchiveFile(archivePath))
+                using (var archive = new SharpSevenZipExtractor(archivePath, password))
                 {
-                    // Эта операция принципиальна для теста архивов с -mhe=on:
-                    // библиотека должна прочитать имена файлов до начала распаковки.
+                    // Пароль передаётся при создании extractor, поэтому библиотека
+                    // может открыть архив и прочитать зашифрованные заголовки (-mhe=on).
                     Console.WriteLine("Чтение списка файлов...");
-                    foreach (Entry entry in archive.Entries)
+                    foreach (var entry in archive.ArchiveFileData)
                     {
-                        Console.WriteLine($"{(entry.IsFolder ? "[DIR] " : "[FILE]")} {entry.FileName}");
+                        Console.WriteLine(
+                            $"{(entry.IsDirectory ? "[DIR] " : "[FILE]")} {entry.FileName} ({entry.Size} байт)");
                     }
 
                     Console.WriteLine("Распаковка...");
-                    archive.Extract(outputPath, overwrite: true, password: password);
+                    Directory.CreateDirectory(outputPath);
+                    archive.ExtractArchive(outputPath);
                 }
 
                 Console.WriteLine("Распаковка завершена.");
@@ -71,6 +73,39 @@ namespace dRz.Test.Console.SevenZipExtractor
                 }
 
                 Console.WriteLine("Значение не должно быть пустым.");
+            }
+        }
+
+        private static string ReadPassword()
+        {
+            var password = new System.Text.StringBuilder();
+
+            while (true)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(intercept: true);
+
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    Console.WriteLine();
+                    return password.ToString();
+                }
+
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    if (password.Length > 0)
+                    {
+                        password.Length--;
+                        Console.Write("\b \b");
+                    }
+
+                    continue;
+                }
+
+                if (!char.IsControl(key.KeyChar))
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
             }
         }
     }
