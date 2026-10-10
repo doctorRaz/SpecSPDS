@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using SharpSevenZip;
 
 namespace dRz.Updater.Services.SevenZip
 {
@@ -99,12 +100,15 @@ namespace dRz.Updater.Services.SevenZip
 
             Directory.CreateDirectory(destination);
 
-            string arguments =
-                $"x \"{archivePath}\" -o\"{destination}\" -y";
+            // SharpSevenZip передаёт пароль при открытии архива и поддерживает
+            // чтение зашифрованных заголовков (-mhe=on).
+            using SharpSevenZipExtractor archive = new SharpSevenZipExtractor(
+                archivePath,
+                password);
 
-            AddPassword(ref arguments, password);
+            archive.ExtractArchive(destination);
 
-            return Execute(arguments);
+            return SevenZipExitCode.Success;
         }
 
         /// <summary>
