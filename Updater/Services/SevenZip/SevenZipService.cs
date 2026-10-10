@@ -22,15 +22,10 @@ namespace dRz.Updater.Services.SevenZip
         /// Пароль архива. Если <see langword="null"/> или пустая строка,
         /// считается, что архив не защищён паролем.
         /// </param>
-        /// <returns>
-        /// Код завершения операции <see cref="SevenZipExitCode"/>.
-        /// Значение <see cref="SevenZipExitCode.Success"/> означает,
-        /// что распаковка завершилась без исключения.
-        /// </returns>
         /// <exception cref="FileNotFoundException">
         /// Архив не найден.
         /// </exception>
-        public SevenZipExitCode Extract(
+        public void Extract(
             string archivePath,
             string destination,
             string? password = null)
@@ -52,7 +47,6 @@ namespace dRz.Updater.Services.SevenZip
 
             archive.ExtractArchive(destination);
 
-            return SevenZipExitCode.Success;
         }
     }
 }
