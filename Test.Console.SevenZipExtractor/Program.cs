@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using SharpSevenZip;
 
-namespace dRz.Test.Console.SevenZipExtractor
+namespace dRz.Test.SevenZipExtractor
 {
     internal static class Program
     {
@@ -13,14 +13,14 @@ namespace dRz.Test.Console.SevenZipExtractor
 
             string archivePath = args.Length > 0
                 ? args[0]
-                : ReadRequiredValue("Путь к архиву 7z: ");
+                : @"d:\@Developers\Programmers\!NET\HTTP_TEST\mandatory\SpecSPDS_1.2.9778.19120-protected.7z";//ReadRequiredValue("Путь к архиву 7z: ");
 
             string outputPath = args.Length > 1
                 ? args[1]
-                : Path.Combine(Path.GetTempPath(), "SharpSevenZip-Test");
+                : @"e:\TEMP\dRz\Updater\test";// Path.Combine(Path.GetTempPath(), "SharpSevenZip-Test");
 
             Console.Write("Пароль архива: ");
-            string password = ReadPassword();
+            string password = "SpecSPDS";// ReadPassword();
 
             try
             {
@@ -33,7 +33,7 @@ namespace dRz.Test.Console.SevenZipExtractor
                 Console.WriteLine($"Архив: {archivePath}");
                 Console.WriteLine($"Каталог распаковки: {outputPath}");
 
-                using (var archive = new SharpSevenZipExtractor(archivePath, password))
+                using (SharpSevenZipExtractor archive = new SharpSevenZipExtractor(archivePath, password))
                 {
                     // Пароль передаётся при создании extractor, поэтому библиотека
                     // может открыть архив и прочитать зашифрованные заголовки (-mhe=on).
@@ -57,6 +57,12 @@ namespace dRz.Test.Console.SevenZipExtractor
                 Console.Error.WriteLine("Тест завершился ошибкой:");
                 Console.Error.WriteLine(ex);
                 return 1;
+            }
+
+            finally
+            {                
+                Console.WriteLine("Нажмите любую клавишу для выхода...");
+                Console.ReadKey(intercept: true);
             }
         }
 
