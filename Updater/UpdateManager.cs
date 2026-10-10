@@ -54,7 +54,11 @@ namespace dRz.Updater
         /// Выполняет проверку и установку обновления согласно переданным параметрам.
         /// </summary>
         /// <param name="request">Параметры обновления, сформированные основным аддоном.</param>
-        /// <returns><see langword="true"/>, если обновление установлено или проверка завершена без ошибки.</returns>
+        /// <returns>
+        /// <see langword="true"/>, если установка завершилась успешно;
+        /// <see langword="false"/>, если обновление не требуется, пользователь отказался
+        /// от установки или операция завершилась ошибкой.
+        /// </returns>
         public async Task<bool> RunAsync(
             UpdateRequest request,
             CancellationToken cancellationToken = default)
