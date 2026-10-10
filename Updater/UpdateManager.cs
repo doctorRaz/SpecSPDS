@@ -47,7 +47,7 @@ namespace dRz.Updater
             if (string.IsNullOrWhiteSpace(addOnDirectory))
                 throw new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
 
-            BackupCleaner.DeleteBackupFiles(addOnDirectory);
+            BackupCleaner.DeleteBackupFiles(addOnDirectory, _logger);
         }
 
         /// <summary>
@@ -210,11 +210,8 @@ namespace dRz.Updater
                     return false;
                 }
 
-                if (installAutomatically)//todo не уверен, что здесь нужно условие
-                {
-                    _messageServices.InfoMessage(
-                        $"{update.Product} обновлен с версии {request.CurrentVersion.ToString()} до версии {update.Version.ToVersion()}\n Что бы изменения вступили в силу необходима перезагрузка.");
-                }
+                _messageServices.InfoMessage(
+                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
 
                 return true;
             }
