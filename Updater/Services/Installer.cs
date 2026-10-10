@@ -5,7 +5,7 @@ using System.IO;
 namespace dRz.Updater.Services
 {
     /// <summary>
-    /// Installer
+    /// Устанавливает файлы обновления с резервированием существующих файлов и откатом при ошибке.
     /// </summary>
     public static class Installer
     {
@@ -22,9 +22,9 @@ namespace dRz.Updater.Services
             public bool Installed { get; set; }
         }
 
-        /// <summary>Moves a file to the target directory, backing up an existing file first.</summary>
-        /// <param name="sourceFile">The source file.</param>
-        /// <param name="targetDirectory">The target directory.</param>
+        /// <summary>Перемещает файл в целевой каталог, предварительно сохраняя существующий файл в резервной копии.</summary>
+        /// <param name="sourceFile">Полный путь к исходному файлу.</param>
+        /// <param name="targetDirectory">Каталог, в который перемещается файл.</param>
         /// <exception cref="System.IO.FileNotFoundException">Файл не найден</exception>
         public static void MoveWithBackup(string sourceFile, string targetDirectory)
         {
@@ -46,9 +46,9 @@ namespace dRz.Updater.Services
             File.Move(sourceFile, targetFile);
         }
 
-        /// <summary>Gets a unique name for a backup file.</summary>
-        /// <param name="file">The original file path.</param>
-        /// <returns>A path that does not currently exist.</returns>
+        /// <summary>Возвращает уникальное имя резервной копии, которое ещё не занято.</summary>
+        /// <param name="file">Полный путь к исходному файлу.</param>
+        /// <returns>Полный путь к свободному имени резервной копии.</returns>
         private static string GetBackupName(string file)
         {
             string directory = Path.GetDirectoryName(file)!;
@@ -123,10 +123,11 @@ namespace dRz.Updater.Services
         /// <summary>
         /// Переносит файлы из распакованного обновления с резервированием заменяемых файлов.
         /// При ошибке откатывает все изменения, выполненные в рамках этой установки.
+        /// Если откат не удаётся, выбрасывает <see cref="UpdateRollbackException"/>.
         /// </summary>
         /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
         /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
-        /// <returns><see langword="true"/>, если все файлы перенесены; иначе <see langword="false"/>.</returns>
+        /// <returns><see langword="true"/>, если все файлы перенесены; <see langword="false"/>, если исходный каталог не существует.</returns>
         public static bool MoveDirectoryFilesWithBackup(
             string sourceDirectory,
             string targetDirectory)
@@ -137,12 +138,12 @@ namespace dRz.Updater.Services
         /// <summary>
         /// Переносит файлы обновления как одну операцию с возможностью отката.
         /// При полном обновлении сначала резервируются все старые файлы, в том числе отсутствующие
-        /// в новой версии.
+        /// в новой версии. При ошибке установки изменения откатываются в обратном порядке.
         /// </summary>
         /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
         /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
-        /// <param name="fullUpdate">Если <see langword="true"/>, резервируются все старые файлы.</param>
-        /// <returns><see langword="true"/>, если все файлы перенесены; иначе <see langword="false"/>.</returns>
+        /// <param name="fullUpdate">Если <see langword="true"/>, перед установкой резервируются все старые файлы целевого каталога.</param>
+        /// <returns><see langword="true"/>, если все файлы перенесены; <see langword="false"/>, если исходный каталог не существует.</returns>
         public static bool MoveDirectoryFilesWithBackup(
             string sourceDirectory,
             string targetDirectory,
