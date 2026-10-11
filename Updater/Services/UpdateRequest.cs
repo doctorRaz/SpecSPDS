@@ -27,7 +27,7 @@ namespace dRz.Updater.Services
         /// Способ запуска проверки. Влияет на дополнительные уведомления,
         /// но не меняет правила проверки и установки.
         /// </summary>
-        public UpdateTrigger Trigger { get; init; } = UpdateTrigger.Automatic;
+        public UpdateLaunchMode LaunchMode { get; init; } = UpdateLaunchMode.Automatic;
 
         /// <summary>
         /// Полный путь к целевому каталогу установленного аддона или модуля.

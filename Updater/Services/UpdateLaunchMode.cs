@@ -3,7 +3,7 @@ namespace dRz.Updater.Services
     /// <summary>
     /// Определяет способ запуска проверки обновлений.
     /// </summary>
-    public enum UpdateTrigger
+    public enum UpdateLaunchMode
     {
         /// <summary>
         /// Автоматический запуск без дополнительных уведомлений о результате проверки.

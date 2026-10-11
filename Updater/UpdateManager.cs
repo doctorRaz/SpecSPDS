@@ -96,7 +96,7 @@ namespace dRz.Updater
 
                 if (updateKind is null)
                 {
-                    if (request.Trigger == UpdateTrigger.Manual)
+                    if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         _messageServices.InfoMessage(
                             $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
@@ -108,15 +108,15 @@ namespace dRz.Updater
                 // Disabled запрещает необязательные обновления, но не mandatory.
                 // Mandatory обновления выполняются независимо от режима.
                 if (request.Mode == UpdateMode.Disabled &&
-                                     request.Trigger != UpdateTrigger.Manual &&
+                                     request.LaunchMode != UpdateLaunchMode.Manual &&
                                     !update.Mandatory)
                     return false;
 
                 bool installAutomatically =
-                    update.Mandatory ||
-                    request.Mode == UpdateMode.CheckAndInstall;
+                                    update.Mandatory ||
+                                    (request.LaunchMode != UpdateLaunchMode.Manual && request.Mode == UpdateMode.CheckAndInstall);
 
-                if (!installAutomatically || (request.Trigger == UpdateTrigger.Manual && !update.Mandatory))
+                if (!installAutomatically)
                 {
                     MessageResult result = _promptService.AskYesNo(
                         $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?",
@@ -126,15 +126,14 @@ namespace dRz.Updater
                         return false;
                 }
 
-                if (request.Trigger == UpdateTrigger.Manual && update.Mandatory)
+                if ((request.LaunchMode == UpdateLaunchMode.Manual && update.Mandatory) || request.Mode == UpdateMode.CheckAndNotify)
                 {
                     _messageServices.InfoMessage($"Будет выполнено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}");
                 }
 
-
-                    string assetFile = Path.Combine(
-                    tempDirectory,
-                    "update" + Path.GetExtension(GetAssetName(update)));
+                string assetFile = Path.Combine(
+                tempDirectory,
+                "update" + Path.GetExtension(GetAssetName(update)));
 
                 string assetUrl = ResolveUrl(
                     request.UpdateUrl,
@@ -224,12 +223,8 @@ namespace dRz.Updater
                     return false;
                 }
 
-                // если ручое обновление выключено и флаг мандатори, пользователя можно не уведомлять о обновлении
-                if (request.Mode==UpdateMode.Disabled && request.Trigger==UpdateTrigger.Manual)
-                {
-                    _messageServices.InfoMessage(
-                        $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
-                }
+                _messageServices.InfoMessage(
+                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
 
                 return true;
             }
@@ -237,7 +232,7 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
 
-                if (request.Trigger == UpdateTrigger.Manual)
+                if (request.LaunchMode == UpdateLaunchMode.Manual)
                 {
                     _messageServices.WarningMessage(
                         $"Не удалось проверить или выполнить обновление: {ex.Message}");
