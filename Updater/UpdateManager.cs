@@ -67,6 +67,12 @@ namespace dRz.Updater
 
             ValidateRequest(request);
 
+            // При ручном запуске всегда проверяем обновления с уведомлением,
+            // независимо от режима, заданного вызывающим кодом.
+            UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
+                ? UpdateMode.CheckAndNotify
+                : request.Mode;
+
             _logger.Debug("RunAsync");
 
             string tempDirectory = Path.Combine(
@@ -107,14 +113,12 @@ namespace dRz.Updater
 
                 // Disabled запрещает необязательные обновления, но не mandatory.
                 // Mandatory обновления выполняются независимо от режима.
-                if (request.Mode == UpdateMode.Disabled &&
-                                     request.LaunchMode != UpdateLaunchMode.Manual &&
-                                    !update.Mandatory)
+                if (effectiveMode == UpdateMode.Disabled && !update.Mandatory)
                     return false;
 
                 bool installAutomatically =
-                                    update.Mandatory ||
-                                    (request.LaunchMode != UpdateLaunchMode.Manual && request.Mode == UpdateMode.CheckAndInstall);
+                    update.Mandatory ||
+                    effectiveMode == UpdateMode.CheckAndInstall;
 
                 if (!installAutomatically)
                 {
@@ -126,9 +130,10 @@ namespace dRz.Updater
                         return false;
                 }
 
-                if ((request.LaunchMode == UpdateLaunchMode.Manual && update.Mandatory) || request.Mode == UpdateMode.CheckAndNotify)
+                if (effectiveMode == UpdateMode.CheckAndNotify)
                 {
-                    _messageServices.InfoMessage($"Будет выполнено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}");
+                    _messageServices.InfoMessage(
+                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}");
                 }
 
                 string assetFile = Path.Combine(
