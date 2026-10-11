@@ -130,7 +130,14 @@ namespace dRz.Updater
                         return false;
                 }
 
-                if (effectiveMode == UpdateMode.CheckAndNotify)
+                // Автоматическая установка должна быть предварительно обозначена пользователю.
+                // При CheckAndNotify запрос согласия уже является уведомлением.
+                if (update.Mandatory)
+                {
+                    _messageServices.InfoMessage(
+                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.");
+                }
+                else if (effectiveMode == UpdateMode.CheckAndInstall)
                 {
                     _messageServices.InfoMessage(
                         $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}");
