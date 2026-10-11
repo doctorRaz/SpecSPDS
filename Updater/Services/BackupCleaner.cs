@@ -124,7 +124,19 @@ namespace dRz.Updater.Services
                 return;
             }
 
-            foreach (string directory in Directory.EnumerateDirectories(directoryPath))
+            string[] directories;
+
+            try
+            {
+                directories = Directory.GetDirectories(directoryPath);
+            }
+            catch (Exception ex)
+            {
+                logger?.Error(ex);
+                return;
+            }
+
+            foreach (string directory in directories)
             {
                 DeleteEmptyDirectories(directory, logger);
                 try
