@@ -45,7 +45,11 @@ namespace dRz.Updater
         public void Cleanup(string addOnDirectory)
         {
             if (string.IsNullOrWhiteSpace(addOnDirectory))
-                throw new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+            {
+                var exception = new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+                _logger.Error(exception);
+                throw exception;
+            }
 
             BackupCleaner.DeleteBackupFiles(addOnDirectory, _logger);
         }
@@ -63,28 +67,29 @@ namespace dRz.Updater
             UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(request);
-
-            ValidateRequest(request);
-
-            // При ручном запуске всегда проверяем обновления с уведомлением,
-            // независимо от режима, заданного вызывающим кодом.
-            UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
-                ? UpdateMode.CheckAndNotify
-                : request.Mode;
-
-            _logger.Debug("RunAsync");
-
-            string tempDirectory = Path.Combine(
-                Path.GetTempPath(),
-                "dRz",
-                "Updater",
-                Guid.NewGuid().ToString("N"));
-
-            Directory.CreateDirectory(tempDirectory);
+            string? tempDirectory = null;
 
             try
             {
+                ArgumentNullException.ThrowIfNull(request);
+                ValidateRequest(request);
+
+                // При ручном запуске всегда проверяем обновления с уведомлением,
+                // независимо от режима, заданного вызывающим кодом.
+                UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
+                    ? UpdateMode.CheckAndNotify
+                    : request.Mode;
+
+                _logger.Debug("RunAsync");
+
+                tempDirectory = Path.Combine(
+                    Path.GetTempPath(),
+                    "dRz",
+                    "Updater",
+                    Guid.NewGuid().ToString("N"));
+
+                Directory.CreateDirectory(tempDirectory);
+
                 // update.json нужен даже в Disabled, чтобы mandatory update оставался обнаруживаемым.
                 string updateJsonPath = Path.Combine(tempDirectory, "update.json");
                 string updateJsonUrl = ResolveUrl(request.UpdateUrl, "update.json");
@@ -144,8 +149,8 @@ namespace dRz.Updater
                 }
 
                 string assetFile = Path.Combine(
-                tempDirectory,
-                "update" + Path.GetExtension(GetAssetName(update)));
+                    tempDirectory,
+                    "update" + Path.GetExtension(GetAssetName(update)));
 
                 string assetUrl = ResolveUrl(
                     request.UpdateUrl,
@@ -244,7 +249,7 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
 
-                if (request.LaunchMode == UpdateLaunchMode.Manual)
+                if (request?.LaunchMode == UpdateLaunchMode.Manual)
                 {
                     _messageServices.WarningMessage(
                         $"Не удалось проверить или выполнить обновление: {ex.Message}");
@@ -256,7 +261,7 @@ namespace dRz.Updater
             {
                 try
                 {
-                    if (Directory.Exists(tempDirectory))
+                    if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
                         Directory.Delete(tempDirectory, true);
                 }
                 catch (Exception ex)
