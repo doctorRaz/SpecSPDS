@@ -96,7 +96,15 @@ namespace dRz.Updater
                     update);
 
                 if (updateKind is null)
+                {
+                    if (request.Trigger == UpdateTrigger.Manual)
+                    {
+                        _messageServices.InfoMessage(
+                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
+                    }
+
                     return false;
+                }
 
                 // Disabled запрещает необязательные обновления, но не mandatory.
                 if (request.Mode == UpdateMode.Disabled && !update.Mandatory)
@@ -218,6 +226,13 @@ namespace dRz.Updater
             catch (Exception ex)
             {
                 _logger.Error(ex);
+
+                if (request.Trigger == UpdateTrigger.Manual)
+                {
+                    _messageServices.WarningMessage(
+                        $"Не удалось проверить или выполнить обновление: {ex.Message}");
+                }
+
                 return false;
             }
             finally
