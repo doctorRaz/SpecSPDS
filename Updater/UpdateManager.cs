@@ -79,8 +79,7 @@ namespace dRz.Updater
 
             try
             {
-                // update.json нужен даже в Disabled, чтобы mandatory update
-                // оставался обнаруживаемым.
+                // update.json нужен даже в Disabled, чтобы mandatory update оставался обнаруживаемым.
                 string updateJsonPath = Path.Combine(tempDirectory, "update.json");
                 string updateJsonUrl = ResolveUrl(request.UpdateUrl, "update.json");
 
@@ -107,14 +106,17 @@ namespace dRz.Updater
                 }
 
                 // Disabled запрещает необязательные обновления, но не mandatory.
-                if (request.Mode == UpdateMode.Disabled && !update.Mandatory)
+                // Mandatory обновления выполняются независимо от режима.
+                if (request.Mode == UpdateMode.Disabled &&
+                                     request.Trigger != UpdateTrigger.Manual &&
+                                    !update.Mandatory)
                     return false;
 
                 bool installAutomatically =
                     update.Mandatory ||
                     request.Mode == UpdateMode.CheckAndInstall;
 
-                if (!installAutomatically)
+                if (!installAutomatically || (request.Trigger == UpdateTrigger.Manual && !update.Mandatory))
                 {
                     MessageResult result = _promptService.AskYesNo(
                         $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?",
@@ -124,7 +126,13 @@ namespace dRz.Updater
                         return false;
                 }
 
-                string assetFile = Path.Combine(
+                if (request.Trigger == UpdateTrigger.Manual && update.Mandatory)
+                {
+                    _messageServices.InfoMessage($"Будет выполнено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}");
+                }
+
+
+                    string assetFile = Path.Combine(
                     tempDirectory,
                     "update" + Path.GetExtension(GetAssetName(update)));
 
@@ -198,8 +206,7 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}, и восстановление завершилось ошибкой. " +
-                        $"Аддон может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов. " +
-                        $"Открыть страницу релиза?");
+                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return false;
@@ -211,15 +218,18 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}; прежнее состояние восстановлено. " +
-                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную. " +
-                        $"Открыть страницу релиза?");
+                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return false;
                 }
 
-                _messageServices.InfoMessage(
-                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
+                // если ручое обновление выключено и флаг мандатори, пользователя можно не уведомлять о обновлении
+                if (request.Mode==UpdateMode.Disabled && request.Trigger==UpdateTrigger.Manual)
+                {
+                    _messageServices.InfoMessage(
+                        $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
+                }
 
                 return true;
             }
@@ -242,9 +252,9 @@ namespace dRz.Updater
                     if (Directory.Exists(tempDirectory))
                         Directory.Delete(tempDirectory, true);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Временный каталог не должен маскировать результат операции.
+                    _logger.Error(ex);
                 }
             }
         }
