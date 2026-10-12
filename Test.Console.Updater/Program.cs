@@ -38,7 +38,7 @@ namespace dRz.SpecSPDS.Test
                     AddOnCtx.AddOnInfo.Product +
                     "/releases/latest/download/";
 
-                updateUrl = "http://127.0.0.1:8080/mandatory/";
+                updateUrl = "http://127.0.0.1:8080/SpecSPDS/";
 
                 UpdateMode mode = UpdateMode.CheckAndInstall;
 
