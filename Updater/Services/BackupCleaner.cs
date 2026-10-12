@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using dRz.Abstractions.Logger;
 
 namespace dRz.Updater.Services
 {
@@ -49,6 +50,16 @@ namespace dRz.Updater.Services
         /// </remarks>
         public static void DeleteBackupFiles(string directoryPath)
         {
+            DeleteBackupFiles(directoryPath, null);
+        }
+
+        /// <summary>
+        /// Удаляет резервные файлы с записью ошибок в журнал, если логгер передан.
+        /// </summary>
+        /// <param name="directoryPath">Каталог, который необходимо очистить.</param>
+        /// <param name="logger">Логгер для регистрации ошибок очистки.</param>
+        public static void DeleteBackupFiles(string directoryPath, IDrzLogger? logger)
+        {
             if (!Directory.Exists(directoryPath))
             {
                 return;
@@ -69,18 +80,21 @@ namespace dRz.Updater.Services
                         {
                             File.Delete(filePath);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
-                            //todo : добавить логирование ошибок удаления файлов
-                            //Logger.Warn(ex);
+                            logger?.Error(ex);
                         }
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Перечисление может завершиться ошибкой из-за доступа или изменений файловой системы.
+                logger?.Error(ex);
+            }
 
-            //удалить пустые каталоги
-            DeleteEmptyDirectories(directoryPath);
+            // Удалить пустые каталоги.
+            DeleteEmptyDirectories(directoryPath, logger);
         }
 
         /// <summary>
@@ -95,14 +109,36 @@ namespace dRz.Updater.Services
         /// </remarks>
         public static void DeleteEmptyDirectories(string directoryPath)
         {
+            DeleteEmptyDirectories(directoryPath, null);
+        }
+
+        /// <summary>
+        /// Рекурсивно удаляет пустые каталоги с записью ошибок в журнал, если логгер передан.
+        /// </summary>
+        /// <param name="directoryPath">Каталог, с которого начинается очистка.</param>
+        /// <param name="logger">Логгер для регистрации ошибок очистки.</param>
+        public static void DeleteEmptyDirectories(string directoryPath, IDrzLogger? logger)
+        {
             if (!Directory.Exists(directoryPath))
             {
                 return;
             }
 
-            foreach (string directory in Directory.EnumerateDirectories(directoryPath))
+            string[] directories;
+
+            try
             {
-                DeleteEmptyDirectories(directory);
+                directories = Directory.GetDirectories(directoryPath);
+            }
+            catch (Exception ex)
+            {
+                logger?.Error(ex);
+                return;
+            }
+
+            foreach (string directory in directories)
+            {
+                DeleteEmptyDirectories(directory, logger);
                 try
                 {
                     if (!Directory.EnumerateFileSystemEntries(directory).Any())
@@ -110,10 +146,9 @@ namespace dRz.Updater.Services
                         Directory.Delete(directory);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //todo : добавить логирование ошибок удаления каталогов
-                    //Logger.Warn(ex);
+                    logger?.Error(ex);
                 }
             }
         }
