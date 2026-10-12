@@ -32,6 +32,10 @@ namespace dRz.Abstractions.Infrastructure
         /// </value>
         bool HasPackage { get; }
 
+        /// <summary>Определяет, расположен ли файл основной сборки аддона на сетевом ресурсе.</summary>
+        /// <returns><see langword="true"/>, если путь сборки сетевой; иначе <see langword="false"/>.</returns>
+        bool IsNetworkPath();
+
         /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
         /// <value>"Полное Имя" сборки.</value>
         string AssembleFullName { get; }
