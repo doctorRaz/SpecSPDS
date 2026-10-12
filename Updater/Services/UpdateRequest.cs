@@ -31,7 +31,10 @@ namespace dRz.Updater.Services
 
         /// <summary>Gets a value indicating whether this instance has package.</summary>
         /// <value><c>true</c> if this instance has package; otherwise, <c>false</c>.</value>
-        public bool IsPackage { get; init; } = false;  
+        public bool IsPackage { get; init; } = false;
+
+        /// <summary>Признак сетевого расположения основной сборки аддона.</summary>
+        public bool IsNetworkPath { get; init; }
 
 
     }
