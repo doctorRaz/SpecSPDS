@@ -62,6 +62,16 @@ namespace dRz.Updater
 
             ValidateRequest(request);
 
+            // Обновление экземпляра, загруженного с сетевого ресурса, выполняет администратор.
+            // Проверяем флаг до создания временных файлов и любых сетевых запросов.
+            if (request.IsNetworkPath)
+            {
+                const string message = "Обновление отключено: аддон загружен с сетевого ресурса. Обратитесь к администратору для установки обновления.";
+                _logger.Warn(message);
+                _messageServices.WarningMessage(message);
+                return false;
+            }
+
             _logger.Debug("RunAsync");
 
             string tempDirectory = Path.Combine(
