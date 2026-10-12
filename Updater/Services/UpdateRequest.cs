@@ -24,14 +24,24 @@ namespace dRz.Updater.Services
         public UpdateMode Mode { get; init; }
 
         /// <summary>
-        /// Полный путь к каталогу установленного аддона.<br/>
-        /// Может быть на уровень выше аддона, включая файл paсkage
+        /// Способ запуска проверки. Влияет на дополнительные уведомления,
+        /// но не меняет правила проверки и установки.
+        /// </summary>
+        public UpdateLaunchMode LaunchMode { get; init; } = UpdateLaunchMode.Automatic;
+
+        /// <summary>
+        /// Полный путь к целевому каталогу установленного аддона или модуля.
+        /// Файлы обновления будут установлены непосредственно в этот каталог.
         /// </summary>
         public string PackageDirectory { get; init; } = string.Empty;
 
-        /// <summary>Gets a value indicating whether this instance has package.</summary>
-        /// <value><c>true</c> if this instance has package; otherwise, <c>false</c>.</value>
-        public bool IsPackage { get; init; } = false;  
+        /// <summary>
+        /// Определяет структуру каталога продукта внутри архива.
+        /// При <see langword="true"/> файлы находятся в каталоге продукта;
+        /// при <see langword="false"/> после каталога продукта ожидается каталог,
+        /// имя которого совпадает с именем каталога из <see cref="PackageDirectory"/>.
+        /// </summary>
+        public bool IsPackage { get; init; } = false;
 
 
     }

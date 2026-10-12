@@ -33,10 +33,16 @@ namespace dRz.SpecSPDS.Test
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
 
                 updateManager.Cleanup(AddOnCtx.AddOnInfo.PackageDirectory);
-
+                //return;
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                     AddOnCtx.AddOnInfo.Product +
                     "/releases/latest/download/";
+
+                updateUrl = "http://127.0.0.1:8080/mandatory/";
+
+                UpdateMode mode = UpdateMode.CheckAndInstall;
+
+                UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
 
                 UpdateRequest request = new UpdateRequest
                 {
@@ -44,11 +50,13 @@ namespace dRz.SpecSPDS.Test
 
                     UpdateUrl = updateUrl,
 
-                    Mode = UpdateMode.CheckAndInstall,
+                    Mode = mode,
 
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
 
-                    IsPackage=AddOnCtx.AddOnInfo.HasPackage,
+                    IsPackage = AddOnCtx.AddOnInfo.HasPackage,
+
+                    LaunchMode = launchMode
                 };
 
                 //что с ним делать дальше????

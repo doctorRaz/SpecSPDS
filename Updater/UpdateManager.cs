@@ -5,6 +5,7 @@ using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
 using System;
 using System.IO;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace dRz.Updater
         private readonly Downloader _downloader;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateManager"/> class.
+        /// Создаёт менеджер обновлений.
         /// </summary>
         /// <param name="messageServices">Сервис сообщений.</param>
         /// <param name="promptService">Сервис интерактивных запросов.</param>
@@ -44,38 +45,52 @@ namespace dRz.Updater
         public void Cleanup(string addOnDirectory)
         {
             if (string.IsNullOrWhiteSpace(addOnDirectory))
-                throw new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+            {
+                var exception = new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+                _logger.Error(exception);
+                throw exception;
+            }
 
-            BackupCleaner.DeleteBackupFiles(addOnDirectory);
+            BackupCleaner.DeleteBackupFiles(addOnDirectory, _logger);
         }
 
         /// <summary>
         /// Выполняет проверку и установку обновления согласно переданным параметрам.
         /// </summary>
         /// <param name="request">Параметры обновления, сформированные основным аддоном.</param>
-        /// <returns><see langword="true"/>, если обновление установлено или проверка завершена без ошибки.</returns>
+        /// <returns>
+        /// <see langword="true"/>, если установка завершилась успешно;
+        /// <see langword="false"/>, если обновление не требуется, пользователь отказался
+        /// от установки или операция завершилась ошибкой.
+        /// </returns>
         public async Task<bool> RunAsync(
             UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
-            ArgumentNullException.ThrowIfNull(request);
-
-            ValidateRequest(request);
-
-            _logger.Debug("RunAsync");
-
-            string tempDirectory = Path.Combine(
-                Path.GetTempPath(),
-                "dRz",
-                "Updater",
-                Guid.NewGuid().ToString("N"));
-
-            Directory.CreateDirectory(tempDirectory);
+            string? tempDirectory = null;
 
             try
             {
-                // update.json нужен даже в Disabled, чтобы mandatory update
-                // оставался обнаруживаемым.
+                ArgumentNullException.ThrowIfNull(request);
+                ValidateRequest(request);
+
+                // При ручном запуске всегда проверяем обновления с уведомлением,
+                // независимо от режима, заданного вызывающим кодом.
+                UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
+                    ? UpdateMode.CheckAndNotify
+                    : request.Mode;
+
+                _logger.Debug("RunAsync");
+
+                tempDirectory = Path.Combine(
+                    Path.GetTempPath(),
+                    "dRz",
+                    "Updater",
+                    Guid.NewGuid().ToString("N"));
+
+                Directory.CreateDirectory(tempDirectory);
+
+                // update.json нужен даже в Disabled, чтобы mandatory update оставался обнаруживаемым.
                 string updateJsonPath = Path.Combine(tempDirectory, "update.json");
                 string updateJsonUrl = ResolveUrl(request.UpdateUrl, "update.json");
 
@@ -86,29 +101,29 @@ namespace dRz.Updater
 
                 UpdateInfo update = UpdateJsonReader.Read(updateJsonPath);
 
-                bool? updateRequired;
+                UpdateKind? updateKind = UpdateVersionChecker.Check(
+                    request.CurrentVersion,
+                    update);
 
-                try
+                if (updateKind is null)
                 {
-                    updateRequired = UpdateVersionChecker.Check(
-                        request.CurrentVersion,
-                        update);
-                }
-                catch (MinimumVersionException ex)
-                {
-                    _messageServices.WarningMessage(ex.Message);
+                    if (request.LaunchMode == UpdateLaunchMode.Manual)
+                    {
+                        _messageServices.InfoMessage(
+                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
+                    }
+
                     return false;
                 }
 
-                if (updateRequired is null)
-                    return false;
-
-                if (request.Mode == UpdateMode.Disabled && updateRequired == false)
+                // Disabled запрещает необязательные обновления, но не mandatory.
+                // Mandatory обновления выполняются независимо от режима.
+                if (effectiveMode == UpdateMode.Disabled && !update.Mandatory)
                     return false;
 
                 bool installAutomatically =
-                    updateRequired == true ||
-                    request.Mode == UpdateMode.CheckAndInstall;
+                    update.Mandatory ||
+                    effectiveMode == UpdateMode.CheckAndInstall;
 
                 if (!installAutomatically)
                 {
@@ -118,6 +133,19 @@ namespace dRz.Updater
 
                     if (result != MessageResult.Yes)
                         return false;
+                }
+
+                // Автоматическая установка должна быть предварительно обозначена пользователю.
+                // При CheckAndNotify запрос согласия уже является уведомлением.
+                if (update.Mandatory)
+                {
+                    _messageServices.InfoMessage(
+                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.");
+                }
+                else if (effectiveMode == UpdateMode.CheckAndInstall)
+                {
+                    _messageServices.InfoMessage(
+                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}");
                 }
 
                 string assetFile = Path.Combine(
@@ -148,22 +176,12 @@ namespace dRz.Updater
                     tempDirectory,
                     "extracted");
 
-                //7z.exe всегда лежит рядом с updater
-                string sevenZipDirectory = Path.GetDirectoryName(typeof(UpdateManager).Assembly.Location)!;
+                SevenZipService sevenZip = new SevenZipService();
 
-                SevenZipService sevenZip = new SevenZipService(
-                    sevenZipDirectory);
-
-                SevenZipExitCode extractResult = sevenZip.Extract(
+                sevenZip.Extract(
                     assetFile,
                     extractedDirectory,
                     GetAssetPassword(update));
-
-                if (extractResult != SevenZipExitCode.Success)
-                {
-                    throw new InvalidDataException(
-                        $"Не удалось распаковать пакет обновления. Код 7-Zip: {extractResult}.");
-                }
 
                 string sourceDirectory = Path.Combine(extractedDirectory, update.Product);
 
@@ -181,52 +199,130 @@ namespace dRz.Updater
                         $"В архиве не найден каталог обновления: {sourceDirectory}");
                 }
 
-                bool fullUpdate =
-                    update.Mandatory ||
-                    update.Version.ToVersion().Major > request.CurrentVersion.Major;
+                bool fullUpdate = updateKind == UpdateKind.Full;
 
                 // Удаляем резервные копии предыдущего запуска до создания новых.
                 Cleanup(request.PackageDirectory);
 
-                if (fullUpdate &&
-                    !Installer.RenameDirectoryFilesWithBackup(request.PackageDirectory))
+                try
                 {
-                    throw new IOException(
-                        "Не удалось создать резервные копии файлов перед полным обновлением.");
+                    if (!Installer.MoveDirectoryFilesWithBackup(
+                        sourceDirectory,
+                        request.PackageDirectory,
+                        fullUpdate))
+                    {
+                        throw new IOException("Не удалось установить пакет обновления.");
+                    }
+                }
+                catch (UpdateRollbackException ex)
+                {
+                    // Откат не завершён: логируем обе первичные ошибки и не повторяем установку.
+                    _logger.Error(ex.InstallException);
+                    _logger.Error(ex.RollbackException);
+
+                    _messageServices.WarningMessage(
+                        $"Не удалось установить обновление {update.Version.ToVersion()}, и восстановление завершилось ошибкой. " +
+                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.");
+
+                    OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
+                    return false;
+                }
+                catch (Exception installException)
+                {
+                    // Installer выбросил исходную ошибку только после успешного отката.
+                    _logger.Error(installException);
+
+                    _messageServices.WarningMessage(
+                        $"Не удалось установить обновление {update.Version.ToVersion()}; прежнее состояние восстановлено. " +
+                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.");
+
+                    OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
+                    return false;
                 }
 
-                if (!Installer.MoveDirectoryFilesWithBackup(
-                    sourceDirectory,
-                    request.PackageDirectory))
-                {
-                    throw new IOException("Не удалось установить пакет обновления.");
-                }
-
-                if (installAutomatically)//todo не уверен, что здесь нужно условие
-                {
-                    _messageServices.InfoMessage(
-                        $"{update.Product} обновлен с версии {request.CurrentVersion.ToString()} до версии {update.Version.ToVersion()}\n Что бы изменения вступили в силу необходима перезагрузка.");
-                }
+                _messageServices.InfoMessage(
+                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
 
                 return true;
             }
             catch (Exception ex)
             {
                 _logger.Error(ex);
+
+                if (request?.LaunchMode == UpdateLaunchMode.Manual)
+                {
+                    _messageServices.WarningMessage(
+                        $"Не удалось проверить или выполнить обновление: {ex.Message}");
+                }
+
                 return false;
             }
             finally
             {
                 try
                 {
-                    if (Directory.Exists(tempDirectory))
+                    if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
                         Directory.Delete(tempDirectory, true);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Временный каталог не должен маскировать результат операции.
+                    _logger.Error(ex);
                 }
             }
+        }
+
+        /// <summary>
+        /// Предлагает открыть страницу опубликованного релиза и открывает её при подтверждении.
+        /// </summary>
+        private void OpenReleaseIfRequested(string updateUrl, string tag)//todo вынести в инфраструктуру??
+        {
+            string releaseUrl = BuildReleaseUrl(updateUrl, tag);
+            MessageResult result = _promptService.AskYesNo(
+                $"Открыть страницу релиза?\n{releaseUrl}",
+                "Восстановление обновления");
+
+            if (result != MessageResult.Yes)
+                return;
+
+            try
+            {
+                Process.Start(new ProcessStartInfo(releaseUrl)
+                {
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                _messageServices.WarningMessage(
+                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}");
+            }
+        }
+
+        /// <summary>
+        /// Преобразует URL каталога загрузки в URL страницы конкретного релиза.
+        /// </summary>
+        private static string BuildReleaseUrl(string updateUrl, string tag)
+        {
+            if (Uri.TryCreate(updateUrl, UriKind.Absolute, out Uri? uri))
+            {
+                const string downloadSuffix = "/releases/latest/download/";
+                string path = uri.AbsolutePath;
+
+                if (path.EndsWith(downloadSuffix, StringComparison.OrdinalIgnoreCase))
+                {
+                    string repositoryPath = path.Substring(0, path.Length - downloadSuffix.Length);
+                    return new UriBuilder(uri)
+                    {
+                        Path = repositoryPath + "/releases/tag/" + Uri.EscapeDataString(tag),
+                        Query = string.Empty,
+                        Fragment = string.Empty
+                    }.Uri.ToString();
+                }
+            }
+
+            // Если формат URL нестандартный, хотя бы предлагаем исходный URL источника обновлений.
+            return updateUrl;
         }
 
         /// <summary>
