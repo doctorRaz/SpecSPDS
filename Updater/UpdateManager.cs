@@ -4,8 +4,8 @@ using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
 using System;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -74,13 +74,29 @@ namespace dRz.Updater
                 ArgumentNullException.ThrowIfNull(request);
                 ValidateRequest(request);
 
+                // Обновление экземпляра, загруженного с сетевого ресурса, выполняет администратор.
+                // Проверяем флаг до создания временных файлов и любых сетевых запросов.
+                if (request.IsNetworkPath)
+                {
+                    const string message = "Обновление отключено: аддон загружен с сетевого ресурса. Обратитесь к администратору для установки обновления.";
+
+                    if (request.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
+                    {
+                        _messageServices.WarningMessage(message);
+                    }
+
+                    _logger.Warn(message);
+
+                    return false;
+                }
+
+                _logger.Debug("RunAsync");
+
                 // При ручном запуске всегда проверяем обновления с уведомлением,
                 // независимо от режима, заданного вызывающим кодом.
                 UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
                     ? UpdateMode.CheckAndNotify
                     : request.Mode;
-
-                _logger.Debug("RunAsync");
 
                 tempDirectory = Path.Combine(
                     Path.GetTempPath(),

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace dRz.Infrastructure.Infrastructure
 {
@@ -101,6 +102,100 @@ namespace dRz.Infrastructure.Infrastructure
 
             ProductFamily = GetMetadata(AssemblyMetadataKeys.ProductFamily, Product);
         }
+
+        /// <summary>
+        /// Определяет, находится ли основная сборка аддона на сетевом ресурсе.
+        /// Проверяет UNC, тип диска и цели DOS-устройств, что позволяет распознать
+        /// в том числе SUBST-путь, ведущий к сетевому диску.
+        /// </summary>
+        public bool IsNetworkPath()
+        {
+            if (string.IsNullOrWhiteSpace(AssemblyPath))
+                return false;
+
+            string path = AssemblyPath;
+
+            // UNC-путь является сетевым независимо от доступности ресурса.
+            if (path.StartsWith(@"\\", StringComparison.Ordinal))
+                return true;
+
+            try
+            {
+                string? root = Path.GetPathRoot(path);
+                if (string.IsNullOrEmpty(root) || root.Length < 2 || root[1] != ':')
+                    return false;
+
+                // DriveInfo распознаёт обычные подключённые сетевые диски.
+                try
+                {
+                    if (new DriveInfo(root).DriveType == DriveType.Network)
+                        return true;
+                }
+                catch (IOException)
+                {
+                    // Продолжаем проверку по целям DOS-устройств.
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Продолжаем проверку по целям DOS-устройств.
+                }
+
+                return IsNetworkDevice(root.Substring(0, 2), 0);
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+            catch (IOException)
+            {
+                return false;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
+        }
+
+        private static bool IsNetworkDevice(string drive, int depth)
+        {
+            // Защита от циклических SUBST-ссылок.
+            if (depth > 8)
+                return false;
+
+            char[] target = new char[1024];
+            uint length = QueryDosDevice(drive, target, (uint)target.Length);
+            if (length == 0)
+                return false;
+
+            string devicePath = new string(target, 0, (int)length).Split('\0')[0];
+
+            if (devicePath.StartsWith(@"\Device\Mup", StringComparison.OrdinalIgnoreCase) ||
+                devicePath.StartsWith(@"\Device\LanmanRedirector", StringComparison.OrdinalIgnoreCase) ||
+                devicePath.StartsWith(@"\??\UNC\", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // SUBST обычно указывает на другой DOS-путь, например \??\Z:\folder.
+            if (devicePath.StartsWith(@"\??\", StringComparison.OrdinalIgnoreCase))
+            {
+                string substitutedPath = devicePath.Substring(4);
+                if (substitutedPath.Length >= 2 &&
+                    char.IsLetter(substitutedPath[0]) &&
+                    substitutedPath[1] == ':')
+                {
+                    return IsNetworkDevice(substitutedPath.Substring(0, 2), depth + 1);
+                }
+            }
+
+            return false;
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern uint QueryDosDevice(
+            string lpDeviceName,
+            [Out] char[] lpTargetPath,
+            uint ucchMax);
 
         /// <summary>Возвращает путь к данным приложения.</summary>
         /// <value>Путь к данным приложения.</value>

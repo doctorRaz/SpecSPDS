@@ -43,6 +43,9 @@ namespace dRz.Updater.Services
         /// </summary>
         public bool IsPackage { get; init; } = false;
 
+        /// <summary>Признак сетевого расположения основной сборки аддона.</summary>
+        public bool IsNetworkPath { get; init; }
+
 
     }
 }
