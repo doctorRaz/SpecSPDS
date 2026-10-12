@@ -32,7 +32,7 @@ namespace dRz.SpecSPDS.Test
 
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
 
-                //updateManager.Cleanup(AddOnCtx.AddOnInfo.PackageDirectory);
+                updateManager.Cleanup(AddOnCtx.AddOnInfo.PackageDirectory);
                 //return;
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                     AddOnCtx.AddOnInfo.Product +
@@ -40,7 +40,7 @@ namespace dRz.SpecSPDS.Test
 
                 updateUrl = "http://127.0.0.1:8080/mandatory/";
 
-                UpdateMode mode = UpdateMode.Disabled;
+                UpdateMode mode = UpdateMode.CheckAndInstall;
 
                 UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
 
