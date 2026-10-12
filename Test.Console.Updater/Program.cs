@@ -48,7 +48,9 @@ namespace dRz.SpecSPDS.Test
 
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
 
-                    IsPackage=AddOnCtx.AddOnInfo.HasPackage,
+                    IsPackage = AddOnCtx.AddOnInfo.HasPackage,
+
+                    IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
                 };
 
                 //что с ним делать дальше????
