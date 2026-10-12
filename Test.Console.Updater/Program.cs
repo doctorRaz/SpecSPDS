@@ -26,9 +26,9 @@ namespace dRz.SpecSPDS.Test
             {
                 ConteinerCtx.Run();
 
-                _logger.Debug("Start debug updater");
+                _logger?.Debug("Start debug updater");
 
-                AddOnCtx.Msg.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
+                _msg.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
 
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
 
@@ -42,7 +42,7 @@ namespace dRz.SpecSPDS.Test
 
                 UpdateMode mode = UpdateMode.CheckAndInstall;
 
-                UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
+                UpdateLaunchMode launchMode = UpdateLaunchMode.Manual;
 
                 UpdateRequest request = new UpdateRequest
                 {
@@ -57,6 +57,8 @@ namespace dRz.SpecSPDS.Test
                     IsPackage = AddOnCtx.AddOnInfo.HasPackage,
 
                     IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
+
+                    LaunchMode = launchMode,
                 };
 
                 //что с ним делать дальше????
@@ -64,19 +66,13 @@ namespace dRz.SpecSPDS.Test
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider)
-                {
-                    _logger.Fatal(ex, "Продолжение не возможно");
-                }
+                _logger?.Fatal(ex, "Продолжение не возможно");
 
                 AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
             }
             finally
             {
-                if (_isLoggerProvider)
-                {
-                    _logger.Info("Terminate");
-                }
+                _logger?.Info("Terminate");
 
                 ConsoleReadKey();
             }
@@ -88,9 +84,8 @@ namespace dRz.SpecSPDS.Test
             return Console.ReadKey();
         }
 
-        private static IDrzLogger _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
-        private static bool _isLoggerProvider;//логер есть
-        private static IMessageService _msg;
-        private static ICommandLineMessageService _msgCmd;
+        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
+
+        private static IMessageService _msg = AddOnCtx.Msg;
     }
 }

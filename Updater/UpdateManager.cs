@@ -80,7 +80,7 @@ namespace dRz.Updater
                 {
                     const string message = "Обновление отключено: аддон загружен с сетевого ресурса. Обратитесь к администратору для установки обновления.";
 
-                    if (request.Mode == UpdateMode.CheckAndNotify || request.LaunchMode==UpdateLaunchMode.Manual)
+                    if (request.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         _messageServices.WarningMessage(message);
                     }
@@ -91,13 +91,12 @@ namespace dRz.Updater
                 }
 
                 _logger.Debug("RunAsync");
+
                 // При ручном запуске всегда проверяем обновления с уведомлением,
                 // независимо от режима, заданного вызывающим кодом.
                 UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
                     ? UpdateMode.CheckAndNotify
                     : request.Mode;
-
-                _logger.Debug("RunAsync");
 
                 tempDirectory = Path.Combine(
                     Path.GetTempPath(),

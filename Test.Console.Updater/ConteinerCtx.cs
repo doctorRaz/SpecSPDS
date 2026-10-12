@@ -27,6 +27,8 @@ namespace dRz.Test.Console
 
                 // экземпляр копии контейнера by ref
                 AddOnCtx.Initialize(root.Get<IAddOnServices>());
+
+                _isAddOnCompositionRoot = true;
             }
             catch (Exception ex)
             {
