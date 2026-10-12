@@ -169,15 +169,15 @@ namespace dRz.Infrastructure.Infrastructure
 
             string devicePath = new string(target, 0, (int)length).Split('\0')[0];
 
-            if (devicePath.StartsWith(@"\\Device\\Mup", StringComparison.OrdinalIgnoreCase) ||
-                devicePath.StartsWith(@"\\Device\\LanmanRedirector", StringComparison.OrdinalIgnoreCase) ||
-                devicePath.StartsWith(@"\\??\\UNC\\", StringComparison.OrdinalIgnoreCase))
+            if (devicePath.StartsWith(@"\Device\Mup", StringComparison.OrdinalIgnoreCase) ||
+                devicePath.StartsWith(@"\Device\LanmanRedirector", StringComparison.OrdinalIgnoreCase) ||
+                devicePath.StartsWith(@"\??\UNC\", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
             // SUBST обычно указывает на другой DOS-путь, например \??\Z:\folder.
-            if (devicePath.StartsWith(@"\\??\\", StringComparison.OrdinalIgnoreCase))
+            if (devicePath.StartsWith(@"\??\", StringComparison.OrdinalIgnoreCase))
             {
                 string substitutedPath = devicePath.Substring(4);
                 if (substitutedPath.Length >= 2 &&
