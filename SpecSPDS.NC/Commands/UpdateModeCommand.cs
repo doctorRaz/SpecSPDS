@@ -52,11 +52,11 @@ namespace dRz.NC.Commands
                 ? GetKeyword(previousMode)
                 : result.StringResult;
 
-            UpdateMode newMode = selected switch
+            UpdateMode newMode = selected.ToUpperInvariant() switch
             {
-                "Disabled" => UpdateMode.Disabled,
-                "Notify" => UpdateMode.CheckAndNotify,
-                "Install" => UpdateMode.CheckAndInstall,
+                "DISABLED" => UpdateMode.Disabled,
+                "NOTIFY" => UpdateMode.CheckAndNotify,
+                "INSTALL" => UpdateMode.CheckAndInstall,
                 _ => previousMode
             };
 
