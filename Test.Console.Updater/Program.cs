@@ -6,6 +6,7 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Test.Console;
 using dRz.Updater;
+using dRz.Abstractions.Updater;
 using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
@@ -19,16 +20,18 @@ namespace dRz.SpecSPDS.Test
     public class Program
     {
         //[STAThread]
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
                 ConteinerCtx.Run();
 
+                _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
+
                 _logger?.Debug("Start debug updater");
 
-                _msg.InfoMessage(AddOnCtx.AddOnInfo.ToLongString());
+                _msg.InfoMessage($"Start update");
 
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
 
@@ -38,9 +41,11 @@ namespace dRz.SpecSPDS.Test
                     AddOnCtx.AddOnInfo.Product +
                     "/releases/latest/download/";
 
-                updateUrl = "http://127.0.0.1:8080/SpecSPDS/";
+                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
 
-                UpdateMode mode = UpdateMode.CheckAndInstall;
+            update:
+
+                UpdateMode mode = UpdateMode.Disabled;
 
                 UpdateLaunchMode launchMode = UpdateLaunchMode.Manual;
 
@@ -61,26 +66,66 @@ namespace dRz.SpecSPDS.Test
                     LaunchMode = launchMode,
                 };
 
-                //что с ним делать дальше????
-                Task<bool> task = updateManager.RunAsync(request);
+                // Результат позволяет вызывающему коду различать исходы обновления.
+                UpdateResult result = await updateManager.RunAsync(request);
+
+                switch (result)
+                {
+                    case UpdateResult.Installed:
+                        _msg.InfoMessage("Обновление установлено. Перезапустите аддон.");
+                        break;
+
+                    case UpdateResult.UpToDate:
+                        _msg.InfoMessage("Установлена актуальная версия.");
+                        break;
+
+                    case UpdateResult.Declined:
+                        _msg.InfoMessage("Пользователь отказался от необязательного обновления.");
+                        break;
+
+                    case UpdateResult.Disabled:
+                        _msg.InfoMessage("Обновление отключено настройками.");
+                        break;
+
+                    case UpdateResult.NetworkPath:
+                        _msg.InfoMessage("Аддон загружен из сетевого расположения.");
+                        break;
+
+                    case UpdateResult.Failed:
+                        _msg.WarningMessage("Не удалось выполнить обновление. Подробности — в журнале.");
+                        break;
+
+                    case UpdateResult.Cancelled:
+                        _msg.InfoMessage("Операция отменена через CancellationToken.");
+                        break;
+                }
+                //goto update;
             }
             catch (Exception ex)
             {
                 _logger?.Fatal(ex, "Продолжение не возможно");
 
-                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
+                _msg.ErrorMessage("Продолжение не возможно", ex);
             }
             finally
             {
                 _logger?.Info("Terminate");
 
-                ConsoleReadKey();
+                ConsoleReadKey(sw);
             }
         }
 
-        private static ConsoleKeyInfo ConsoleReadKey()
+        private static ConsoleKeyInfo ConsoleReadKey(Stopwatch? sw = null)
         {
-            Console.WriteLine("Press any key to exit...");
+            string res = "";
+
+            if (sw != null)
+            {
+                res = $"Total time {sw.Elapsed}\n";
+            }
+
+            _msg.InfoMessage($"{res}Press any key to exit...");
+
             return Console.ReadKey();
         }
 

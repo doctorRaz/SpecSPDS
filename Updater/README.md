@@ -18,6 +18,7 @@ Updater **распаковывает** архивы, но не создаёт и
 ```csharp
 using dRz.Updater;
 using dRz.Updater.Services;
+using dRz.Abstractions.Updater;
 
 // IMessageService, IMessagePromptService и IDrzLoggerFactory
 // предоставляет инфраструктура основного аддона.
@@ -32,7 +33,7 @@ var request = new UpdateRequest
     IsPackage = true
 };
 
-bool installed = await updateManager.RunAsync(request, cancellationToken);
+UpdateResult result = await updateManager.RunAsync(request, cancellationToken);
 ```
 
 Это пример контракта: `messageService`, `promptService`, `loggerFactory`, `currentVersion` и `addOnDirectory` должны быть предоставлены вызывающим кодом. URL в примере условный.
@@ -46,6 +47,22 @@ bool installed = await updateManager.RunAsync(request, cancellationToken);
 - `PackageDirectory` — полный путь к каталогу, в который устанавливаются файлы обновления. Должен указывать на каталог установленного аддона/модуля, а не на временный каталог распаковки.
 - `IsPackage` — определяет структуру каталога внутри архива. При `true` файлы берутся из `<распаковка>/<product>/`; при `false` — из `<распаковка>/<product>/<имя PackageDirectory>/`. Имя последнего каталога вычисляется из `PackageDirectory`.
 - `IsNetworkPath` — признак того, что основная сборка аддона загружена с сетевого расположения. Если `true`, Updater прекращает работу до сетевых запросов и создания временных файлов; обновление должен выполнять администратор.
+
+### Результат RunAsync
+
+Метод `RunAsync` возвращает `Task<UpdateResult>`. Результат размещён в `dRz.Abstractions.Updater`, чтобы основной аддон и другие проекты могли использовать контракт без зависимости от реализации Updater.
+
+| Результат | Значение |
+| --- | --- |
+| `Installed` | Обновление успешно установлено. |
+| `UpToDate` | Обновление не требуется. |
+| `Declined` | Пользователь отказался от необязательного обновления. |
+| `Disabled` | Установка необязательного обновления отключена настройками. |
+| `NetworkPath` | Обновление не выполнялось из-за сетевого расположения аддона. |
+| `Failed` | Проверка или установка завершилась ошибкой; подробности записываются в журнал. |
+| `Cancelled` | Операция отменена через переданный `CancellationToken`. |
+
+Отмена обрабатывается отдельно от ошибки. Она поддерживается во время отменяемых сетевых операций и до начала изменения установленных файлов. Синхронный этап установки не прерывается посередине: это позволяет завершить установку или выполнить откат в согласованном порядке.
 
 ## Режимы обновления
 

@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
@@ -60,14 +61,8 @@ namespace dRz.Updater
         /// Если основная сборка загружена с сетевого расположения, обновление не выполняется.
         /// </summary>
         /// <param name="request">Параметры обновления, сформированные основным аддоном.</param>
-        /// <returns>
-        /// <see langword="true"/>, если установка завершилась успешно;
-        /// <see langword="false"/>, если обновление не требуется, пользователь отказался
-        /// от установки, обнаружено сетевое расположение аддона или операция завершилась ошибкой.
-        /// Исключения проверки и установки перехватываются и записываются в журнал;
-        /// при отмене через <paramref name="cancellationToken"/> метод также возвращает <see langword="false"/>.
-        /// </returns>
-        public async Task<bool> RunAsync(
+        /// <returns>Результат проверки и установки обновления.</returns>
+        public async Task<UpdateResult> RunAsync(
             UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
@@ -91,7 +86,7 @@ namespace dRz.Updater
 
                     _logger.Warn(message);
 
-                    return false;
+                    return UpdateResult.NetworkPath;
                 }
 
                 _logger.Debug("RunAsync");
@@ -133,13 +128,13 @@ namespace dRz.Updater
                             $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
                     }
 
-                    return false;
+                    return UpdateResult.UpToDate;
                 }
 
                 // Disabled запрещает необязательные обновления, но не mandatory.
                 // Mandatory обновления выполняются независимо от режима.
                 if (effectiveMode == UpdateMode.Disabled && !update.Mandatory)
-                    return false;
+                    return UpdateResult.Disabled;
 
                 bool installAutomatically =
                     update.Mandatory ||
@@ -152,7 +147,7 @@ namespace dRz.Updater
                         "Обновление");
 
                     if (result != MessageResult.Yes)
-                        return false;
+                        return UpdateResult.Declined;
                 }
 
                 // Автоматическая установка должна быть предварительно обозначена пользователю.
@@ -180,6 +175,8 @@ namespace dRz.Updater
                     assetUrl,
                     assetFile,
                     cancellationToken);
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 if (!FileVerifier.Verify(
                     assetFile,
@@ -221,6 +218,10 @@ namespace dRz.Updater
 
                 bool fullUpdate = updateKind == UpdateKind.Full;
 
+                // Отмена допускается до начала изменения установленных файлов.
+                // Во время синхронной установки не прерываем операции, чтобы не нарушить откат.
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // Удаляем резервные копии предыдущего запуска до создания новых.
                 Cleanup(request.PackageDirectory);
 
@@ -245,7 +246,7 @@ namespace dRz.Updater
                         $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
-                    return false;
+                    return UpdateResult.Failed;
                 }
                 catch (Exception installException)
                 {
@@ -257,13 +258,18 @@ namespace dRz.Updater
                         $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
-                    return false;
+                    return UpdateResult.Failed;
                 }
 
                 _messageServices.InfoMessage(
                     $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
 
-                return true;
+                return UpdateResult.Installed;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                _logger.Debug("Операция обновления отменена через CancellationToken.");
+                return UpdateResult.Cancelled;
             }
             catch (Exception ex)
             {
@@ -275,7 +281,7 @@ namespace dRz.Updater
                         $"Не удалось проверить или выполнить обновление: {ex.Message}");
                 }
 
-                return false;
+                return UpdateResult.Failed;
             }
             finally
             {
