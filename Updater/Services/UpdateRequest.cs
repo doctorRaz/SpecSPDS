@@ -24,8 +24,8 @@ namespace dRz.Updater.Services
         public UpdateMode Mode { get; init; }
 
         /// <summary>
-        /// Способ запуска проверки. Влияет на дополнительные уведомления,
-        /// но не меняет правила проверки и установки.
+        /// Способ запуска проверки. При ручном запуске принудительно включает режим
+        /// <see cref="UpdateMode.CheckAndNotify"/> для необязательных обновлений.
         /// </summary>
         public UpdateLaunchMode LaunchMode { get; init; } = UpdateLaunchMode.Automatic;
 
