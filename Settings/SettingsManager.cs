@@ -1,0 +1,36 @@
+using dRz.Abstractions.Settings;
+using System;
+
+namespace dRz.Settings
+{
+    /// <summary>
+    /// Загружает настройки и обеспечивает значения по умолчанию.
+    /// </summary>
+    public sealed class SettingsManager
+    {
+        private readonly JsonSettingsStore _store;
+
+        /// <summary>
+        /// Создаёт менеджер настроек.
+        /// </summary>
+        public SettingsManager(JsonSettingsStore store)
+        {
+            _store = store ?? throw new ArgumentNullException(nameof(store));
+        }
+
+        /// <summary>
+        /// Загружает настройки или создаёт и сохраняет значения по умолчанию.
+        /// </summary>
+        public IAddonSettings Load()
+        {
+            AddonSettings settings = _store.Load() ?? new AddonSettings();
+            settings.AttachStore(_store);
+
+            // При отсутствующем или повреждённом файле сохраняем начальные значения.
+            if (settings.LastLoadUsedDefaults)
+                settings.Save();
+
+            return settings;
+        }
+    }
+}
