@@ -9,6 +9,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Settings\Settings.csproj" />
 		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\Test.CadServices\Test.CadServices.csproj" />
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
