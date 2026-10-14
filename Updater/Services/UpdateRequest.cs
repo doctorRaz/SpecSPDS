@@ -43,7 +43,11 @@ namespace dRz.Updater.Services
         /// </summary>
         public bool IsPackage { get; init; } = false;
 
-        /// <summary>Признак сетевого расположения основной сборки аддона.</summary>
+        /// <summary>
+        /// Признак того, что основная сборка аддона загружена с сетевого расположения.
+        /// При <see langword="true"/> Updater не выполняет сетевые запросы и установку;
+        /// обновление должен выполнять администратор.
+        /// </summary>
         public bool IsNetworkPath { get; init; }
 
 
