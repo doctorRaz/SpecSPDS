@@ -20,7 +20,7 @@ namespace dRz.SpecSPDS.Test
     public class Program
     {
         //[STAThread]
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
             try
@@ -63,7 +63,7 @@ namespace dRz.SpecSPDS.Test
                 };
 
                 // Результат позволяет вызывающему коду различать исходы обновления.
-                UpdateResult result = updateManager.RunAsync(request).GetAwaiter().GetResult();
+                UpdateResult result = await updateManager.RunAsync(request);
                 _msg.InfoMessage($"Результат обновления: {result}");
             }
             catch (Exception ex)
