@@ -4,7 +4,7 @@ using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
 using System;
 
-namespace dRz.Test.Console
+namespace dRz.Test.Console.Updater
 {
     internal class ConteinerCtx
     {
@@ -39,7 +39,7 @@ namespace dRz.Test.Console
 
         public static void Run()
         {
-            ConteinerCtx conteineNlog = new ConteinerCtx();
+            _ = new ConteinerCtx();
         }
     }
 }

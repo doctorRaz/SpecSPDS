@@ -34,7 +34,7 @@ namespace dRz.Src.Infrastructure
         /// <summary>Gets the document service.</summary>
         /// <value>The document service.</value>
         internal static IDocumentService DocService => Services.Get<IDocumentService>();
-        
+
         /// <summary>Gets the system information.</summary>
         /// <value>The system information.</value>
         internal static ISysInfo SysInfo => Services.Get<ISysInfo>();
@@ -55,7 +55,7 @@ namespace dRz.Src.Infrastructure
         /// </exception>
         internal static IMcNotificatorMessageService MsgMcN => Services.Get<IMcNotificatorMessageService>();
 
-               
+
         /// <summary>общий вызов сервиса сообщений <br/>
         /// реализация в классе DefaultMessageService?<br/>
         /// вернет:<br/>
