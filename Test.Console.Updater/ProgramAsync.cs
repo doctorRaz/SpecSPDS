@@ -46,37 +46,6 @@ namespace dRz.Test.Console.Updater
                 // Результат позволяет вызывающему коду различать исходы обновления.
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                switch (result)
-                {
-                    case UpdateResult.Installed:
-                        _msg.InfoMessage("Обновление установлено. Перезапустите аддон.");
-                        break;
-
-                    case UpdateResult.UpToDate:
-                        _msg.InfoMessage("Установлена актуальная версия.");
-                        break;
-
-                    case UpdateResult.Declined:
-                        _msg.InfoMessage("Пользователь отказался от необязательного обновления.");
-                        break;
-
-                    case UpdateResult.Disabled:
-                        _msg.InfoMessage("Обновление отключено настройками.");
-                        break;
-
-                    case UpdateResult.NetworkPath:
-                        _msg.InfoMessage("Аддон загружен из сетевого расположения.");
-                        break;
-
-                    case UpdateResult.Failed:
-                        _msg.WarningMessage("Не удалось выполнить обновление. Подробности — в журнале.");
-                        break;
-
-                    case UpdateResult.Cancelled:
-                        _msg.InfoMessage("Операция отменена через CancellationToken.");
-                        break;
-                }
-
                 settings.Updates.LastCheck = DateTime.UtcNow;
                 settings.Updates.LastResult = result;
                 try
