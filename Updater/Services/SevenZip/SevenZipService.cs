@@ -1,5 +1,6 @@
-﻿using System.IO;
-using SharpSevenZip;
+﻿using SharpSevenZip;
+using System;
+using System.IO;
 
 namespace dRz.Updater.Services.SevenZip
 {
@@ -10,6 +11,30 @@ namespace dRz.Updater.Services.SevenZip
     /// </summary>
     public sealed class SevenZipService
     {
+        public SevenZipService()
+        {
+            // Каталог сборки Updater, а не основного аддона.
+            string updaterDirectory = Path.GetDirectoryName(
+                                    typeof(SevenZipService).Assembly.Location)
+                                    ?? throw new InvalidOperationException(
+                                        "Не удалось определить каталог Updater.");
+
+            // SharpSevenZip самостоятельно выберет x86 или x64
+            // в зависимости от разрядности процесса.
+            string libraryDirectory = Path.Combine(
+                                    updaterDirectory,
+                                    Environment.Is64BitProcess ? "x64" : "x86");
+
+            string libraryPath = Path.Combine(libraryDirectory, "7z.dll");
+
+            if (!File.Exists(libraryPath))
+            {
+                throw new FileNotFoundException("Не найдена библиотека 7-Zip.", libraryPath);
+            }
+
+            SharpSevenZipBase.SetLibraryPath(libraryPath);
+        }
+
         /// <summary>
         /// Распаковывает архив 7z в указанный каталог.
         /// </summary>
@@ -46,7 +71,6 @@ namespace dRz.Updater.Services.SevenZip
                 password);
 
             archive.ExtractArchive(destination);
-
         }
     }
 }
