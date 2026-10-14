@@ -6,6 +6,7 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Test.Console;
 using dRz.Updater;
+using dRz.Abstractions.Updater;
 using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
@@ -61,8 +62,9 @@ namespace dRz.SpecSPDS.Test
                     LaunchMode = launchMode,
                 };
 
-                //что с ним делать дальше????
-                Task<bool> task = updateManager.RunAsync(request);
+                // Результат позволяет вызывающему коду различать исходы обновления.
+                UpdateResult result = updateManager.RunAsync(request).GetAwaiter().GetResult();
+                _msg.InfoMessage($"Результат обновления: {result}");
             }
             catch (Exception ex)
             {
