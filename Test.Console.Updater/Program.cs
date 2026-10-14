@@ -4,23 +4,14 @@
 
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.Test.Console;
-using dRz.Updater;
-using dRz.Abstractions.Updater;
-using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
-namespace dRz.SpecSPDS.Test
+namespace dRz.Test.Console.Updater
 {
-    /// <summary>
-    /// Start
-    /// </summary>
     public class Program
     {
-        //[STAThread]
-        private static async Task Main(string[] args)
+        private static void /*async Task*/ Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
             try
@@ -33,73 +24,10 @@ namespace dRz.SpecSPDS.Test
 
                 _msg.InfoMessage($"Start update");
 
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
+                ProgramAsync programAsync = new();
 
-                updateManager.Cleanup(AddOnCtx.AddOnInfo.PackageDirectory);
-                //return;
-                string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
-                    AddOnCtx.AddOnInfo.Product +
-                    "/releases/latest/download/";
+                _ = programAsync.MainAsync();
 
-                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-            update:
-
-                UpdateMode mode = UpdateMode.Disabled;
-
-                UpdateLaunchMode launchMode = UpdateLaunchMode.Manual;
-
-                UpdateRequest request = new UpdateRequest
-                {
-                    CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
-
-                    UpdateUrl = updateUrl,
-
-                    Mode = mode,
-
-                    PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
-
-                    IsPackage = AddOnCtx.AddOnInfo.HasPackage,
-
-                    IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
-
-                    LaunchMode = launchMode,
-                };
-
-                // Результат позволяет вызывающему коду различать исходы обновления.
-                UpdateResult result = await updateManager.RunAsync(request);
-
-                switch (result)
-                {
-                    case UpdateResult.Installed:
-                        _msg.InfoMessage("Обновление установлено. Перезапустите аддон.");
-                        break;
-
-                    case UpdateResult.UpToDate:
-                        _msg.InfoMessage("Установлена актуальная версия.");
-                        break;
-
-                    case UpdateResult.Declined:
-                        _msg.InfoMessage("Пользователь отказался от необязательного обновления.");
-                        break;
-
-                    case UpdateResult.Disabled:
-                        _msg.InfoMessage("Обновление отключено настройками.");
-                        break;
-
-                    case UpdateResult.NetworkPath:
-                        _msg.InfoMessage("Аддон загружен из сетевого расположения.");
-                        break;
-
-                    case UpdateResult.Failed:
-                        _msg.WarningMessage("Не удалось выполнить обновление. Подробности — в журнале.");
-                        break;
-
-                    case UpdateResult.Cancelled:
-                        _msg.InfoMessage("Операция отменена через CancellationToken.");
-                        break;
-                }
-                //goto update;
             }
             catch (Exception ex)
             {
@@ -111,7 +39,7 @@ namespace dRz.SpecSPDS.Test
             {
                 _logger?.Info("Terminate");
 
-                ConsoleReadKey(sw);
+                _ = ConsoleReadKey(sw);
             }
         }
 
@@ -126,7 +54,7 @@ namespace dRz.SpecSPDS.Test
 
             _msg.InfoMessage($"{res}Press any key to exit...");
 
-            return Console.ReadKey();
+            return System.Console.ReadKey();
         }
 
         private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
