@@ -2,9 +2,11 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Infrastructure.Infrastructure;
 using dRz.Infrastructure.Services.Message;
 using dRz.LogBootstrap;
+using dRz.Settings;
 using dRz.NC.Infrastructure.Services;
 using dRz.NC.Infrastructure.Services.Message;
 
@@ -12,6 +14,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
 using System.Reflection;
+using System.IO;
 
 //using Container = SimpleInjector.Container;
 
@@ -165,6 +168,17 @@ namespace dRz.AddOnRuntime
 
             //запрашивает фабрику из словаря при каждом обращении
             //container.GetOrAdd<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
+
+            // Настройки принадлежат основному аддону и загружаются один раз.
+            container.RegisterSingleton<JsonSettingsStore>(() =>
+                new JsonSettingsStore(
+                    Path.Combine(container.GetInstance<IAddOnInfo>().ProductDataDirectory, "settings.json"),
+                    container.GetInstance<IDrzLoggerFactory>(),
+                    container.GetInstance<IMessageService>()));
+
+            container.RegisterSingleton<SettingsManager>();
+            container.RegisterSingleton<IAddonSettings>(() =>
+                container.GetInstance<SettingsManager>().Load());
         }
 
         #endregion Private Methods
