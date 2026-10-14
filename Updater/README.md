@@ -13,22 +13,23 @@ Updater **распаковывает** архивы, но не создаёт и
 
 ## Использование
 
-Основной аддон передаёт актуальную версию, режим обновления, базовый URL и каталог установки:
+Основной аддон передаёт Updater настройки обновления через `IUpdateSettings`, а в запросе — актуальную версию, базовый URL и каталог установки: 
 
 ```csharp
 using dRz.Updater;
 using dRz.Updater.Services;
 using dRz.Abstractions.Updater;
+using dRz.Abstractions.Settings;
 
 // IMessageService, IMessagePromptService и IDrzLoggerFactory
 // предоставляет инфраструктура основного аддона.
-var updateManager = new UpdateManager(messageService, promptService, loggerFactory);
+IUpdateSettings updateSettings = addonSettings.Updates;
+var updateManager = new UpdateManager(messageService, promptService, loggerFactory, updateSettings);
 
 var request = new UpdateRequest
 {
     CurrentVersion = currentVersion,
     UpdateUrl = "https://example.org/releases/",
-    Mode = UpdateMode.CheckAndNotify,
     PackageDirectory = addOnDirectory,
     IsPackage = true
 };
