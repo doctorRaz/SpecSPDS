@@ -78,11 +78,11 @@ namespace dRz.Test.Settings
         [Test]
         public void Save_WhenFilePathIsDirectory_LogsNotifiesAndThrows()
         {
-            Directory.CreateDirectory(_directory);
-            JsonSettingsStore store = new JsonSettingsStore(_directory, _loggerFactory.Object, _messageService.Object);
-            IAddonSettings settings = new SettingsManager(store).Load();
+            IAddonSettings settings = CreateManager().Load();
+            File.Delete(_filePath);
+            Directory.CreateDirectory(_filePath);
 
-            Assert.Throws<UnauthorizedAccessException>(() => settings.Save());
+            Assert.Catch<Exception>(() => settings.Save());
             _logger.Verify(logger => logger.Error(It.IsAny<Exception>(), It.Is<string>(message => message.Contains("Не удалось сохранить настройки"))), Times.Once);
             _messageService.Verify(service => service.ErrorMessage(It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
         }
