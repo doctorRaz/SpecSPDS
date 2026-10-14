@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
 using dRz.Updater;
 using dRz.Updater.Services;
@@ -16,15 +17,14 @@ namespace dRz.Test.Console.Updater
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
+                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
 
                 updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-                UpdateMode mode = UpdateMode.Disabled;
 
                 UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
 
@@ -33,8 +33,6 @@ namespace dRz.Test.Console.Updater
                     CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
 
                     UpdateUrl = updateUrl,
-
-                    Mode = mode,
 
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
 
@@ -77,6 +75,17 @@ namespace dRz.Test.Console.Updater
                     case UpdateResult.Cancelled:
                         _msg.InfoMessage("Операция отменена через CancellationToken.");
                         break;
+                }
+
+                settings.Updates.LastCheck = DateTime.UtcNow;
+                settings.Updates.LastResult = result;
+                try
+                {
+                    settings.Save();
+                }
+                catch (Exception saveException)
+                {
+                    _logger?.Error(saveException, "Не удалось сохранить состояние обновления.");
                 }
 
                 _msg.InfoMessage($"{nameof(ProgramAsync)}: {sw.Elapsed}");
