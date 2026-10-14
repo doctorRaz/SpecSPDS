@@ -73,6 +73,9 @@ namespace dRz.Updater
                 ArgumentNullException.ThrowIfNull(request);
                 ValidateRequest(request);
 
+                // Удаляем резервные копии предыдущего запуска до создания новых.
+                await Task.Run(() => Cleanup(request.PackageDirectory));
+
                 // Обновление экземпляра, загруженного с сетевого ресурса, выполняет администратор.
                 // Проверяем флаг до создания временных файлов и любых сетевых запросов.
                 if (request.IsNetworkPath)
@@ -222,9 +225,6 @@ namespace dRz.Updater
                 // Во время синхронной установки не прерываем операции, чтобы не нарушить откат.
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Удаляем резервные копии предыдущего запуска до создания новых.
-                Cleanup(request.PackageDirectory);
-
                 try
                 {
                     if (!Installer.MoveDirectoryFilesWithBackup(
@@ -289,6 +289,7 @@ namespace dRz.Updater
                 {
                     if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
                         Directory.Delete(tempDirectory, true);
+                    _logger.Debug("Final");
                 }
                 catch (Exception ex)
                 {
