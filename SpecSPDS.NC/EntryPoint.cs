@@ -1,6 +1,5 @@
 ﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;//глобально на сборку, чтобы не писать каждый раз длинный путь
 
-
 // -----------------
 using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
@@ -10,12 +9,12 @@ using dRz.AddOnRuntime;
 using dRz.Updater.Services;
 using System;
 
-
-
 #if NC
 
 using HostMgd.ApplicationServices;
+
 using App = HostMgd.ApplicationServices;
+
 using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 
@@ -76,7 +75,7 @@ namespace dRz.NC
                 TryAddOnCompositionRoot();//получаем окружение
 
                 //стартуем очистку копий и bak
-                TryCleanBackups();
+                TryUpdate();
 
                 //
                 TryInit();
@@ -119,7 +118,7 @@ namespace dRz.NC
         }
 
         /// <summary>Tries the clean backups.</summary>
-        private void TryCleanBackups()
+        private void TryUpdate()
         {
             try
             {
@@ -136,7 +135,9 @@ namespace dRz.NC
         {
             try
             {
-                BackupCleaner.DeleteBackupFiles(AddOnCtx.AddOnInfo.PackageDirectory);
+                UpdateAsync updateAsync = new UpdateAsync();
+                _ = updateAsync.MainAsync();
+                //BackupCleaner.DeleteBackupFiles(AddOnCtx.AddOnInfo.PackageDirectory);
             }
             catch { }
         }
