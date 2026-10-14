@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
@@ -20,6 +21,7 @@ namespace dRz.Updater
         private readonly IDrzLogger _logger;
         private readonly IMessageService _messageServices;
         private readonly IMessagePromptService _promptService;
+        private readonly IUpdateSettings _updateSettings;
         private readonly Downloader _downloader;
 
         /// <summary>
@@ -31,10 +33,12 @@ namespace dRz.Updater
         public UpdateManager(
             IMessageService messageServices,
             IMessagePromptService promptService,
-            IDrzLoggerFactory loggerFactory)
+            IDrzLoggerFactory loggerFactory,
+            IUpdateSettings updateSettings)
         {
             _messageServices = messageServices;
             _promptService = promptService;
+            _updateSettings = updateSettings ?? throw new ArgumentNullException(nameof(updateSettings));
             _downloader = new Downloader();
             _logger = loggerFactory.GetLogger<UpdateManager>();
         }
@@ -82,7 +86,7 @@ namespace dRz.Updater
                 {
                     const string message = "Обновление отключено: аддон загружен с сетевого ресурса. Обратитесь к администратору для установки обновления.";
 
-                    if (request.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
+                    if (_updateSettings.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         _messageServices.WarningMessage(message);
                     }
@@ -98,7 +102,7 @@ namespace dRz.Updater
                 // независимо от режима, заданного вызывающим кодом.
                 UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
                     ? UpdateMode.CheckAndNotify
-                    : request.Mode;
+                    : _updateSettings.Mode;
 
                 tempDirectory = Path.Combine(
                     Path.GetTempPath(),
