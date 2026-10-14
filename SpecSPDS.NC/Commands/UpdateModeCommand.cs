@@ -37,7 +37,7 @@ namespace dRz.NC.Commands
             UpdateMode previousMode = updateSettings.Mode;
 
             PromptKeywordOptions options = new PromptKeywordOptions(
-                $"\nРежим обновления [{GetKeyword(previousMode)}]: ");
+                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
             options.Keywords.Add("Disabled");
             options.Keywords.Add("Notify");
             options.Keywords.Add("Install");
