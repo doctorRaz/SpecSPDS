@@ -30,6 +30,7 @@ namespace dRz.Updater
         /// <param name="messageServices">Сервис сообщений.</param>
         /// <param name="promptService">Сервис интерактивных запросов.</param>
         /// <param name="loggerFactory">Фабрика логгеров.</param>
+        /// <param name="updateSettings">Настройки обновления, принадлежащие основному аддону.</param>
         public UpdateManager(
             IMessageService messageServices,
             IMessagePromptService promptService,
