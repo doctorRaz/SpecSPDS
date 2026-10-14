@@ -17,6 +17,10 @@ namespace dRz.Updater.Services
         /// <summary>
         /// Читает и десериализует update.json.
         /// </summary>
+        /// <param name="filePath">Полный путь к файлу manifest.</param>
+        /// <returns>Десериализованные метаданные обновления.</returns>
+        /// <exception cref="FileNotFoundException">Файл manifest не найден.</exception>
+        /// <exception cref="InvalidDataException">Manifest пуст или не содержит данных обновления.</exception>
         public static UpdateInfo Read(string filePath)
         {
             if (!File.Exists(filePath))
