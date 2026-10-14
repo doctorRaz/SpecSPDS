@@ -1,3 +1,5 @@
+using dRz.Abstractions.Settings;
+
 namespace dRz.Updater.Services
 {
     /// <summary>
