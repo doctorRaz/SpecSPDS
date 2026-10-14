@@ -11,6 +11,8 @@ namespace dRz.Updater.Services
         /// <summary>
         /// Сравнивает установленную и доступную версии и определяет тип обновления.
         /// </summary>
+        /// <param name="currentVersion">Текущая установленная версия.</param>
+        /// <param name="update">Метаданные доступного обновления.</param>
         /// <returns>
         /// <see langword="null"/>, если обновление не требуется;
         /// <see cref="UpdateKind.Normal"/>, если требуется обычное обновление;

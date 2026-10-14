@@ -7,9 +7,13 @@ namespace dRz.Updater.Models
     /// </summary>
     public sealed class VersionInfo
     {
+        /// <summary>Старший компонент версии.</summary>
         public int Major { get; init; }
+        /// <summary>Младший компонент версии.</summary>
         public int Minor { get; init; }
+        /// <summary>Компонент сборки.</summary>
         public int Build { get; init; }
+        /// <summary>Компонент ревизии.</summary>
         public int Revision { get; init; }
 
         /// <summary>

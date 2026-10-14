@@ -22,10 +22,14 @@ namespace dRz.Updater.Services
             public bool Installed { get; set; }
         }
 
-        /// <summary>Перемещает файл в целевой каталог, предварительно сохраняя существующий файл в резервной копии.</summary>
-        /// <param name="sourceFile">Полный путь к исходному файлу.</param>
-        /// <param name="targetDirectory">Каталог, в который перемещается файл.</param>
-        /// <exception cref="System.IO.FileNotFoundException">Файл не найден</exception>
+        /// <summary>
+        /// Перемещает файл в целевой каталог, предварительно сохраняя существующий файл в резервной копии.
+        /// </summary>
+        /// <param name="sourceFile">Полный путь к существующему исходному файлу.</param>
+        /// <param name="targetDirectory">Каталог, в который перемещается файл; при необходимости создаётся.</param>
+        /// <exception cref="FileNotFoundException">Исходный файл не найден.</exception>
+        /// <exception cref="IOException">Не удалось переместить исходный или целевой файл.</exception>
+        /// <exception cref="UnauthorizedAccessException">Недостаточно прав для изменения файлов или каталогов.</exception>
         public static void MoveWithBackup(string sourceFile, string targetDirectory)
         {
             if (!File.Exists(sourceFile))
@@ -75,7 +79,13 @@ namespace dRz.Updater.Services
         /// При ошибке пытается вернуть уже переименованные файлы исходным именам.
         /// </summary>
         /// <param name="directory">Каталог установленного пакета или модуля.</param>
-        /// <returns><see langword="true"/>, если все файлы переименованы; иначе <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/>, если файлы успешно переименованы;
+        /// <see langword="false"/>, если каталог не существует или операция завершилась ошибкой.
+        /// При ошибке выполняется попытка вернуть уже переименованные файлы.
+        /// </returns>
+        /// <exception cref="IOException">Не удалось получить список файлов каталога.</exception>
+        /// <exception cref="UnauthorizedAccessException">Недостаточно прав для чтения каталога.</exception>
         public static bool RenameDirectoryFilesWithBackup(string directory)
         {
             if (!Directory.Exists(directory))
@@ -127,7 +137,14 @@ namespace dRz.Updater.Services
         /// </summary>
         /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
         /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
-        /// <returns><see langword="true"/>, если все файлы перенесены; <see langword="false"/>, если исходный каталог не существует.</returns>
+        /// <returns>
+        /// <see langword="true"/>, если все файлы перенесены;
+        /// <see langword="false"/>, если исходный каталог не существует.
+        /// </returns>
+        /// <exception cref="IOException">Не удалось перенести файл. После успешного отката исходная ошибка повторно выбрасывается.</exception>
+        /// <exception cref="UpdateRollbackException">Установка и откат завершились ошибками.</exception>
+        /// <exception cref="InvalidDataException">Относительный путь файла выходит за пределы целевого каталога.</exception>
+        /// <exception cref="UnauthorizedAccessException">Недостаточно прав для изменения файлов или каталогов.</exception>
         public static bool MoveDirectoryFilesWithBackup(
             string sourceDirectory,
             string targetDirectory)
@@ -143,7 +160,14 @@ namespace dRz.Updater.Services
         /// <param name="sourceDirectory">Каталог распакованного обновления.</param>
         /// <param name="targetDirectory">Каталог установленного пакета или модуля.</param>
         /// <param name="fullUpdate">Если <see langword="true"/>, перед установкой резервируются все старые файлы целевого каталога.</param>
-        /// <returns><see langword="true"/>, если все файлы перенесены; <see langword="false"/>, если исходный каталог не существует.</returns>
+        /// <returns>
+        /// <see langword="true"/>, если все файлы перенесены;
+        /// <see langword="false"/>, если исходный каталог не существует.
+        /// </returns>
+        /// <exception cref="IOException">Не удалось перенести файл. После успешного отката исходная ошибка повторно выбрасывается.</exception>
+        /// <exception cref="UpdateRollbackException">Установка и откат завершились ошибками.</exception>
+        /// <exception cref="InvalidDataException">Относительный путь файла выходит за пределы целевого каталога.</exception>
+        /// <exception cref="UnauthorizedAccessException">Недостаточно прав для изменения файлов или каталогов.</exception>
         public static bool MoveDirectoryFilesWithBackup(
             string sourceDirectory,
             string targetDirectory,

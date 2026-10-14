@@ -24,8 +24,8 @@ namespace dRz.Updater.Services
         public UpdateMode Mode { get; init; }
 
         /// <summary>
-        /// Способ запуска проверки. Влияет на дополнительные уведомления,
-        /// но не меняет правила проверки и установки.
+        /// Способ запуска проверки. При ручном запуске принудительно включает режим
+        /// <see cref="UpdateMode.CheckAndNotify"/> для необязательных обновлений.
         /// </summary>
         public UpdateLaunchMode LaunchMode { get; init; } = UpdateLaunchMode.Automatic;
 
@@ -43,7 +43,11 @@ namespace dRz.Updater.Services
         /// </summary>
         public bool IsPackage { get; init; } = false;
 
-        /// <summary>Признак сетевого расположения основной сборки аддона.</summary>
+        /// <summary>
+        /// Признак того, что основная сборка аддона загружена с сетевого расположения.
+        /// При <see langword="true"/> Updater не выполняет сетевые запросы и установку;
+        /// обновление должен выполнять администратор.
+        /// </summary>
         public bool IsNetworkPath { get; init; }
 
 
