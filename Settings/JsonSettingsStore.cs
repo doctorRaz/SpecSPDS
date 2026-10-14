@@ -18,30 +18,32 @@ namespace dRz.Settings
 
         private static readonly JsonSerializerOptions SerializerOptions = CreateSerializerOptions();
 
+        /// <summary>True, если последняя загрузка завершилась использованием значений по умолчанию.</summary>
+        internal bool LoadUsedDefaults { get; private set; }
+
         /// <summary>
         /// Создаёт JSON-хранилище по готовому пути к файлу.
         /// </summary>
-        public JsonSettingsStore(
-            string filePath,
-            IDrzLoggerFactory loggerFactory,
-            IMessageService messageService)
+        public JsonSettingsStore(string filePath, IDrzLoggerFactory loggerFactory, IMessageService messageService)
         {
             if (string.IsNullOrWhiteSpace(filePath))
                 throw new ArgumentException("Не указан путь к файлу настроек.", nameof(filePath));
 
             _filePath = filePath;
-            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory)))
-                .GetLogger<JsonSettingsStore>();
+            _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).GetLogger<JsonSettingsStore>();
             _messageService = messageService ?? throw new ArgumentNullException(nameof(messageService));
         }
 
-        /// <summary>
-        /// Загружает настройки. При отсутствии файла или ошибке чтения возвращает null.
-        /// </summary>
+        /// <summary>Загружает настройки. При отсутствии файла или ошибке чтения возвращает null.</summary>
         internal AddonSettings? Load()
         {
+            LoadUsedDefaults = false;
+
             if (!File.Exists(_filePath))
+            {
+                LoadUsedDefaults = true;
                 return null;
+            }
 
             try
             {
@@ -54,14 +56,13 @@ namespace dRz.Settings
             }
             catch (Exception ex)
             {
+                LoadUsedDefaults = true;
                 _logger.Error(ex, $"Не удалось прочитать настройки из '{_filePath}'. Будут использованы значения по умолчанию.");
                 return null;
             }
         }
 
-        /// <summary>
-        /// Сохраняет настройки. При ошибке уведомляет пользователя и повторно выбрасывает исключение.
-        /// </summary>
+        /// <summary>Сохраняет настройки. При ошибке уведомляет пользователя и повторно выбрасывает исключение.</summary>
         internal void Save(AddonSettings settings)
         {
             if (settings == null)
@@ -94,11 +95,7 @@ namespace dRz.Settings
 
         private static JsonSerializerOptions CreateSerializerOptions()
         {
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                WriteIndented = true
-            };
+            JsonSerializerOptions options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, WriteIndented = true };
             options.Converters.Add(new JsonStringEnumConverter());
             return options;
         }
