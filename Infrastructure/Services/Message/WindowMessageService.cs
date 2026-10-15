@@ -5,6 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using Forms = System.Windows.Forms;
 
 namespace dRz.Infrastructure.Services.Message
 {
@@ -50,38 +51,51 @@ namespace dRz.Infrastructure.Services.Message
         }
 
         public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) =>
-            ShowPrompt(message, title, caller, MessageBoxButton.AbortRetryIgnore, MessageBoxImage.Warning);
+            ShowPrompt(message, title, caller, Forms.MessageBoxButtons.AbortRetryIgnore, Forms.MessageBoxIcon.Warning);
 
         public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
-            ShowPrompt(message, title, caller, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+            ShowPrompt(message, title, caller, Forms.MessageBoxButtons.OKCancel, Forms.MessageBoxIcon.Question);
 
         public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
-            ShowPrompt(message, title, caller, MessageBoxButton.RetryCancel, MessageBoxImage.Question);
+            ShowPrompt(message, title, caller, Forms.MessageBoxButtons.RetryCancel, Forms.MessageBoxIcon.Question);
 
         public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) =>
-            ShowPrompt(message, title, caller, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNo, Forms.MessageBoxIcon.Question);
 
         public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
-            ShowPrompt(message, title, caller, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+            ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNoCancel, Forms.MessageBoxIcon.Question);
 
-        private MessageResult ShowPrompt(string message, string? title, string? caller, MessageBoxButton buttons, MessageBoxImage image)
+        private MessageResult ShowPrompt(
+            string message,
+            string? title,
+            string? caller,
+            Forms.MessageBoxButtons buttons,
+            Forms.MessageBoxIcon icon)
         {
             ActivateCadWindow();
-            MessageBoxResult result = MessageBox.Show(
-                FormatMessage(message, caller),
-                BuildTitle(title, null),
-                buttons,
-                image);
+
+            Forms.DialogResult result = _cadWindowHandle == IntPtr.Zero
+                ? Forms.MessageBox.Show(
+                    FormatMessage(message, caller),
+                    BuildTitle(title, null),
+                    buttons,
+                    icon)
+                : Forms.MessageBox.Show(
+                    new WindowOwner(_cadWindowHandle),
+                    FormatMessage(message, caller),
+                    BuildTitle(title, null),
+                    buttons,
+                    icon);
 
             return result switch
             {
-                MessageBoxResult.OK => MessageResult.Ok,
-                MessageBoxResult.Cancel => MessageResult.Cancel,
-                MessageBoxResult.Yes => MessageResult.Yes,
-                MessageBoxResult.No => MessageResult.No,
-                MessageBoxResult.Retry => MessageResult.Retry,
-                MessageBoxResult.Abort => MessageResult.Abort,
-                MessageBoxResult.Ignore => MessageResult.Ignore,
+                Forms.DialogResult.OK => MessageResult.Ok,
+                Forms.DialogResult.Cancel => MessageResult.Cancel,
+                Forms.DialogResult.Yes => MessageResult.Yes,
+                Forms.DialogResult.No => MessageResult.No,
+                Forms.DialogResult.Retry => MessageResult.Retry,
+                Forms.DialogResult.Abort => MessageResult.Abort,
+                Forms.DialogResult.Ignore => MessageResult.Ignore,
                 _ => MessageResult.None
             };
         }
@@ -105,5 +119,13 @@ namespace dRz.Infrastructure.Services.Message
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        /// <summary>Предоставляет WinForms-диалогу HWND окна nanoCAD в качестве владельца.</summary>
+        private sealed class WindowOwner : Forms.IWin32Window
+        {
+            public WindowOwner(IntPtr handle) => Handle = handle;
+
+            public IntPtr Handle { get; }
+        }
     }
 }
