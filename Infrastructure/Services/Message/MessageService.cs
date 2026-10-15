@@ -40,19 +40,19 @@ namespace dRz.Infrastructure.Services.Message
         public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             Current.WarningMessage(message, title, caller);
 
-        public MessageResult AskYesNo(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) =>
             _window.AskYesNo(message, title, caller);
 
-        public MessageResult AskOkCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             _window.AskOkCancel(message, title, caller);
 
-        public MessageResult AskRetryCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             _window.AskRetryCancel(message, title, caller);
 
-        public MessageResult AskYesNoCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             _window.AskYesNoCancel(message, title, caller);
 
-        public MessageResult AskAbortRetryIgnore(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) =>
             _window.AskAbortRetryIgnore(message, title, caller);
     }
 }
