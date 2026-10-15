@@ -18,8 +18,8 @@ namespace dRz.NC.Infrastructure.Services.Message
             _applicationInfo = applicationInfo;
         }
 
-        public void ConsoleMessage(string message, [CallerMemberName] string? caller = null) =>
-            WriteMessage(string.Empty, message, caller, null);
+        public void ConsoleMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
+            WriteMessage(string.Empty, message, caller, title);
 
         public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage("Warn", message, caller, title);
