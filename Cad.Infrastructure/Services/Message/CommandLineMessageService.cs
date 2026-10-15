@@ -28,7 +28,7 @@ namespace dRz.NC.Infrastructure.Services.Message
             WriteMessage("Error", $"{ex.Message}\n{ex.StackTrace}", caller, title);
 
         public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null) =>
-            WriteMessage("Error", ex == null ? message : $"{message}\n{ex.Message}\n{ex.StackTrace}", title, caller);
+            WriteMessage("Error", ex == null ? message : $"{message}\n{ex.Message}\n{ex.StackTrace}", caller, title);
 
         public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage("Info", message, caller, title);
