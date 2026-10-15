@@ -28,17 +28,17 @@ namespace dRz.Infrastructure.Services.Message
         private IMessageService Current =>
             _documentService.IsActive ? _commandLine : _window;
 
-        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null, string? title = null) =>
-            Current.ErrorMessage(ex, caller, title);
+        public void ErrorMessage(Exception ex, string title = "", [CallerMemberName] string? caller = null) =>
+            Current.ErrorMessage(ex, title, caller);
 
-        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null, string? title = null) =>
-            Current.ErrorMessage(message, ex, caller, title);
+        public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null) =>
+            Current.ErrorMessage(message, ex, title, caller);
 
-        public void InfoMessage(string message, [CallerMemberName] string? caller = null, string? title = null) =>
-            Current.InfoMessage(message, caller, title);
+        public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
+            Current.InfoMessage(message, title, caller);
 
-        public void WarningMessage(string message, [CallerMemberName] string? caller = null, string? title = null) =>
-            Current.WarningMessage(message, caller, title);
+        public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
+            Current.WarningMessage(message, title, caller);
 
         public MessageResult AskYesNo(string message, string? title = null, [CallerMemberName] string? caller = null) =>
             _window.AskYesNo(message, title, caller);
