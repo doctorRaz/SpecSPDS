@@ -51,16 +51,16 @@ namespace dRz.Infrastructure.Services.Message
         public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.AbortRetryIgnore, MessageBoxImage.Warning);
 
-        public MessageResult AskOkCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.OKCancel, MessageBoxImage.Question);
 
-        public MessageResult AskRetryCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.RetryCancel, MessageBoxImage.Question);
 
-        public MessageResult AskYesNo(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-        public MessageResult AskYesNoCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
         private MessageResult ShowPrompt(string message, string? title, string? caller, MessageBoxButton buttons, MessageBoxImage image)
