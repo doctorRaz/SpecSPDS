@@ -13,22 +13,23 @@ Updater **распаковывает** архивы, но не создаёт и
 
 ## Использование
 
-Основной аддон передаёт актуальную версию, режим обновления, базовый URL и каталог установки:
+Основной аддон передаёт Updater настройки обновления через `IUpdateSettings`, а в запросе — актуальную версию, базовый URL и каталог установки:
 
 ```csharp
 using dRz.Updater;
 using dRz.Updater.Services;
 using dRz.Abstractions.Updater;
+using dRz.Abstractions.Settings;
 
 // IMessageService, IMessagePromptService и IDrzLoggerFactory
 // предоставляет инфраструктура основного аддона.
-var updateManager = new UpdateManager(messageService, promptService, loggerFactory);
+IUpdateSettings updateSettings = addonSettings.Updates;
+var updateManager = new UpdateManager(messageService, promptService, loggerFactory, updateSettings);
 
 var request = new UpdateRequest
 {
     CurrentVersion = currentVersion,
     UpdateUrl = "https://example.org/releases/",
-    Mode = UpdateMode.CheckAndNotify,
     PackageDirectory = addOnDirectory,
     IsPackage = true
 };
@@ -42,8 +43,8 @@ UpdateResult result = await updateManager.RunAsync(request, cancellationToken);
 
 - `CurrentVersion` — установленная версия в формате `System.Version` с четырьмя компонентами.
 - `UpdateUrl` — **базовый URL каталога**, содержащего `update.json`. Если URL не заканчивается на `/`, Updater добавляет разделитель при разрешении относительных путей.
-- `Mode` — режим проверки/установки из `UpdateMode`.
-- `LaunchMode` — способ запуска из `UpdateLaunchMode`. По умолчанию `Automatic`: используется заданный `Mode`. При `Manual` режим принудительно становится `CheckAndNotify` для необязательных обновлений; обязательные обновления устанавливаются без подтверждения.
+- `IUpdateSettings.Mode` — режим проверки/установки, хранящийся в настройках аддона; передаётся в `UpdateManager` отдельно от `UpdateRequest`.
+- `LaunchMode` — способ запуска из `UpdateLaunchMode`. По умолчанию `Automatic`: используется режим из `IUpdateSettings`. При `Manual` режим принудительно становится `CheckAndNotify` для необязательных обновлений; обязательные обновления устанавливаются без подтверждения.
 - `PackageDirectory` — полный путь к каталогу, в который устанавливаются файлы обновления. Должен указывать на каталог установленного аддона/модуля, а не на временный каталог распаковки.
 - `IsPackage` — определяет структуру каталога внутри архива. При `true` файлы берутся из `<распаковка>/<product>/`; при `false` — из `<распаковка>/<product>/<имя PackageDirectory>/`. Имя последнего каталога вычисляется из `PackageDirectory`.
 - `IsNetworkPath` — признак того, что основная сборка аддона загружена с сетевого расположения. Если `true`, Updater прекращает работу до сетевых запросов и создания временных файлов; обновление должен выполнять администратор.

@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
@@ -20,6 +21,7 @@ namespace dRz.Updater
         private readonly IDrzLogger _logger;
         private readonly IMessageService _messageServices;
         private readonly IMessagePromptService _promptService;
+        private readonly IUpdateSettings _updateSettings;
         private readonly Downloader _downloader;
 
         /// <summary>
@@ -28,13 +30,16 @@ namespace dRz.Updater
         /// <param name="messageServices">Сервис сообщений.</param>
         /// <param name="promptService">Сервис интерактивных запросов.</param>
         /// <param name="loggerFactory">Фабрика логгеров.</param>
+        /// <param name="updateSettings">Настройки обновления, принадлежащие основному аддону.</param>
         public UpdateManager(
             IMessageService messageServices,
             IMessagePromptService promptService,
-            IDrzLoggerFactory loggerFactory)
+            IDrzLoggerFactory loggerFactory,
+            IUpdateSettings updateSettings)
         {
             _messageServices = messageServices;
             _promptService = promptService;
+            _updateSettings = updateSettings ?? throw new ArgumentNullException(nameof(updateSettings));
             _downloader = new Downloader();
             _logger = loggerFactory.GetLogger<UpdateManager>();
         }
@@ -57,7 +62,7 @@ namespace dRz.Updater
 
         /// <summary>
         /// Выполняет проверку и установку обновления согласно параметрам запроса. При ручном запуске
-        /// принудительно использует режим <see cref="Services.UpdateMode.CheckAndNotify"/>.
+        /// принудительно использует режим <see cref="UpdateMode.CheckAndNotify"/>.
         /// Если основная сборка загружена с сетевого расположения, обновление не выполняется.
         /// </summary>
         /// <param name="request">Параметры обновления, сформированные основным аддоном.</param>
@@ -82,9 +87,9 @@ namespace dRz.Updater
                 {
                     const string message = "Обновление отключено: аддон загружен с сетевого ресурса. Обратитесь к администратору для установки обновления.";
 
-                    if (request.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
+                    if (_updateSettings.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
                     {
-                        _messageServices.WarningMessage(message);
+                        _messageServices.WarningMessage(message, title: "Updater");
                     }
 
                     _logger.Warn(message);
@@ -98,7 +103,7 @@ namespace dRz.Updater
                 // независимо от режима, заданного вызывающим кодом.
                 UpdateMode effectiveMode = request.LaunchMode == UpdateLaunchMode.Manual
                     ? UpdateMode.CheckAndNotify
-                    : request.Mode;
+                    : _updateSettings.Mode;
 
                 tempDirectory = Path.Combine(
                     Path.GetTempPath(),
@@ -128,7 +133,7 @@ namespace dRz.Updater
                     if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         _messageServices.InfoMessage(
-                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
+                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.", title: "Updater");
                     }
 
                     return UpdateResult.UpToDate;
@@ -146,8 +151,7 @@ namespace dRz.Updater
                 if (!installAutomatically)
                 {
                     MessageResult result = _promptService.AskYesNo(
-                        $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?",
-                        "Обновление");
+                        $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?", "Updater");
 
                     if (result != MessageResult.Yes)
                         return UpdateResult.Declined;
@@ -158,12 +162,12 @@ namespace dRz.Updater
                 if (update.Mandatory)
                 {
                     _messageServices.InfoMessage(
-                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.");
+                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.", title: "Updater");
                 }
                 else if (effectiveMode == UpdateMode.CheckAndInstall)
                 {
                     _messageServices.InfoMessage(
-                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}");
+                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}", title: "Updater");
                 }
 
                 string assetFile = Path.Combine(
@@ -243,7 +247,7 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}, и восстановление завершилось ошибкой. " +
-                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.");
+                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.", title: "Updater");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return UpdateResult.Failed;
@@ -255,14 +259,14 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}; прежнее состояние восстановлено. " +
-                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.");
+                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.", title: "Updater");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return UpdateResult.Failed;
                 }
 
                 _messageServices.InfoMessage(
-                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
+                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.", title: "Updater");
 
                 return UpdateResult.Installed;
             }
@@ -278,7 +282,7 @@ namespace dRz.Updater
                 if (request?.LaunchMode == UpdateLaunchMode.Manual)
                 {
                     _messageServices.WarningMessage(
-                        $"Не удалось проверить или выполнить обновление: {ex.Message}");
+                        $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
                 }
 
                 return UpdateResult.Failed;
@@ -305,8 +309,7 @@ namespace dRz.Updater
         {
             string releaseUrl = BuildReleaseUrl(updateUrl, tag);
             MessageResult result = _promptService.AskYesNo(
-                $"Открыть страницу релиза?\n{releaseUrl}",
-                "Восстановление обновления");
+                $"Открыть страницу релиза?\n{releaseUrl}", "Updater");
 
             if (result != MessageResult.Yes)
                 return;
@@ -322,7 +325,7 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
                 _messageServices.WarningMessage(
-                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}");
+                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}", title: "Updater");
             }
         }
 

@@ -5,124 +5,132 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using Forms = System.Windows.Forms;
 
 namespace dRz.Infrastructure.Services.Message
 {
-    public class WindowMessageService : IMessageService, IWindowMessageService
+    /// <summary>Оконная реализация обычных и интерактивных сообщений.</summary>
+    public class WindowMessageService : IWindowMessageService
     {
-        //наследуемся от IMessageService, добавляются методы ASK
-
-        #region Private Fields
-
-        private readonly IAddOnInfo _applicationInfo;
-
-        private readonly IntPtr _cadWindowHandle = IntPtr.Zero;
-
-        #endregion Private Fields
-
-        #region Public Constructors
+        private readonly string _productTitlePrefix;
+        private readonly IntPtr _cadWindowHandle;
 
         public WindowMessageService(IAddOnInfo addOnInfo, IWindowHandleProvider handleProvider)
         {
-            _applicationInfo = addOnInfo;
-
+            _productTitlePrefix = addOnInfo.ProductTitlePrefix;
             _cadWindowHandle = handleProvider.Handle;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
-        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(Exception ex, string title = "", [CallerMemberName] string? caller = null)
         {
-            //throw new NotImplementedException();
-            if (_cadWindowHandle != IntPtr.Zero)
-            {
-                SetForegroundWindow(_cadWindowHandle);
-            }
-
-            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex,
-                _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ActivateCadWindow();
+            MessageBox.Show(FormatMessage(ex.ToString(), caller),
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
+        public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null)
         {
-            //throw new NotImplementedException();
-            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex + "\n" + message,
-              _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            ActivateCadWindow();
+            string text = ex == null ? message : $"{ex}\n{message}";
+            MessageBox.Show(FormatMessage(text, caller),
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void InfoMessage(string message, [CallerMemberName] string? caller = null)
+        public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
-            if (_cadWindowHandle != IntPtr.Zero)
-            {
-                SetForegroundWindow(_cadWindowHandle);
-            }
-
-            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
-                _applicationInfo.ProductTitlePrefix
-                + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            ActivateCadWindow();
+            MessageBox.Show(FormatMessage(message, caller),
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public void WarningMessage(string message, [CallerMemberName] string? caller = null)
+        public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
+            ActivateCadWindow();
+            MessageBox.Show(FormatMessage(message, caller),
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        #endregion Public Methods
+        public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.AbortRetryIgnore, Forms.MessageBoxIcon.Warning);
 
-        public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null)
+        public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.OKCancel, Forms.MessageBoxIcon.Question);
+
+        public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.RetryCancel, Forms.MessageBoxIcon.Question);
+
+        public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNo, Forms.MessageBoxIcon.Question);
+
+        public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNoCancel, Forms.MessageBoxIcon.Question);
+
+        private MessageResult ShowPrompt(
+            string message,
+            string? title,
+            string? caller,
+            Forms.MessageBoxButtons buttons,
+            Forms.MessageBoxIcon icon)
         {
-            throw new NotImplementedException();
-        }
+            ActivateCadWindow();
 
-        public MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string? caller = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null)
-        {
-            if (_cadWindowHandle != IntPtr.Zero)
-            {
-                SetForegroundWindow(_cadWindowHandle);
-            }
-
-            var result = MessageBox.Show(
-                (string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
-                title,
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            Forms.DialogResult result = _cadWindowHandle == IntPtr.Zero
+                ? Forms.MessageBox.Show(
+                    FormatMessage(message, caller),
+                    BuildTitle(title),
+                    buttons,
+                    icon)
+                : Forms.MessageBox.Show(
+                    new WindowOwner(_cadWindowHandle),
+                    FormatMessage(message, caller),
+                    BuildTitle(title),
+                    buttons,
+                    icon);
 
             return result switch
             {
-                MessageBoxResult.Yes => MessageResult.Yes,
-                MessageBoxResult.No => MessageResult.No,
+                Forms.DialogResult.OK => MessageResult.Ok,
+                Forms.DialogResult.Cancel => MessageResult.Cancel,
+                Forms.DialogResult.Yes => MessageResult.Yes,
+                Forms.DialogResult.No => MessageResult.No,
+                Forms.DialogResult.Retry => MessageResult.Retry,
+                Forms.DialogResult.Abort => MessageResult.Abort,
+                Forms.DialogResult.Ignore => MessageResult.Ignore,
                 _ => MessageResult.None
             };
         }
 
-        public MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null)
+        private string BuildTitle(string? title)
         {
-            throw new NotImplementedException();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                return $"{_productTitlePrefix}: {title}";
+            }
+            else
+            {
+                return $"{_productTitlePrefix}";
+            }
         }
 
-        #region Private Methods
+        private static string FormatMessage(string message, string? caller)
+        {
+            string _caller = "";
+#if DEBUG
+            _caller = $"{caller} >> ";
+#endif
+            return _caller + message;
+        }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private void ActivateCadWindow()
+        {
+            if (_cadWindowHandle != IntPtr.Zero)
+                SetForegroundWindow(_cadWindowHandle);
+        }
+
+        [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern int MessageBoxW(
-                IntPtr hWnd,
-                string lpText,
-                string lpCaption,
-                uint uType);
-        #endregion Private Methods
+        /// <summary>Предоставляет WinForms-диалогу HWND окна nanoCAD в качестве владельца.</summary>
+        private sealed class WindowOwner : Forms.IWin32Window
+        {
+            public WindowOwner(IntPtr handle) => Handle = handle;
+
+            public IntPtr Handle { get; }
+        }
     }
 }

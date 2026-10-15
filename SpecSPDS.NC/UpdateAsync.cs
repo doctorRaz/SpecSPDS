@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
 using dRz.Updater;
 using dRz.Updater.Services;
@@ -16,15 +17,14 @@ namespace dRz.NC
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
+                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
 
                 updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-                UpdateMode mode = UpdateMode.CheckAndNotify;
 
                 UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
 
@@ -33,8 +33,6 @@ namespace dRz.NC
                     CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
 
                     UpdateUrl = updateUrl,
-
-                    Mode = mode,
 
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
 
@@ -48,35 +46,16 @@ namespace dRz.NC
                 // Результат позволяет вызывающему коду различать исходы обновления.
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                switch (result)
+                settings.Updates.LastCheck = DateTime.UtcNow;
+                settings.Updates.LastResult = result;
+                try
                 {
-                    case UpdateResult.Installed:
-                        _msg.InfoMessage("Обновление установлено. Перезапустите аддон.");
-                        break;
-
-                    case UpdateResult.UpToDate:
-                        _msg.InfoMessage("Установлена актуальная версия.");
-                        break;
-
-                    case UpdateResult.Declined:
-                        _msg.InfoMessage("Пользователь отказался от необязательного обновления.");
-                        break;
-
-                    case UpdateResult.Disabled:
-                        _msg.InfoMessage("Обновление отключено настройками.");
-                        break;
-
-                    case UpdateResult.NetworkPath:
-                        _msg.InfoMessage("Аддон загружен из сетевого расположения.");
-                        break;
-
-                    case UpdateResult.Failed:
-                        _msg.WarningMessage("Не удалось выполнить обновление. Подробности — в журнале.");
-                        break;
-
-                    case UpdateResult.Cancelled:
-                        _msg.InfoMessage("Операция отменена через CancellationToken.");
-                        break;
+                    settings.Save();
+                }
+                catch (Exception saveException)
+                {
+                    // Ошибка сохранения состояния не отменяет результат уже выполненного обновления.
+                    _logger?.Error(saveException, "Не удалось сохранить состояние обновления.");
                 }
 
                 _msg.InfoMessage($"{nameof(UpdateAsync)}: {sw.Elapsed}");

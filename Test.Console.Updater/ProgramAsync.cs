@@ -1,11 +1,13 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
 using dRz.Updater;
 using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
@@ -16,15 +18,16 @@ namespace dRz.Test.Console.Updater
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory);
+                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+                SelectUpdateMode(settings);
+
+                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
 
                 updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-                UpdateMode mode = UpdateMode.Disabled;
 
                 UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
 
@@ -33,8 +36,6 @@ namespace dRz.Test.Console.Updater
                     CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
 
                     UpdateUrl = updateUrl,
-
-                    Mode = mode,
 
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
 
@@ -48,35 +49,15 @@ namespace dRz.Test.Console.Updater
                 // Результат позволяет вызывающему коду различать исходы обновления.
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                switch (result)
+                settings.Updates.LastCheck = DateTime.UtcNow;
+                settings.Updates.LastResult = result;
+                try
                 {
-                    case UpdateResult.Installed:
-                        _msg.InfoMessage("Обновление установлено. Перезапустите аддон.");
-                        break;
-
-                    case UpdateResult.UpToDate:
-                        _msg.InfoMessage("Установлена актуальная версия.");
-                        break;
-
-                    case UpdateResult.Declined:
-                        _msg.InfoMessage("Пользователь отказался от необязательного обновления.");
-                        break;
-
-                    case UpdateResult.Disabled:
-                        _msg.InfoMessage("Обновление отключено настройками.");
-                        break;
-
-                    case UpdateResult.NetworkPath:
-                        _msg.InfoMessage("Аддон загружен из сетевого расположения.");
-                        break;
-
-                    case UpdateResult.Failed:
-                        _msg.WarningMessage("Не удалось выполнить обновление. Подробности — в журнале.");
-                        break;
-
-                    case UpdateResult.Cancelled:
-                        _msg.InfoMessage("Операция отменена через CancellationToken.");
-                        break;
+                    settings.Save();
+                }
+                catch (Exception saveException)
+                {
+                    _logger?.Error(saveException, "Не удалось сохранить состояние обновления.");
                 }
 
                 _msg.InfoMessage($"{nameof(ProgramAsync)}: {sw.Elapsed}");
@@ -89,8 +70,56 @@ namespace dRz.Test.Console.Updater
             }
         }
 
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ProgramAsync));
+        /// <summary>
+        /// Позволяет вручную выбрать режим обновления для проверки в консольном тесте.
+        /// </summary>
+        private void SelectUpdateMode(IAddonSettings settings)
+        {
+            while (true)
+            {
+                _msg.InfoMessage($"Текущий режим обновления: {settings.Updates.Mode}");
+                _msg.InfoMessage("Выберите режим: 0 — Disabled, 1 — CheckAndNotify, 2 — CheckAndInstall.");
+                _msg.InfoMessage("Enter — оставить текущий режим.");
 
-        private static IMessageService _msg = AddOnCtx.Msg;
+                string? input = Sys.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                    return;
+
+                UpdateMode? selected = input.Trim() switch
+                {
+                    "0" => UpdateMode.Disabled,
+                    "1" => UpdateMode.CheckAndNotify,
+                    "2" => UpdateMode.CheckAndInstall,
+                    _ => null
+                };
+
+                if (selected == null)
+                {
+                    _msg.InfoMessage("Неверный выбор. Введите 0, 1, 2 или Enter.");
+                    continue;
+                }
+
+                UpdateMode previous = settings.Updates.Mode;
+                settings.Updates.Mode = selected.Value;
+
+                try
+                {
+                    settings.Save();
+                    _msg.InfoMessage($"Режим обновления сохранён: {settings.Updates.Mode}");
+                }
+                catch (Exception ex)
+                {
+                    settings.Updates.Mode = previous;
+                    _logger?.Error(ex, "Не удалось сохранить режим обновления.");
+                    _msg.ErrorMessage("Не удалось сохранить режим. Оставлен прежний режим.", ex);
+                }
+
+                return;
+            }
+        }
+
+        private IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ProgramAsync));
+
+        private IMessageService _msg = AddOnCtx.Msg;
     }
 }

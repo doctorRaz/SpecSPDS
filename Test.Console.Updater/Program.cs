@@ -7,6 +7,8 @@ using dRz.Abstractions.Services.Message;
 using System;
 using System.Diagnostics;
 
+using Sys = System;
+
 namespace dRz.Test.Console.Updater
 {
     public class Program
@@ -16,7 +18,19 @@ namespace dRz.Test.Console.Updater
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
+               
                 ConteinerCtx.Run();
+
+                var msg = AddOnCtx.MsgGui;
+
+                var ex=new Exception("Exceptions");
+
+                msg.WarningMessage("Warn","Обновление");
+                msg.InfoMessage("info");
+                msg.ErrorMessage("error",ex);
+
+                var prmt = AddOnCtx.MsgPrt.AskYesNo("test","title");
+
 
                 _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
 
@@ -27,7 +41,6 @@ namespace dRz.Test.Console.Updater
                 ProgramAsync programAsync = new();
 
                 _ = programAsync.MainAsync();
-
             }
             catch (Exception ex)
             {
@@ -54,7 +67,7 @@ namespace dRz.Test.Console.Updater
 
             _msg.InfoMessage($"{res}Press any key to exit...");
 
-            return System.Console.ReadKey();
+            return Sys.Console.ReadKey();
         }
 
         private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));

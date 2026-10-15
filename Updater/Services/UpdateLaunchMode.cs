@@ -1,3 +1,5 @@
+using dRz.Abstractions.Settings;
+
 namespace dRz.Updater.Services
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace dRz.Updater.Services
     public enum UpdateLaunchMode
     {
         /// <summary>
-        /// Автоматический запуск. Используется режим установки, заданный в <see cref="UpdateRequest.Mode"/>; уведомления об отсутствии обновлений и ошибках не добавляются.
+        /// Автоматический запуск. Используется режим установки из настроек аддона; уведомления об отсутствии обновлений и ошибках не добавляются.
         /// </summary>
         Automatic,
 

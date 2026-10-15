@@ -5,6 +5,7 @@ using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
 using dRz.Updater.Services;
 using System;
@@ -157,6 +158,9 @@ namespace dRz.NC
 
                     // экземпляр копии контейнера by ref
                     AddOnCtx.Initialize(root.Get<IAddOnServices>());
+
+                    // Загружаем настройки сразу при инициализации и фиксируем singleton в контейнере.
+                    _ = AddOnCtx.Services.Get<IAddonSettings>();
 
                     _isAddOnCompositionRoot = true;//сервис поднялся
                 }

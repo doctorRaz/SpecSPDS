@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Description>Сервис nanoCAD</Description>
 		<UseWPF>true</UseWPF>
-		<UseWindowForms>true</UseWindowForms>
+		<UseWindowsForms>true</UseWindowsForms>
 	</PropertyGroup>
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
