@@ -18,6 +18,7 @@ namespace dRz.Test.Console.Updater
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
+               
                 ConteinerCtx.Run();
 
                 var msg = AddOnCtx.MsgGui;
