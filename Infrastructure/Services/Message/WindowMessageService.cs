@@ -19,14 +19,14 @@ namespace dRz.Infrastructure.Services.Message
             _cadWindowHandle = handleProvider.Handle;
         }
 
-        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null, string? title = null)
+        public void ErrorMessage(Exception ex, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(ex.ToString(), caller),
                 BuildTitle(title, "Error"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null, string? title = null)
+        public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             string text = ex == null ? message : $"{ex}\n{message}";
@@ -34,21 +34,21 @@ namespace dRz.Infrastructure.Services.Message
                 BuildTitle(title, "Error"), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public void InfoMessage(string message, [CallerMemberName] string? caller = null, string? title = null)
+        public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(message, caller),
                 BuildTitle(title, "Info"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        public void WarningMessage(string message, [CallerMemberName] string? caller = null, string? title = null)
+        public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(message, caller),
                 BuildTitle(title, "Warn"), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        public MessageResult AskAbortRetryIgnore(string message, string? title = null, [CallerMemberName] string? caller = null) =>
+        public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) =>
             ShowPrompt(message, title, caller, MessageBoxButton.AbortRetryIgnore, MessageBoxImage.Warning);
 
         public MessageResult AskOkCancel(string message, string? title = null, [CallerMemberName] string? caller = null) =>
