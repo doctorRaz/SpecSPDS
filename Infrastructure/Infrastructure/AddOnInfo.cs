@@ -84,8 +84,6 @@ namespace dRz.Infrastructure.Infrastructure
 
             ProductDataDirectory = Path.Combine(_appData, Company, Product);
 
-            ProductTitlePrefix = $"{Product} v.{RunningVersion}";
-
             FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 
             PackageDirectory = package?.DirectoryName ?? AssemblyDirectory;
@@ -101,6 +99,10 @@ namespace dRz.Infrastructure.Infrastructure
             //HostCode = GetMetadata(AssemblyMetadataKeys.HostCode, "");
 
             ProductFamily = GetMetadata(AssemblyMetadataKeys.ProductFamily, Product);
+
+            string hostFamily = !string.IsNullOrEmpty(HostFamily) ? $".{HostFamily}" : "";
+
+            ProductTitlePrefix = $"{Product}{hostFamily} v.{RunningVersion.Major}.{RunningVersion.Minor}";
         }
 
         /// <summary>
