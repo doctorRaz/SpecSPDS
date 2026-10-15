@@ -5,8 +5,9 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using System;
-using Sys = System;
 using System.Diagnostics;
+
+using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
@@ -19,6 +20,17 @@ namespace dRz.Test.Console.Updater
             {
                 ConteinerCtx.Run();
 
+                var msg = AddOnCtx.MsgGui;
+
+                var ex=new Exception("Exceptions");
+
+                msg.WarningMessage("Warn");
+                msg.InfoMessage("info");
+                msg.ErrorMessage("error",ex);
+
+                var prmt = AddOnCtx.MsgPrt.AskYesNo("test","title");
+
+
                 _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
 
                 _logger?.Debug("Start debug updater");
@@ -28,7 +40,6 @@ namespace dRz.Test.Console.Updater
                 ProgramAsync programAsync = new();
 
                 _ = programAsync.MainAsync();
-
             }
             catch (Exception ex)
             {
