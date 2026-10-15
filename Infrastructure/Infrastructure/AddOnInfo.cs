@@ -84,7 +84,7 @@ namespace dRz.Infrastructure.Infrastructure
 
             ProductDataDirectory = Path.Combine(_appData, Company, Product);
 
-            ProductTitlePrefix = $"{Product} v.{RunningVersion} : ";
+            ProductTitlePrefix = $"{Product} v.{RunningVersion}";
 
             FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 

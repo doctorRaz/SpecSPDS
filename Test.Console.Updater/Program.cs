@@ -24,7 +24,7 @@ namespace dRz.Test.Console.Updater
 
                 var ex=new Exception("Exceptions");
 
-                msg.WarningMessage("Warn");
+                msg.WarningMessage("Warn","Обновление");
                 msg.InfoMessage("info");
                 msg.ErrorMessage("error",ex);
 
