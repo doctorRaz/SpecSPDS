@@ -11,11 +11,11 @@ namespace dRz.NC.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {
-        private readonly IAddOnInfo _applicationInfo;
+        //private readonly IAddOnInfo _applicationInfo;
 
         public CommandLineMessageService(IAddOnInfo applicationInfo)
         {
-            _applicationInfo = applicationInfo;
+            //_applicationInfo = applicationInfo;
         }
 
         public void ConsoleMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
@@ -35,11 +35,16 @@ namespace dRz.NC.Infrastructure.Services.Message
 
         private void WriteMessage(string prefix, string message, string? caller, string? title)
         {
+            string _caller = "";
+#if DEBUG
+            _caller = string.IsNullOrWhiteSpace(caller) ? string.Empty : $"{caller} >> ";
+#endif
+
             string formatted =
                 "\n" +
+                (string.IsNullOrWhiteSpace(title) ? string.Empty : $"[{title}]: ") +
                 (string.IsNullOrWhiteSpace(prefix) ? string.Empty : $"[{prefix}] ") +
-                (string.IsNullOrWhiteSpace(title) ? string.Empty : $"[{title}] ") +
-                (string.IsNullOrWhiteSpace(caller) ? string.Empty : $"{caller} >> ") +
+                (_caller) +
                 message;
 
 #if !TEST
