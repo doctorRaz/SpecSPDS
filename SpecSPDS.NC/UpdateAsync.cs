@@ -12,21 +12,21 @@ namespace dRz.NC
 {
     public class UpdateAsync
     {
-        public async Task MainAsync()
+        public async Task MainAsync(UpdateLaunchMode launchMode)
         {
-            Stopwatch sw = Stopwatch.StartNew();
             try
             {
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
+#if DEBUG
 
-                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-                UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
+                //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+#endif
 
                 UpdateRequest request = new UpdateRequest
                 {
@@ -57,8 +57,6 @@ namespace dRz.NC
                     // Ошибка сохранения состояния не отменяет результат уже выполненного обновления.
                     _logger?.Error(saveException, "Не удалось сохранить состояние обновления.");
                 }
-
-                _msg.InfoMessage($"{nameof(UpdateAsync)}: {sw.Elapsed}");
             }
             catch (Exception ex)
             {

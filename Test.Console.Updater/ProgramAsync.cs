@@ -13,13 +13,13 @@ namespace dRz.Test.Console.Updater
 {
     public class ProgramAsync
     {
-        public async Task MainAsync()
+        public async Task MainAsync(UpdateLaunchMode launchMode)
         {
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
-                SelectUpdateMode(settings);
+                //SelectUpdateMode(settings);
 
                 UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
 
@@ -27,9 +27,9 @@ namespace dRz.Test.Console.Updater
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
 
-                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+         //       updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
 
-                UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
+
 
                 UpdateRequest request = new UpdateRequest
                 {

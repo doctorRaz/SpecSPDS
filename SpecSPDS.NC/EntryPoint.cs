@@ -137,8 +137,7 @@ namespace dRz.NC
             try
             {
                 UpdateAsync updateAsync = new UpdateAsync();
-                _ = updateAsync.MainAsync();
-                //BackupCleaner.DeleteBackupFiles(AddOnCtx.AddOnInfo.PackageDirectory);
+                _ = updateAsync.MainAsync(UpdateLaunchMode.Automatic);
             }
             catch { }
         }
