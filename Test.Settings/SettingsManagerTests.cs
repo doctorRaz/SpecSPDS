@@ -84,7 +84,13 @@ namespace dRz.Test.Settings
 
             Assert.Catch<Exception>(() => settings.Save());
             _logger.Verify(logger => logger.Error(It.IsAny<Exception>(), It.Is<string>(message => message.Contains("Не удалось сохранить настройки"))), Times.Once);
-            _messageService.Verify(service => service.ErrorMessage(It.IsAny<string>(), It.IsAny<Exception>(), It.IsAny<string>()), Times.Once);
+            _messageService.Verify(
+                service => service.ErrorMessage(
+                    It.IsAny<string>(),
+                    It.IsAny<Exception>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>()),
+                Times.Once);
         }
 
         private SettingsManager CreateManager()
