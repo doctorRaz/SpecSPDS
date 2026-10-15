@@ -89,7 +89,7 @@ namespace dRz.Updater
 
                     if (_updateSettings.Mode != UpdateMode.Disabled || request.LaunchMode == UpdateLaunchMode.Manual)
                     {
-                        _messageServices.WarningMessage(message);
+                        _messageServices.WarningMessage(message, title: "Updater");
                     }
 
                     _logger.Warn(message);
@@ -133,7 +133,7 @@ namespace dRz.Updater
                     if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         _messageServices.InfoMessage(
-                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.");
+                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.", title: "Updater");
                     }
 
                     return UpdateResult.UpToDate;
@@ -151,8 +151,7 @@ namespace dRz.Updater
                 if (!installAutomatically)
                 {
                     MessageResult result = _promptService.AskYesNo(
-                        $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?",
-                        "Обновление");
+                        $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?", "Updater");
 
                     if (result != MessageResult.Yes)
                         return UpdateResult.Declined;
@@ -163,12 +162,12 @@ namespace dRz.Updater
                 if (update.Mandatory)
                 {
                     _messageServices.InfoMessage(
-                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.");
+                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.", title: "Updater");
                 }
                 else if (effectiveMode == UpdateMode.CheckAndInstall)
                 {
                     _messageServices.InfoMessage(
-                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}");
+                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}", title: "Updater");
                 }
 
                 string assetFile = Path.Combine(
@@ -248,7 +247,7 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}, и восстановление завершилось ошибкой. " +
-                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.");
+                        $"Приложение может находиться в невалидном состоянии. Скачайте полный релиз и распакуйте его с заменой файлов.", title: "Updater");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return UpdateResult.Failed;
@@ -260,14 +259,14 @@ namespace dRz.Updater
 
                     _messageServices.WarningMessage(
                         $"Не удалось установить обновление {update.Version.ToVersion()}; прежнее состояние восстановлено. " +
-                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.");
+                        $"Попробуйте повторить обновление после перезапуска nanoCAD или скачайте релиз вручную.", title: "Updater");
 
                     OpenReleaseIfRequested(request.UpdateUrl, update.Tag);
                     return UpdateResult.Failed;
                 }
 
                 _messageServices.InfoMessage(
-                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.");
+                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.", title: "Updater");
 
                 return UpdateResult.Installed;
             }
@@ -283,7 +282,7 @@ namespace dRz.Updater
                 if (request?.LaunchMode == UpdateLaunchMode.Manual)
                 {
                     _messageServices.WarningMessage(
-                        $"Не удалось проверить или выполнить обновление: {ex.Message}");
+                        $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
                 }
 
                 return UpdateResult.Failed;
@@ -310,8 +309,7 @@ namespace dRz.Updater
         {
             string releaseUrl = BuildReleaseUrl(updateUrl, tag);
             MessageResult result = _promptService.AskYesNo(
-                $"Открыть страницу релиза?\n{releaseUrl}",
-                "Восстановление обновления");
+                $"Открыть страницу релиза?\n{releaseUrl}", "Updater");
 
             if (result != MessageResult.Yes)
                 return;
@@ -327,7 +325,7 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
                 _messageServices.WarningMessage(
-                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}");
+                    $"Не удалось открыть страницу релиза автоматически. Откройте ссылку вручную: {releaseUrl}", title: "Updater");
             }
         }
 
