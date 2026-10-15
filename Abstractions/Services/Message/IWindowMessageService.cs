@@ -1,15 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace dRz.Abstractions.Services.Message
+﻿namespace dRz.Abstractions.Services.Message
 {
-    /// <summary>Сервис сообщений, окно</summary>
-    /// <seealso cref="IMessageService" />
+    /// <summary>Сервис оконных сообщений.</summary>
+    /// <remarks>Объединяет обычные и интерактивные сообщения без дублирования их контрактов.</remarks>
     public interface IWindowMessageService : IMessageService, IMessagePromptService
     {
-        MessageResult AskOkCancel(string message, string title, [CallerMemberName] string? caller = null);
-        MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null);
-        MessageResult AskYesNoCancel(string message, string title, [CallerMemberName] string? caller = null);
-        MessageResult AskYesNo(string message, string title, [CallerMemberName] string? caller = null);
-        MessageResult AskRetryCancel(string message, string title, [CallerMemberName] string? caller = null);
-    } 
+    }
 }
