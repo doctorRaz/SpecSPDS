@@ -7,6 +7,7 @@ using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
@@ -72,7 +73,7 @@ namespace dRz.Test.Console.Updater
         /// <summary>
         /// Позволяет вручную выбрать режим обновления для проверки в консольном тесте.
         /// </summary>
-        private static void SelectUpdateMode(IAddonSettings settings)
+        private void SelectUpdateMode(IAddonSettings settings)
         {
             while (true)
             {
@@ -80,7 +81,7 @@ namespace dRz.Test.Console.Updater
                 _msg.InfoMessage("Выберите режим: 0 — Disabled, 1 — CheckAndNotify, 2 — CheckAndInstall.");
                 _msg.InfoMessage("Enter — оставить текущий режим.");
 
-                string? input = Console.ReadLine();
+                string? input = Sys.Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
                     return;
 
@@ -117,8 +118,8 @@ namespace dRz.Test.Console.Updater
             }
         }
 
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ProgramAsync));
+        private IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ProgramAsync));
 
-        private static IMessageService _msg = AddOnCtx.Msg;
+        private IMessageService _msg = AddOnCtx.Msg;
     }
 }

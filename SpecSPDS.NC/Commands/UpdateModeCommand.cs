@@ -1,8 +1,8 @@
 using dRz.Abstractions.Settings;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using System;
 using Teigha.Runtime;
+using Sys = System;
 
 namespace dRz.NC.Commands
 {
@@ -27,9 +27,10 @@ namespace dRz.NC.Commands
             {
                 settings = AddOnCtx.Services.Get<IAddonSettings>();
             }
-            catch (Exception ex)
+            catch (Sys.Exception ex)
             {
-                document.Editor.WriteMessage($"\nНе удалось получить настройки аддона: {ex.Message}");
+                AddOnCtx.Msg.ErrorMessage("Не удалось получить настройки аддона:", ex);
+
                 return;
             }
 
@@ -37,7 +38,7 @@ namespace dRz.NC.Commands
             UpdateMode previousMode = updateSettings.Mode;
 
             PromptKeywordOptions options = new PromptKeywordOptions(
-                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
+                                            $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
             options.Keywords.Add("Disabled");
             options.Keywords.Add("Notify");
             options.Keywords.Add("Install");
@@ -62,7 +63,8 @@ namespace dRz.NC.Commands
 
             if (newMode == previousMode)
             {
-                document.Editor.WriteMessage($"\nРежим обновления не изменён: {GetDescription(previousMode)}.");
+                AddOnCtx.Msg.InfoMessage($"Режим обновления не изменён: {GetDescription(previousMode)}.");
+
                 return;
             }
 
@@ -70,13 +72,14 @@ namespace dRz.NC.Commands
             try
             {
                 settings.Save();
-                document.Editor.WriteMessage($"\nРежим обновления сохранён: {GetDescription(newMode)}.");
+                AddOnCtx.Msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
             }
-            catch (Exception ex)
+            catch (Sys.Exception ex)
             {
                 // Если JSON не сохранился, возвращаем прежнее значение в памяти.
                 updateSettings.Mode = previousMode;
-                document.Editor.WriteMessage($"\nНе удалось сохранить режим обновления. Восстановлено прежнее значение: {GetDescription(previousMode)}. {ex.Message}");
+
+                AddOnCtx.Msg.ErrorMessage($"Не удалось сохранить режим обновления.Восстановлено прежнее значение: {GetDescription(previousMode)}", ex);
             }
         }
 

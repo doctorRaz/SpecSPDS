@@ -5,6 +5,7 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using System;
+using Sys = System;
 using System.Diagnostics;
 
 namespace dRz.Test.Console.Updater
@@ -54,7 +55,7 @@ namespace dRz.Test.Console.Updater
 
             _msg.InfoMessage($"{res}Press any key to exit...");
 
-            return System.Console.ReadKey();
+            return Sys.Console.ReadKey();
         }
 
         private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
