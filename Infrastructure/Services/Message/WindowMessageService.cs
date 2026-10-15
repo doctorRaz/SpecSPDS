@@ -12,44 +12,40 @@ namespace dRz.Infrastructure.Services.Message
     {
         //наследуемся от IMessageService, добавляются методы ASK
 
-        #region Private Fields
+        private readonly string _productTitlePrefix;
 
-        private readonly IAddOnInfo _applicationInfo;
+        //private readonly IAddOnInfo _applicationInfo;
 
         private readonly IntPtr _cadWindowHandle = IntPtr.Zero;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public WindowMessageService(IAddOnInfo addOnInfo, IWindowHandleProvider handleProvider)
         {
-            _applicationInfo = addOnInfo;
+            //_applicationInfo = addOnInfo;
+            _productTitlePrefix = addOnInfo.ProductTitlePrefix;
 
             _cadWindowHandle = handleProvider.Handle;
         }
 
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null)
         {
-            //throw new NotImplementedException();
             if (_cadWindowHandle != IntPtr.Zero)
             {
                 SetForegroundWindow(_cadWindowHandle);
             }
 
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex,
-                _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _productTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null)
         {
-            //throw new NotImplementedException();
+            if (_cadWindowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(_cadWindowHandle);
+            }
+
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + ex + "\n" + message,
-              _applicationInfo.ProductTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+              _productTitlePrefix + "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void InfoMessage(string message, [CallerMemberName] string? caller = null)
@@ -60,16 +56,21 @@ namespace dRz.Infrastructure.Services.Message
             }
 
             MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
-                _applicationInfo.ProductTitlePrefix
+                _productTitlePrefix
                 + "Info", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void WarningMessage(string message, [CallerMemberName] string? caller = null)
         {
-            throw new NotImplementedException();
-        }
+            if (_cadWindowHandle != IntPtr.Zero)
+            {
+                SetForegroundWindow(_cadWindowHandle);
+            }
 
-        #endregion Public Methods
+            MessageBox.Show((string.IsNullOrWhiteSpace(caller) ? "" : $"{caller} >> ") + message,
+              _productTitlePrefix
+              + "Warn", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
 
         public MessageResult AskAbortRetryIgnore(string message, string title, [CallerMemberName] string? caller = null)
         {
@@ -112,8 +113,6 @@ namespace dRz.Infrastructure.Services.Message
             throw new NotImplementedException();
         }
 
-        #region Private Methods
-
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -123,6 +122,5 @@ namespace dRz.Infrastructure.Services.Message
                 string lpText,
                 string lpCaption,
                 uint uType);
-        #endregion Private Methods
     }
 }
