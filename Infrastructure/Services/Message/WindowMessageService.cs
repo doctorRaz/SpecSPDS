@@ -25,7 +25,7 @@ namespace dRz.Infrastructure.Services.Message
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(ex.ToString(), caller),
-                BuildTitle(title, "Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null)
@@ -33,47 +33,32 @@ namespace dRz.Infrastructure.Services.Message
             ActivateCadWindow();
             string text = ex == null ? message : $"{ex}\n{message}";
             MessageBox.Show(FormatMessage(text, caller),
-                BuildTitle(title, "Error"), MessageBoxButton.OK, MessageBoxImage.Error);
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(message, caller),
-                BuildTitle(title, "Info"), MessageBoxButton.OK, MessageBoxImage.Information);
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
             MessageBox.Show(FormatMessage(message, caller),
-                BuildTitle(title, "Warn"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null)
-        {
-            return ShowPrompt(message, title, caller, Forms.MessageBoxButtons.AbortRetryIgnore, Forms.MessageBoxIcon.Warning);
-        }
+        public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.AbortRetryIgnore, Forms.MessageBoxIcon.Warning);
 
-        public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null)
-        {
-            return ShowPrompt(message, title, caller, Forms.MessageBoxButtons.OKCancel, Forms.MessageBoxIcon.Question);
-        }
+        public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.OKCancel, Forms.MessageBoxIcon.Question);
 
-        public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null)
-        {
-            return ShowPrompt(message, title, caller, Forms.MessageBoxButtons.RetryCancel, Forms.MessageBoxIcon.Question);
-        }
+        public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.RetryCancel, Forms.MessageBoxIcon.Question);
 
-        public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null)
-        {
-            return ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNo, Forms.MessageBoxIcon.Question);
-        }
+        public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNo, Forms.MessageBoxIcon.Question);
 
-        public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null)
-        {
-            return ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNoCancel, Forms.MessageBoxIcon.Question);
-        }
+        public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNoCancel, Forms.MessageBoxIcon.Question);
 
         private MessageResult ShowPrompt(
             string message,
@@ -87,13 +72,13 @@ namespace dRz.Infrastructure.Services.Message
             Forms.DialogResult result = _cadWindowHandle == IntPtr.Zero
                 ? Forms.MessageBox.Show(
                     FormatMessage(message, caller),
-                    BuildTitle(title, null),
+                    BuildTitle(title),
                     buttons,
                     icon)
                 : Forms.MessageBox.Show(
                     new WindowOwner(_cadWindowHandle),
                     FormatMessage(message, caller),
-                    BuildTitle(title, null),
+                    BuildTitle(title),
                     buttons,
                     icon);
 
@@ -110,15 +95,11 @@ namespace dRz.Infrastructure.Services.Message
             };
         }
 
-        private string BuildTitle(string? title, string? category)
+        private string BuildTitle(string? title)
         {
             if (!string.IsNullOrWhiteSpace(title))
             {
                 return $"{_productTitlePrefix}: {title}";
-            }
-            else if (!string.IsNullOrWhiteSpace(category))
-            {
-                return $"{_productTitlePrefix}: {category}";
             }
             else
             {
