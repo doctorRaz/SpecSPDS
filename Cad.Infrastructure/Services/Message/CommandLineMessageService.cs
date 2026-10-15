@@ -21,16 +21,16 @@ namespace dRz.NC.Infrastructure.Services.Message
         public void ConsoleMessage(string message, [CallerMemberName] string? caller = null) =>
             WriteMessage(string.Empty, message, caller, null);
 
-        public void WarningMessage(string message, [CallerMemberName] string? caller = null, string? title = null) =>
+        public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage("Warn", message, caller, title);
 
-        public void ErrorMessage(Exception ex, [CallerMemberName] string? caller = null, string? title = null) =>
+        public void ErrorMessage(Exception ex, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage("Error", $"{ex.Message}\n{ex.StackTrace}", caller, title);
 
-        public void ErrorMessage(string message, Exception? ex = null, [CallerMemberName] string? caller = null, string? title = null) =>
-            WriteMessage("Error", ex == null ? message : $"{message}\n{ex.Message}\n{ex.StackTrace}", caller, title);
+        public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null) =>
+            WriteMessage("Error", ex == null ? message : $"{message}\n{ex.Message}\n{ex.StackTrace}", title, caller);
 
-        public void InfoMessage(string message, [CallerMemberName] string? caller = null, string? title = null) =>
+        public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage("Info", message, caller, title);
 
         private void WriteMessage(string prefix, string message, string? caller, string? title)
