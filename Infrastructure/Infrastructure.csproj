@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<UseWindowForms>true</UseWindowForms>
+		<UseWindowsForms>true</UseWindowsForms>
 		<Description>Инфраструктура и сервисы</Description>
 	</PropertyGroup>
 	<ItemGroup>
