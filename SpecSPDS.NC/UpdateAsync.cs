@@ -18,6 +18,13 @@ namespace dRz.NC
     /// </remarks>
     public class UpdateAsync
     {
+        public UpdateAsync()
+        {
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
+
+            _msg = AddOnCtx.Msg;
+        }
+
         /// <summary>
         /// Выполняет проверку обновлений и, в зависимости от режима запуска и настроек,
         /// передаёт управление установкой обновления менеджеру обновлений.
@@ -87,15 +94,15 @@ namespace dRz.NC
             {
                 string msg = "Продолжение не возможно";
 
-                _logger?.Fatal(ex, msg);
+                _logger.Fatal(ex, msg);
 
                 _msg.ErrorMessage(msg, ex);
             }
         }
 
         // Статические ссылки соответствуют общему контексту аддона и используются для диагностики ошибок.
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
+        private   IDrzLogger _logger;
 
-        private static IMessageService _msg = AddOnCtx.Msg;
+        private   IMessageService _msg;
     }
 }

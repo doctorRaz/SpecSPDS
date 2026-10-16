@@ -57,7 +57,7 @@ namespace dRz.NC
 
 #if DEBUG
 
-        [Rtm.CommandMethod("инитПЧ", Rtm.CommandFlags.UsePickSet)]
+        [Rtm.CommandMethod("инитСП", Rtm.CommandFlags.UsePickSet)]
         public static void test()
         {
             EntryPoint entryPoint = new EntryPoint();
@@ -146,7 +146,8 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"CleanBackups: {ex.Message}");
+                if (_isLoggerProvider)
+                    _logger.Error(ex, $"CleanBackups: {ex.Message}");
             }
         }
 
@@ -211,15 +212,18 @@ namespace dRz.NC
         {
             try
             {
-                _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
-                _logger.Info(AddOnCtx.CadInfo.ToLongString());
-                _logger.Info(AddOnCtx.SysInfo.ToLongString());
+                _logger.Trace(AddOnCtx.AddOnInfo.ToLongString());
+                _logger.Trace(AddOnCtx.CadInfo.ToLongString());
+                _logger.Trace(AddOnCtx.SysInfo.ToLongString());
 
                 _message.InfoMessage($"Hello {AddOnCtx.AddOnInfo.ToShortString()} for {AddOnCtx.CadInfo.ToString()}");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, ex.Message);
+                if (_isLoggerProvider)
+                {
+                    _logger.Error(ex, ex.Message);
+                }
             }
         }
 
@@ -228,7 +232,8 @@ namespace dRz.NC
         /// </summary>
         public void Terminate()
         {
-            _logger.Trace("Terminate");
+            if (_isLoggerProvider)
+                _logger.Trace("Terminate");
 
             // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();

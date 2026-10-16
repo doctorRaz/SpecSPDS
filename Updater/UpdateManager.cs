@@ -318,9 +318,9 @@ namespace dRz.Updater
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(tempDirectoryRoot) && Directory.Exists(tempDirectoryRoot))
+                    if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
                     {
-                        Directory.Delete(tempDirectoryRoot, true);
+                        Directory.Delete(tempDirectory, true);
                     }
 
                     _logger.Trace("Delete tempDirectoryRoot");
