@@ -5,6 +5,7 @@ using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
+using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -306,11 +307,8 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
 
-                if (request?.LaunchMode == UpdateLaunchMode.Manual)
-                {
-                    _messageServices.WarningMessage(
-                        $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
-                }
+                _messageServices.WarningMessage(
+                    $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
 
                 return UpdateResult.Failed;
             }
