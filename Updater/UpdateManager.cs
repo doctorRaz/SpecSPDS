@@ -200,12 +200,18 @@ namespace dRz.Updater
                     tempDirectory,
                     "extracted");
 
-                SevenZipService sevenZip = new SevenZipService();
+                // Выполняем распаковку в отдельном потоке и ожидаем её завершения.
+                // Инициализация SharpSevenZip, распаковка и освобождение ресурсов
+                // выполняются в одном фоновом потоке, без блокировки потока nanoCAD.
+                await Task.Run(() =>
+                {
+                    SevenZipService sevenZip = new SevenZipService();
 
-                sevenZip.Extract(
-                    assetFile,
-                    extractedDirectory,
-                    GetAssetPassword(update));
+                    sevenZip.Extract(
+                        assetFile,
+                        extractedDirectory,
+                        GetAssetPassword(update));
+                }, cancellationToken);
 
                 string sourceDirectory = Path.Combine(extractedDirectory, update.Product);
 
