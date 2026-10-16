@@ -19,6 +19,7 @@ namespace dRz.Updater
     public class UpdateManager
     {
         private readonly IDrzLogger _logger;
+        private readonly IDrzLogger _cleanerLogger;
         private readonly IMessageService _messageServices;
         private readonly IMessagePromptService _promptService;
         private readonly IUpdateSettings _updateSettings;
@@ -42,6 +43,7 @@ namespace dRz.Updater
             _updateSettings = updateSettings ?? throw new ArgumentNullException(nameof(updateSettings));
             _downloader = new Downloader();
             _logger = loggerFactory.GetLogger<UpdateManager>();
+            _cleanerLogger = loggerFactory.GetLogger<BackupCleaner>();
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace dRz.Updater
                 throw exception;
             }
 
-            BackupCleaner.DeleteBackupFiles(addOnDirectory, _logger);
+            BackupCleaner.DeleteBackupFiles(addOnDirectory, _cleanerLogger);
         }
 
         /// <summary>
