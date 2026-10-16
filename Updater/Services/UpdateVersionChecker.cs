@@ -28,22 +28,30 @@ namespace dRz.Updater.Services
             // Актуальность версии проверяется первой: устаревший или тот же релиз
             // не должен запускать остальные проверки.
             if (updateVersion <= currentVersion)
+            {
                 return null;
+            }
 
             // Обязательный релиз всегда требует полного обновления.
             if (update.Mandatory)
+            {
                 return UpdateKind.Full;
+            }
 
             Version minimumVersion = update.MinimumVersion.ToVersion();
 
             // Ниже минимальной версии разрешено только полное обновление,
             // но решение об установке остаётся за UpdateMode.
             if (currentVersion < minimumVersion)
+            {
                 return UpdateKind.Full;
+            }
 
             // Переход на новую Major-версию требует полного обновления.
             if (updateVersion.Major > currentVersion.Major)
+            {
                 return UpdateKind.Full;
+            }
 
             return UpdateKind.Normal;
         }

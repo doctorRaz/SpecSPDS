@@ -1,5 +1,3 @@
-using System;
-
 namespace dRz.Abstractions.Settings
 {
     /// <summary>

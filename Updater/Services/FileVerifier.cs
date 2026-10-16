@@ -18,13 +18,19 @@ namespace dRz.Updater.Services
             string expectedSha256)
         {
             if (!File.Exists(filePath))
+            {
                 return false;
+            }
 
             if (new FileInfo(filePath).Length != expectedSize)
+            {
                 return false;
+            }
 
             if (string.IsNullOrWhiteSpace(expectedSha256))
+            {
                 return false;
+            }
 
             using FileStream stream = File.OpenRead(filePath);
             using SHA256 sha256 = SHA256.Create();

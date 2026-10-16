@@ -1,5 +1,5 @@
-using System;
 using dRz.Abstractions.Updater;
+using System;
 
 namespace dRz.Abstractions.Settings
 {
@@ -14,7 +14,7 @@ namespace dRz.Abstractions.Settings
         UpdateMode Mode { get; set; }
 
         /// <summary>
-        /// Дата и время последней завершённой проверки обновлений в UTC.
+        /// Дата и время последнего завершённого запуска проверки/обновления в UTC. Не обновляется при отмене или блокировке обновления из-за сетевого расположения.
         /// </summary>
         DateTime? LastCheck { get; set; }
 

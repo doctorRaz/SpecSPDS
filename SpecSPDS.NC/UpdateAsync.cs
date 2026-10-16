@@ -5,71 +5,127 @@ using dRz.Abstractions.Updater;
 using dRz.Updater;
 using dRz.Updater.Services;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace dRz.NC
 {
+    /// <summary>
+    /// Координирует проверку и установку обновлений аддона из контекста CAD-хоста.
+    /// </summary>
+    /// <remarks>
+    /// Класс использует зарегистрированные сервисы аддона. Асинхронный запуск не блокирует
+    /// поток вызова; после асинхронных операций продолжение использует захваченный контекст,
+    /// если он предоставлен вызывающей средой.
+    /// </remarks>
     public class UpdateAsync
     {
-        public async Task MainAsync()
+        private readonly IDrzLogger _logger;
+        private readonly IMessageService _msg;
+
+        public UpdateAsync()
         {
-            Stopwatch sw = Stopwatch.StartNew();
+            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
+            _msg = AddOnCtx.Msg;
+        }
+
+        /// <summary>
+        /// Выполняет проверку обновлений и, в зависимости от режима запуска и настроек,
+        /// передаёт управление установкой обновления менеджеру обновлений.
+        /// Сохраняет результат запуска и время завершённой проверки.
+        /// </summary>
+        /// <param name="launchMode">Режим запуска, определяющий поведение проверки и установки.</param>
+        /// <returns>Задача, представляющая асинхронную операцию обновления.</returns>
+        /// <remarks>
+        /// Ошибки выполнения, сохранения состояния и уведомления об ошибках обрабатываются
+        /// отдельно, чтобы сбой диагностики не маскировал исходную ошибку.
+        /// </remarks>
+        public async Task UpdateAsyncRun(UpdateLaunchMode launchMode)
+        {
             try
             {
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
+
+                UpdateManager updateManager = new UpdateManager(
+                    AddOnCtx.Msg,
+                    AddOnCtx.MsgPrt,
+                    AddOnCtx.NLogFactory,
+                    settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
-                                                            AddOnCtx.AddOnInfo.Product +
-                                                            "/releases/latest/download/";
-
-                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-                UpdateLaunchMode launchMode = UpdateLaunchMode.Automatic;
+                                   AddOnCtx.AddOnInfo.Product +
+                                   "/releases/latest/download/";
+#if DEBUG
+                //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+#endif
+                _logger.Trace($"updateUrl: {updateUrl}");
 
                 UpdateRequest request = new UpdateRequest
                 {
-                    CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
-
+                    CurrentVersion = AddOnCtx.AddOnInfo.InstalledVersion,
                     UpdateUrl = updateUrl,
-
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
-
                     IsPackage = AddOnCtx.AddOnInfo.HasPackage,
-
                     IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
-
                     LaunchMode = launchMode,
                 };
 
-                // Результат позволяет вызывающему коду различать исходы обновления.
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                settings.Updates.LastCheck = DateTime.UtcNow;
+                // Сохраняем время завершённой попытки, в том числе неудачной проверки.
+                // При отмене или сетевом расположении проверка обновлений не завершена.
+                if (result is not UpdateResult.Cancelled and not UpdateResult.NetworkPath)
+                {
+                    settings.Updates.LastCheck = DateTime.UtcNow;
+                }
+
+                // Результат сохраняется и для неуспешного запуска, чтобы его можно было диагностировать.
                 settings.Updates.LastResult = result;
+
                 try
                 {
                     settings.Save();
                 }
                 catch (Exception saveException)
                 {
-                    // Ошибка сохранения состояния не отменяет результат уже выполненного обновления.
-                    _logger?.Error(saveException, "Не удалось сохранить состояние обновления.");
+                    ReportError(saveException, "Не удалось сохранить состояние обновления.");
                 }
-
-                _msg.InfoMessage($"{nameof(UpdateAsync)}: {sw.Elapsed}");
             }
             catch (Exception ex)
             {
-                _logger?.Fatal(ex, "Продолжение не возможно");
-
-                _msg.ErrorMessage("Продолжение не возможно", ex);
+                ReportError(ex, "Не удалось выполнить проверку или обновление.");
             }
         }
 
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
+        /// <summary>
+        /// Пытается записать ошибку в журнал и уведомить пользователя.
+        /// Сбой одного из каналов диагностики не должен скрывать исходную ошибку.
+        /// </summary>
+        private void ReportError(Exception exception, string message)
+        {
+            try
+            {
+                _logger.Error(exception, message);
+            }
+            catch
+            {
+                // Не допускаем, чтобы сбой логгера прервал обработку исходной ошибки.
+            }
 
-        private static IMessageService _msg = AddOnCtx.Msg;
+            try
+            {
+                _msg.ErrorMessage(message, exception);
+            }
+            catch (Exception notificationException)
+            {
+                try
+                {
+                    _logger.Error(notificationException, "Не удалось показать сообщение об ошибке.");
+                }
+                catch
+                {
+                    // Оба канала диагностики могут быть недоступны.
+                }
+            }
+        }
     }
 }

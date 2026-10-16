@@ -5,6 +5,7 @@ using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
+using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,7 @@ namespace dRz.Updater
     public class UpdateManager
     {
         private readonly IDrzLogger _logger;
+        private readonly IDrzLogger _cleanerLogger;
         private readonly IMessageService _messageServices;
         private readonly IMessagePromptService _promptService;
         private readonly IUpdateSettings _updateSettings;
@@ -42,6 +44,7 @@ namespace dRz.Updater
             _updateSettings = updateSettings ?? throw new ArgumentNullException(nameof(updateSettings));
             _downloader = new Downloader();
             _logger = loggerFactory.GetLogger<UpdateManager>();
+            _cleanerLogger = loggerFactory.GetLogger<BackupCleaner>();
         }
 
         /// <summary>
@@ -52,12 +55,12 @@ namespace dRz.Updater
         {
             if (string.IsNullOrWhiteSpace(addOnDirectory))
             {
-                var exception = new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
+                ArgumentException exception = new ArgumentException("Не указан каталог аддона.", nameof(addOnDirectory));
                 _logger.Error(exception);
                 throw exception;
             }
 
-            BackupCleaner.DeleteBackupFiles(addOnDirectory, _logger);
+            BackupCleaner.DeleteBackupFiles(addOnDirectory, _cleanerLogger);
         }
 
         /// <summary>
@@ -71,6 +74,8 @@ namespace dRz.Updater
             UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
+            string tempDirectoryRoot = Path.Combine(Path.GetTempPath(), "dRz");
+
             string? tempDirectory = null;
 
             try
@@ -97,7 +102,7 @@ namespace dRz.Updater
                     return UpdateResult.NetworkPath;
                 }
 
-                _logger.Debug("RunAsync");
+                _logger.Trace("RunAsync");
 
                 // При ручном запуске всегда проверяем обновления с уведомлением,
                 // независимо от режима, заданного вызывающим кодом.
@@ -105,11 +110,7 @@ namespace dRz.Updater
                     ? UpdateMode.CheckAndNotify
                     : _updateSettings.Mode;
 
-                tempDirectory = Path.Combine(
-                    Path.GetTempPath(),
-                    "dRz",
-                    "Updater",
-                    Guid.NewGuid().ToString("N"));
+                tempDirectory = Path.Combine(tempDirectoryRoot, nameof(Updater), Guid.NewGuid().ToString("N"));
 
                 Directory.CreateDirectory(tempDirectory);
 
@@ -142,7 +143,9 @@ namespace dRz.Updater
                 // Disabled запрещает необязательные обновления, но не mandatory.
                 // Mandatory обновления выполняются независимо от режима.
                 if (effectiveMode == UpdateMode.Disabled && !update.Mandatory)
+                {
                     return UpdateResult.Disabled;
+                }
 
                 bool installAutomatically =
                     update.Mandatory ||
@@ -154,7 +157,9 @@ namespace dRz.Updater
                         $"Доступно обновление {update.Product} до версии {update.Version.ToVersion()}.\nУстановить его?", "Updater");
 
                     if (result != MessageResult.Yes)
+                    {
                         return UpdateResult.Declined;
+                    }
                 }
 
                 // Автоматическая установка должна быть предварительно обозначена пользователю.
@@ -200,12 +205,35 @@ namespace dRz.Updater
                     tempDirectory,
                     "extracted");
 
-                SevenZipService sevenZip = new SevenZipService();
+                //консоль:
+                // Перед распаковкой: поток вызывающего кода, ID=7, ThreadPool=True, Name=.NET ThreadPool Worker
+                //нанокад:
+                //  Перед распаковкой: поток вызывающего кода, ID=1, ThreadPool=False, Name=(без имени)
 
-                sevenZip.Extract(
-                    assetFile,
-                    extractedDirectory,
-                    GetAssetPassword(update));
+                // Диагностика потока, из которого запускается распаковка.
+                Thread currentThread = Thread.CurrentThread;
+                _logger.Trace(
+                    $"Перед распаковкой: поток вызывающего кода, ID={currentThread.ManagedThreadId}, " +
+                    $"ThreadPool={currentThread.IsThreadPoolThread}, Name={currentThread.Name ?? "(без имени)"}");
+
+                // Выполняем распаковку в отдельном потоке и ожидаем её завершения.
+                // Диагностику потока распаковки пишем в лог: UI-сообщения nanoCAD
+                // не вызываем из фонового потока.
+                await Task.Run(() =>
+                {
+                    Thread extractionThread = Thread.CurrentThread;
+                    _logger.Trace(
+                        $"Начало распаковки: ID потока={extractionThread.ManagedThreadId}, " +
+                        $"ThreadPool={extractionThread.IsThreadPoolThread}, " +
+                        $"Name={extractionThread.Name ?? "(без имени)"}");
+
+                    SevenZipService sevenZip = new SevenZipService();
+
+                    sevenZip.Extract(
+                        assetFile,
+                        extractedDirectory,
+                        GetAssetPassword(update));
+                }, cancellationToken);
 
                 string sourceDirectory = Path.Combine(extractedDirectory, update.Product);
 
@@ -279,11 +307,8 @@ namespace dRz.Updater
             {
                 _logger.Error(ex);
 
-                if (request?.LaunchMode == UpdateLaunchMode.Manual)
-                {
-                    _messageServices.WarningMessage(
-                        $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
-                }
+                _messageServices.WarningMessage(
+                    $"Не удалось проверить или выполнить обновление: {ex.Message}", title: "Updater");
 
                 return UpdateResult.Failed;
             }
@@ -292,8 +317,11 @@ namespace dRz.Updater
                 try
                 {
                     if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
+                    {
                         Directory.Delete(tempDirectory, true);
-                    _logger.Debug("Final");
+                    }
+
+                    _logger.Trace("Удалён временный каталог обновления.");
                 }
                 catch (Exception ex)
                 {
@@ -312,7 +340,9 @@ namespace dRz.Updater
                 $"Открыть страницу релиза?\n{releaseUrl}", "Updater");
 
             if (result != MessageResult.Yes)
+            {
                 return;
+            }
 
             try
             {
@@ -394,13 +424,19 @@ namespace dRz.Updater
         private static string ResolveUrl(string baseUrl, string resource)
         {
             if (string.IsNullOrWhiteSpace(resource))
+            {
                 throw new InvalidDataException("В update.json не указан ресурс.");
+            }
 
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out Uri? baseUri))
+            {
                 throw new InvalidDataException("Некорректный базовый URL обновлений.");
+            }
 
             if (Uri.TryCreate(resource, UriKind.Absolute, out Uri? absoluteUri))
+            {
                 return absoluteUri.ToString();
+            }
 
             string normalizedBaseUrl = baseUri.AbsoluteUri.EndsWith(
                 "/",
@@ -417,13 +453,19 @@ namespace dRz.Updater
         private static void ValidateRequest(UpdateRequest request)
         {
             if (request.CurrentVersion is null)
+            {
                 throw new ArgumentException("Не указана текущая версия.", nameof(request));
+            }
 
             if (string.IsNullOrWhiteSpace(request.UpdateUrl))
+            {
                 throw new ArgumentException("Не указан базовый URL обновлений.", nameof(request));
+            }
 
             if (string.IsNullOrWhiteSpace(request.PackageDirectory))
+            {
                 throw new ArgumentException("Не указан каталог аддона.", nameof(request));
+            }
         }
     }
 }

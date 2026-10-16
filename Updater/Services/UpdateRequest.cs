@@ -1,4 +1,3 @@
-using dRz.Abstractions.Settings;
 using System;
 
 namespace dRz.Updater.Services

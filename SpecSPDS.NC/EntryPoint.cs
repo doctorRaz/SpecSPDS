@@ -13,10 +13,8 @@ using System;
 #if NC
 
 using HostMgd.ApplicationServices;
-
-using App = HostMgd.ApplicationServices;
-
 using HostMgd.EditorInput;
+
 using Rtm = Teigha.Runtime;
 
 #elif AC
@@ -33,23 +31,25 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 namespace dRz.NC
 {
-    /// <summary> инициализация модуля </summary>
+    /// <summary>
+    /// Точка входа аддона для инициализации и завершения работы в CAD-хосте.
+    /// </summary>
     public class EntryPoint : Rtm.IExtensionApplication
     {
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private bool _isRegisterAssemblyResolver;//register assembly resolver
+        private bool _isRegisterAssemblyResolver;// Флаг регистрации обработчика разрешения сборок.
 
         private IDrzLogger _logger;
-        private static bool _isLoggerProvider;//логер есть
+        private static bool _isLoggerProvider;// Логгер успешно получен.
 
         private IMessageService _message;
-        private bool _isMessageProvider;//сообщения
+        private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
 
-        private IAddOnInfo _addOnInfo;//о сборке
+        private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
         private bool _isAddOnInfoProvider;
 
-        private ICadInfo _cadInfo;//о cad
+        private ICadInfo _cadInfo;// Сведения о CAD-хосте.
         private bool _isCadInfoProvider;
 
         private ISysInfo _sysInfo;//о cad
@@ -57,7 +57,7 @@ namespace dRz.NC
 
 #if DEBUG
 
-        [Rtm.CommandMethod("инитПЧ", Rtm.CommandFlags.UsePickSet)]
+        [Rtm.CommandMethod("инитСП", Rtm.CommandFlags.UsePickSet)]
         public static void test()
         {
             EntryPoint entryPoint = new EntryPoint();
@@ -66,86 +66,98 @@ namespace dRz.NC
 
 #endif
 
-        /// <summary>Initializes this instance.</summary>
+        /// <summary>
+        /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
+        /// и выполняет оставшуюся инициализацию.
+        /// </summary>
+        /// <remarks>
+        /// Метод вызывается CAD-хостом через <see cref="Rtm.IExtensionApplication"/>.
+        /// Ошибки инициализации перехватываются здесь, чтобы не передавать исключение хосту.
+        /// </remarks>
         public void Initialize()
         {
             try
             {
                 // регистрируемся
+                TryAddOnCompositionRoot();// Получаем сервисы и контекст аддона.
 
-                TryAddOnCompositionRoot();//получаем окружение
-
-                //стартуем очистку копий и bak
+                //стартуем обновление, очистку копий и bak
                 TryUpdate();
 
-                //
+                // служебные записи и сообщение пользователю, что аддон поднялся
                 TryInit();
             }
-            catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
+            catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
+                                 // Если ошибка поднялась сюда, то вероятно, что аддон неработоспособен
             {
-                string message = $"Приложение не загружено!!!";
+                string msg = $"Приложение не загружено!!!";
 
-                if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
+                if (_isLoggerProvider)// Используем логгер только после успешного получения сервиса.
                 {
-                    message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
+                    msg += $"\nОтправьте разработчику логфайлы";
 
-                    _logger.Error(ex, message);
+                    if (_isAddOnInfoProvider)
+                    {
+                        msg += $": {_addOnInfo.ProductDataDirectory}\\logs";
+                    }
+
+                    _logger.Fatal(ex, msg);
                 }
-                if (_isAddOnCompositionRoot)
+                if (_isMessageProvider)
                 {
-                    _message.ErrorMessage(message, ex);
+                    _message.ErrorMessage(msg, ex);
                 }
                 else
                 {
 #if NC
-                    message += $"\nСкопируйте и отправьте разработчику это сообщение";
+                    msg += $"\nСкопируйте и отправьте разработчику это сообщение";
 
-                    message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
+                    msg = $"Exception: {msg}\n{ex.Message}\n{ex.StackTrace}";
 
-                    Document document = App.Application.DocumentManager.MdiActiveDocument;
+                    Document document = Application.DocumentManager.MdiActiveDocument;
                     if (document != null)
                     {
                         Editor editor = document.Editor;
 
-                        editor.WriteMessage(message);
+                        editor.WriteMessage(msg);
                     }
                     else
                     {
-                        App.Application.ShowAlertDialog(message);
+                        Application.ShowAlertDialog(msg);
                     }
 #endif
                 }
             }
         }
 
-        /// <summary>Tries the clean backups.</summary>
+        /// <summary>
+        /// Запускает обновление и очистку служебных файлов в фоновом асинхронном процессе.
+        /// </summary>
+        /// <remarks>
+        /// Задача намеренно не ожидается, чтобы не блокировать синхронную инициализацию CAD-хоста.
+        /// Исключения, возникшие до передачи управления асинхронному методу, обрабатываются здесь;
+        /// ошибки внутри задачи должны обрабатываться самим <see cref="UpdateAsync"/>.
+        /// </remarks>
         private void TryUpdate()
         {
             try
             {
-                CleanBackups();
+                UpdateAsync updateAsync = new UpdateAsync();
+                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"CleanBackups: {ex.Message}");
+                if (_isLoggerProvider)
+                    _logger.Error(ex, $"CleanBackups: {ex.Message}");
             }
         }
 
-        /// <summary>Cleans the backups.</summary>
-        private void CleanBackups()
-        {
-            try
-            {
-                UpdateAsync updateAsync = new UpdateAsync();
-                _ = updateAsync.MainAsync();
-                //BackupCleaner.DeleteBackupFiles(AddOnCtx.AddOnInfo.PackageDirectory);
-            }
-            catch { }
-        }
-
-        /// <summary>Tries the add on composition root.</summary>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidOperationException">AddOnCompositionRoot initialization failed</exception>
+        /// <summary>
+        /// Создаёт корень композиции при первом вызове и получает необходимые сервисы аддона.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Не удалось создать корень композиции или получить необходимые сервисы.
+        /// </exception>
         private void TryAddOnCompositionRoot()
         {
             try
@@ -153,16 +165,16 @@ namespace dRz.NC
                 if (!_isAddOnCompositionRoot)
                 {
                     //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
-                    // один раз в точке входа /Rtm.IExtensionApplication/
+                    // Регистрируем сервисы один раз при инициализации CAD-хоста.
                     AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
 
-                    // экземпляр копии контейнера by ref
+                    // Передаём зарегистрированные сервисы в общий контекст аддона.
                     AddOnCtx.Initialize(root.Get<IAddOnServices>());
 
                     // Загружаем настройки сразу при инициализации и фиксируем singleton в контейнере.
                     _ = AddOnCtx.Services.Get<IAddonSettings>();
 
-                    _isAddOnCompositionRoot = true;//сервис поднялся
+                    _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
                 }
 
                 //логер для класса
@@ -183,32 +195,48 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                //роняем загрузчик
+                //если логер получен пытаемся сохранить ошбку в лог
+                if (_isLoggerProvider)
+                {
+                    _logger.Fatal(ex);
+                }
+
+                // Преобразуем ошибку в исключение инициализации с исходной причиной.
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
         }
 
-        /// <summary>Tries the initialize.</summary>
+        /// <summary>
+        /// Записывает сведения об аддоне и CAD-хосте в журнал и выводит приветственное сообщение.
+        /// </summary>
         private void TryInit()
         {
             try
             {
-                _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+                _logger.Trace(AddOnCtx.AddOnInfo.ToLongString());
+                _logger.Trace(AddOnCtx.CadInfo.ToLongString());
+                _logger.Trace(AddOnCtx.SysInfo.ToLongString());
 
                 _message.InfoMessage($"Hello {AddOnCtx.AddOnInfo.ToShortString()} for {AddOnCtx.CadInfo.ToString()}");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, ex.Message);
+                if (_isLoggerProvider)
+                {
+                    _logger.Error(ex, ex.Message);
+                }
             }
         }
 
-        /// <summary>Terminates this instance.</summary>
+        /// <summary>
+        /// Выполняет завершающие действия при выгрузке аддона из CAD-хоста.
+        /// </summary>
         public void Terminate()
         {
-            _logger.Trace("Terminate");
+            if (_isLoggerProvider)
+                _logger.Trace("Terminate");
 
-            //think грузить в инит, теряет свойства радиобатонов
+            // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();
             //dsf.SetGeneralSetting.WriteValue("TEST", "terminate", "true");
         }

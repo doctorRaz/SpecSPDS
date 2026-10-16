@@ -27,7 +27,9 @@ namespace dRz.Settings
         public JsonSettingsStore(string filePath, IDrzLoggerFactory loggerFactory, IMessageService messageService)
         {
             if (string.IsNullOrWhiteSpace(filePath))
+            {
                 throw new ArgumentException("Не указан путь к файлу настроек.", nameof(filePath));
+            }
 
             _filePath = filePath;
             _logger = (loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory))).GetLogger<JsonSettingsStore>();
@@ -66,13 +68,17 @@ namespace dRz.Settings
         internal void Save(AddonSettings settings)
         {
             if (settings == null)
+            {
                 throw new ArgumentNullException(nameof(settings));
+            }
 
             try
             {
                 string? directory = Path.GetDirectoryName(_filePath);
                 if (!string.IsNullOrEmpty(directory))
+                {
                     Directory.CreateDirectory(directory);
+                }
 
                 string json = JsonSerializer.Serialize(settings, SerializerOptions);
                 File.WriteAllText(_filePath, json);

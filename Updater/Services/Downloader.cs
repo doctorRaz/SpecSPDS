@@ -37,7 +37,9 @@ namespace dRz.Updater.Services
 
             string? directory = Path.GetDirectoryName(destinationFile);
             if (!string.IsNullOrEmpty(directory))
+            {
                 Directory.CreateDirectory(directory);
+            }
 
             using HttpResponseMessage response =
                 await _httpClient.GetAsync(

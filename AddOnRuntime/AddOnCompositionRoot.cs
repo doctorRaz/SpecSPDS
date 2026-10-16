@@ -6,15 +6,14 @@ using dRz.Abstractions.Settings;
 using dRz.Infrastructure.Infrastructure;
 using dRz.Infrastructure.Services.Message;
 using dRz.LogBootstrap;
-using dRz.Settings;
 using dRz.NC.Infrastructure.Services;
 using dRz.NC.Infrastructure.Services.Message;
-
+using dRz.Settings;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using System;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 
 //using Container = SimpleInjector.Container;
 

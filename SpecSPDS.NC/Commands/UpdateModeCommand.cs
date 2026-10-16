@@ -1,3 +1,5 @@
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
@@ -11,6 +13,10 @@ namespace dRz.NC.Commands
     /// </summary>
     public sealed class UpdateModeCommand
     {
+        private static IDrzLogger _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+
+        private static IMessageService _msg = AddOnCtx.Msg;
+
         /// <summary>
         /// Показывает текущий режим и позволяет выбрать новый.
         /// Команда: drz_UpdateMode.
@@ -20,16 +26,23 @@ namespace dRz.NC.Commands
         {
             Document? document = Application.DocumentManager.MdiActiveDocument;
             if (document == null)
+            {
                 return;
+            }
 
             IAddonSettings settings;
+
             try
             {
                 settings = AddOnCtx.Services.Get<IAddonSettings>();
             }
             catch (Sys.Exception ex)
             {
-                AddOnCtx.Msg.ErrorMessage("Не удалось получить настройки аддона:", ex);
+                string msg = "Не удалось получить настройки аддона:";
+
+                _logger.Error(msg, ex);
+
+                _msg.ErrorMessage("Не удалось получить настройки аддона:", ex);
 
                 return;
             }
@@ -47,7 +60,9 @@ namespace dRz.NC.Commands
 
             PromptResult result = document.Editor.GetKeywords(options);
             if (result.Status == PromptStatus.Cancel)
+            {
                 return;
+            }
 
             string selected = result.Status == PromptStatus.None
                 ? GetKeyword(previousMode)
