@@ -48,11 +48,12 @@ namespace dRz.Abstractions.Infrastructure
         /// <value>Полный путь к сборке.</value>
         string AssemblyPath { get; }
 
-        /// <summary>Возвращает версию загруженной сборки.</summary>
+        /// <summary>Возвращает версию загруженной в ХОСТ сборки.</summary>
         /// <value>версия сборки.</value>
         Version RunningVersion { get; }
 
-        /// <summary>Возвращает версию установленной сборки.</summary>
+        /// <summary>Возвращает версию ФАЙЛА сборки, может отличаться от RunningVersion загруженной в ХОСТ.<br/>
+        /// Не обязательно загружена в ХОСТ, копия лежит по тому же пути что и asssemble </summary>
         /// <value>версия сборки.</value>
         Version InstalledVersion { get; }
 
