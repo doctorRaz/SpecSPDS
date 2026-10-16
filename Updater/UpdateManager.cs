@@ -200,11 +200,24 @@ namespace dRz.Updater
                     tempDirectory,
                     "extracted");
 
+                // Диагностика потока, из которого запускается распаковка.
+                Thread currentThread = Thread.CurrentThread;
+                _messageServices.InfoMessage(
+                    $"Перед распаковкой: поток вызывающего кода, ID={currentThread.ManagedThreadId}, " +
+                    $"ThreadPool={currentThread.IsThreadPoolThread}, Name={currentThread.Name ?? "(без имени)"}",
+                    title: "Updater");
+
                 // Выполняем распаковку в отдельном потоке и ожидаем её завершения.
-                // Инициализация SharpSevenZip, распаковка и освобождение ресурсов
-                // выполняются в одном фоновом потоке, без блокировки потока nanoCAD.
+                // Диагностику потока распаковки пишем в лог: UI-сообщения nanoCAD
+                // не вызываем из фонового потока.
                 await Task.Run(() =>
                 {
+                    Thread extractionThread = Thread.CurrentThread;
+                    _logger.Debug(
+                        $"Начало распаковки: ID потока={extractionThread.ManagedThreadId}, " +
+                        $"ThreadPool={extractionThread.IsThreadPoolThread}, " +
+                        $"Name={extractionThread.Name ?? "(без имени)"}");
+
                     SevenZipService sevenZip = new SevenZipService();
 
                     sevenZip.Extract(
