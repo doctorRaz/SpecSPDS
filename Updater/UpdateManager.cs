@@ -323,7 +323,7 @@ namespace dRz.Updater
                         Directory.Delete(tempDirectory, true);
                     }
 
-                    _logger.Trace("Delete tempDirectoryRoot");
+                    _logger.Trace("Удалён временный каталог обновления.");
                 }
                 catch (Exception ex)
                 {
