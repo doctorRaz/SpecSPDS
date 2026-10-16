@@ -71,11 +71,9 @@ namespace dRz.NC
 
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                // Не считаем отмену, сетевой путь и ошибочный запуск завершённой проверкой.
-                if (result is UpdateResult.UpToDate
-                    or UpdateResult.Installed
-                    or UpdateResult.Declined
-                    or UpdateResult.Disabled)
+                // Сохраняем время завершённой попытки, в том числе неудачной проверки.
+                // При отмене или сетевом расположении проверка обновлений не завершена.
+                if (result is not UpdateResult.Cancelled and not UpdateResult.NetworkPath)
                 {
                     settings.Updates.LastCheck = DateTime.UtcNow;
                 }
