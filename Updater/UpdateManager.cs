@@ -73,6 +73,8 @@ namespace dRz.Updater
             UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
+            string tempDirectoryRoot = Path.Combine(Path.GetTempPath(), "dRz");
+
             string? tempDirectory = null;
 
             try
@@ -107,11 +109,7 @@ namespace dRz.Updater
                     ? UpdateMode.CheckAndNotify
                     : _updateSettings.Mode;
 
-                tempDirectory = Path.Combine(
-                    Path.GetTempPath(),
-                    "dRz",
-                    "Updater",
-                    Guid.NewGuid().ToString("N"));
+                tempDirectory = Path.Combine(tempDirectoryRoot, nameof(Updater), Guid.NewGuid().ToString("N"));
 
                 Directory.CreateDirectory(tempDirectory);
 
@@ -319,12 +317,12 @@ namespace dRz.Updater
             {
                 try
                 {
-                    if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
+                    if (!string.IsNullOrEmpty(tempDirectoryRoot) && Directory.Exists(tempDirectoryRoot))
                     {
-                        Directory.Delete(tempDirectory, true);
+                        Directory.Delete(tempDirectoryRoot, true);
                     }
 
-                    _logger.Debug("Final");
+                    _logger.Trace("Delete tempDirectoryRoot");
                 }
                 catch (Exception ex)
                 {
