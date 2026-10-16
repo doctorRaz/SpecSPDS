@@ -9,8 +9,27 @@ using System.Threading.Tasks;
 
 namespace dRz.NC
 {
+    /// <summary>
+    /// Координирует проверку и установку обновлений аддона из контекста CAD-хоста.
+    /// </summary>
+    /// <remarks>
+    /// Класс использует зарегистрированные сервисы аддона. Пользовательские сообщения и
+    /// журналирование выполняются через эти сервисы, а запуск обновления не блокирует поток вызова.
+    /// </remarks>
     public class UpdateAsync
     {
+        /// <summary>
+        /// Выполняет проверку обновлений и, в зависимости от режима запуска и настроек,
+        /// передаёт управление установкой обновления менеджеру обновлений.
+        /// После завершения сохраняет время проверки и её результат в настройках.
+        /// </summary>
+        /// <param name="launchMode">Режим запуска, определяющий поведение проверки и установки.</param>
+        /// <returns>Задача, представляющая асинхронную операцию обновления.</returns>
+        /// <remarks>
+        /// Ошибки выполнения и сохранения состояния перехватываются и передаются в журнал
+        /// и сервис пользовательских сообщений. Ошибка сохранения состояния не отменяет
+        /// уже полученный результат обновления.
+        /// </remarks>
         public async Task UpdateAsyncRun(UpdateLaunchMode launchMode)
         {
             try
@@ -43,7 +62,7 @@ namespace dRz.NC
                     LaunchMode = launchMode,
                 };
 
-                // Результат позволяет вызывающему коду различать исходы обновления.
+                // Сохраняем результат, чтобы следующий запуск мог показать актуальное состояние.
                 UpdateResult result = await updateManager.RunAsync(request);
 
                 settings.Updates.LastCheck = DateTime.UtcNow;
@@ -74,6 +93,7 @@ namespace dRz.NC
             }
         }
 
+        // Статические ссылки соответствуют общему контексту аддона и используются для диагностики ошибок.
         private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
 
         private static IMessageService _msg = AddOnCtx.Msg;
