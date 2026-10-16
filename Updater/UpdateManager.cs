@@ -99,7 +99,7 @@ namespace dRz.Updater
                     return UpdateResult.NetworkPath;
                 }
 
-                _logger.Debug("RunAsync");
+                _logger.Trace("RunAsync");
 
                 // При ручном запуске всегда проверяем обновления с уведомлением,
                 // независимо от режима, заданного вызывающим кодом.
@@ -212,10 +212,9 @@ namespace dRz.Updater
                 //  Перед распаковкой: поток вызывающего кода, ID=1, ThreadPool=False, Name=(без имени)
                 // Диагностика потока, из которого запускается распаковка.
                 Thread currentThread = Thread.CurrentThread;
-                _messageServices.InfoMessage(
+                _logger.Trace(
                     $"Перед распаковкой: поток вызывающего кода, ID={currentThread.ManagedThreadId}, " +
-                    $"ThreadPool={currentThread.IsThreadPoolThread}, Name={currentThread.Name ?? "(без имени)"}",
-                    title: "Updater");
+                    $"ThreadPool={currentThread.IsThreadPoolThread}, Name={currentThread.Name ?? "(без имени)"}");
 
                 // Выполняем распаковку в отдельном потоке и ожидаем её завершения.
                 // Диагностику потока распаковки пишем в лог: UI-сообщения nanoCAD
@@ -223,7 +222,7 @@ namespace dRz.Updater
                 await Task.Run(() =>
                 {
                     Thread extractionThread = Thread.CurrentThread;
-                    _logger.Debug(
+                    _logger.Trace(
                         $"Начало распаковки: ID потока={extractionThread.ManagedThreadId}, " +
                         $"ThreadPool={extractionThread.IsThreadPoolThread}, " +
                         $"Name={extractionThread.Name ?? "(без имени)"}");
