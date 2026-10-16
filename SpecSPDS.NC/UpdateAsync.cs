@@ -44,12 +44,38 @@ namespace dRz.NC
             try
             {
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+                IUpdateSettings updateSettings = settings.Updates;
 
-                UpdateManager updateManager = new UpdateManager(
-                    AddOnCtx.Msg,
-                    AddOnCtx.MsgPrt,
-                    AddOnCtx.NLogFactory,
-                    settings.Updates);
+                // Ограничиваем интервал автоматических проверок допустимым диапазоном.
+                int configuredInterval = updateSettings.UpdateCheckIntervalDays;
+                int normalizedInterval = Math.Clamp(configuredInterval, 1, 30);
+                bool intervalNormalized = configuredInterval != normalizedInterval;
+
+                if (intervalNormalized)
+                {
+                    updateSettings.UpdateCheckIntervalDays = normalizedInterval;
+                    try
+                    {
+                        // Сохраняем нормализованное значение даже если проверка будет пропущена.
+                        settings.Save();
+                    }
+                    catch (Exception saveException)
+                    {
+                        ReportError(saveException, "Не удалось сохранить интервал проверки обновлений.");
+                    }
+                }
+
+                // Автоматическая проверка выполняется не чаще заданного интервала.
+                // Ручной запуск всегда игнорирует ограничение.
+                if (launchMode == UpdateLaunchMode.Automatic &&
+                    updateSettings.LastCheck.HasValue &&
+                    DateTime.UtcNow - updateSettings.LastCheck.Value < TimeSpan.FromDays(normalizedInterval))
+                {
+                    _logger.Trace(
+                        $"Автоматическая проверка пропущена: с последней успешной проверки " +
+                        $"не прошло {normalizedInterval} дн.");
+                    return;
+                }
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                    AddOnCtx.AddOnInfo.Product +
@@ -58,6 +84,12 @@ namespace dRz.NC
                 //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
+
+                UpdateManager updateManager = new UpdateManager(
+                    AddOnCtx.Msg,
+                    AddOnCtx.MsgPrt,
+                    AddOnCtx.NLogFactory,
+                    updateSettings);
 
                 UpdateRequest request = new UpdateRequest
                 {
@@ -71,15 +103,18 @@ namespace dRz.NC
 
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                // Сохраняем время завершённой попытки, в том числе неудачной проверки.
-                // При отмене или сетевом расположении проверка обновлений не завершена.
-                if (result is not UpdateResult.Cancelled and not UpdateResult.NetworkPath)
+                // Обновляем LastCheck только если проверка/операция завершилась успешно.
+                // Ошибка, отмена и блокировка из-за сетевого расположения интервал не сбрасывают.
+                if (result is UpdateResult.Installed
+                    or UpdateResult.UpToDate
+                    or UpdateResult.Declined
+                    or UpdateResult.Disabled)
                 {
-                    settings.Updates.LastCheck = DateTime.UtcNow;
+                    updateSettings.LastCheck = DateTime.UtcNow;
                 }
 
-                // Результат сохраняется и для неуспешного запуска, чтобы его можно было диагностировать.
-                settings.Updates.LastResult = result;
+                // Сохраняем результат фактически выполненного запуска.
+                updateSettings.LastResult = result;
 
                 try
                 {
