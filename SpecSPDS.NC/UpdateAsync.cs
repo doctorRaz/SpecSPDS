@@ -13,29 +13,31 @@ namespace dRz.NC
     /// Координирует проверку и установку обновлений аддона из контекста CAD-хоста.
     /// </summary>
     /// <remarks>
-    /// Класс использует зарегистрированные сервисы аддона. Пользовательские сообщения и
-    /// журналирование выполняются через эти сервисы, а запуск обновления не блокирует поток вызова.
+    /// Класс использует зарегистрированные сервисы аддона. Асинхронный запуск не блокирует
+    /// поток вызова; после асинхронных операций продолжение использует захваченный контекст,
+    /// если он предоставлен вызывающей средой.
     /// </remarks>
     public class UpdateAsync
     {
+        private readonly IDrzLogger _logger;
+        private readonly IMessageService _msg;
+
         public UpdateAsync()
         {
             _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
-
             _msg = AddOnCtx.Msg;
         }
 
         /// <summary>
         /// Выполняет проверку обновлений и, в зависимости от режима запуска и настроек,
         /// передаёт управление установкой обновления менеджеру обновлений.
-        /// После завершения сохраняет время проверки и её результат в настройках.
+        /// Сохраняет результат запуска и время завершённой проверки.
         /// </summary>
         /// <param name="launchMode">Режим запуска, определяющий поведение проверки и установки.</param>
         /// <returns>Задача, представляющая асинхронную операцию обновления.</returns>
         /// <remarks>
-        /// Ошибки выполнения и сохранения состояния перехватываются и передаются в журнал
-        /// и сервис пользовательских сообщений. Ошибка сохранения состояния не отменяет
-        /// уже полученный результат обновления.
+        /// Ошибки выполнения, сохранения состояния и уведомления об ошибках обрабатываются
+        /// отдельно, чтобы сбой диагностики не маскировал исходную ошибку.
         /// </remarks>
         public async Task UpdateAsyncRun(UpdateLaunchMode launchMode)
         {
@@ -43,13 +45,16 @@ namespace dRz.NC
             {
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
 
-                UpdateManager updateManager = new UpdateManager(AddOnCtx.Msg, AddOnCtx.MsgPrt, AddOnCtx.NLogFactory, settings.Updates);
+                UpdateManager updateManager = new UpdateManager(
+                    AddOnCtx.Msg,
+                    AddOnCtx.MsgPrt,
+                    AddOnCtx.NLogFactory,
+                    settings.Updates);
 
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
-                                                            AddOnCtx.AddOnInfo.Product +
-                                                            "/releases/latest/download/";
+                                   AddOnCtx.AddOnInfo.Product +
+                                   "/releases/latest/download/";
 #if DEBUG
-
                 //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
@@ -57,23 +62,25 @@ namespace dRz.NC
                 UpdateRequest request = new UpdateRequest
                 {
                     CurrentVersion = AddOnCtx.AddOnInfo.InstalledVersion,
-
                     UpdateUrl = updateUrl,
-
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
-
                     IsPackage = AddOnCtx.AddOnInfo.HasPackage,
-
                     IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
-
                     LaunchMode = launchMode,
                 };
 
-                // Сохраняем результат, чтобы следующий запуск мог показать актуальное состояние.
                 UpdateResult result = await updateManager.RunAsync(request);
 
-                settings.Updates.LastCheck = DateTime.UtcNow;
+                // Не считаем отмену, сетевой путь и ошибочный запуск завершённой проверкой.
+                if (result is UpdateResult.UpToDate
+                    or UpdateResult.Installed
+                    or UpdateResult.Declined
+                    or UpdateResult.Disabled)
+                {
+                    settings.Updates.LastCheck = DateTime.UtcNow;
+                }
 
+                // Результат сохраняется и для неуспешного запуска, чтобы его можно было диагностировать.
                 settings.Updates.LastResult = result;
 
                 try
@@ -82,27 +89,45 @@ namespace dRz.NC
                 }
                 catch (Exception saveException)
                 {
-                    string msg = "Не удалось сохранить состояние обновления.";
-
-                    // Ошибка сохранения состояния не отменяет результат уже выполненного обновления.
-                    _logger?.Error(saveException, msg);
-
-                    _msg.ErrorMessage(msg, saveException);
+                    ReportError(saveException, "Не удалось сохранить состояние обновления.");
                 }
             }
             catch (Exception ex)
             {
-                string msg = "Продолжение не возможно";
-
-                _logger.Fatal(ex, msg);
-
-                _msg.ErrorMessage(msg, ex);
+                ReportError(ex, "Не удалось выполнить проверку или обновление.");
             }
         }
 
-        // Статические ссылки соответствуют общему контексту аддона и используются для диагностики ошибок.
-        private   IDrzLogger _logger;
+        /// <summary>
+        /// Пытается записать ошибку в журнал и уведомить пользователя.
+        /// Сбой одного из каналов диагностики не должен скрывать исходную ошибку.
+        /// </summary>
+        private void ReportError(Exception exception, string message)
+        {
+            try
+            {
+                _logger.Error(exception, message);
+            }
+            catch
+            {
+                // Не допускаем, чтобы сбой логгера прервал обработку исходной ошибки.
+            }
 
-        private   IMessageService _msg;
+            try
+            {
+                _msg.ErrorMessage(message, exception);
+            }
+            catch (Exception notificationException)
+            {
+                try
+                {
+                    _logger.Error(notificationException, "Не удалось показать сообщение об ошибке.");
+                }
+                catch
+                {
+                    // Оба канала диагностики могут быть недоступны.
+                }
+            }
+        }
     }
 }
