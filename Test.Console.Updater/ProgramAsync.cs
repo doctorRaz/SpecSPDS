@@ -7,6 +7,7 @@ using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+
 using Sys = System;
 
 namespace dRz.Test.Console.Updater
@@ -26,10 +27,9 @@ namespace dRz.Test.Console.Updater
                 string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
-
-                //       updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
-
-
+#if DEBUG
+                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+#endif
 
                 UpdateRequest request = new UpdateRequest
                 {
