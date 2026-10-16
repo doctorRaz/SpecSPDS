@@ -31,23 +31,25 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 namespace dRz.NC
 {
-    /// <summary> инициализация модуля </summary>
+    /// <summary>
+    /// Точка входа аддона для инициализации и завершения работы в CAD-хосте.
+    /// </summary>
     public class EntryPoint : Rtm.IExtensionApplication
     {
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private bool _isRegisterAssemblyResolver;//register assembly resolver
+        private bool _isRegisterAssemblyResolver;// Флаг регистрации обработчика разрешения сборок.
 
         private IDrzLogger _logger;
-        private static bool _isLoggerProvider;//логер есть
+        private static bool _isLoggerProvider;// Логгер успешно получен.
 
         private IMessageService _message;
-        private bool _isMessageProvider;//сообщения
+        private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
 
-        private IAddOnInfo _addOnInfo;//о сборке
+        private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
         private bool _isAddOnInfoProvider;
 
-        private ICadInfo _cadInfo;//о cad
+        private ICadInfo _cadInfo;// Сведения о CAD-хосте.
         private bool _isCadInfoProvider;
 
         private ISysInfo _sysInfo;//о cad
@@ -64,13 +66,20 @@ namespace dRz.NC
 
 #endif
 
-        /// <summary>Initializes this instance.</summary>
+        /// <summary>
+        /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
+        /// и выполняет оставшуюся инициализацию.
+        /// </summary>
+        /// <remarks>
+        /// Метод вызывается CAD-хостом через <see cref="Rtm.IExtensionApplication"/>.
+        /// Ошибки инициализации перехватываются здесь, чтобы не передавать исключение хосту.
+        /// </remarks>
         public void Initialize()
         {
             try
             {
                 // регистрируемся
-                TryAddOnCompositionRoot();//получаем окружение
+                TryAddOnCompositionRoot();// Получаем сервисы и контекст аддона.
 
                 //стартуем обновление, очистку копий и bak
                 TryUpdate();
@@ -78,11 +87,11 @@ namespace dRz.NC
                 //
                 TryInit();
             }
-            catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
+            catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
             {
                 string msg = $"Приложение не загружено!!!";
 
-                if (_isLoggerProvider)//todo если логер есть ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
+                if (_isLoggerProvider)// Используем логгер только после успешного получения сервиса.
                 {
                     msg += $"\nОтправьте разработчику логфайлы";
 
@@ -120,7 +129,14 @@ namespace dRz.NC
             }
         }
 
-        /// <summary>Tries the clean backups.</summary>
+        /// <summary>
+        /// Запускает обновление и очистку служебных файлов в фоновом асинхронном процессе.
+        /// </summary>
+        /// <remarks>
+        /// Задача намеренно не ожидается, чтобы не блокировать синхронную инициализацию CAD-хоста.
+        /// Исключения, возникшие до передачи управления асинхронному методу, обрабатываются здесь;
+        /// ошибки внутри задачи должны обрабатываться самим <see cref="UpdateAsync"/>.
+        /// </remarks>
         private void TryUpdate()
         {
             try
@@ -134,9 +150,12 @@ namespace dRz.NC
             }
         }
 
-        /// <summary>Tries the add on composition root.</summary>
-        /// <returns></returns>
-        /// <exception cref="System.InvalidOperationException">AddOnCompositionRoot initialization failed</exception>
+        /// <summary>
+        /// Создаёт корень композиции при первом вызове и получает необходимые сервисы аддона.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Не удалось создать корень композиции или получить необходимые сервисы.
+        /// </exception>
         private void TryAddOnCompositionRoot()
         {
             try
@@ -144,16 +163,16 @@ namespace dRz.NC
                 if (!_isAddOnCompositionRoot)
                 {
                     //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
-                    // один раз в точке входа /Rtm.IExtensionApplication/
+                    // Регистрируем сервисы один раз при инициализации CAD-хоста.
                     AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
 
-                    // экземпляр копии контейнера by ref
+                    // Передаём зарегистрированные сервисы в общий контекст аддона.
                     AddOnCtx.Initialize(root.Get<IAddOnServices>());
 
                     // Загружаем настройки сразу при инициализации и фиксируем singleton в контейнере.
                     _ = AddOnCtx.Services.Get<IAddonSettings>();
 
-                    _isAddOnCompositionRoot = true;//сервис поднялся
+                    _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
                 }
 
                 //логер для класса
@@ -180,12 +199,14 @@ namespace dRz.NC
                     _logger.Fatal(ex);
                 }
 
-                //роняем загрузчик
+                // Преобразуем ошибку в исключение инициализации с исходной причиной.
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
         }
 
-        /// <summary>Tries the initialize.</summary>
+        /// <summary>
+        /// Записывает сведения об аддоне и CAD-хосте в журнал и выводит приветственное сообщение.
+        /// </summary>
         private void TryInit()
         {
             try
@@ -202,12 +223,14 @@ namespace dRz.NC
             }
         }
 
-        /// <summary>Terminates this instance.</summary>
+        /// <summary>
+        /// Выполняет завершающие действия при выгрузке аддона из CAD-хоста.
+        /// </summary>
         public void Terminate()
         {
             _logger.Trace("Terminate");
 
-            //think грузить в инит, теряет свойства радиобатонов
+            // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();
             //dsf.SetGeneralSetting.WriteValue("TEST", "terminate", "true");
         }
