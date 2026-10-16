@@ -30,7 +30,7 @@ namespace dRz.NC
 
                 UpdateRequest request = new UpdateRequest
                 {
-                    CurrentVersion = AddOnCtx.AddOnInfo.RunningVersion,
+                    CurrentVersion = AddOnCtx.AddOnInfo.InstalledVersion,
 
                     UpdateUrl = updateUrl,
 
