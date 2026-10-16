@@ -15,7 +15,7 @@ namespace dRz.NC.Commands
         public static void UpdateCheckRun()
         {
             UpdateAsync updateAsync = new UpdateAsync();
-            _ = updateAsync.MainAsync(UpdateLaunchMode.Manual);
+            _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Manual);
         }
     }
 }

@@ -13,10 +13,8 @@ using System;
 #if NC
 
 using HostMgd.ApplicationServices;
-
-using App = HostMgd.ApplicationServices;
-
 using HostMgd.EditorInput;
+
 using Rtm = Teigha.Runtime;
 
 #elif AC
@@ -72,10 +70,9 @@ namespace dRz.NC
             try
             {
                 // регистрируемся
-
                 TryAddOnCompositionRoot();//получаем окружение
 
-                //стартуем очистку копий и bak
+                //стартуем обновление, очистку копий и bak
                 TryUpdate();
 
                 //
@@ -83,35 +80,40 @@ namespace dRz.NC
             }
             catch (Exception ex) // ошибка инициализации, все развалилось, лог смысла не имеет
             {
-                string message = $"Приложение не загружено!!!";
+                string msg = $"Приложение не загружено!!!";
 
-                if (_isLoggerProvider)//todo если лог инит ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
+                if (_isLoggerProvider)//todo если логер есть ПРОВЕРИТЬ не вызовет ли еще один ЕХ если false??!!
                 {
-                    message += $"\nОтправьте разработчику лог файлы из каталога [APPDATA/ЭТО_ПРИЛОЖЕНИЕ/Logs]";
+                    msg += $"\nОтправьте разработчику логфайлы";
 
-                    _logger.Error(ex, message);
+                    if (_isAddOnInfoProvider)
+                    {
+                        msg += $": {_addOnInfo.ProductDataDirectory}\\logs";
+                    }
+
+                    _logger.Error(ex, msg);
                 }
-                if (_isAddOnCompositionRoot)
+                if (_isMessageProvider)
                 {
-                    _message.ErrorMessage(message, ex);
+                    _message.ErrorMessage(msg, ex);
                 }
                 else
                 {
 #if NC
-                    message += $"\nСкопируйте и отправьте разработчику это сообщение";
+                    msg += $"\nСкопируйте и отправьте разработчику это сообщение";
 
-                    message = $"Exception: {message}\n{ex.Message}\n{ex.StackTrace}";
+                    msg = $"Exception: {msg}\n{ex.Message}\n{ex.StackTrace}";
 
-                    Document document = App.Application.DocumentManager.MdiActiveDocument;
+                    Document document = Application.DocumentManager.MdiActiveDocument;
                     if (document != null)
                     {
                         Editor editor = document.Editor;
 
-                        editor.WriteMessage(message);
+                        editor.WriteMessage(msg);
                     }
                     else
                     {
-                        App.Application.ShowAlertDialog(message);
+                        Application.ShowAlertDialog(msg);
                     }
 #endif
                 }
@@ -123,23 +125,13 @@ namespace dRz.NC
         {
             try
             {
-                CleanBackups();
+                UpdateAsync updateAsync = new UpdateAsync();
+                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, $"CleanBackups: {ex.Message}");
             }
-        }
-
-        /// <summary>Cleans the backups.</summary>
-        private void CleanBackups()
-        {
-            try
-            {
-                UpdateAsync updateAsync = new UpdateAsync();
-                _ = updateAsync.MainAsync(UpdateLaunchMode.Automatic);
-            }
-            catch { }
         }
 
         /// <summary>Tries the add on composition root.</summary>
@@ -182,6 +174,12 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
+                //если логер получен пытаемся сохранить ошбку в лог
+                if (_isLoggerProvider)
+                {
+                    _logger.Fatal(ex);
+                }
+
                 //роняем загрузчик
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
@@ -193,6 +191,8 @@ namespace dRz.NC
             try
             {
                 _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+                _logger.Info(AddOnCtx.CadInfo.ToLongString());
+                _logger.Info(AddOnCtx.SysInfo.ToLongString());
 
                 _message.InfoMessage($"Hello {AddOnCtx.AddOnInfo.ToShortString()} for {AddOnCtx.CadInfo.ToString()}");
             }
