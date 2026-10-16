@@ -207,7 +207,8 @@ namespace dRz.Updater
                 //консоль:
                 // Перед распаковкой: поток вызывающего кода, ID=7, ThreadPool=True, Name=.NET ThreadPool Worker
                 //нанокад:
-                //  Перед распаковкой: поток вызывающего кода, ID=1, ThreadPool=False, Name=(без имени)
+                //  Перед распаковкой: поток вызывающего кода, ID=1, ThreadPool=False, Name=(без имени)
+
                 // Диагностика потока, из которого запускается распаковка.
                 Thread currentThread = Thread.CurrentThread;
                 _logger.Trace(
