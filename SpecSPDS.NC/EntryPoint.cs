@@ -84,10 +84,11 @@ namespace dRz.NC
                 //стартуем обновление, очистку копий и bak
                 TryUpdate();
 
-                //
+                // служебные записи и сообщение пользователю, что аддон поднялся
                 TryInit();
             }
             catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
+                                 // Если ошибка поднялась сюда, то вероятно, что аддон неработоспособен
             {
                 string msg = $"Приложение не загружено!!!";
 
@@ -100,7 +101,7 @@ namespace dRz.NC
                         msg += $": {_addOnInfo.ProductDataDirectory}\\logs";
                     }
 
-                    _logger.Error(ex, msg);
+                    _logger.Fatal(ex, msg);
                 }
                 if (_isMessageProvider)
                 {
