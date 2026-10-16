@@ -20,7 +20,9 @@ namespace dRz.Settings
             settings.AttachStore(_store);
 
             if (_store.LoadUsedDefaults)
+            {
                 settings.Save();
+            }
 
             return settings;
         }

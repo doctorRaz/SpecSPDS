@@ -113,25 +113,33 @@ namespace dRz.Infrastructure.Infrastructure
         public bool IsNetworkPath()
         {
             if (string.IsNullOrWhiteSpace(AssemblyPath))
+            {
                 return false;
+            }
 
             string path = AssemblyPath;
 
             // UNC-путь является сетевым независимо от доступности ресурса.
             if (path.StartsWith(@"\\", StringComparison.Ordinal))
+            {
                 return true;
+            }
 
             try
             {
                 string? root = Path.GetPathRoot(path);
                 if (string.IsNullOrEmpty(root) || root.Length < 2 || root[1] != ':')
+                {
                     return false;
+                }
 
                 // DriveInfo распознаёт обычные подключённые сетевые диски.
                 try
                 {
                     if (new DriveInfo(root).DriveType == DriveType.Network)
+                    {
                         return true;
+                    }
                 }
                 catch (IOException)
                 {
@@ -162,12 +170,16 @@ namespace dRz.Infrastructure.Infrastructure
         {
             // Защита от циклических SUBST-ссылок.
             if (depth > 8)
+            {
                 return false;
+            }
 
             char[] target = new char[1024];
             uint length = QueryDosDevice(drive, target, (uint)target.Length);
             if (length == 0)
+            {
                 return false;
+            }
 
             string devicePath = new string(target, 0, (int)length).Split('\0')[0];
 

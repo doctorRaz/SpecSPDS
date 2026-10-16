@@ -14,15 +14,13 @@ namespace dRz.Test.Console.Updater
 {
     public class Program
     {
+        [STAThread]
         private static void /*async Task*/ Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
             try
             {
-               
                 ConteinerCtx.Run();
-
-               
 
                 _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
 

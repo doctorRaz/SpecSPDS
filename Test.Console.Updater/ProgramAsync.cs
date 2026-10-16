@@ -27,7 +27,7 @@ namespace dRz.Test.Console.Updater
                                                             AddOnCtx.AddOnInfo.Product +
                                                             "/releases/latest/download/";
 
-         //       updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+                //       updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
 
 
 
@@ -83,7 +83,9 @@ namespace dRz.Test.Console.Updater
 
                 string? input = Sys.Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(input))
+                {
                     return;
+                }
 
                 UpdateMode? selected = input.Trim() switch
                 {

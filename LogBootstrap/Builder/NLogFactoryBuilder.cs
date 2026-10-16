@@ -53,7 +53,7 @@ namespace dRz.LogBootstrap.Builder
             //      release - Info
             //      debug - Trace
 #if DEBUG
-            var loglevel = LogLevel.Trace;
+            LogLevel loglevel = LogLevel.Trace;
 #else
             var loglevel = LogLevel.Info;
 #endif

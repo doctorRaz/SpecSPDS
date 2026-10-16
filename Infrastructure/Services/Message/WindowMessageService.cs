@@ -119,7 +119,9 @@ namespace dRz.Infrastructure.Services.Message
         private void ActivateCadWindow()
         {
             if (_cadWindowHandle != IntPtr.Zero)
+            {
                 SetForegroundWindow(_cadWindowHandle);
+            }
         }
 
         [DllImport("user32.dll")]

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using dRz.Abstractions.Logger;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using dRz.Abstractions.Logger;
 
 namespace dRz.Updater.Services
 {

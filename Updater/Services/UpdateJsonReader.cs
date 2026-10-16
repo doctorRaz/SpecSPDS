@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using dRz.Updater.Models;
+using System.IO;
 using System.Text.Json;
-using dRz.Updater.Models;
 
 namespace dRz.Updater.Services
 {
@@ -26,7 +26,9 @@ namespace dRz.Updater.Services
         public static UpdateInfo Read(string filePath)
         {
             if (!File.Exists(filePath))
+            {
                 throw new FileNotFoundException("Файл update.json не найден.", filePath);
+            }
 
             string json = File.ReadAllText(filePath);
             return JsonSerializer.Deserialize<UpdateInfo>(json, _options)

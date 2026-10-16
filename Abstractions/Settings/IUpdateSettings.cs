@@ -1,5 +1,5 @@
-using System;
 using dRz.Abstractions.Updater;
+using System;
 
 namespace dRz.Abstractions.Settings
 {

@@ -5,8 +5,6 @@ using dRz.Abstractions.Updater;
 using dRz.Settings;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.IO;
 
 namespace dRz.Test.Settings
 {
@@ -34,7 +32,9 @@ namespace dRz.Test.Settings
         public void TearDown()
         {
             if (Directory.Exists(_directory))
+            {
                 Directory.Delete(_directory, true);
+            }
         }
 
         [Test]

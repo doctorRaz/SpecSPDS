@@ -17,7 +17,9 @@ namespace dRz.Updater.Services
             try
             {
                 if (File.Exists(zoneIdentifier))
+                {
                     File.Delete(zoneIdentifier);
+                }
             }
             catch (IOException)
             {
