@@ -1,10 +1,7 @@
-﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
-
-//global using static dRz.Src.Infrastructure.AddOnContext;
-
-using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
+using dRz.AddOnRuntime;
 using dRz.NC;
 using dRz.Updater.Services;
 using System;
@@ -15,74 +12,92 @@ namespace dRz.Test.Console.Updater
 {
     public class Program
     {
+        private readonly IDrzLogger _logger;
+        private readonly IMessageService _msg;
+        private readonly IAddonSettings _settings;
+
+        public Program(
+            IDrzLogger logger,
+            IMessageService msg,
+            IAddonSettings settings)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _msg = msg ?? throw new ArgumentNullException(nameof(msg));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        }
+
         //[STAThread]
-        private static void /*async Task*/ Main(string[] args)
+        private static void Main(string[] args)
         {
             Stopwatch sw = Stopwatch.StartNew();
+            IDrzLogger? logger = null;
+            IMessageService? msg = null;
+
             try
             {
-                ConteinerCtx.Run();
-                                
-                _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
+                AddOnCompositionRoot root = ConteinerCtx.Run();
 
-                _logger?.Debug("Start debug updater");
+                logger = root.Get<IDrzLoggerFactory>().GetLogger<Program>();
+                msg = root.Get<IMessageService>();
+                IAddonSettings settings = root.Get<IAddonSettings>();
 
-                _msg.InfoMessage($"Start update");
+                Program program = new Program(logger, msg, settings);
 
-                //var msgmcn = AddOnCtx.MsgMcN;
-                //var gui = AddOnCtx.MsgGui;
-                //var cmd = AddOnCtx.MsgCmd;
+                logger.Debug("Start debug updater");
+                msg.InfoMessage("Start update");
 
-                Program program = new Program();
+                program.SelectUpdateMode();
 
-                IAddonSettings settings =  AddOnCtx.Services.Get<IAddonSettings>();
-                
-                program.SelectUpdateMode(settings);
-
+                // UpdateAsync пока использует AddOnCtx внутри себя.
+                // Инициализация этого контекста остаётся в ConteinerCtx как временный адаптер.
                 UpdateAsync updateAsync = new UpdateAsync();
-
                 _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
             }
             catch (Exception ex)
             {
-                _logger?.Fatal(ex, "Продолжение не возможно");
+                logger?.Fatal(ex, "Продолжение не возможно");
 
-                _msg.ErrorMessage("Продолжение не возможно", ex);
+                if (msg != null)
+                {
+                    msg.ErrorMessage("Продолжение не возможно", ex);
+                }
+                else
+                {
+                    Sys.Console.Error.WriteLine($"Продолжение не возможно: {ex}");
+                }
             }
             finally
             {
-                _logger?.Info("Terminate");
-
-                _ = ConsoleReadKey(sw);
+                logger?.Info("Terminate");
+                _ = ConsoleReadKey(msg, sw);
             }
         }
 
-        private static ConsoleKeyInfo ConsoleReadKey(Stopwatch? sw = null)
+        private static ConsoleKeyInfo ConsoleReadKey(IMessageService? msg, Stopwatch? sw = null)
         {
-            string res = "";
+            string res = sw != null ? $"Total time {sw.Elapsed}\n" : string.Empty;
+            string message = $"{res}Press any key to exit...";
 
-            if (sw != null)
+            if (msg != null)
             {
-                res = $"Total time {sw.Elapsed}\n";
+                msg.InfoMessage(message);
             }
-
-            _msg.InfoMessage($"{res}Press any key to exit...");
+            else
+            {
+                Sys.Console.WriteLine(message);
+            }
 
             return Sys.Console.ReadKey();
         }
 
-        private static IDrzLogger? _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Program));
-
-        private static IMessageService _msg = AddOnCtx.Msg;
-
         /// <summary>
         /// Позволяет вручную выбрать режим обновления для проверки в консольном тесте.
         /// </summary>
-        private void SelectUpdateMode(IAddonSettings settings)
+        private void SelectUpdateMode()
         {
             while (true)
             {
-                _msg.InfoMessage($"Текущий режим обновления: {settings.Updates.Mode}");
+                _msg.InfoMessage($"Текущий режим обновления: {_settings.Updates.Mode}");
                 _msg.InfoMessage("Выберите режим: 0 — Disabled, 1 — CheckAndNotify, 2 — CheckAndInstall.");
                 _msg.InfoMessage("Enter — оставить текущий режим.");
 
@@ -106,18 +121,18 @@ namespace dRz.Test.Console.Updater
                     continue;
                 }
 
-                UpdateMode previous = settings.Updates.Mode;
-                settings.Updates.Mode = selected.Value;
+                UpdateMode previous = _settings.Updates.Mode;
+                _settings.Updates.Mode = selected.Value;
 
                 try
                 {
-                    settings.Save();
-                    _msg.InfoMessage($"Режим обновления сохранён: {settings.Updates.Mode}");
+                    _settings.Save();
+                    _msg.InfoMessage($"Режим обновления сохранён: {_settings.Updates.Mode}");
                 }
                 catch (Exception ex)
                 {
-                    settings.Updates.Mode = previous;
-                    _logger?.Error(ex, "Не удалось сохранить режим обновления.");
+                    _settings.Updates.Mode = previous;
+                    _logger.Error(ex, "Не удалось сохранить режим обновления.");
                     _msg.ErrorMessage("Не удалось сохранить режим. Оставлен прежний режим.", ex);
                 }
 
