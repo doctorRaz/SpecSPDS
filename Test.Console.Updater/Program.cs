@@ -4,6 +4,7 @@
 
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.NC;
 using dRz.Updater.Services;
 using System;
 using System.Diagnostics;
@@ -28,9 +29,9 @@ namespace dRz.Test.Console.Updater
 
                 _msg.InfoMessage($"Start update");
 
-                ProgramAsync programAsync = new();
+                UpdateAsync updateAsync = new UpdateAsync();
 
-                _ = programAsync.MainAsync(UpdateLaunchMode.Automatic);
+                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
             }
             catch (Exception ex)
             {
