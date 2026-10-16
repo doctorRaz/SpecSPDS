@@ -46,9 +46,15 @@ namespace dRz.NC
                 IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
                 IUpdateSettings updateSettings = settings.Updates;
 
+                int minDay = 1;
+
+#if DEBUG
+                minDay = 0;//интервал для отладки
+#endif
+
                 // Ограничиваем интервал автоматических проверок допустимым диапазоном.
                 int configuredInterval = updateSettings.UpdateCheckIntervalDays;
-                int normalizedInterval = Math.Clamp(configuredInterval, 1, 30);
+                int normalizedInterval = Math.Clamp(configuredInterval, minDay, 30);
                 bool intervalNormalized = configuredInterval != normalizedInterval;
 
                 if (intervalNormalized)
@@ -81,7 +87,7 @@ namespace dRz.NC
                                    AddOnCtx.AddOnInfo.Product +
                                    "/releases/latest/download/";
 #if DEBUG
-                //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}/{AddOnCtx.AddOnInfo.HostFamily}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
 

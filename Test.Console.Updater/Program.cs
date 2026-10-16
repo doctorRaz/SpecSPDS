@@ -22,16 +22,21 @@ namespace dRz.Test.Console.Updater
             try
             {
                 ConteinerCtx.Run();
-
+                                
                 _logger = AddOnCtx.NLogFactory.GetLogger<Program>();
 
                 _logger?.Debug("Start debug updater");
 
                 _msg.InfoMessage($"Start update");
 
+                //var msgmcn = AddOnCtx.MsgMcN;
+                //var gui = AddOnCtx.MsgGui;
+                //var cmd = AddOnCtx.MsgCmd;
 
                 Program program = new Program();
-                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+
+                IAddonSettings settings =  AddOnCtx.Services.Get<IAddonSettings>();
+                
                 program.SelectUpdateMode(settings);
 
                 UpdateAsync updateAsync = new UpdateAsync();
