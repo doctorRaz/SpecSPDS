@@ -19,4 +19,26 @@
 	<ItemGroup>
 		<Compile Include="..\src\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+		<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
+	<Target Name="GenerateCommandPrefix"
+	        BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<_CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</_CommandPrefixFile>
+		</PropertyGroup>
+		<MakeDir Directories="$(IntermediateOutputPath)"/>
+		<WriteLinesToFile
+			File="$(_CommandPrefixFile)"
+			Overwrite="true"
+			Lines="internal static class CommandPrefix 
+			{ 
+			#if DEBUG
+				public const string Value = &quot;$(MSBuildProjectName)&quot; + &quot;-&quot;%3B 
+			#else
+				public const string Value = &quot;&quot;%3B			
+			#endif
+			}"/>
+		<ItemGroup>
+			<Compile Include="$(_CommandPrefixFile)"/>
+		</ItemGroup>
+	</Target>
 </Project>
