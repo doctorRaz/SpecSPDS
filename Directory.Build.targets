@@ -34,7 +34,7 @@
 		<WriteLinesToFile
 			File="$(_CommandPrefixFile)"
 			Overwrite="true"
-			Lines="internal static class CommandPrefix { public const string Value = &quot;$(MSBuildProjectName)&quot;; }"/>
+			Lines="internal static class CommandPrefix { public const string Value = &quot;$(MSBuildProjectName)&quot;%3B }"/>
 		<ItemGroup>
 			<Compile Include="$(_CommandPrefixFile)"/>
 		</ItemGroup>
