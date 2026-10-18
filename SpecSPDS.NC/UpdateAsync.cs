@@ -21,11 +21,17 @@ namespace dRz.NC
     {
         private readonly IDrzLogger _logger;
         private readonly IMessageService _msg;
+        private readonly IMessagePromptService _msgprt;
 
-        public UpdateAsync()
+        public UpdateAsync(IDrzLoggerFactory drzLoggerFactory, 
+                            IMessageService messageService, 
+                            IMessagePromptService messagePromptService)
         {
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
-            _msg = AddOnCtx.Msg;
+            _logger = drzLoggerFactory.GetLogger(typeof(UpdateAsync));
+            _msg = messageService;
+            _msgprt = messagePromptService;
+
+         
         }
 
         /// <summary>
@@ -39,11 +45,11 @@ namespace dRz.NC
         /// Ошибки выполнения, сохранения состояния и уведомления об ошибках обрабатываются
         /// отдельно, чтобы сбой диагностики не маскировал исходную ошибку.
         /// </remarks>
-        public async Task UpdateAsyncRun(UpdateLaunchMode launchMode)
+        public async Task UpdateAsyncRun(UpdateLaunchMode launchMode, IAddonSettings settings)
         {
             try
             {
-                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
+                //IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
                 IUpdateSettings updateSettings = settings.Updates;
 
                 int minDay = 1;
