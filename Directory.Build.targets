@@ -23,4 +23,20 @@
 		<None Remove="**/_experimental/**"/>
 		<Content Remove="**/_experimental/**"/>
 	</ItemGroup>
+
+	<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
+	<Target Name="GenerateCommandPrefix"
+	        BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<_CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</_CommandPrefixFile>
+		</PropertyGroup>
+		<MakeDir Directories="$(IntermediateOutputPath)"/>
+		<WriteLinesToFile
+			File="$(_CommandPrefixFile)"
+			Overwrite="true"
+			Lines="internal static class CommandPrefix { public const string Value = &quot;$(MSBuildProjectName)&quot;; }"/>
+		<ItemGroup>
+			<Compile Include="$(_CommandPrefixFile)"/>
+		</ItemGroup>
+	</Target>
 </Project>
