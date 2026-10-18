@@ -1,4 +1,4 @@
-﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+﻿/*global*/ using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 
 using dRz.Abstractions.Services;
 using dRz.AddOnRuntime;
