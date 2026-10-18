@@ -55,7 +55,7 @@ namespace dRz.NC
                                    AddOnCtx.AddOnInfo.Product +
                                    "/releases/latest/download/";
 #if DEBUG
-                //updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}";
+                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}/{AddOnCtx.AddOnInfo.HostFamily}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
 
