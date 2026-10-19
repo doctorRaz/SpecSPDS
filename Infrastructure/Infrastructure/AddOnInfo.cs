@@ -86,9 +86,26 @@ namespace dRz.Infrastructure.Infrastructure
 
             FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 
-            PackageDirectory = package?.DirectoryName ?? AssemblyDirectory;
-
             PackageFileName = package?.Name;
+
+            DirectoryInfo addonDirectory = new(AssemblyDirectory);
+            DirectoryInfo? parentDirectory = addonDirectory.Parent;
+
+            // Пакет обычно расположен на уровень выше каталога аддона.
+            // Если родитель не относится к продукту, не считаем его корнем обновления:
+            // в нём могут находиться посторонние приложения.
+            bool packageIsInParent = package != null &&
+                parentDirectory != null &&
+                string.Equals(package.DirectoryName, parentDirectory.FullName, StringComparison.OrdinalIgnoreCase);
+
+            Location = packageIsInParent &&
+                !Path.GetFileName(parentDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase)
+                    ? AddonLocation.ExternalDirectory
+                    : AddonLocation.ProductDirectory;
+
+            PackageDirectory = packageIsInParent && Location == AddonLocation.ExternalDirectory
+                ? AssemblyDirectory
+                : package?.DirectoryName ?? AssemblyDirectory;
 
             _metadata = new AssemblyMetadata(_assembly);
 
@@ -257,6 +274,11 @@ namespace dRz.Infrastructure.Infrastructure
         /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
         /// </value>
         public bool HasPackage => PackageFileName != null;
+
+        /// <summary>
+        /// Возвращает расположение аддона относительно каталога продукта.
+        /// </summary>
+        public AddonLocation Location { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
