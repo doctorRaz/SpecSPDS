@@ -102,7 +102,7 @@ namespace dRz.NC
                     CurrentVersion = AddOnCtx.AddOnInfo.InstalledVersion,
                     UpdateUrl = updateUrl,
                     PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
-                    IsPackage = AddOnCtx.AddOnInfo.HasPackage,
+                    IsPackage = AddOnCtx.AddOnInfo.IsProductDirectory,
                     IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
                     LaunchMode = launchMode,
                 };
