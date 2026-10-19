@@ -86,9 +86,25 @@ namespace dRz.Infrastructure.Infrastructure
 
             FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 
-            PackageDirectory = package?.DirectoryName ?? AssemblyDirectory;
-
             PackageFileName = package?.Name;
+
+            DirectoryInfo addonDirectory = new(AssemblyDirectory);
+            DirectoryInfo? packageDirectory = addonDirectory.Parent;
+
+            // Маркер пакета должен находиться непосредственно над каталогом аддона,
+            // а имя этого каталога должно начинаться с Product без учёта регистра.
+            bool packageIsInParent = package != null &&
+                packageDirectory != null &&
+                string.Equals(package.DirectoryName, packageDirectory.FullName, StringComparison.OrdinalIgnoreCase);
+
+            IsProductDirectory = packageIsInParent &&
+                Path.GetFileName(packageDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
+
+            // При нештатном расположении не используем внешний родительский каталог
+            // как корень полного обновления.
+            PackageDirectory = IsProductDirectory
+                ? packageDirectory!.FullName
+                : AssemblyDirectory;
 
             _metadata = new AssemblyMetadata(_assembly);
 
@@ -257,6 +273,11 @@ namespace dRz.Infrastructure.Infrastructure
         /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
         /// </value>
         public bool HasPackage => PackageFileName != null;
+
+        /// <summary>
+        /// Определяет, находится ли аддон в каталоге продукта.
+        /// </summary>
+        public bool IsProductDirectory { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
