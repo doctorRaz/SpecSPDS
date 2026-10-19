@@ -89,21 +89,26 @@ namespace dRz.Infrastructure.Infrastructure
             PackageFileName = package?.Name;
 
             DirectoryInfo addonDirectory = new(AssemblyDirectory);
-            DirectoryInfo? parentDirectory = addonDirectory.Parent;
+            DirectoryInfo? packageDirectory = addonDirectory.Parent;
+            DirectoryInfo? productDirectory = packageDirectory?.Parent;
 
-            // Пакет обычно расположен на уровень выше каталога аддона.
-            // Если родитель не относится к продукту, не считаем его корнем обновления:
-            // в нём могут находиться посторонние приложения.
+            // Маркер пакета находится на уровень выше каталога аддона.
+            // Каталогом продукта считаем следующий уровень, если его имя начинается с Product.
+            // Иначе не используем каталог пакета как корень обновления: рядом могут быть
+            // посторонние приложения.
             bool packageIsInParent = package != null &&
-                parentDirectory != null &&
-                string.Equals(package.DirectoryName, parentDirectory.FullName, StringComparison.OrdinalIgnoreCase);
+                packageDirectory != null &&
+                string.Equals(package.DirectoryName, packageDirectory.FullName, StringComparison.OrdinalIgnoreCase);
 
-            Location = packageIsInParent &&
-                !Path.GetFileName(parentDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase)
-                    ? AddonLocation.ExternalDirectory
-                    : AddonLocation.ProductDirectory;
+            bool isProductDirectory = packageIsInParent &&
+                productDirectory != null &&
+                Path.GetFileName(productDirectory.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
 
-            PackageDirectory = packageIsInParent && Location == AddonLocation.ExternalDirectory
+            Location = packageIsInParent && !isProductDirectory
+                ? AddonLocation.ExternalDirectory
+                : AddonLocation.ProductDirectory;
+
+            PackageDirectory = packageIsInParent && !isProductDirectory
                 ? AssemblyDirectory
                 : package?.DirectoryName ?? AssemblyDirectory;
 
