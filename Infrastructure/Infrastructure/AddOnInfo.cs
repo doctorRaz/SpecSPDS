@@ -91,19 +91,22 @@ namespace dRz.Infrastructure.Infrastructure
             DirectoryInfo addonDirectory = new(AssemblyDirectory);
             DirectoryInfo? packageDirectory = addonDirectory.Parent;
 
-            // Штатная структура: Product.package находится непосредственно
-            // в каталоге-родителе аддона.
+            // Маркер пакета должен находиться непосредственно над каталогом аддона,
+            // а имя этого каталога должно начинаться с Product без учёта регистра.
             bool packageIsInParent = package != null &&
                 packageDirectory != null &&
                 string.Equals(package.DirectoryName, packageDirectory.FullName, StringComparison.OrdinalIgnoreCase);
 
-            Location = packageIsInParent
+            bool isProductDirectory = packageIsInParent &&
+                Path.GetFileName(packageDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
+
+            Location = isProductDirectory
                 ? AddonLocation.ProductDirectory
                 : AddonLocation.ExternalDirectory;
 
             // При нештатном расположении не используем внешний родительский каталог
             // как корень полного обновления.
-            PackageDirectory = packageIsInParent
+            PackageDirectory = isProductDirectory
                 ? packageDirectory!.FullName
                 : AssemblyDirectory;
 
