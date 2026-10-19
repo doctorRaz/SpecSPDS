@@ -11,7 +11,7 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Запускает ручную проверку обновлений
         /// </summary>
-        [CommandMethod("drz_UpdateCheck", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "drz_UpdateCheck", CommandFlags.Session)]
         public static void UpdateCheckRun()
         {
             UpdateAsync updateAsync = new UpdateAsync();

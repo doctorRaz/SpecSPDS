@@ -57,7 +57,7 @@ namespace dRz.NC
 
 #if DEBUG
 
-        [Rtm.CommandMethod("инитСП", Rtm.CommandFlags.UsePickSet)]
+        [Rtm.CommandMethod(CommandPrefix.Value + "INIT", Rtm.CommandFlags.UsePickSet)]
         public static void test()
         {
             EntryPoint entryPoint = new EntryPoint();
