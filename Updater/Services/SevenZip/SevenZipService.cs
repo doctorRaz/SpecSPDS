@@ -32,7 +32,7 @@ namespace dRz.Updater.Services.SevenZip
                 throw new FileNotFoundException("Не найдена библиотека 7-Zip.", libraryPath);
             }
 
-            SharpSevenZipBase.SetLibraryPath(libraryPath);
+            _ = SharpSevenZipBase.TrySetLibraryPath(libraryPath);
         }
 
         /// <summary>

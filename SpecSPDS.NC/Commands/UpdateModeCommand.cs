@@ -21,7 +21,7 @@ namespace dRz.NC.Commands
         /// Показывает текущий режим и позволяет выбрать новый.
         /// Команда: drz_UpdateMode.
         /// </summary>
-        [CommandMethod("drz_UpdateMode", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "drz_UpdateMode", CommandFlags.Session)]
         public static void SetUpdateMode()
         {
             Document? document = Application.DocumentManager.MdiActiveDocument;

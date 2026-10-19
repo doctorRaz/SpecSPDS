@@ -6,7 +6,9 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 	<ItemGroup>
+	  <PackageReference Include="drzSharpSevenZip" Version="2.0.0" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<PackageReference Include="SharpSevenZip" Version="2.0.128" />
 	</ItemGroup>
 </Project>
