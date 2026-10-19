@@ -100,9 +100,7 @@ namespace dRz.Infrastructure.Infrastructure
             bool isProductDirectory = packageIsInParent &&
                 Path.GetFileName(packageDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
 
-            Location = isProductDirectory
-                ? AddonLocation.ProductDirectory
-                : AddonLocation.ExternalDirectory;
+            IsProductDirectory = isProductDirectory;
 
             // При нештатном расположении не используем внешний родительский каталог
             // как корень полного обновления.
@@ -279,9 +277,9 @@ namespace dRz.Infrastructure.Infrastructure
         public bool HasPackage => PackageFileName != null;
 
         /// <summary>
-        /// Возвращает расположение аддона относительно каталога продукта.
+        /// Определяет, находится ли аддон в каталоге продукта.
         /// </summary>
-        public AddonLocation Location { get; }
+        public bool IsProductDirectory { get; }
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
