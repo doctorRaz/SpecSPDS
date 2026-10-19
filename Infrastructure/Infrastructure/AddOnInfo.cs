@@ -90,27 +90,22 @@ namespace dRz.Infrastructure.Infrastructure
 
             DirectoryInfo addonDirectory = new(AssemblyDirectory);
             DirectoryInfo? packageDirectory = addonDirectory.Parent;
-            DirectoryInfo? productDirectory = packageDirectory?.Parent;
 
-            // Маркер пакета находится на уровень выше каталога аддона.
-            // Каталогом продукта считаем следующий уровень, если его имя начинается с Product.
-            // Иначе не используем каталог пакета как корень обновления: рядом могут быть
-            // посторонние приложения.
+            // Штатная структура: Product.package находится непосредственно
+            // в каталоге-родителе аддона.
             bool packageIsInParent = package != null &&
                 packageDirectory != null &&
                 string.Equals(package.DirectoryName, packageDirectory.FullName, StringComparison.OrdinalIgnoreCase);
 
-            bool isProductDirectory = packageIsInParent &&
-                productDirectory != null &&
-                Path.GetFileName(productDirectory.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
+            Location = packageIsInParent
+                ? AddonLocation.ProductDirectory
+                : AddonLocation.ExternalDirectory;
 
-            Location = packageIsInParent && !isProductDirectory
-                ? AddonLocation.ExternalDirectory
-                : AddonLocation.ProductDirectory;
-
-            PackageDirectory = packageIsInParent && !isProductDirectory
-                ? AssemblyDirectory
-                : package?.DirectoryName ?? AssemblyDirectory;
+            // При нештатном расположении не используем внешний родительский каталог
+            // как корень полного обновления.
+            PackageDirectory = packageIsInParent
+                ? packageDirectory!.FullName
+                : AssemblyDirectory;
 
             _metadata = new AssemblyMetadata(_assembly);
 
