@@ -97,14 +97,12 @@ namespace dRz.Infrastructure.Infrastructure
                 packageDirectory != null &&
                 string.Equals(package.DirectoryName, packageDirectory.FullName, StringComparison.OrdinalIgnoreCase);
 
-            bool isProductDirectory = packageIsInParent &&
+            IsProductDirectory = packageIsInParent &&
                 Path.GetFileName(packageDirectory!.FullName).StartsWith(Product, StringComparison.OrdinalIgnoreCase);
-
-            IsProductDirectory = isProductDirectory;
 
             // При нештатном расположении не используем внешний родительский каталог
             // как корень полного обновления.
-            PackageDirectory = isProductDirectory
+            PackageDirectory = IsProductDirectory
                 ? packageDirectory!.FullName
                 : AssemblyDirectory;
 
