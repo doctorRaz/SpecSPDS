@@ -32,6 +32,11 @@ namespace dRz.Abstractions.Infrastructure
         /// </value>
         bool HasPackage { get; }
 
+        /// <summary>
+        /// Возвращает расположение аддона относительно каталога продукта.
+        /// </summary>
+        AddonLocation Location { get; }
+
         /// <summary>Определяет, расположен ли файл основной сборки аддона на сетевом ресурсе.</summary>
         /// <returns><see langword="true"/>, если путь сборки сетевой; иначе <see langword="false"/>.</returns>
         bool IsNetworkPath();
