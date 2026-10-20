@@ -13,6 +13,9 @@ namespace dRz.Settings
         public UpdateMode Mode { get; set; } = UpdateMode.CheckAndNotify;
 
         /// <inheritdoc />
+        public int UpdateCheckIntervalDays { get; set; } = 7;
+
+        /// <inheritdoc />
         public DateTime? LastCheck { get; set; }
 
         /// <inheritdoc />

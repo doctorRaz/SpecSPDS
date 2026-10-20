@@ -5,7 +5,6 @@ using dRz.Abstractions.Updater;
 using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
-using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -314,7 +313,11 @@ namespace dRz.Updater
             }
             finally
             {
+#if DEBUG
+                tempDirectory = Path.Combine(tempDirectoryRoot, nameof(Updater));
+#endif
                 try
+
                 {
                     if (!string.IsNullOrEmpty(tempDirectory) && Directory.Exists(tempDirectory))
                     {

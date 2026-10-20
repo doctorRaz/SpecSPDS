@@ -43,6 +43,7 @@ namespace dRz.Test.Settings
             IAddonSettings settings = CreateManager().Load();
 
             Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
+            Assert.That(settings.Updates.UpdateCheckIntervalDays, Is.EqualTo(7));
             Assert.That(File.Exists(_filePath), Is.True);
         }
 
@@ -51,6 +52,7 @@ namespace dRz.Test.Settings
         {
             IAddonSettings settings = CreateManager().Load();
             settings.Updates.Mode = UpdateMode.CheckAndInstall;
+            settings.Updates.UpdateCheckIntervalDays = 12;
             settings.Updates.LastCheck = new DateTime(2026, 10, 14, 12, 30, 0, DateTimeKind.Utc);
             settings.Updates.LastResult = UpdateResult.Installed;
             settings.Save();
@@ -58,6 +60,7 @@ namespace dRz.Test.Settings
             IAddonSettings reloaded = CreateManager().Load();
 
             Assert.That(reloaded.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
+            Assert.That(reloaded.Updates.UpdateCheckIntervalDays, Is.EqualTo(12));
             Assert.That(reloaded.Updates.LastCheck, Is.EqualTo(settings.Updates.LastCheck));
             Assert.That(reloaded.Updates.LastResult, Is.EqualTo(UpdateResult.Installed));
         }
