@@ -25,6 +25,7 @@ updates:
     # Эти зависимости зафиксированы для совместимости проекта.
     # Их обновление выполняется вручную и не должно предлагаться Dependabot.
     ignore:
+        - dependency-name: "NUnit"
         - dependency-name: "NUnit3TestAdapter"
         - dependency-name: "MultiCAD.NET"
         - dependency-name: "nanoCAD.Platform.NET"
