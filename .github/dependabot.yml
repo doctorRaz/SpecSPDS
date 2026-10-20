@@ -5,11 +5,18 @@
 
 version: 2
 
+registries:
+  nanodev:
+    type: nuget-feed
+    url: https://nuget.nanodev.ru/nuget
+
 updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
       interval: "weekly"
+    registries:
+      - nanodev
 
     groups:
       nuget-dependencies:
