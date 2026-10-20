@@ -1,11 +1,12 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+
 using drz.Lib_B;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
 
 namespace drz.Lib_A
 {
@@ -35,14 +36,14 @@ namespace drz.Lib_A
             //  _services=services
             //      и получать интерфейсы по
             //          services.Get<T>
-            AddOnCtx.Initialize(services);
+            AddOnContext.Initialize(services);
 
             string msg = $"{nameof(ContainerTransferA)} Init";
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransferA));
+            _logger = AddOnContext.NLogFactory.GetLogger(typeof(ContainerTransferA));
             _logger.InfoCaller(msg);
 
-            _msgCmd = AddOnCtx.MsgCmd;
+            _msgCmd = AddOnContext.MsgCmd;
             _msgCmd.InfoMessage(msg);
         }
 
@@ -91,15 +92,15 @@ namespace drz.Lib_A
                     .Log();
 
             //---- CadInfo -------
-            _logger.Info(AddOnCtx.CadInfo.ToLongString());
+            _logger.Info(AddOnContext.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
-            _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+            _logger.Info(AddOnContext.AddOnInfo.ToLongString());
 
             //----- SysInfo ------
-            _logger.Info(AddOnCtx.SysInfo.ToLongString());
+            _logger.Info(AddOnContext.SysInfo.ToLongString());
 
-            ContainerTransferB.Run(AddOnCtx.Services);
+            ContainerTransferB.Run(AddOnContext.Services);
 
             msg = $"{nameof(CommandA_Run)} end";
             _logger.Info(msg);

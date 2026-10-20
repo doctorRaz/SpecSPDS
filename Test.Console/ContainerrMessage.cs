@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure.Services;
+using dRz.Src.Infrastructure;
 using System;
 
 namespace dRz.SpecSPDS.Test
@@ -17,21 +18,21 @@ namespace dRz.SpecSPDS.Test
 
         internal ContainerrMessage()
         {
-            _msg = AddOnCtx.Msg;
-            _msgCmd = AddOnCtx.MsgCmd;
-            _msgGui = AddOnCtx.MsgW;
+            _msg = AddOnContext.Msg;
+            _msgCmd = AddOnContext.MsgCmd;
+            _msgGui = AddOnContext.MsgW;
 
             _ex = new Exception("Test Exception");
 
             //todo так делать нехорошо , но для отладки можно(((
-            _documentService = (DocumentService)AddOnCtx.DocService;
+            _documentService = (DocumentService)AddOnContext.DocService;
         }
 
         /// <summary>route the MSG console or window message</summary>
         internal void RunMsg()
         {
-            _msg.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
-            _msg.WarningMessage(AddOnCtx.CadInfo.ToString());
+            _msg.InfoMessage(AddOnContext.SysInfo.ToString());//ex
+            _msg.WarningMessage(AddOnContext.CadInfo.ToString());
             _msg.ErrorMessage(_ex);
             _msg.ErrorMessage(_msgErr, _ex);
         }
@@ -39,8 +40,8 @@ namespace dRz.SpecSPDS.Test
         /// <summary>Runs the MSG command.</summary>
         internal void RunMsgCmd()
         {
-            _msgCmd.InfoMessage(AddOnCtx.SysInfo.ToString());//ex
-            _msgCmd.WarningMessage(AddOnCtx.CadInfo.ToString());
+            _msgCmd.InfoMessage(AddOnContext.SysInfo.ToString());//ex
+            _msgCmd.WarningMessage(AddOnContext.CadInfo.ToString());
             _msgCmd.ErrorMessage(_ex);
             _msgCmd.ErrorMessage(_msgErr, _ex);
         }
@@ -49,8 +50,8 @@ namespace dRz.SpecSPDS.Test
         internal void RunMsgGui()
         {
             //info
-            _msgGui.InfoMessage(AddOnCtx.SysInfo.ToString());
-            _msgGui.WarningMessage(AddOnCtx.CadInfo.ToString());
+            _msgGui.InfoMessage(AddOnContext.SysInfo.ToString());
+            _msgGui.WarningMessage(AddOnContext.CadInfo.ToString());
             _msgGui.ErrorMessage(_ex);
             _msgGui.ErrorMessage(_msgErr, _ex);
 

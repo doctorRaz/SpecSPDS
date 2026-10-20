@@ -2,6 +2,7 @@
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
+using dRz.Src.Infrastructure;
 using System;
 
 namespace dRz.Test.Console
@@ -27,16 +28,16 @@ namespace dRz.Test.Console
                 AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ConteinerNlog).Assembly);
 
                 // экземпляр копии контейнера by ref
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                 string msg = $"{nameof(ConteinerNlog)} Init";
 
                 //логер
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ConteinerNlog));
+                _logger = AddOnContext.NLogFactory.GetLogger(typeof(ConteinerNlog));
                 _logger.InfoCaller(msg);
 
                 //ком строка
-                _msgCmd = AddOnCtx.MsgCmd;
+                _msgCmd = AddOnContext.MsgCmd;
                 _msgCmd.InfoMessage(msg);
 
                 _isAddOnCompositionRoot = true;//сервис поднялся
@@ -50,9 +51,9 @@ namespace dRz.Test.Console
 
         internal void ConteinerNlogRun()
         {
-            _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
-            _logger.Info(AddOnCtx.CadInfo.ToLongString());
-            _logger.Info(AddOnCtx.SysInfo.ToLongString());
+            _logger.Info(AddOnContext.AddOnInfo.ToLongString());
+            _logger.Info(AddOnContext.CadInfo.ToLongString());
+            _logger.Info(AddOnContext.SysInfo.ToLongString());
         }
 
         public static void Run()

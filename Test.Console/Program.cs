@@ -19,10 +19,11 @@ AppSettings я б засунул именно в то, что работает �
 
 */
 
-global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+//global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
 using dRz.Test.Console;
 using System;
 using System.Diagnostics;
@@ -48,14 +49,14 @@ namespace dRz.SpecSPDS.Test
             nlog:
                 ConteinerNlog.Run();
 
-                _msg = AddOnCtx.MsgW;
+                _msg = AddOnContext.MsgW;
 
                 _msg.InfoMessage("test");
                 _msg.ErrorMessage("test");
                 _msg.WarningMessage("test");
 
 
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(Start));
+                _logger = AddOnContext.NLogFactory.GetLogger(typeof(Start));
                 _isLoggerProvider = true;
                 return;
 
@@ -121,7 +122,7 @@ namespace dRz.SpecSPDS.Test
                     _logger.Fatal(ex, "Продолжение не возможно");
                 }
 
-                AddOnCtx.Msg.ErrorMessage("Продолжение не возможно", ex);
+                AddOnContext.Msg.ErrorMessage("Продолжение не возможно", ex);
             }
             finally
             {
