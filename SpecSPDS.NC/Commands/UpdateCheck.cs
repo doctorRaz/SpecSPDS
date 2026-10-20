@@ -1,6 +1,4 @@
-﻿using dRz.Abstractions.Logger;
-using dRz.Abstractions.Settings;
-using dRz.Src.Infrastructure;
+﻿using dRz.Src.Infrastructure;
 using dRz.Updater.Services;
 using Teigha.Runtime;
 
@@ -22,10 +20,10 @@ namespace dRz.NC.Commands
             UpdateAsync updateAsync = new UpdateAsync(AddOnContext.NLogFactory,
                                                         AddOnContext.Msg,
                                                         AddOnContext.MsgP);
-            
+
             _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Manual,
                                             AddOnContext.AddonSettings,
-                                            AddOnContext.AddOnInfo  );
+                                            AddOnContext.AddOnInfo);
         }
     }
 }

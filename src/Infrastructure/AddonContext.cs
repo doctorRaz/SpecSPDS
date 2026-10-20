@@ -71,7 +71,7 @@ namespace dRz.Src.Infrastructure
         /// <value>The MSG PRT.</value>
         internal static IMessagePromptService MsgP => Services.Get<IMessagePromptService>();
 
-        
+
 
         /// <summary>
         /// фабрика логгеров, одна на продукт из нее каждый класс получает свой логгер

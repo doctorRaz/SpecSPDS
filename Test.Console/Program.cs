@@ -81,7 +81,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto clone;
-            //******
+                //******
             transfer:
 
                 #region ContainerTransfer
@@ -101,7 +101,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto transfer;
-            //******
+                //******
             message:
 
                 #region TEST MESSAGE

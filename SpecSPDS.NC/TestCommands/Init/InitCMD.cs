@@ -10,13 +10,13 @@ namespace dRz.NC.TestCommands.Init
 #if DEBUG && NC
 
         [Rtm.CommandMethod(CommandPrefix.Value + "инит", Rtm.CommandFlags.Session)]
-        [Scm.Description( "ручной инит загрузчика для SPEC")]
+        [Scm.Description("ручной инит загрузчика для SPEC")]
         public static void test()
         {
             AddOnContext.Msg.InfoMessage($"инит SPEC");
 
             EntryPoint entryPoint = new EntryPoint();
-            
+
             entryPoint.Initialize();
         }
 

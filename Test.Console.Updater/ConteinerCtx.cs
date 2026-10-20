@@ -1,7 +1,6 @@
-﻿/*global*/ using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
-
-using dRz.Abstractions.Services;
+﻿using dRz.Abstractions.Services;
 using dRz.AddOnRuntime;
+using dRz.Src.Infrastructure;
 using System;
 
 namespace dRz.Test.Console.Updater
@@ -27,7 +26,7 @@ namespace dRz.Test.Console.Updater
                 AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ConteinerCtx).Assembly);
 
                 // Временный адаптер для существующего UpdateAsync.
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                 _root = root;
                 return root;

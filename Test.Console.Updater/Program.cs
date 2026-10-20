@@ -122,7 +122,7 @@ namespace dRz.Test.Console.Updater
                 catch (Exception ex)
                 {
                     _settings.Updates.Mode = previous;
-                    _logger.Error(ex, "Не удалось сохранить режим обновления.");
+                    _logger?.Error(ex, "Не удалось сохранить режим обновления.");
                     _msg.ErrorMessage("Не удалось сохранить режим. Оставлен прежний режим.", ex);
                 }
 
