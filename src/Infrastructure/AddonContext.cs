@@ -56,7 +56,6 @@ namespace dRz.Src.Infrastructure
         /// </exception>
         internal static IMcNotificatorMessageService MsgN => Services.Get<IMcNotificatorMessageService>();
 
-
         /// <summary>общий вызов сервиса сообщений <br/>
         /// реализация в классе DefaultMessageService?<br/>
         /// вернет:<br/>
@@ -71,15 +70,12 @@ namespace dRz.Src.Infrastructure
         /// <value>The MSG PRT.</value>
         internal static IMessagePromptService MsgP => Services.Get<IMessagePromptService>();
 
-
-
         /// <summary>
         /// фабрика логгеров, одна на продукт из нее каждый класс получает свой логгер
         /// </summary>
         internal static IDrzLoggerFactory NLogFactory => Services.Get<IDrzLoggerFactory>();
 
         internal static IAddonSettings AddonSettings => Services.Get<IAddonSettings>();
-
 
         #endregion Internal Properties
 

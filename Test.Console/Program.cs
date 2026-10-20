@@ -45,7 +45,6 @@ namespace dRz.SpecSPDS.Test
             {
                 goto nlog;
 
-
             nlog:
                 ConteinerNlog.Run();
 
@@ -54,7 +53,6 @@ namespace dRz.SpecSPDS.Test
                 _msg.InfoMessage("test");
                 _msg.ErrorMessage("test");
                 _msg.WarningMessage("test");
-
 
                 _logger = AddOnContext.NLogFactory.GetLogger(typeof(Start));
                 _isLoggerProvider = true;

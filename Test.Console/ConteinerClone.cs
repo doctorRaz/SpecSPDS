@@ -79,7 +79,6 @@ namespace drz.SpecSPDS.Test
             _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
             //get registrator
 
-
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать
             //*******************

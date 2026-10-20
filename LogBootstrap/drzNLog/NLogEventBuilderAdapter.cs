@@ -6,7 +6,6 @@ namespace dRz.LogBootstrap.drzNLog
 {
     internal sealed class NLogEventBuilderAdapter : ILogEventBuilder
     {
-
         public ILogEventBuilder Exception(Exception exception)
         {
             _ = _inner.Exception(exception);

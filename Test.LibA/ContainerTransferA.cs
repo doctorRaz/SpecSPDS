@@ -1,7 +1,6 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-
 using drz.Lib_B;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;

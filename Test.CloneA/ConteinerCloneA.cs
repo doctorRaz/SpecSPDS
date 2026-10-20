@@ -66,7 +66,6 @@ namespace drz.Clone_A
             _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
             //get registrator
 
-
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать
             //*******************

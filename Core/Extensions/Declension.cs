@@ -21,7 +21,6 @@ namespace dRz.Core.Extensions
 
         public static string Declens(this List<string> titles, int number)
         {
-
             //todo переделать на d:\@Developers\Programmers\!NET\!Archivist\Archivist\Localization\
             List<int> cases = new List<int> { 2, 0, 1, 1, 1, 2 };
             return titles[number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]];

@@ -9,7 +9,6 @@ namespace dRz.Infrastructure.Infrastructure
     /// </summary>
     public static class AddOnInfoProvider
     {
-
         public static IAddOnInfo GetOrAdd<T>() => GetOrAdd(typeof(T).Assembly);
 
         public static IAddOnInfo GetOrAdd(Type type) => GetOrAdd(type.Assembly);
@@ -21,6 +20,5 @@ namespace dRz.Infrastructure.Infrastructure
 
             return addOnInfoRegistry.GetOrAdd(assembly);
         }
-
     }
 }

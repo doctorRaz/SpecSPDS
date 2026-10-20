@@ -1,5 +1,4 @@
-﻿
-using dRz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
@@ -67,10 +66,6 @@ namespace drz.Clone_B
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
             _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
             //get registrator
-
-
-
-
 
             //*******************
             // Так делать не надо, интерфейс из контейнера не должен торчать

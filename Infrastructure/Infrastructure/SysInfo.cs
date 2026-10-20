@@ -24,7 +24,6 @@ namespace dRz.Infrastructure.Infrastructure
 
         private static readonly Lazy<string> _ramTotal = new(() => GetRamTotal());
 
-
         #endregion Private Fields
 
         #region Public Constructors
@@ -95,14 +94,19 @@ namespace dRz.Infrastructure.Infrastructure
 
         //public string GpuInfo => _gpuInfo ??= GetGpuData();
         public string GpuInfo => _gpuInfo.Value;
+
         public string InstallationType { get; init; } = "Unknown";
         public bool IsFallback { get; init; }
         public Version OsVersion { get; init; }
+
         //public string ProcessorName => _processorName ??= GetWmiValue("Win32_Processor", "Name");
         public string ProcessorName => _processorName.Value;
+
         public string ProductName { get; init; } = "Windows";
+
         //public string RamTotalGb => _ramTotal ??= GetRamTotal();
         public string RamTotalGb => _ramTotal.Value;
+
         public string VersionString => OsVersion.ToString();
 
         #endregion Public Properties

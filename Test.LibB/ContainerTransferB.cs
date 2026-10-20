@@ -1,7 +1,6 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
@@ -58,7 +57,6 @@ namespace drz.Lib_B
         internal void CommandB_Run()
         {
             string msg = $"{nameof(CommandB_Run)} Init";
-
 
             _logger.InfoCaller(msg);
             _msgCmd.InfoMessage(msg);

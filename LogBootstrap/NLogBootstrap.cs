@@ -34,7 +34,6 @@ namespace dRz.LogBootstrap
                         LogFactory logFactory = builder.Build();
 
                         return new NLogLoggerFactory(logFactory);
-
                     },
                     LazyThreadSafetyMode.ExecutionAndPublication));
 

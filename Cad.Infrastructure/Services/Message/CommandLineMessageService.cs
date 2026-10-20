@@ -4,7 +4,9 @@ using System;
 using System.Runtime.CompilerServices;
 
 #if !TEST
+
 using HostMgd.ApplicationServices;
+
 #endif
 
 namespace dRz.NC.Infrastructure.Services.Message

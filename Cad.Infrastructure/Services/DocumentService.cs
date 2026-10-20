@@ -48,6 +48,7 @@ namespace dRz.NC.Infrastructure.Services
         }
 
 #if !TEST
+
         public bool IsActive
         {
             get
@@ -56,6 +57,7 @@ namespace dRz.NC.Infrastructure.Services
                 return doc != null;
             }
         }
+
 #else
 
         /// <summary>The is active</summary>

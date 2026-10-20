@@ -8,13 +8,13 @@ namespace dRz.LogBootstrap.drzNLog
 {
     internal sealed class NLogAdapter : IDrzLogger
     {
-
         public bool IsDebugEnabled => _inner.IsDebugEnabled;
         public bool IsErrorEnabled => _inner.IsErrorEnabled;
         public bool IsFatalEnabled => _inner.IsFatalEnabled;
         public bool IsInfoEnabled => _inner.IsInfoEnabled;
         public bool IsTraceEnabled => _inner.IsTraceEnabled;
         public bool IsWarnEnabled => _inner.IsWarnEnabled;
+
         public void Debug(string message) => _inner.Debug(message);
 
         public void Error(string message, Exception? exception = null) => _inner.Error(exception, message);

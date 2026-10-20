@@ -12,11 +12,8 @@
         public const string ProductFamily = nameof(ProductFamily);
         public const string Vendor = nameof(Vendor);
 
-        /// <summary>The repository URL предопределенный 
+        /// <summary>The repository URL предопределенный
         /// SDK</summary>
         public const string RepositoryUrl = nameof(RepositoryUrl);
-
-
-
     }
 }

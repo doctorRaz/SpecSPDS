@@ -54,7 +54,6 @@ namespace dRz.NC
         {
             try
             {
-
                 IUpdateSettings updateSettings = settings.Updates;// Получаем настройки обновлений аддона
 
                 int minDay = 1;

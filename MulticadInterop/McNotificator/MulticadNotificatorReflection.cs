@@ -11,16 +11,22 @@ namespace drz.MulticadInterop.McNotificator
     {
         /// <summary>Без иконки.</summary>
         neSimple = -1,
+
         /// <summary>Стандартное уведомление.</summary>
         neUsual = 0,
+
         /// <summary>Предупреждение.</summary>
         neWarning = 1,
+
         /// <summary>Ошибка в виде крестика.</summary>
         neCure = 2,
+
         /// <summary>Подсказка.</summary>
         neHint = 3,
+
         /// <summary>Ошибка.</summary>
         neError = 4,
+
         /// <summary>Справочная информация.</summary>
         neHelp = 5
     }

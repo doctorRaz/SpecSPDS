@@ -33,8 +33,6 @@ namespace dRz.NC.Commands
                 return;
             }
 
-
-
             try
             {
                 _settings = AddOnContext.AddonSettings;

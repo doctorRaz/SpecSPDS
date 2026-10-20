@@ -15,7 +15,6 @@ namespace dRz.Test.Console
 
         internal ConteinerNlog()
         {
-
             try
             {
                 if (_isAddOnCompositionRoot)
