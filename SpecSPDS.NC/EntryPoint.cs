@@ -40,7 +40,10 @@ namespace dRz.NC
         : Rtm.IExtensionApplication
 #endif
     {
+
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
+
+        private IAddonSettings _settings;
 
         private bool _isRegisterAssemblyResolver;// Флаг регистрации обработчика разрешения сборок.
 
@@ -83,23 +86,23 @@ namespace dRz.NC
             try
             {
                 // регистрируемся
-                AddOnCompositionRoot root = TryAddOnCompositionRoot();// Получаем сервисы и контекст аддона.
+                TryAddOnCompositionRoot();// Получаем сервисы и контекст аддона.
 
                 // Загружаем настройки сразу при инициализации и фиксируем singleton в контейнере.
-                IAddonSettings settings = root.Get<IAddonSettings>();
+                _settings = AddOnContext.Services.Get<IAddonSettings>();
 
-                _addOnInfo = root.Get<IAddOnInfo>();
+                _addOnInfo = AddOnContext.Services.Get<IAddOnInfo>();
                 _isAddOnInfoProvider = true;
 
-                _cadInfo = root.Get<ICadInfo>();
+                _cadInfo = AddOnContext.Services.Get<ICadInfo>();
                 _isCadInfoProvider = true;
 
-                _sysInfo = root.Get<ISysInfo>();
+                _sysInfo = AddOnContext.Services.Get<ISysInfo>();
                 _isSysInfoProvider = true;
 
-                if(!_addOnInfo.IsProductDirectory)
+                if (!_addOnInfo.IsProductDirectory)
                 {
-                    root.Get<IWindowMessageService>().WarningMessage(
+                    AddOnContext.Services.Get<IWindowMessageService>().WarningMessage(
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
                         $"\nВозможны ошибки в работе!");
@@ -180,15 +183,13 @@ namespace dRz.NC
             }
         }
 
-        private AddOnCompositionRoot _root;
-
         /// <summary>
         /// Создаёт корень композиции при первом вызове и получает необходимые сервисы аддона.
         /// </summary>
         /// <exception cref="InvalidOperationException">
         /// Не удалось создать корень композиции или получить необходимые сервисы.
         /// </exception>
-        private AddOnCompositionRoot TryAddOnCompositionRoot()
+        private void TryAddOnCompositionRoot()
         {
             try
             {
@@ -202,21 +203,18 @@ namespace dRz.NC
                     AddOnContext  /*AddOnCtx*/.Initialize(root.Get<IAddOnServices>());
 
                     _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
-                    _root = root;
+
                 }
-                else
-                {
-                    return _root;
-                }
+
 
                 //логер для класса
-                _logger = _root.Get<IDrzLoggerFactory>()/* AddOnCtx.NLogFactory*/.GetLogger(typeof(EntryPoint));
+                _logger = AddOnContext.Services.Get<IDrzLoggerFactory>().GetLogger(typeof(EntryPoint));
                 _isLoggerProvider = true;//логгер есть
 
-                _message = _root.Get<IMessageService>()/* AddOnCtx.Msg*/;
+                _message = AddOnContext.Services.Get<IMessageService>()/* AddOnCtx.Msg*/;
                 _isMessageProvider = true;  //ссобщения есть
 
-                return _root;
+
             }
             catch (Exception ex)
             {
