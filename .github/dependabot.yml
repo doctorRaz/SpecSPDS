@@ -28,4 +28,4 @@ updates:
         - dependency-name: "NUnit"
         - dependency-name: "NUnit3TestAdapter"
         - dependency-name: "MultiCAD.NET"
-        # - dependency-name: "nanoCAD.Platform.NET"
+        - dependency-name: "nanoCAD.Platform.NET"
