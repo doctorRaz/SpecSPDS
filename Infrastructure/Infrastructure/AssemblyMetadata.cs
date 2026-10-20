@@ -37,8 +37,6 @@ namespace dRz.Infrastructure.Infrastructure
                 : null;
         }
 
-
-
         public string Get(string key, string defaultValue)
         {
             return _metadata.TryGetValue(key, out string? value)
@@ -49,6 +47,5 @@ namespace dRz.Infrastructure.Infrastructure
         public IEnumerable<string> Keys => _metadata.Keys;
 
         public IEnumerable<KeyValuePair<string, string>> Items => _metadata;
-
     }
 }

@@ -2,6 +2,7 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
 using System;
 
 namespace dRz.Src.Infrastructure
@@ -46,15 +47,14 @@ namespace dRz.Src.Infrastructure
 
         /// <summary>явный вызов окошка + Ask</summary>
         /// <value>The MSG GUI.</value>
-        internal static IWindowMessageService MsgGui => Services.Get<IWindowMessageService>();
+        internal static IWindowMessageService MsgW => Services.Get<IWindowMessageService>();
 
         /// <summary>Явный вызов нотифай мультикад.</summary>
         /// <value>Сервис уведомлений <see cref="IMcNotificatorMessageService"/>.</value>
         /// <exception cref="InvalidOperationException">
         /// Выбрасывается, если сервис <see cref="IMcNotificatorMessageService"/> не зарегистрирован.
         /// </exception>
-        internal static IMcNotificatorMessageService MsgMcN => Services.Get<IMcNotificatorMessageService>();
-
+        internal static IMcNotificatorMessageService MsgN => Services.Get<IMcNotificatorMessageService>();
 
         /// <summary>общий вызов сервиса сообщений <br/>
         /// реализация в классе DefaultMessageService?<br/>
@@ -68,16 +68,14 @@ namespace dRz.Src.Infrastructure
 
         /// <summary>Вызов сервиса ASK сообщений</summary>
         /// <value>The MSG PRT.</value>
-        internal static IMessagePromptService MsgPrt => Services.Get<IMessagePromptService>();
-
-        // наследник IMessageService,IWindowMessageService расширен диалоговыми окнами: да нет пропустить дальше
-        //todo internal static IWindowMessageServiceAsk MsgGUIAsc => Services.Get<IWindowMessageServiceIWindowMessageServiceAsk>();
+        internal static IMessagePromptService MsgP => Services.Get<IMessagePromptService>();
 
         /// <summary>
         /// фабрика логгеров, одна на продукт из нее каждый класс получает свой логгер
         /// </summary>
         internal static IDrzLoggerFactory NLogFactory => Services.Get<IDrzLoggerFactory>();
 
+        internal static IAddonSettings AddonSettings => Services.Get<IAddonSettings>();
 
         #endregion Internal Properties
 

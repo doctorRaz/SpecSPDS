@@ -1,19 +1,23 @@
 ﻿#if DEBUG
+using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
 using Teigha.Runtime;
-using static dRz.Src.Infrastructure.AddOnContext;
 
 namespace dRz.NC.TestCommands.Message
 {
     public class ConsoleMessageCmd
     {
-        [CommandMethod($"SPEC-console-message", CommandFlags.Session)]
+        private static IMessageService _msg = AddOnContext.Msg;
+
+
+        [CommandMethod(CommandPrefix.Value + "SPEC-console-message", CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
-            Msg.InfoMessage("test Console message");
+            _msg.InfoMessage("test Console message");
 
-            Msg.InfoMessage("test Console message");
+            _msg.InfoMessage("test Console message");
 
-            Msg.WarningMessage("test Console message");
+            _msg.WarningMessage("test Console message");
         }
     }
 }

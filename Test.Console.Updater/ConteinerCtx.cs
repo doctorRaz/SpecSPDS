@@ -1,45 +1,40 @@
-﻿using dRz.Abstractions.Logger;
-using dRz.Abstractions.Services;
-using dRz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Services;
 using dRz.AddOnRuntime;
+using dRz.Src.Infrastructure;
 using System;
 
 namespace dRz.Test.Console.Updater
 {
-    internal class ConteinerCtx
+    /// <summary>
+    /// Создаёт composition root консольного теста.
+    /// Временная инициализация AddOnCtx нужна для существующего UpdateAsync,
+    /// который пока получает зависимости через статический контекст.
+    /// </summary>
+    internal static class ConteinerCtx
     {
-        private static bool _isAddOnCompositionRoot;
-        private readonly IDrzLogger? _logger;
-        private readonly ICommandLineMessageService? _msgCmd;
+        private static AddOnCompositionRoot? _root;
 
-        internal ConteinerCtx()
+        public static AddOnCompositionRoot Run()
         {
+            if (_root != null)
+            {
+                return _root;
+            }
+
             try
             {
-                if (_isAddOnCompositionRoot)
-                {
-                    return;
-                }
-
-                //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
-                // один раз в точке входа /Rtm.IExtensionApplication/
                 AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ConteinerCtx).Assembly);
 
-                // экземпляр копии контейнера by ref
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                // Временный адаптер для существующего UpdateAsync.
+                AddOnContext.Initialize(root.Get<IAddOnServices>());
 
-                _isAddOnCompositionRoot = true;
+                _root = root;
+                return root;
             }
             catch (Exception ex)
             {
-                //роняем загрузчик
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
-        }
-
-        public static void Run()
-        {
-            _ = new ConteinerCtx();
         }
     }
 }

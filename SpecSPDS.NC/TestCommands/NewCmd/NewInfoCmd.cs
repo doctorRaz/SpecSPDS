@@ -1,41 +1,48 @@
 ﻿#if DEBUG
+using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
 using Teigha.Runtime;
-using static dRz.Src.Infrastructure.AddOnContext;
 
 
 namespace dRz.NC.TestCommands.NewCmd
 {
     public class NewInfoCmd
     {
-        [CommandMethod($"SPEC-console-New", CommandFlags.Session)]
+
+        private static IMessageService _msg = AddOnContext.Msg;
+
+        private static IWindowMessageService _msgGui = AddOnContext.MsgW;
+
+
+        [CommandMethod(CommandPrefix.Value + "SPEC-console-New", CommandFlags.Session)]
         public static void ConsoleNewCmd()
         {
-            Msg.InfoMessage($"{CadInfo}");
+            _msg.InfoMessage($"{AddOnContext.CadInfo}");
 
-            Msg.InfoMessage($"{SysInfo}");
+            _msg.InfoMessage($"{AddOnContext.SysInfo}");
 
-            Msg.WarningMessage($"{AddOnInfo}");
+            _msg.WarningMessage($"{AddOnContext.AddOnInfo}");
 
         }
 
-        [CommandMethod($"SPEC-info-New", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-info-New", CommandFlags.Session)]
         public static void GuiNewCmd()
         {
-            MsgGui.InfoMessage($"{CadInfo}");
+            _msgGui.InfoMessage($"{AddOnContext.CadInfo}");
 
-            MsgGui.WarningMessage($"{SysInfo}");
+            _msgGui.WarningMessage($"{AddOnContext.SysInfo}");
 
             System.Exception ex = new System.Exception("test err");
-            MsgGui.ErrorMessage($"{AddOnInfo.ToLongString()}", ex);
+            _msgGui.ErrorMessage($"{AddOnContext.AddOnInfo.ToLongString()}", ex);
         }
 
-        [CommandMethod($"SPEC-console-Long", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-console-Long", CommandFlags.Session)]
         public static void ConsoleLongCmd()
         {
 
-            Msg.WarningMessage($"{AddOnInfo.ToLongString()}");
+            _msg.WarningMessage($"{AddOnContext.AddOnInfo.ToLongString()}");
 
-            Msg.InfoMessage($"{SysInfo.ToLongString()}");
+            _msg.InfoMessage($"{AddOnContext.SysInfo.ToLongString()}");
 
 
         }

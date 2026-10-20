@@ -11,8 +11,10 @@ namespace drz.MulticadInterop.McNotificator
     public static class MulticadNotificator
     {
         private static readonly MethodInfo CreateMessageMethod = MulticadNotificatorReflection.FindCreateMessage();
+
         private static readonly Dictionary<NotificationType, MethodInfo>
             CreateMessageMethods = FindCreateMessageMethods();
+
         private static readonly Dictionary<NotificationType, MethodInfo>
             CreateMessageWithParentMethods = FindCreateMessageWithParentMethods();
 
@@ -128,6 +130,5 @@ namespace drz.MulticadInterop.McNotificator
 
             return result;
         }
-
     }
 }

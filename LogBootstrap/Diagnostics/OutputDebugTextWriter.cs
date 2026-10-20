@@ -10,7 +10,6 @@ namespace dRz.LogBootstrap.Diagnostics
     /// <seealso cref="TextWriter" />
     public sealed class OutputDebugTextWriter : TextWriter
     {
-
         /// <summary>
         /// При переопределении в производном классе возвращает кодировку символов, в которой записаны выходные данные.
         /// </summary>
@@ -33,6 +32,5 @@ namespace dRz.LogBootstrap.Diagnostics
         {
             Debug.WriteLine(value);
         }
-
     }
 }

@@ -7,10 +7,8 @@ using System.Linq;
 
 namespace dRz.LogBootstrap.Diagnostics
 {
-
     public static class InternalLoggerHelpers
     {
-
         // 10 MB
         /// <summary>
         /// Internal logger → Output Window (DEBUG) <br/>
@@ -91,6 +89,7 @@ namespace dRz.LogBootstrap.Diagnostics
         private static readonly object _lock = new();
         private static bool _initialized = false;
         private static string _logDir = string.Empty;
+
         /// <summary>
         /// Checks the size of the current file.
         /// </summary>
@@ -136,10 +135,8 @@ namespace dRz.LogBootstrap.Diagnostics
                 {
                     file.Delete();
                 }
-
             }
             catch { }
         }
-
     }
 }

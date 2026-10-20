@@ -9,12 +9,9 @@ namespace dRz.SpecSPDS
     /// </summary>
     public class StartRaw
     {
-
-
         [STAThread]
         private static void Main(string[] args)
         {
-
             IAddOnInfo addOnInfo = new AddOnInfo(typeof(StartRaw).Assembly);
 
             string? vendor = addOnInfo.GetMetadata(AssemblyMetadataKeys.Vendor);

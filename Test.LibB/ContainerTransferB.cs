@@ -1,10 +1,10 @@
 ﻿// тест передачи контейнера между сборками
 // container transfer test between builds
 
-global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
 using System;
 
 namespace drz.Lib_B
@@ -32,14 +32,14 @@ namespace drz.Lib_B
         internal ContainerTransferB(IAddOnServices services)
         {
             // экземпляр копии контейнера by ref
-            AddOnCtx.Initialize(services);
+            AddOnContext.Initialize(services);
 
             string msg = $"{nameof(ContainerTransferB)} Init";
 
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransferB));
+            _logger = AddOnContext.NLogFactory.GetLogger(typeof(ContainerTransferB));
             _logger.InfoCaller(msg);
 
-            _msgCmd = AddOnCtx.MsgCmd;
+            _msgCmd = AddOnContext.MsgCmd;
             _msgCmd.InfoMessage(msg);
         }
 
@@ -57,7 +57,6 @@ namespace drz.Lib_B
         internal void CommandB_Run()
         {
             string msg = $"{nameof(CommandB_Run)} Init";
-
 
             _logger.InfoCaller(msg);
             _msgCmd.InfoMessage(msg);
@@ -89,21 +88,21 @@ namespace drz.Lib_B
                     .Log();
 
             //---- CadInfo -------
-            _logger.Info(AddOnCtx.CadInfo.ToLongString());
+            _logger.Info(AddOnContext.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
-            _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+            _logger.Info(AddOnContext.AddOnInfo.ToLongString());
 
             //----- SysInfo ------
-            _logger.Info(AddOnCtx.SysInfo.ToLongString());
+            _logger.Info(AddOnContext.SysInfo.ToLongString());
 
             //если подменить сборку аддона, то покажет новый номер версии
-            _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+            _msgCmd.InfoMessage(AddOnContext.AddOnInfo.InstalledVersion.ToString());
 
-            _msgCmd.InfoMessage($"Замените сборку аддона {AddOnCtx.AddOnInfo.AssemblyPath} на одноименную любую сборку другой версии");
+            _msgCmd.InfoMessage($"Замените сборку аддона {AddOnContext.AddOnInfo.AssemblyPath} на одноименную любую сборку другой версии");
             _msgCmd.InfoMessage("И нажмите любую клавишу");
             Console.ReadKey();
-            _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.InstalledVersion.ToString());
+            _msgCmd.InfoMessage(AddOnContext.AddOnInfo.InstalledVersion.ToString());
 
             msg = $"{nameof(CommandB_Run)} end";
             _logger.Info(msg);

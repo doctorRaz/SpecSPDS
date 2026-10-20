@@ -1,15 +1,16 @@
 ﻿#if DEBUG
+using dRz.Src.Infrastructure;
 using Teigha.Runtime;
-using static dRz.Src.Infrastructure.AddOnContext;
+//using static dRz.Src.Infrastructure.AddOnContext;
 
 namespace dRz.NC.TestCommands.DocInfo
 {
     public class DocInfoLineCmd
     {
-        [CommandMethod($"-SPEC-doc-info", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "-SPEC-doc-info", CommandFlags.Session)]
         public static void DocInfoLineCommand()
         {
-            Msg.InfoMessage(DocService.FullPath);
+            AddOnContext.Msg.InfoMessage(AddOnContext.DocService.FullPath);
         }
     }
 }

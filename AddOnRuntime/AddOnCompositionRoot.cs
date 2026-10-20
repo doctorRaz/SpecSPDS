@@ -110,10 +110,10 @@ namespace dRz.AddOnRuntime
             // AddOnInfoRegistry регистрируем интерфейс
             //      создания IAddOnInfo (только в контейнере)
             //      получения IAddOnInfo
-            //      
+            //
             // хранится в ConcurrentDictionary<string, IAddOnInfo> _addons = new();
             //      ключ полный путь к файлу addOnAssembly
-            //      
+            //
             //доступ на запись только из контейнера,
             //чтение при получении в контейнере IAddOnInfoRegistry
             container.RegisterSingleton<IAddOnInfoRegistry, AddOnInfoRegistry>();

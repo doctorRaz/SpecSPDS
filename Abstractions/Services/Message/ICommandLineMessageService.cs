@@ -2,12 +2,11 @@
 
 namespace dRz.Abstractions.Services.Message
 {
-    /// <summary>Сервис сообщений ком строка 
+    /// <summary>Сервис сообщений ком строка
     /// добавлен метод </summary>
     /// <seealso cref="IMessageService" ConsoleMessage />
     public interface ICommandLineMessageService : IMessageService
     {
-
         /// <summary> Сообщение в консоль CAD </summary>
         /// <param name="message">Выводимое сообщение</param>
         /// <param name="caller">Вызывающий метод. null - вычисляется автоматически. В случае, если ком.строка недоступна,<br/>

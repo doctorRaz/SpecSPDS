@@ -1,4 +1,5 @@
-﻿using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.Abstractions.Updater;
@@ -19,13 +20,23 @@ namespace dRz.NC
     /// </remarks>
     public class UpdateAsync
     {
-        private readonly IDrzLogger _logger;
-        private readonly IMessageService _msg;
+        private readonly IDrzLogger _logger;// сервис логирования
+        private readonly IMessageService _msg;// сервис для отображения сообщений пользователю
+        private readonly IMessagePromptService _msgprt;// сервис для отображения сообщений с запросом подтверждения
+        private readonly IDrzLoggerFactory _loggerFactory;// фабрика для создания экземпляров логгера
 
-        public UpdateAsync()
+        /// <summary>Initializes a new instance of the <see cref="UpdateAsync"/> class.</summary>
+        /// <param name="drzLoggerFactory">The DRZ logger factory.</param>
+        /// <param name="messageService">The message service.</param>
+        /// <param name="messagePromptService">The message prompt service.</param>
+        public UpdateAsync(IDrzLoggerFactory drzLoggerFactory,
+                            IMessageService messageService,
+                            IMessagePromptService messagePromptService)
         {
-            _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateAsync));
-            _msg = AddOnCtx.Msg;
+            _loggerFactory = drzLoggerFactory;
+            _logger = _loggerFactory.GetLogger(typeof(UpdateAsync));
+            _msg = messageService;
+            _msgprt = messagePromptService;
         }
 
         /// <summary>
@@ -39,12 +50,11 @@ namespace dRz.NC
         /// Ошибки выполнения, сохранения состояния и уведомления об ошибках обрабатываются
         /// отдельно, чтобы сбой диагностики не маскировал исходную ошибку.
         /// </remarks>
-        public async Task UpdateAsyncRun(UpdateLaunchMode launchMode)
+        public async Task UpdateAsyncRun(UpdateLaunchMode launchMode, IAddonSettings settings, IAddOnInfo addOnInfo)
         {
             try
             {
-                IAddonSettings settings = AddOnCtx.Services.Get<IAddonSettings>();
-                IUpdateSettings updateSettings = settings.Updates;
+                IUpdateSettings updateSettings = settings.Updates;// Получаем настройки обновлений аддона
 
                 int minDay = 1;
 
@@ -83,27 +93,27 @@ namespace dRz.NC
                     return;
                 }
 
-                string updateUrl = AddOnCtx.AddOnInfo.RepositoryUrl + "/" +
-                                   AddOnCtx.AddOnInfo.Product +
+                string updateUrl = addOnInfo.RepositoryUrl + "/" +
+                                   addOnInfo.Product +
                                    "/releases/latest/download/";
 #if DEBUG
-                updateUrl = $"http://127.0.0.1:8080/{AddOnCtx.AddOnInfo.Product}/{AddOnCtx.AddOnInfo.HostFamily}";
+                updateUrl = $"http://127.0.0.1:8080/{addOnInfo.Product}/{addOnInfo.HostFamily}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
 
                 UpdateManager updateManager = new UpdateManager(
-                    AddOnCtx.Msg,
-                    AddOnCtx.MsgPrt,
-                    AddOnCtx.NLogFactory,
+                    _msg,
+                    _msgprt,
+                    _loggerFactory,
                     updateSettings);
 
                 UpdateRequest request = new UpdateRequest
                 {
-                    CurrentVersion = AddOnCtx.AddOnInfo.InstalledVersion,
+                    CurrentVersion = addOnInfo.InstalledVersion,
                     UpdateUrl = updateUrl,
-                    PackageDirectory = AddOnCtx.AddOnInfo.PackageDirectory,
-                    IsPackage = AddOnCtx.AddOnInfo.IsProductDirectory,
-                    IsNetworkPath = AddOnCtx.AddOnInfo.IsNetworkPath(),
+                    PackageDirectory = addOnInfo.PackageDirectory,
+                    IsPackage = addOnInfo.IsProductDirectory,
+                    IsNetworkPath = addOnInfo.IsNetworkPath(),
                     LaunchMode = launchMode,
                 };
 

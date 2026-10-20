@@ -6,6 +6,7 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
+using dRz.Src.Infrastructure;
 using System;
 
 //using static dRz.Src.Infrastructure.AddOnContext;
@@ -45,16 +46,16 @@ namespace dRz.SpecSPDS.Test
                 AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ContainerTransfer).Assembly);
 
                 // экземпляр копии контейнера by ref
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                 string msg = $"{nameof(ContainerTransfer)} Init";
 
                 //логер
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ContainerTransfer));
+                _logger = AddOnContext.NLogFactory.GetLogger(typeof(ContainerTransfer));
                 _logger.InfoCaller(msg);
 
                 //ком строка
-                _msgCmd = AddOnCtx.MsgCmd;
+                _msgCmd = AddOnContext.MsgCmd;
                 _msgCmd.InfoMessage(msg);
 
                 _isAddOnCompositionRoot = true;
@@ -101,16 +102,16 @@ namespace dRz.SpecSPDS.Test
                     .Log();
 
             //---- CadInfo -------
-            _logger.Info(AddOnCtx.CadInfo.ToLongString());
+            _logger.Info(AddOnContext.CadInfo.ToLongString());
 
             //----- AddOnInfo ------
-            _logger.Info(AddOnCtx.AddOnInfo.ToLongString());
+            _logger.Info(AddOnContext.AddOnInfo.ToLongString());
 
             //----- SysInfo ------
-            _logger.Info(AddOnCtx.SysInfo.ToLongString());
+            _logger.Info(AddOnContext.SysInfo.ToLongString());
 
-            //запускаем цепочку библиотек с передачей друг другу AddOnCtx.Services
-            ContainerTransferA.Run(AddOnCtx.Services);
+            //запускаем цепочку библиотек с передачей друг другу AddOnContext.Services
+            ContainerTransferA.Run(AddOnContext.Services);
 
             msg = $"{nameof(TestContainerTransfer_Run)} end";
             _logger.Info(msg);
