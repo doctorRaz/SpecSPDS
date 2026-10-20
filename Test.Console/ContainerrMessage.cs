@@ -19,7 +19,7 @@ namespace dRz.SpecSPDS.Test
         {
             _msg = AddOnCtx.Msg;
             _msgCmd = AddOnCtx.MsgCmd;
-            _msgGui = AddOnCtx.MsgGui;
+            _msgGui = AddOnCtx.MsgW;
 
             _ex = new Exception("Test Exception");
 

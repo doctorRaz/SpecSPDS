@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-using static dRz.Src.Infrastructure.AddOnContext;
+using dRz.Src.Infrastructure;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
 namespace dRz.NC.TestCommands.Init
@@ -9,19 +9,21 @@ namespace dRz.NC.TestCommands.Init
 
 #if DEBUG && NC
 
-        [Rtm.CommandMethod($"SPEC-инит", Rtm.CommandFlags.Session)]
-        [Scm.Description($"ручной инит загрузчика для SPEC")]
+        [Rtm.CommandMethod(CommandPrefix.Value + "инит", Rtm.CommandFlags.Session)]
+        [Scm.Description( "ручной инит загрузчика для SPEC")]
         public static void test()
         {
-            Msg.InfoMessage($"инит SPEC");
+            AddOnContext.Msg.InfoMessage($"инит SPEC");
+
             EntryPoint entryPoint = new EntryPoint();
+            
             entryPoint.Initialize();
         }
 
-        [Rtm.CommandMethod($"-SPEC-console-message-test", Rtm.CommandFlags.Session)]
+        [Rtm.CommandMethod("-" + CommandPrefix.Value + "SPEC-console-message-test", Rtm.CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
-            MsgCmd.ConsoleMessage("Console message");
+            AddOnContext.MsgCmd.ConsoleMessage("Console message");
         }
 
 #endif

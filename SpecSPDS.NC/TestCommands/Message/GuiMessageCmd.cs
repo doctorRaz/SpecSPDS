@@ -1,15 +1,16 @@
 ﻿#if DEBUG
+using dRz.Src.Infrastructure;
 using Teigha.Runtime;
-using static dRz.Src.Infrastructure.AddOnContext;
 
 namespace dRz.NC.TestCommands.Message
 {
     public class GuiMessageCmd
     {
-        [CommandMethod($"SPEC-info-message", CommandFlags.Session)]
+
+        [CommandMethod(CommandPrefix.Value + "SPEC-info-message", CommandFlags.Session)]
         public static void InfoMessageCommand()
         {
-            MsgGui.InfoMessage("Info message");
+            AddOnContext.MsgW.InfoMessage("Info message");
 
         }
     }

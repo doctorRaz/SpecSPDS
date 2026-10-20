@@ -1,44 +1,47 @@
 ﻿#if DEBUG
 using Teigha.Runtime;
-using static dRz.Src.Infrastructure.AddOnContext;
+using dRz.Src.Infrastructure;
+using dRz.Abstractions.Services.Message;
 
 namespace dRz.NC.TestCommands.McNotifay
 {
     public class NotifayMsgMcN
     {
 
+        private static IMcNotificatorMessageService _msgMcN = AddOnContext.MsgN;
+
         static System.Exception ex = new System.Exception("Properties is null");
 
-        [CommandMethod($"SPEC-noti1", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-noti1", CommandFlags.Session)]
         public static void noti1()
         {
-            MsgMcN.InfoMessage("Без иконки");
+            _msgMcN.InfoMessage("Без иконки");
         }
 
-        [CommandMethod($"SPEC-noti2", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-noti2", CommandFlags.Session)]
         public static void noti2()
         {
 
-            MsgMcN.ErrorMessage("С иконкой err", ex);
+            _msgMcN.ErrorMessage("С иконкой err", ex);
         }
 
-        [CommandMethod($"SPEC-noti20", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-noti20", CommandFlags.Session)]
         public static void noti20()
         {
 
-            MsgMcN.ErrorMessage("С иконкой err");
+            _msgMcN.ErrorMessage("С иконкой err");
         }
 
-        [CommandMethod($"SPEC-noti3", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-noti3", CommandFlags.Session)]
         public static void noti3()
         {
-            MsgMcN.ErrorMessage(ex);
+            _msgMcN.ErrorMessage(ex);
         }
 
-        [CommandMethod($"SPEC-noti4", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "SPEC-noti4", CommandFlags.Session)]
         public static void InfoMessageNoti()
         {
-            MsgMcN.WarningMessage($"{SysInfo.ToLongString()}");
+            _msgMcN.WarningMessage($"{AddOnContext.SysInfo.ToLongString()}");
 
         }
     }

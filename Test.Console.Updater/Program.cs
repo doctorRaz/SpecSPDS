@@ -1,65 +1,45 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.AddOnRuntime;
 using dRz.NC;
-using dRz.Updater.Services;
+using dRz.Src.Infrastructure;
 using System;
 using System.Diagnostics;
+
 using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
     public class Program
     {
-        private readonly IDrzLogger _logger;
-        private readonly IMessageService _msg;
-        private readonly IAddonSettings _settings;
+        private readonly IDrzLogger? _logger;
+        private readonly IMessageService? _msg;
+        private readonly IAddonSettings? _settings;
+        private readonly Stopwatch _sw;
 
-        public Program(
-            IDrzLogger logger,
-            IMessageService msg,
-            IAddonSettings settings)
+        public Program()
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _msg = msg ?? throw new ArgumentNullException(nameof(msg));
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        }
+            _sw = Stopwatch.StartNew();
 
-        //[STAThread]
-        private static void Main(string[] args)
-        {
-            Stopwatch sw = Stopwatch.StartNew();
-            IDrzLogger? logger = null;
-            IMessageService? msg = null;
+            EntryPoint entryPoint = new();
 
             try
             {
-                AddOnCompositionRoot root = ConteinerCtx.Run();
+                entryPoint.Initialize();
 
-                logger = root.Get<IDrzLoggerFactory>().GetLogger<Program>();
-                msg = root.Get<IMessageService>();
-                IAddonSettings settings = root.Get<IAddonSettings>();
+                _logger = AddOnContext.NLogFactory.GetLogger<Program>();
 
-                Program program = new Program(logger, msg, settings);
+                _msg = AddOnContext.Msg;
 
-                logger.Debug("Start debug updater");
-                msg.InfoMessage("Start update");
-
-                program.SelectUpdateMode();
-
-                // UpdateAsync пока использует AddOnCtx внутри себя.
-                // Инициализация этого контекста остаётся в ConteinerCtx как временный адаптер.
-                UpdateAsync updateAsync = new UpdateAsync();
-                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
+                _settings = AddOnContext.AddonSettings;
             }
             catch (Exception ex)
             {
-                logger?.Fatal(ex, "Продолжение не возможно");
+                _logger?.Fatal(ex, "Продолжение не возможно");
 
-                if (msg != null)
+                if (_msg != null)
                 {
-                    msg.ErrorMessage("Продолжение не возможно", ex);
+                    _msg.ErrorMessage("Продолжение не возможно", ex);
                 }
                 else
                 {
@@ -68,9 +48,19 @@ namespace dRz.Test.Console.Updater
             }
             finally
             {
-                logger?.Info("Terminate");
-                _ = ConsoleReadKey(msg, sw);
+                entryPoint.Terminate();
+                _logger?.Info("Terminate");
             }
+        }
+
+        //[STAThread]
+        private static void Main(string[] args)
+        {
+            Program program = new Program();
+
+            program.SelectUpdateMode();
+
+            _ = ConsoleReadKey(program._msg, program._sw);
         }
 
         private static ConsoleKeyInfo ConsoleReadKey(IMessageService? msg, Stopwatch? sw = null)

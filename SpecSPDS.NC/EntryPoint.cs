@@ -1,4 +1,4 @@
-﻿//global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;//глобально на сборку, чтобы не писать каждый раз длинный путь
+﻿//using static dRz.Src.Infrastructure.AddOnContext;// на класс, чтобы не писать каждый раз длинный путь
 
 // -----------------
 using dRz.Abstractions.Infrastructure;
@@ -40,38 +40,31 @@ namespace dRz.NC
         : Rtm.IExtensionApplication
 #endif
     {
-
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private IAddonSettings _settings;
+        private IAddonSettings _settings;// Настройки аддона, полученные из контейнера сервисов.
+        private bool _isSettingsProvider;// Настройки аддона успешно получены.
 
-        private bool _isRegisterAssemblyResolver;// Флаг регистрации обработчика разрешения сборок.
+        private IDrzLogger _logger;// Логгер для записи сообщений в журнал.
+        private bool _isLoggerProvider;// Логгер успешно получен.
 
-        private IDrzLogger _logger;
-        private static bool _isLoggerProvider;// Логгер успешно получен.
+        private IDrzLoggerFactory _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
+        private bool _isLoggerFactoryProvider;// Фабрика логгеров успешно получена.
 
-        private IMessageService _message;
+        private IMessageService _message;// Сервис пользовательских сообщений.
         private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
 
+        private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
+        private bool _isMessagePromptProvider;// Сервис пользовательских сообщений с запросом получен.
+
         private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
-        private bool _isAddOnInfoProvider;
+        private bool _isAddOnInfoProvider; // Сведения о сборке аддона успешно получены.
 
         private ICadInfo _cadInfo;// Сведения о CAD-хосте.
-        private bool _isCadInfoProvider;
+        private bool _isCadInfoProvider;// Сведения о CAD-хосте успешно получены.
 
-        private ISysInfo _sysInfo;//о cad
-        private bool _isSysInfoProvider;
-
-#if DEBUG&&!TEST
-
-        [Rtm.CommandMethod(CommandPrefix.Value + "INIT", Rtm.CommandFlags.UsePickSet)]
-        public static void test()
-        {
-            EntryPoint entryPoint = new EntryPoint();
-            entryPoint.Initialize();
-        }
-
-#endif
+        private ISysInfo _sysInfo;// Сведения о системе.
+        private bool _isSysInfoProvider;//  Сведения о системе успешно получены.
 
         /// <summary>
         /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
@@ -85,36 +78,23 @@ namespace dRz.NC
         {
             try
             {
-                // регистрируемся
-                TryAddOnCompositionRoot();// Получаем сервисы и контекст аддона.
+                // Инициализация сервисов аддона и получение необходимых сервисов из контейнера.
+                InitializeServices();
 
-                // Загружаем настройки сразу при инициализации и фиксируем singleton в контейнере.
-                _settings = AddOnContext.Services.Get<IAddonSettings>();
-
-                _addOnInfo = AddOnContext.Services.Get<IAddOnInfo>();
-                _isAddOnInfoProvider = true;
-
-                _cadInfo = AddOnContext.Services.Get<ICadInfo>();
-                _isCadInfoProvider = true;
-
-                _sysInfo = AddOnContext.Services.Get<ISysInfo>();
-                _isSysInfoProvider = true;
-
+                // Проверяем, что аддон загружен в родной каталог, и предупреждаем пользователя о возможных ошибках.
                 if (!_addOnInfo.IsProductDirectory)
                 {
-                    AddOnContext.Services.Get<IWindowMessageService>().WarningMessage(
+                    _message.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
                         $"\nВозможны ошибки в работе!");
                 }
 
-                //стартуем обновление, очистку копий и bak
-                TryUpdate();
+                // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
+                StartUpdate();
 
-                // служебные записи и сообщение пользователю, что аддон поднялся
-                TryInit(_addOnInfo.ToLongString(),
-                        _cadInfo.ToLongString(),
-                        _sysInfo.ToLongString());
+                // Записываем сведения о сборке аддона и CAD-хосте в журнал и выводим приветственное сообщение.
+                ReportInitialization();
             }
             catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
                                  // Если ошибка поднялась сюда, то вероятно, что аддон неработоспособен
@@ -169,12 +149,19 @@ namespace dRz.NC
         /// Исключения, возникшие до передачи управления асинхронному методу, обрабатываются здесь;
         /// ошибки внутри задачи должны обрабатываться самим <see cref="UpdateAsync"/>.
         /// </remarks>
-        private void TryUpdate()
+        private void StartUpdate()
         {
             try
             {
-                UpdateAsync updateAsync = new UpdateAsync();
-                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic);
+                // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
+                UpdateAsync updateAsync = new UpdateAsync(_loggerFactory,
+                                                            _message,
+                                                            _messagePrompt);
+
+                // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
+                _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic,
+                                                _settings,
+                                                _addOnInfo);
             }
             catch (Exception ex)
             {
@@ -189,10 +176,11 @@ namespace dRz.NC
         /// <exception cref="InvalidOperationException">
         /// Не удалось создать корень композиции или получить необходимые сервисы.
         /// </exception>
-        private void TryAddOnCompositionRoot()
+        private void InitializeServices()
         {
             try
             {
+                // Проверяем, был ли уже создан корень композиции. Если нет, создаём его и регистрируем сервисы.
                 if (!_isAddOnCompositionRoot)
                 {
                     //***** РЕГИСТРИРУЕМ СЕРВИСЫ *************
@@ -203,28 +191,49 @@ namespace dRz.NC
                     AddOnContext  /*AddOnCtx*/.Initialize(root.Get<IAddOnServices>());
 
                     _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
-
                 }
 
+                // Получаем фабрику логгеров из контейнера сервисов.
+                _loggerFactory = AddOnContext.NLogFactory;
+                _isLoggerFactoryProvider = true;
 
-                //логер для класса
-                _logger = AddOnContext.Services.Get<IDrzLoggerFactory>().GetLogger(typeof(EntryPoint));
+                // Получаем логгер для текущего класса из фабрики логгеров.
+                _logger = _loggerFactory.GetLogger(typeof(EntryPoint));
                 _isLoggerProvider = true;//логгер есть
 
-                _message = AddOnContext.Services.Get<IMessageService>()/* AddOnCtx.Msg*/;
+                // Получаем сервис сообщений из контейнера сервисов.
+                _message = AddOnContext.Msg;
                 _isMessageProvider = true;  //ссобщения есть
 
+                // Получаем сервис сообщений с запросом из контейнера сервисов.
+                _messagePrompt = AddOnContext.MsgP;
+                _isMessagePromptProvider = true;
 
+                // Получаем настройки аддона из контейнера сервисов.
+                _settings = AddOnContext.AddonSettings;
+                _isSettingsProvider = true;
+
+                // Получаем сведения о сборке аддона из контейнера сервисов.
+                _addOnInfo = AddOnContext.AddOnInfo;
+                _isAddOnInfoProvider = true;
+
+                // Получаем сведения о CAD-хосте из контейнера сервисов.
+                _cadInfo = AddOnContext.CadInfo;
+                _isCadInfoProvider = true;
+
+                // Получаем сведения о системе из контейнера сервисов.
+                _sysInfo = AddOnContext.SysInfo;
+                _isSysInfoProvider = true;
             }
             catch (Exception ex)
             {
-                //если логер получен пытаемся сохранить ошбку в лог
+                // Если возникла ошибка при инициализации сервисов, логируем её и выбрасываем исключение.
                 if (_isLoggerProvider)
                 {
                     _logger.Fatal(ex);
                 }
 
-                // Преобразуем ошибку в исключение инициализации с исходной причиной.
+                // Выбрасываем исключение, чтобы сигнализировать о неудачной инициализации корня композиции.
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
         }
@@ -232,15 +241,13 @@ namespace dRz.NC
         /// <summary>
         /// Записывает сведения об аддоне и CAD-хосте в журнал и выводит приветственное сообщение.
         /// </summary>
-        private void TryInit(string addOnInfo,
-                            string cadInfo,
-                            string sysInfo)
+        private void ReportInitialization()
         {
             try
             {
-                _logger.Trace(addOnInfo);
-                _logger.Trace(cadInfo);
-                _logger.Trace(sysInfo);
+                _logger.Trace(_addOnInfo.ToLongString());
+                _logger.Trace(_cadInfo.ToLongString());
+                _logger.Trace(_sysInfo.ToLongString());
 
                 _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
             }
@@ -254,12 +261,14 @@ namespace dRz.NC
         }
 
         /// <summary>
-        /// Выполняет завершающие действия при выгрузке аддона из CAD-хоста.
+        ///  Выполняет завершающие действия при выгрузке аддона из CAD-хоста.
         /// </summary>
         public void Terminate()
         {
             if (_isLoggerProvider)
+            {
                 _logger.Trace("Terminate");
+            }
 
             // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();

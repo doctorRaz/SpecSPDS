@@ -1,6 +1,7 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
+using dRz.Src.Infrastructure;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Teigha.Runtime;
@@ -13,9 +14,11 @@ namespace dRz.NC.Commands
     /// </summary>
     public sealed class UpdateModeCommand
     {
-        private static IDrzLogger _logger = AddOnCtx.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
 
-        private static IMessageService _msg = AddOnCtx.Msg;
+        private static IMessageService _msg = AddOnContext.Msg;
+
+        private static IAddonSettings? _settings;
 
         /// <summary>
         /// Показывает текущий режим и позволяет выбрать новый.
@@ -30,11 +33,11 @@ namespace dRz.NC.Commands
                 return;
             }
 
-            IAddonSettings settings;
+
 
             try
             {
-                settings = AddOnCtx.Services.Get<IAddonSettings>();
+                _settings = AddOnContext.AddonSettings;
             }
             catch (Sys.Exception ex)
             {
@@ -47,7 +50,7 @@ namespace dRz.NC.Commands
                 return;
             }
 
-            IUpdateSettings updateSettings = settings.Updates;
+            IUpdateSettings updateSettings = _settings.Updates;
             UpdateMode previousMode = updateSettings.Mode;
 
             PromptKeywordOptions options = new PromptKeywordOptions(
@@ -78,7 +81,7 @@ namespace dRz.NC.Commands
 
             if (newMode == previousMode)
             {
-                AddOnCtx.Msg.InfoMessage($"Режим обновления не изменён: {GetDescription(previousMode)}.");
+                _msg.InfoMessage($"Режим обновления не изменён: {GetDescription(previousMode)}.");
 
                 return;
             }
@@ -86,15 +89,15 @@ namespace dRz.NC.Commands
             updateSettings.Mode = newMode;
             try
             {
-                settings.Save();
-                AddOnCtx.Msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
+                _settings.Save();
+                _msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
             }
             catch (Sys.Exception ex)
             {
                 // Если JSON не сохранился, возвращаем прежнее значение в памяти.
                 updateSettings.Mode = previousMode;
 
-                AddOnCtx.Msg.ErrorMessage($"Не удалось сохранить режим обновления.Восстановлено прежнее значение: {GetDescription(previousMode)}", ex);
+                _msg.ErrorMessage($"Не удалось сохранить режим обновления.Восстановлено прежнее значение: {GetDescription(previousMode)}", ex);
             }
         }
 
