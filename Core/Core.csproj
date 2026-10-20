@@ -14,7 +14,7 @@
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
+		<PackageReference Include="WindowsAPICodePack" Version="8.0.9" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />

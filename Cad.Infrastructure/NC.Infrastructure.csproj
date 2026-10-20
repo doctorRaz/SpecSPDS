@@ -11,7 +11,7 @@
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
+		<PackageReference Include="nanoCAD.Platform.NET" Version="26.0.7226.4926" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
