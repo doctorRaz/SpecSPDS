@@ -53,12 +53,13 @@ namespace dRz.NC.Commands
             int previousInterval = updateSettings.UpdateCheckIntervalDays;
 
             PromptKeywordOptions modeOptions = new PromptKeywordOptions(
-                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
+                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим: ");
             modeOptions.Keywords.Add("Disabled");
             modeOptions.Keywords.Add("Notify");
             modeOptions.Keywords.Add("Install");
             modeOptions.Keywords.Default = GetKeyword(previousMode);
             modeOptions.AllowNone = true;
+            modeOptions.AppendKeywordsToMessage = true;
 
             PromptResult modeResult = document.Editor.GetKeywords(modeOptions);
             if (modeResult.Status == PromptStatus.Cancel)
@@ -81,11 +82,12 @@ namespace dRz.NC.Commands
             // Период можно изменить независимо от режима, в том числе если режим оставлен прежним.
             int newInterval = previousInterval;
             PromptKeywordOptions intervalOptions = new PromptKeywordOptions(
-                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? [Yes/No] <No>: ");
+                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? ");
             intervalOptions.Keywords.Add("Yes");
             intervalOptions.Keywords.Add("No");
             intervalOptions.Keywords.Default = "No";
             intervalOptions.AllowNone = true;
+            intervalOptions.AppendKeywordsToMessage = true;
 
             PromptResult intervalChoice = document.Editor.GetKeywords(intervalOptions);
             bool changeInterval = intervalChoice.Status != PromptStatus.Cancel
