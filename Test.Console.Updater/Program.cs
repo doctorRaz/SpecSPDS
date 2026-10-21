@@ -59,6 +59,7 @@ namespace dRz.Test.Console.Updater
             Program program = new Program();
 
             program.SelectUpdateMode();
+            program.SelectUpdateCheckInterval();
 
             _ = ConsoleReadKey(program._msg, program._sw);
         }
@@ -78,6 +79,56 @@ namespace dRz.Test.Console.Updater
             }
 
             return Sys.Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Позволяет вручную изменить период автоматической проверки обновлений.
+        /// </summary>
+        private void SelectUpdateCheckInterval()
+        {
+            while (true)
+            {
+                int currentInterval = _settings.Updates.UpdateCheckIntervalDays;
+                _msg.InfoMessage($"Текущий период проверки обновлений: {currentInterval} дн.");
+#if DEBUG
+                const int minInterval = 0;
+                _msg.InfoMessage("Введите период в днях (0–30; 0 — проверка при каждом запуске).");
+#else
+                const int minInterval = 1;
+                _msg.InfoMessage("Введите период в днях (1–30).");
+#endif
+                _msg.InfoMessage("Enter — оставить текущий период.");
+
+                string? input = Sys.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return;
+                }
+
+                if (!int.TryParse(input.Trim(), out int selected) ||
+                    selected < minInterval ||
+                    selected > 30)
+                {
+                    _msg.InfoMessage($"Неверный период. Допустимое значение: {minInterval}–30.");
+                    continue;
+                }
+
+                _settings.Updates.UpdateCheckIntervalDays = selected;
+
+                try
+                {
+                    _settings.Save();
+                    _msg.InfoMessage($"Период проверки обновлений сохранён: {selected} дн.");
+                }
+                catch (Exception ex)
+                {
+                    _settings.Updates.UpdateCheckIntervalDays = currentInterval;
+                    _logger?.Error(ex, "Не удалось сохранить период проверки обновлений.");
+                    _msg.ErrorMessage("Не удалось сохранить период. Оставлен прежний период.", ex);
+                }
+
+                return;
+            }
         }
 
         /// <summary>
