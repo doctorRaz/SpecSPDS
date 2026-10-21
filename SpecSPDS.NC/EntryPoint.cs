@@ -54,6 +54,9 @@ namespace dRz.NC
         private IMessageService _message;// Сервис пользовательских сообщений.
         private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
 
+        private IWindowMessageService _windowMessage;// Сервис оконных сообщений.
+        private bool _isWindowMessageProvider;// Сервис оконных сообщений получен.
+
         private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
         private bool _isMessagePromptProvider;// Сервис пользовательских сообщений с запросом получен.
 
@@ -82,12 +85,15 @@ namespace dRz.NC
                 InitializeServices();
 
                 // Проверяем, что аддон загружен в родной каталог, и предупреждаем пользователя о возможных ошибках.
-                if (!_addOnInfo.IsProductDirectory)
+
+                if (!_addOnInfo.IsProductDirectory && _isWindowMessageProvider)
                 {
-                    _message.WarningMessage(
+                    _windowMessage.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
-                        $"\nВозможны ошибки в работе!");
+                        $"\nили не найден {_addOnInfo.Product}*" +
+                        $".package"+
+                        $"\n\nВозможны ошибки в работе и при обновлении!");
                 }
 
                 // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
@@ -204,6 +210,10 @@ namespace dRz.NC
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
                 _isMessageProvider = true;  //ссобщения есть
+
+                // Получаем сервис оконных сообщений из контейнера сервисов.
+                _windowMessage = AddOnContext.MsgW;
+                _isWindowMessageProvider = true;
 
                 // Получаем сервис сообщений с запросом из контейнера сервисов.
                 _messagePrompt = AddOnContext.MsgP;
