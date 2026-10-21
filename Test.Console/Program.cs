@@ -1,0 +1,153 @@
+﻿/*
+
+У меня не срабатывал, насколько я помню, механизм нескольких определений CommandMethod. Может, потому, что было под АКАД ))
+
+AppSettings я б засунул именно в то, что работает под кадом.
+
+Т.е., если надо, в методы/классы подсовывать не AppSettings.Settings, а именно ApplicationSettings. По крайней мере подменить можно будет при необходимости тестирования
+
+получаю список  свойств маркеров
+Ну ты же не напрямую McObject бросаешь, я правильно понимаю? А собственный класс, который маскирует все это дело? А то и абстрактный класс.
+ пульну на сборку в таблицу
+Отличный вариант написать отдельный тест под это дело ))) Юзер выбрал - вызываем реализацию интефейса типа IConvertMarker, который возвращает коллекцию экземпляров твоего класса.
+Эту коллекцию - в метод типа PrepareDataForTable (который может вернуть чуть ли не полный вариант форматирования таблицы, но без привязки к каду).
+Результат метода - в чисто кадовский метод CreateMCadTable по твоим же правилам.
+
+Я бы сегодня, наверное, делал так. Сорян, в код не полезу - помимо резюме еще и работы понакидали (((
+
+Насколько это лучше - пока не представляю. Но я в любом случае по максимуму бы отделял то, что без када жить не может, от чисто данных. По крайней мере в сегодняшних реалиях
+
+*/
+
+//global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+using drz.SpecSPDS.Test;
+using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
+using dRz.Src.Infrastructure;
+using dRz.Test.Console;
+using System;
+using System.Diagnostics;
+
+namespace dRz.SpecSPDS.Test
+{
+    /// <summary>
+    /// Start
+    /// </summary>
+    public class Start
+    {
+        #region Private Methods
+
+        [STAThread]
+        private static void Main(string[] args)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            try
+            {
+                goto nlog;
+
+            nlog:
+                ConteinerNlog.Run();
+
+                _msg = AddOnContext.MsgW;
+
+                _msg.InfoMessage("test");
+                _msg.ErrorMessage("test");
+                _msg.WarningMessage("test");
+
+                _logger = AddOnContext.NLogFactory.GetLogger(typeof(Start));
+                _isLoggerProvider = true;
+                return;
+
+            clone:
+                //******
+
+                #region ConteinerClone
+
+                //***********************************************************************************************
+                /*
+                тест создания в каждой сборке контейнера
+                проверяем корректность получения AddOnInfo текущей сборки
+                адекватность логера и сервисов сообщений
+                сис инфо переделано на статик, поэтому после первого обращения к:
+                    CPU, GPU, RAM данные кэшируются
+                */
+
+                ConteinerClone.Run();
+
+                //***********************************************************************************************
+
+                #endregion ConteinerClone
+
+                ConsoleReadKey();
+                goto clone;
+                //******
+            transfer:
+
+                #region ContainerTransfer
+
+                //***********************************************************************************************
+                /*
+                    тест проброса контейнера между библиотеками по цепочке, логирование и сообщения
+                    Test.Console->Test.LibA->Test.LibB->
+                    LibA, LibB знают только интерфейсы, Abstractions
+                    контейнер на весь аддон один
+                */
+                ContainerTransfer.Run();
+
+                //***********************************************************************************************
+
+                #endregion ContainerTransfer
+
+                ConsoleReadKey();
+                goto transfer;
+                //******
+            message:
+
+                #region TEST MESSAGE
+
+                ContainerrMessage.Run();
+
+                #endregion TEST MESSAGE
+
+                ConsoleReadKey();
+                goto message;
+                //******
+            }
+            catch (Exception ex)
+            {
+                if (_isLoggerProvider)
+                {
+                    _logger.Fatal(ex, "Продолжение не возможно");
+                }
+
+                AddOnContext.Msg.ErrorMessage("Продолжение не возможно", ex);
+            }
+            finally
+            {
+                if (_isLoggerProvider)
+                {
+                    _logger.Info("Terminate");
+                }
+
+                ConsoleReadKey();
+            }
+        }
+
+        private static ConsoleKeyInfo ConsoleReadKey()
+        {
+            Console.WriteLine("Press any key to exit...");
+            return Console.ReadKey();
+        }
+
+        #endregion Private Methods
+
+        #region Private Fields
+
+        private static IDrzLogger? _logger;
+        private static bool _isLoggerProvider;//логер есть
+        private static IMessageService _msg;
+        private static ICommandLineMessageService _msgCmd;
+
+        #endregion Private Fields
+    }
+}

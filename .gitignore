@@ -209,7 +209,7 @@ publish/
 PublishScripts/
 
 # NuGet Packages
-*.nupkg
+# *.nupkg
 # NuGet Symbol Packages
 *.snupkg
 # The packages folder can be ignored because of Package Restore
@@ -418,7 +418,16 @@ FodyWeavers.xsd
 *.msp
 ExamplePrj
 bin-x64
-res
-.idea
 _res
+desktop.ini
+.idea
+.vs_
+SpecSPDS.wiki
++Updater/Shared/7z_32/*.ion
++Updater/Shared/7z_64/*.ion
 +Updater/Shared/7z.7z
++Abstractions/res
+**/doc/
+**/_draft
+**/_experimental
+**/_reminder/

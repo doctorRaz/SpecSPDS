@@ -1,0 +1,57 @@
+﻿using dRz.Abstractions.Services;
+using System;
+using System.Diagnostics;
+
+#if !TEST
+
+using HostMgd.ApplicationServices;
+
+#endif
+
+namespace dRz.NC.Infrastructure.Services
+{
+    /// <summary>
+    /// Указатель на окно отвязан от Cad
+    /// </summary>
+    /// <seealso cref="IWindowHandleProvider" />
+    public class CadWindowProvider : IWindowHandleProvider
+    {
+        #region Private Fields
+
+        private IntPtr? _handle;
+
+        #endregion Private Fields
+
+        #region Public Properties
+
+        public IntPtr Handle
+        {
+            get
+            {
+                // Кэшируем, чтобы не опрашивать процесс постоянно
+                if (!_handle.HasValue || _handle.Value == IntPtr.Zero)
+                {
+                    // Получаем хэндл главного окна текущего запущенного процесса
+                    _handle = Process.GetCurrentProcess().MainWindowHandle;
+                }
+                return _handle.Value;
+            }
+        }
+
+        #endregion Public Properties
+    }
+
+    /// <summary>
+    /// Указатель на окно привязан к HostMgd <br/>
+    /// Не используется
+    /// </summary>
+    /// <seealso cref="IWindowHandleProvider" />
+    public class CadWindowProvider_Cad : IWindowHandleProvider
+    {
+#if !TEST
+        public IntPtr Handle => Application.MainWindow.Handle;
+#else
+        public IntPtr Handle => IntPtr.Zero;
+#endif
+    }
+}

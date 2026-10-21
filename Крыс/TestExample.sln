@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converter", "Converter\Converter.csproj", "{7BBDEEF2-C7A7-4A96-92F5-A0B41F77863C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checks", "Tests\Checks\Checks.csproj", "{3D60390F-B48D-4628-B810-1A8098B15AFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BBDEEF2-C7A7-4A96-92F5-A0B41F77863C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BBDEEF2-C7A7-4A96-92F5-A0B41F77863C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BBDEEF2-C7A7-4A96-92F5-A0B41F77863C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BBDEEF2-C7A7-4A96-92F5-A0B41F77863C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D60390F-B48D-4628-B810-1A8098B15AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D60390F-B48D-4628-B810-1A8098B15AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D60390F-B48D-4628-B810-1A8098B15AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D60390F-B48D-4628-B810-1A8098B15AFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8AB9E688-50ED-40BC-8B95-DD7BA61D7492}
+	EndGlobalSection
+EndGlobal
