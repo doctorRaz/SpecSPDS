@@ -1,11 +1,14 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
+using dRz.Core.Services;
+using dRz.NC.CadServices;
 using dRz.Src.Infrastructure;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Teigha.Runtime;
-using Sys = System;
+using System;
+using System.Collections.Generic;
 
 namespace dRz.NC.Commands
 {
@@ -19,6 +22,12 @@ namespace dRz.NC.Commands
         private static IMessageService _msg = AddOnContext.Msg;
 
         private static IAddonSettings? _settings;
+
+        private enum IntervalChoice
+        {
+            Yes,
+            No
+        }
 
         /// <summary>
         /// Показывает текущие настройки обновления и позволяет изменить их.
@@ -37,7 +46,7 @@ namespace dRz.NC.Commands
             {
                 _settings = AddOnContext.AddonSettings;
             }
-            catch (Sys.Exception ex)
+            catch (Exception ex)
             {
                 const string message = "Не удалось получить настройки аддона:";
 
@@ -52,51 +61,41 @@ namespace dRz.NC.Commands
             UpdateMode previousMode = updateSettings.Mode;
             int previousInterval = updateSettings.UpdateCheckIntervalDays;
 
-            PromptKeywordOptions modeOptions = new PromptKeywordOptions(
-                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим: ");
-            modeOptions.Keywords.Add("Disabled");
-            modeOptions.Keywords.Add("Notify");
-            modeOptions.Keywords.Add("Install");
-            modeOptions.Keywords.Default = GetKeyword(previousMode);
-            modeOptions.AllowNone = true;
-            modeOptions.AppendKeywordsToMessage = true;
+            List<Keywords> modeKeywords = new List<Keywords>
+            {
+                new Keywords("Disabled", "Disabled", UpdateMode.Disabled, previousMode == UpdateMode.Disabled),
+                new Keywords("Notify", "Notify", UpdateMode.CheckAndNotify, previousMode == UpdateMode.CheckAndNotify),
+                new Keywords("Install", "Install", UpdateMode.CheckAndInstall, previousMode == UpdateMode.CheckAndInstall)
+            };
 
-            PromptResult modeResult = document.Editor.GetKeywords(modeOptions);
-            if (modeResult.Status == PromptStatus.Cancel)
+            Enum? modeAnswer = CadService.KeywordAnswer(
+                document,
+                modeKeywords,
+                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим: ",
+                allowNone: true);
+
+            if (modeAnswer == null)
             {
                 return;
             }
 
-            string selected = modeResult.Status == PromptStatus.None
-                ? GetKeyword(previousMode)
-                : modeResult.StringResult;
-
-            UpdateMode newMode = selected.ToUpperInvariant() switch
-            {
-                "DISABLED" => UpdateMode.Disabled,
-                "NOTIFY" => UpdateMode.CheckAndNotify,
-                "INSTALL" => UpdateMode.CheckAndInstall,
-                _ => previousMode
-            };
+            UpdateMode newMode = (UpdateMode)modeAnswer;
 
             // Период можно изменить независимо от режима, в том числе если режим оставлен прежним.
+            List<Keywords> intervalKeywords = new List<Keywords>
+            {
+                new Keywords(nameof(IntervalChoice.Yes), "Yes", IntervalChoice.Yes),
+                new Keywords(nameof(IntervalChoice.No), "No", IntervalChoice.No, isDefault: true)
+            };
+
+            Enum? intervalAnswer = CadService.KeywordAnswer(
+                document,
+                intervalKeywords,
+                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? ",
+                allowNone: true);
+
             int newInterval = previousInterval;
-            PromptKeywordOptions intervalOptions = new PromptKeywordOptions(
-                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? ");
-            intervalOptions.Keywords.Add("Yes");
-            intervalOptions.Keywords.Add("No");
-            intervalOptions.Keywords.Default = "No";
-            intervalOptions.AllowNone = true;
-            intervalOptions.AppendKeywordsToMessage = true;
-
-            PromptResult intervalChoice = document.Editor.GetKeywords(intervalOptions);
-            bool changeInterval = intervalChoice.Status != PromptStatus.Cancel
-                && intervalChoice.Status != PromptStatus.Error
-                && intervalChoice.Status != PromptStatus.Other
-                && intervalChoice.Status != PromptStatus.None
-                && string.Equals(intervalChoice.StringResult, "Yes", Sys.StringComparison.OrdinalIgnoreCase);
-
-            if (changeInterval)
+            if (intervalAnswer is IntervalChoice.Yes)
             {
                 PromptIntegerOptions daysOptions = new PromptIntegerOptions(
                     $"\nПериод автоматической проверки в днях (1–30) [{previousInterval}]: ")
@@ -143,7 +142,7 @@ namespace dRz.NC.Commands
                     _msg.InfoMessage($"Период автоматической проверки сохранён: {newInterval} дн.");
                 }
             }
-            catch (Sys.Exception ex)
+            catch (Exception ex)
             {
                 // При ошибке сохранения восстанавливаем обе настройки в памяти.
                 updateSettings.Mode = previousMode;
@@ -153,17 +152,6 @@ namespace dRz.NC.Commands
                     "Не удалось сохранить настройки обновления. Восстановлены прежние значения.",
                     ex);
             }
-        }
-
-        private static string GetKeyword(UpdateMode mode)
-        {
-            return mode switch
-            {
-                UpdateMode.Disabled => "Disabled",
-                UpdateMode.CheckAndNotify => "Notify",
-                UpdateMode.CheckAndInstall => "Install",
-                _ => "Notify"
-            };
         }
 
         private static string GetDescription(UpdateMode mode)
