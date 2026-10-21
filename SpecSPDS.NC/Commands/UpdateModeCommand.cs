@@ -10,7 +10,7 @@ using Sys = System;
 namespace dRz.NC.Commands
 {
     /// <summary>
-    /// Изменение режима автоматического обновления через командную строку nanoCAD.
+    /// Изменение режима и периода автоматического обновления через командную строку nanoCAD.
     /// </summary>
     public sealed class UpdateModeCommand
     {
@@ -21,7 +21,7 @@ namespace dRz.NC.Commands
         private static IAddonSettings? _settings;
 
         /// <summary>
-        /// Показывает текущий режим и позволяет выбрать новый.
+        /// Показывает текущие настройки обновления и позволяет изменить их.
         /// Команда: drz_UpdateMode.
         /// </summary>
         [CommandMethod(CommandPrefix.Value + "drz_UpdateMode", CommandFlags.Session)]
@@ -39,35 +39,36 @@ namespace dRz.NC.Commands
             }
             catch (Sys.Exception ex)
             {
-                string msg = "Не удалось получить настройки аддона:";
+                const string message = "Не удалось получить настройки аддона:";
 
-                _logger.Error(msg, ex);
-
-                _msg.ErrorMessage("Не удалось получить настройки аддона:", ex);
-
+                _logger.Error(message, ex);
+                _msg.ErrorMessage(message, ex);
                 return;
             }
 
-            IUpdateSettings updateSettings = _settings.Updates;
+            IAddonSettings settings = _settings;
+            IUpdateSettings updateSettings = settings.Updates;
+
             UpdateMode previousMode = updateSettings.Mode;
+            int previousInterval = updateSettings.UpdateCheckIntervalDays;
 
-            PromptKeywordOptions options = new PromptKeywordOptions(
-                                            $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
-            options.Keywords.Add("Disabled");
-            options.Keywords.Add("Notify");
-            options.Keywords.Add("Install");
-            options.Keywords.Default = GetKeyword(previousMode);
-            options.AllowNone = true;
+            PromptKeywordOptions modeOptions = new PromptKeywordOptions(
+                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
+            modeOptions.Keywords.Add("Disabled");
+            modeOptions.Keywords.Add("Notify");
+            modeOptions.Keywords.Add("Install");
+            modeOptions.Keywords.Default = GetKeyword(previousMode);
+            modeOptions.AllowNone = true;
 
-            PromptResult result = document.Editor.GetKeywords(options);
-            if (result.Status == PromptStatus.Cancel)
+            PromptResult modeResult = document.Editor.GetKeywords(modeOptions);
+            if (modeResult.Status == PromptStatus.Cancel)
             {
                 return;
             }
 
-            string selected = result.Status == PromptStatus.None
+            string selected = modeResult.Status == PromptStatus.None
                 ? GetKeyword(previousMode)
-                : result.StringResult;
+                : modeResult.StringResult;
 
             UpdateMode newMode = selected.ToUpperInvariant() switch
             {
@@ -77,25 +78,78 @@ namespace dRz.NC.Commands
                 _ => previousMode
             };
 
-            if (newMode == previousMode)
-            {
-                _msg.InfoMessage($"Режим обновления не изменён: {GetDescription(previousMode)}.");
+            // Период можно изменить независимо от режима, в том числе если режим оставлен прежним.
+            int newInterval = previousInterval;
+            PromptKeywordOptions intervalOptions = new PromptKeywordOptions(
+                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? [Yes/No] <No>: ");
+            intervalOptions.Keywords.Add("Yes");
+            intervalOptions.Keywords.Add("No");
+            intervalOptions.Keywords.Default = "No";
+            intervalOptions.AllowNone = true;
 
+            PromptResult intervalChoice = document.Editor.GetKeywords(intervalOptions);
+            bool changeInterval = intervalChoice.Status != PromptStatus.Cancel
+                && intervalChoice.Status != PromptStatus.Error
+                && intervalChoice.Status != PromptStatus.Other
+                && intervalChoice.Status != PromptStatus.None
+                && string.Equals(intervalChoice.StringResult, "Yes", Sys.StringComparison.OrdinalIgnoreCase);
+
+            if (changeInterval)
+            {
+                PromptIntegerOptions daysOptions = new PromptIntegerOptions(
+                    $"\nПериод автоматической проверки в днях (1–30) [{previousInterval}]: ")
+                {
+                    AllowNone = true,
+                    DefaultValue = previousInterval,
+                    LowerLimit = 1,
+                    UpperLimit = 30,
+                    AllowNegative = false,
+                    AllowZero = false
+                };
+
+                PromptIntegerResult daysResult = document.Editor.GetInteger(daysOptions);
+                if (daysResult.Status == PromptStatus.OK)
+                {
+                    newInterval = daysResult.Value;
+                }
+                // Отмена ввода периода не отменяет выбранный режим.
+            }
+
+            bool modeChanged = newMode != previousMode;
+            bool intervalChanged = newInterval != previousInterval;
+
+            if (!modeChanged && !intervalChanged)
+            {
+                _msg.InfoMessage("Настройки обновления не изменены.");
                 return;
             }
 
             updateSettings.Mode = newMode;
+            updateSettings.UpdateCheckIntervalDays = newInterval;
+
             try
             {
-                _settings.Save();
-                _msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
+                settings.Save();
+
+                if (modeChanged)
+                {
+                    _msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
+                }
+
+                if (intervalChanged)
+                {
+                    _msg.InfoMessage($"Период автоматической проверки сохранён: {newInterval} дн.");
+                }
             }
             catch (Sys.Exception ex)
             {
-                // Если JSON не сохранился, возвращаем прежнее значение в памяти.
+                // При ошибке сохранения восстанавливаем обе настройки в памяти.
                 updateSettings.Mode = previousMode;
+                updateSettings.UpdateCheckIntervalDays = previousInterval;
 
-                _msg.ErrorMessage($"Не удалось сохранить режим обновления.Восстановлено прежнее значение: {GetDescription(previousMode)}", ex);
+                _msg.ErrorMessage(
+                    "Не удалось сохранить настройки обновления. Восстановлены прежние значения.",
+                    ex);
             }
         }
 
