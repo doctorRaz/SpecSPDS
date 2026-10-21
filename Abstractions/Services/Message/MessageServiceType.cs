@@ -5,7 +5,7 @@
     /// </summary>
     public enum MessageServiceType
     {
-        /// <summary>если есть активный документ то ком сстрока, иначе окошко</summary>
+        /// <summary>если есть активный документ то ком строка, иначе окошко</summary>
         Default,
 
         /// <summary>ком строка</summary>

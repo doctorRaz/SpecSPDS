@@ -1,10 +1,14 @@
-﻿using dRz.Core.Enums;
+﻿using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
+using dRz.Abstractions.Settings;
+using dRz.Core.Enums;
 using dRz.Core.Extensions;
 using dRz.Core.Models;
 using dRz.Core.Services;
 using dRz.Core.Settings;
 using dRz.NC.CadServices;
 using dRz.NC.Services;
+using dRz.Src.Infrastructure;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using NLog;
@@ -26,7 +30,12 @@ namespace dRz.NC.Commands
 
     public class SpecSpdsCmd
     {
-        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+
+        private static IMessageService _msg = AddOnContext.Msg;
+
+        private static IAddonSettings? _settings;
+
         /// <summary>
         /// спека с маркеров
         /// </summary>
@@ -72,7 +81,7 @@ namespace dRz.NC.Commands
                 new Keywords(nameof(Space.Layout),Space.Layout,true),
                 new Keywords(nameof(Space.Select),Space.Select),
             };
-            Enum propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
+            Enum? propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
 
             if (propMod == null)
             {
@@ -173,89 +182,7 @@ namespace dRz.NC.Commands
 
             propXml.SaveProps();//для отладки
         }
-
-#if DEBUG
-
-        [CommandMethod("drz_logS")]
-        [Description("отладка лог")]
-        public static void dRz_log()
-        {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
-            if (doc == null)
-            {
-                return;
-            }
-            Editor ed = doc.Editor;
-
-            log.Debug("Проверка в какой лог пойдет");
-
-            //проверка значений  var
-            LoggingConfiguration? config = LogManager.Configuration;
-
-            if (config.Variables.ContainsKey(LogVar.FinalLevel))
-            {
-                Layout layot = config.Variables[LogVar.FinalLevel];
-
-                string finalLevel = layot.Render(LogEventInfo.CreateNullEvent());
-                ed.WriteMessage($"finalLevel: {finalLevel}");
-            }
-            if (config.Variables.ContainsKey(LogVar.FinalAppTitle))
-            {
-                Layout layot = config.Variables[LogVar.FinalAppTitle];
-
-                string finalAppTitle = layot.Render(LogEventInfo.CreateNullEvent());
-                ed.WriteMessage($"finalAppTitle: {finalAppTitle}");
-            }
-            if (config.Variables.ContainsKey(LogVar.FinalLogsDir))
-            {
-                Layout layot = config.Variables[LogVar.FinalLogsDir];
-
-                string finalLogsDir = layot.Render(LogEventInfo.CreateNullEvent());
-                ed.WriteMessage($"finalLogsDir: {finalLogsDir}");
-            }
-        }
-
-#endif
     }
 
-    internal static class LogVar
-    {
-        #region GDC
-
-        /// <summary>
-        /// префикс имени файла лога GDC
-        /// </summary>
-        public const string AppTitle = "AppTitle";
-
-        /// <summary>
-        /// каталог логов GDC
-        /// </summary>
-        public const string LogsDir = "LogsDir";
-
-        /// <summary>
-        /// level для GDC
-        /// </summary>
-        public const string LevelMay = "LevelMay";
-
-        #endregion GDC
-
-        #region var
-
-        /// <summary>
-        /// level для Var
-        /// </summary>
-        public const string FinalLevel = "FinalLevel";
-
-        /// <summary>
-        /// каталог логов var
-        /// </summary>
-        public const string FinalLogsDir = "FinalLogsDir";
-
-        /// <summary>
-        /// имя лога var
-        /// </summary>
-        public const string FinalAppTitle = "FinalAppTitle";
-
-        #endregion var
-    }
+    
 }

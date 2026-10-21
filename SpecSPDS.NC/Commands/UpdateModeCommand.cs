@@ -1,31 +1,35 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
+using dRz.Core.Enums;
+using dRz.Core.Services;
+using dRz.NC.CadServices;
 using dRz.Src.Infrastructure;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using Teigha.Runtime;
-using Sys = System;
+using System;
+using System.Collections.Generic;
+using Rtm = Teigha.Runtime;
 
 namespace dRz.NC.Commands
 {
     /// <summary>
-    /// Изменение режима автоматического обновления через командную строку nanoCAD.
+    /// Изменение режима и периода автоматического обновления через командную строку nanoCAD.
     /// </summary>
     public sealed class UpdateModeCommand
     {
-        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+        private IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
 
-        private static IMessageService _msg = AddOnContext.Msg;
+        private IMessageService _msg = AddOnContext.Msg;
 
-        private static IAddonSettings? _settings;
+        private IAddonSettings _settings = AddOnContext.AddonSettings;
 
         /// <summary>
-        /// Показывает текущий режим и позволяет выбрать новый.
+        /// Показывает текущие настройки обновления и позволяет изменить их.
         /// Команда: drz_UpdateMode.
         /// </summary>
-        [CommandMethod(CommandPrefix.Value + "drz_UpdateMode", CommandFlags.Session)]
-        public static void SetUpdateMode()
+        [Rtm.CommandMethod(CommandPrefix.Value + "drz_UpdateMode", Rtm.CommandFlags.Session)]
+        public void SetUpdateMode()
         {
             Document? document = Application.DocumentManager.MdiActiveDocument;
             if (document == null)
@@ -33,81 +37,103 @@ namespace dRz.NC.Commands
                 return;
             }
 
-            try
-            {
-                _settings = AddOnContext.AddonSettings;
-            }
-            catch (Sys.Exception ex)
-            {
-                string msg = "Не удалось получить настройки аддона:";
+            IAddonSettings settings = _settings;
+            IUpdateSettings updateSettings = settings.Updates;
 
-                _logger.Error(msg, ex);
-
-                _msg.ErrorMessage("Не удалось получить настройки аддона:", ex);
-
-                return;
-            }
-
-            IUpdateSettings updateSettings = _settings.Updates;
             UpdateMode previousMode = updateSettings.Mode;
+            int previousInterval = updateSettings.UpdateCheckIntervalDays;
 
-            PromptKeywordOptions options = new PromptKeywordOptions(
-                                            $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим [{GetKeyword(previousMode)}]: ");
-            options.Keywords.Add("Disabled");
-            options.Keywords.Add("Notify");
-            options.Keywords.Add("Install");
-            options.Keywords.Default = GetKeyword(previousMode);
-            options.AllowNone = true;
-
-            PromptResult result = document.Editor.GetKeywords(options);
-            if (result.Status == PromptStatus.Cancel)
+            List<Keywords> modeKeywords = new List<Keywords>
             {
-                return;
-            }
-
-            string selected = result.Status == PromptStatus.None
-                ? GetKeyword(previousMode)
-                : result.StringResult;
-
-            UpdateMode newMode = selected.ToUpperInvariant() switch
-            {
-                "DISABLED" => UpdateMode.Disabled,
-                "NOTIFY" => UpdateMode.CheckAndNotify,
-                "INSTALL" => UpdateMode.CheckAndInstall,
-                _ => previousMode
+                new Keywords(nameof(UpdateMode.Disabled), UpdateMode.Disabled, previousMode == UpdateMode.Disabled),
+                new Keywords(nameof(UpdateMode.CheckAndNotify), UpdateMode.CheckAndNotify, previousMode == UpdateMode.CheckAndNotify),
+                new Keywords(nameof(UpdateMode.CheckAndInstall), UpdateMode.CheckAndInstall, previousMode == UpdateMode.CheckAndInstall)
             };
 
-            if (newMode == previousMode)
-            {
-                _msg.InfoMessage($"Режим обновления не изменён: {GetDescription(previousMode)}.");
+            Enum? modeAnswer = CadService.KeywordAnswer(
+                document,
+                modeKeywords,
+                $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим: ",
+                allowNone: true);
 
+            if (modeAnswer == null)
+            {
+                return;
+            }
+
+            UpdateMode newMode = (UpdateMode)modeAnswer;
+
+            // Период можно изменить независимо от режима, в том числе если режим оставлен прежним.
+            List<Keywords> intervalKeywords = new List<Keywords>
+            {
+                new Keywords(nameof(AskYesNo.Yes), AskYesNo.Yes),
+                new Keywords(nameof(AskYesNo.No), AskYesNo.No, isDefault: true)
+            };
+
+            Enum? intervalAnswer = CadService.KeywordAnswer(
+                document,
+                intervalKeywords,
+                $"\nТекущий период проверки: {previousInterval} дн. Изменить период? ",
+                allowNone: true);
+
+            int newInterval = previousInterval;
+            if (intervalAnswer is AskYesNo.Yes)
+            {
+                PromptIntegerOptions daysOptions = new PromptIntegerOptions(
+                    $"\nПериод автоматической проверки в днях (1–30) [{previousInterval}]: ")
+                {
+                    AllowNone = true,
+                    DefaultValue = previousInterval,
+                    LowerLimit = 1,
+                    UpperLimit = 30,
+                    AllowNegative = false,
+                    AllowZero = false
+                };
+
+                PromptIntegerResult daysResult = document.Editor.GetInteger(daysOptions);
+                if (daysResult.Status == PromptStatus.OK)
+                {
+                    newInterval = daysResult.Value;
+                }
+                // Отмена ввода периода не отменяет выбранный режим.
+            }
+
+            bool modeChanged = newMode != previousMode;
+            bool intervalChanged = newInterval != previousInterval;
+
+            if (!modeChanged && !intervalChanged)
+            {
+                _msg.InfoMessage("Настройки обновления не изменены.");
                 return;
             }
 
             updateSettings.Mode = newMode;
+            updateSettings.UpdateCheckIntervalDays = newInterval;
+
             try
             {
-                _settings.Save();
-                _msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
+                settings.Save();
+
+                if (modeChanged)
+                {
+                    _msg.InfoMessage($"Режим обновления сохранён: {GetDescription(newMode)}.");
+                }
+
+                if (intervalChanged)
+                {
+                    _msg.InfoMessage($"Период автоматической проверки сохранён: {newInterval} дн.");
+                }
             }
-            catch (Sys.Exception ex)
+            catch (Exception ex)
             {
-                // Если JSON не сохранился, возвращаем прежнее значение в памяти.
+                // При ошибке сохранения восстанавливаем обе настройки в памяти.
                 updateSettings.Mode = previousMode;
+                updateSettings.UpdateCheckIntervalDays = previousInterval;
 
-                _msg.ErrorMessage($"Не удалось сохранить режим обновления.Восстановлено прежнее значение: {GetDescription(previousMode)}", ex);
+                _msg.ErrorMessage(
+                    "Не удалось сохранить настройки обновления. Восстановлены прежние значения.",
+                    ex);
             }
-        }
-
-        private static string GetKeyword(UpdateMode mode)
-        {
-            return mode switch
-            {
-                UpdateMode.Disabled => "Disabled",
-                UpdateMode.CheckAndNotify => "Notify",
-                UpdateMode.CheckAndInstall => "Install",
-                _ => "Notify"
-            };
         }
 
         private static string GetDescription(UpdateMode mode)

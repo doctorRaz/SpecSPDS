@@ -160,13 +160,13 @@ namespace dRz.Core.Services
         /// <value>
         /// The answer.
         /// </value>
-        public Enum Answer
+        public Enum? Answer
         {
             get => _answer;
             set => _answer = value;
         }
 
-        private Enum _answer;
+        private Enum? _answer;
 
         private string _globalName;
         private string _localName;
