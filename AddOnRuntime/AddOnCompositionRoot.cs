@@ -163,7 +163,13 @@ namespace dRz.AddOnRuntime
             // Настройки принадлежат основному аддону и загружаются один раз.
             container.RegisterSingleton<JsonSettingsStore>(() =>
                 new JsonSettingsStore(
-                    Path.Combine(container.GetInstance<IAddOnInfo>().ProductDataDirectory, "settings.json"),
+                    Path.Combine
+                    (
+                        container.GetInstance<IAddOnInfo>().ProductDataDirectory,
+                        "Settings",
+                        container.GetInstance<IAddOnInfo>().HostFamily,
+                        "GeneralSettings.json"
+                    ),
                     container.GetInstance<IDrzLoggerFactory>(),
                     container.GetInstance<IMessageService>()));
 
