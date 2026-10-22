@@ -12,10 +12,6 @@ namespace dRz.NC.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {
-        public CommandLineMessageService()
-        {
-        }
-
         public void ConsoleMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage(string.Empty, message, caller, title);
 
