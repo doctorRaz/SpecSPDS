@@ -15,8 +15,6 @@ using System;
 using System.IO;
 using System.Reflection;
 
-//using Container = SimpleInjector.Container;
-
 namespace dRz.AddOnRuntime
 {
     /// <summary> Наполнение SimpleInjector объектами </summary>
@@ -145,7 +143,9 @@ namespace dRz.AddOnRuntime
             //  документ есть ->ком строка
             //  документа нет -> Win
             container.RegisterSingleton<MessageService>();
+
             container.Register<IMessageService>(() => container.GetInstance<MessageService>());
+
             container.Register<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
             // сервисс документов
@@ -161,17 +161,23 @@ namespace dRz.AddOnRuntime
             //container.GetOrAdd<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
 
             // Настройки принадлежат основному аддону и загружаются один раз.
+
             container.RegisterSingleton<JsonSettingsStore>(() =>
-                new JsonSettingsStore(
-                    Path.Combine
-                    (
-                        container.GetInstance<IAddOnInfo>().ProductDataDirectory,
-                        "Settings",
-                        container.GetInstance<IAddOnInfo>().HostFamily,
-                        "GeneralSettings.json"
-                    ),
+            {
+                IAddOnInfo addonInfo = container.GetInstance<IAddOnInfo>();
+
+                string filePath = Path.Combine(
+                                                addonInfo.ProductDataDirectory,
+                                                "Settings",
+                                                addonInfo.HostFamily,
+                                                "GeneralSettings.json"
+                                               );
+
+                return new JsonSettingsStore(
+                    filePath,
                     container.GetInstance<IDrzLoggerFactory>(),
-                    container.GetInstance<IMessageService>()));
+                    container.GetInstance<IMessageService>());
+            });
 
             container.RegisterSingleton<SettingsManager>();
 
