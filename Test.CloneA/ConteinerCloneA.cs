@@ -1,10 +1,11 @@
-﻿global using AddOnCtx = dRz.Src.Infrastructure.AddOnContext;
+﻿
 using drz.Clone_B;
 using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
+using dRz.NC.Infrastructure;
 using System;
 using System.Reflection;
 
@@ -34,16 +35,16 @@ namespace drz.Clone_A
                 AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(ConteinerCloneA).Assembly);
 
                 // экземпляр копии контейнера by ref
-                AddOnCtx.Initialize(root.Get<IAddOnServices>());
+                AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                 string msg = $"{nameof(ConteinerCloneA)} Init";
 
                 //логер
-                _logger = AddOnCtx.NLogFactory.GetLogger(typeof(ConteinerCloneA));
+                _logger = AddOnContext.NLogFactory.GetLogger(typeof(ConteinerCloneA));
                 _logger.InfoCaller(msg);
 
                 //ком строка
-                _msgCmd = AddOnCtx.MsgCmd;
+                _msgCmd = AddOnContext.MsgCmd;
                 _msgCmd.InfoMessage(msg);
 
                 _isAddOnCompositionRoot = true;//сервис поднялся
@@ -60,10 +61,10 @@ namespace drz.Clone_A
             string msg = $"{nameof(ConteinerCloneA)} Running";
             _msgCmd.InfoMessage(msg);
 
-            IAddOnInfoRegistry addonRegistreds = AddOnCtx.AddOnInfoRegistry;
+            IAddOnInfoRegistry addonRegistreds = AddOnContext.AddOnInfoRegistry;
             //get count IaddOnInfo
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
-            _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
+            _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
             //get registrator
 
             //*******************
@@ -78,7 +79,7 @@ namespace drz.Clone_A
             _msgCmd.InfoMessage($"addonRegistreds.Count: {addonRegistreds.Count}");
 
             //get container lib info
-            _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
+            _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
 
             //get from key lib info
             IAddOnInfo addonFake;
@@ -99,7 +100,7 @@ namespace drz.Clone_A
                 _msgCmd.InfoMessage(addonFake.ToString());
             }
 
-            IAddOnServices ser = AddOnCtx.Services;
+            IAddOnServices ser = AddOnContext.Services;
             //console all addons
             foreach (IAddOnInfo addon in addonRegistreds.GetValues())
             {
@@ -107,7 +108,7 @@ namespace drz.Clone_A
             }
 
             ConteinerCloneB.Run();
-            _msgCmd.InfoMessage(AddOnCtx.AddOnInfo.ToString());
+            _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
         }
 
         public static void Run()

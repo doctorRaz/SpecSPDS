@@ -5,7 +5,7 @@ using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using System;
 
-namespace dRz.Src.Infrastructure
+namespace dRz.NC.Infrastructure
 {
     /// <summary>
     /// Класс чисто для укорочения вызовов service or infrastructure в коде, чтобы не писать Services.Get&lt;IService&gt;()
