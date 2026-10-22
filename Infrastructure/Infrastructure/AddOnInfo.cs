@@ -116,9 +116,7 @@ namespace dRz.Infrastructure.Infrastructure
 
             ProductFamily = GetMetadata(AssemblyMetadataKeys.ProductFamily, Product);
 
-            string hostFamily = !string.IsNullOrEmpty(HostFamily) ? $".{HostFamily}" : "";
-
-            ProductTitlePrefix = $"{Product}{hostFamily} v.{RunningVersion.Major}.{RunningVersion.Minor}";
+            ProductTitlePrefix = $"{ProductTitle} v.{RunningVersion.Major}.{RunningVersion.Minor}.{RunningVersion.Build}";
         }
 
         /// <summary>
