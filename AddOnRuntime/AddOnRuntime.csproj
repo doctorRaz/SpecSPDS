@@ -9,7 +9,7 @@
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Settings\Settings.csproj" />
 		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
-		<ProjectReference Include="..\Cad.Infrastructure\NC.Infrastructure.csproj" />
+		<ProjectReference Include="..\Infrastructure.NC\Infrastructure.NC.csproj" />
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
 			<PrivateAssets>all</PrivateAssets>
 		</ProjectReference>

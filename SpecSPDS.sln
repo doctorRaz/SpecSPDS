@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AddOnRuntime", "Test.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CadServices", "Test.CadServices\Test.CadServices.csproj", "{D4C9E7E6-B843-4DB9-AAFC-0880480987D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.Infrastructure", "Cad.Infrastructure\NC.Infrastructure.csproj", "{4B23F954-EFF1-10A4-3030-A8D8CC17808B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.NC", "Infrastructure.NC\Infrastructure.NC.csproj", "{4B23F954-EFF1-10A4-3030-A8D8CC17808B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneA", "Test.CloneA\Test.CloneA.csproj", "{5B8210A8-1830-BAE1-8DE0-D732C91C8BC7}"
 EndProject
