@@ -126,7 +126,7 @@ namespace dRz.LogBootstrap.Diagnostics
                 // Получаем все internal-логи именно для этого приложения
                 // Сортируем по дате создания (от новых к старым)
                 List<FileInfo> files = new DirectoryInfo(LogDir)
-                                         .GetFiles($"*_{logName}*.log")
+                                         .GetFiles($"*_{logName}_internal.log")
                                          .OrderByDescending(f => f.LastWriteTime)
                                          .ToList();
 
