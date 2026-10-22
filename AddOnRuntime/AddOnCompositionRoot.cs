@@ -94,13 +94,11 @@ namespace dRz.AddOnRuntime
             //регистрируемая сборка
             container.RegisterInstance(addOnAssembly);
 
-            //инфо о системе, пока экземплярный
-            //todo засунуть в статический контейнер
-            container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
+            //инфо о системе
+            container.RegisterSingleton<ISysInfo, SysInfo>();
 
-            //инфо о хосте, каде, пока экземплярный
-            //todo засунуть в статический контейнер
-            container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+            //инфо о хосте
+            container.RegisterSingleton<ICadInfo, CadInfo>();
 
             // AddOnInfoRegistry регистрируем интерфейс
             //      создания IAddOnInfo (только в контейнере)
@@ -117,43 +115,42 @@ namespace dRz.AddOnRuntime
             // регистрация только из контейнера
             container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
 
-            //old
-            //container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
+
         }
 
         /// <summary>Registers the services.</summary>
         /// <param name="container">The container.</param>
         private void RegisterServices(Container container)
         {
-            container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
+            container.RegisterSingleton<IWindowHandleProvider, CadWindowProvider>();//IntPtr Handle
 
             // серви сообщений ком строки
-            container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<ICommandLineMessageService, CommandLineMessageService>();
 
             //сервис мультикад сообщений
-            //   внутри корявая маршрутизация:
+            //   внутри маршрутизация:
             //      если вызов без документа, то попытается отправить в мультикад окошко
             //          если неуспех выведет алерт кад
-            container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
+            container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             //сервис Win сообщений
-            container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<IWindowMessageService, WindowMessageService>();
 
             //сервис маршрутизации сообщений,
             //  документ есть ->ком строка
             //  документа нет -> Win
             container.RegisterSingleton<MessageService>();
 
-            container.Register<IMessageService>(() => container.GetInstance<MessageService>());
+            container.RegisterSingleton<IMessageService>(() => container.GetInstance<MessageService>());
 
-            container.Register<IMessagePromptService>(() => container.GetInstance<MessageService>());
+            container.RegisterSingleton<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
-            // сервисс документов
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
+            // сервис документов
+            container.RegisterSingleton<IDocumentService, DocumentService>();
 
-            // фабрика логера, одна на ProduktName
-            //  при повторном создании с ттем же продуккт наме, будет использоваться эта же фабрика
-            //      если даже внутри одного аддоона, но в другой сборке будет создан контейнер и имя продуккта другое,
+            // фабрика логгера, одна на ProduktName
+            //  при повторном создании с тем же продукт наме, будет использоваться эта же фабрика
+            //      если даже внутри одного аддона, но в другой сборке будет создан контейнер и имя продукта другое,
             //      в этой сборке будет использоваться другая фабрика
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
 

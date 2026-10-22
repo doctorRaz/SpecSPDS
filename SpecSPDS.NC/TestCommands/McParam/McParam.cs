@@ -1,18 +1,18 @@
 ﻿#if DEBUG
 using drz.MulticadInterop.McParamManager;
 using dRz.Src.Infrastructure;
-using App=HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
 using System.Drawing;
 using Teigha.Runtime;
+using App = HostMgd.ApplicationServices;
 
 namespace dRz.NC.TestCommands.McParam
 {
     public class McParam
     {
-        App.Document doc =>App. Application.DocumentManager.MdiActiveDocument;
-        Editor ed => doc.Editor;
+        private App.Document doc => App.Application.DocumentManager.MdiActiveDocument;
+        private Editor ed => doc.Editor;
 
         /// <summary>
         /// Переключает базу данных Multicad.
@@ -73,15 +73,15 @@ namespace dRz.NC.TestCommands.McParam
 
 
             bool combobox_bool = MulticadParamManager.GetBoolParam(1048);
-            AddOnContext.Msg.InfoMessage($"combobox_profile: {combobox_bool.ToString()}");
+            AddOnContext.Msg.InfoMessage($"combobox_profile: {combobox_bool}");
 
             //MulticadParamManager.CallOptions("",IntPtr.Zero);
 
             double combobox_lineweight = MulticadParamManager.GetDoubleParam(2335);
-            AddOnContext.Msg.InfoMessage($"combobox_lineweight: {combobox_lineweight.ToString()}");
+            AddOnContext.Msg.InfoMessage($"combobox_lineweight: {combobox_lineweight}");
 
             Color combobox_color = MulticadParamManager.GetColorParam(11135);
-            AddOnContext.Msg.InfoMessage($"combobox_color: {combobox_color.ToString()}");
+            AddOnContext.Msg.InfoMessage($"combobox_color: {combobox_color}");
 
         }
 
