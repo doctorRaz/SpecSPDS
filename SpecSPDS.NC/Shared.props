@@ -23,8 +23,9 @@
 	<Target Name="GenerateCommandPrefix" BeforeTargets="CoreCompile">
 		<PropertyGroup>
 			<_CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</_CommandPrefixFile>
-			<_CommandPrefixValue Condition="'$(Configuration)' == 'Debug'">$(MSBuildProjectName)-</_CommandPrefixValue>
-			<_CommandPrefixValue Condition="'$(Configuration)' != 'Debug'"></_CommandPrefixValue>
+			<!--<_CommandPrefixValue Condition="'$(Configuration)' == 'Debug'">$(MSBuildProjectName)-</_CommandPrefixValue>-->
+			<!--<_CommandPrefixValue Condition="'$(Configuration)' != 'Debug'">$drz_(SolutionName)-</_CommandPrefixValue>-->
+			<_CommandPrefixValue>drz_$(SolutionName)</_CommandPrefixValue>
 		</PropertyGroup>
 
 		<MakeDir Directories="$(IntermediateOutputPath)" />
