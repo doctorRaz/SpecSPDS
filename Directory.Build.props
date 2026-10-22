@@ -53,7 +53,7 @@
 		<!-- Авторские права -->
 		<Copyright>©Разыграев Андрей $(StartYear)-$(CurrentYear)</Copyright>
 		<!-- Домашняя страница проекта -->
-		<RepositoryUrl>https://github.com/doctorRaz</RepositoryUrl>
+		<RepositoryUrl>https://github.com/doctorRaz/$(SolutionName)</RepositoryUrl>
 		<NeutralLanguage>ru-RU</NeutralLanguage>
 	</PropertyGroup>
 	<!-- ================================================================= -->

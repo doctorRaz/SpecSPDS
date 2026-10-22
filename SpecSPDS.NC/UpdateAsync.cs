@@ -93,8 +93,7 @@ namespace dRz.NC
                     return;
                 }
 
-                string updateUrl = addOnInfo.RepositoryUrl + "/" +
-                                   addOnInfo.Product +
+                string updateUrl = addOnInfo.RepositoryUrl +
                                    "/releases/latest/download/";
 #if DEBUG
                 updateUrl = $"http://127.0.0.1:8080/{addOnInfo.Product}/{addOnInfo.HostFamily}";
