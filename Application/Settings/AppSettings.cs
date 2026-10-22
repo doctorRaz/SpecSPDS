@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml.Serialization;
 
-namespace dRz.Core.Settings
+namespace dRz.Application.Settings
 {
     public sealed class AppSettings
     {

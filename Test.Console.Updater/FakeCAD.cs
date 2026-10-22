@@ -51,7 +51,7 @@ namespace dRz.Test.Console.Updater
             finally
             {
                 entryPoint.Terminate();
-                _logger?.Info("Terminate");
+                _logger?.Trace("Terminate");
             }
         }
 

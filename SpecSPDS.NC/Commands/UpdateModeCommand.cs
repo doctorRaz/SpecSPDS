@@ -1,11 +1,10 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.Core.Enums;
 using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.Src.Infrastructure;
-using HostMgd.ApplicationServices;
+using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
@@ -31,7 +30,7 @@ namespace dRz.NC.Commands
         [Rtm.CommandMethod(CommandPrefix.Value + "_UpdateMode", Rtm.CommandFlags.Session)]
         public void SetUpdateMode()
         {
-            Document? document = Application.DocumentManager.MdiActiveDocument;
+          App.  Document? document =App. Application.DocumentManager.MdiActiveDocument;
             if (document == null)
             {
                 return;

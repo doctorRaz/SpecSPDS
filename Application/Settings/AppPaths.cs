@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace dRz.Core.Settings
+namespace dRz.Application.Settings
 {
     /// <summary>
     /// AppPaths
@@ -12,7 +12,7 @@ namespace dRz.Core.Settings
         /// Initializes the specified product.
         /// </summary>
         /// <param name="product">The product.</param>
-        /// <exception cref="System.ArgumentException">product</exception>
+        /// <exception cref="ArgumentException">product</exception>
         public static void Initialize(string product)
         {
             if (string.IsNullOrWhiteSpace(product))

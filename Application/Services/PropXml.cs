@@ -1,10 +1,10 @@
-﻿using dRz.Core.Models;
+﻿using dRz.Application.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace dRz.Core.Services
+namespace dRz.Application.Services
 {
     public class PropXml
     {

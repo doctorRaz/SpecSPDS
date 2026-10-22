@@ -6,7 +6,7 @@ using System;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace dRz.Core.Services
+namespace dRz.Application.Services
 {
     public class FolderSelectDialog
     {

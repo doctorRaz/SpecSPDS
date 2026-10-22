@@ -1,6 +1,4 @@
-﻿using dRz.Core.Extensions;
-
-namespace dRz.Core.Models
+﻿namespace dRz.Application.Models
 {
     /// <summary>
     /// значения полей маркера

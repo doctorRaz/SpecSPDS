@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace dRz.Core.Enums
+namespace dRz.Application.Enums
 {
     public enum TableLocation
     {

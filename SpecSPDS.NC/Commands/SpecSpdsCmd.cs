@@ -1,19 +1,17 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.Core.Enums;
+using dRz.Application.Enums;
+using dRz.Application.Models;
+using dRz.Application.Services;
+using dRz.Application.Settings;
 using dRz.Core.Extensions;
-using dRz.Core.Models;
 using dRz.Core.Services;
-using dRz.Core.Settings;
 using dRz.NC.CadServices;
 using dRz.NC.Services;
 using dRz.Src.Infrastructure;
-using HostMgd.ApplicationServices;
+using App=HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-using NLog;
-using NLog.Config;
-using NLog.Layouts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,7 +45,7 @@ namespace dRz.NC.Commands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            Document doc = Application.DocumentManager.MdiActiveDocument;
+            App. Document doc = App. Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;

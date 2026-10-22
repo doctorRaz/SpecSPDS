@@ -13,7 +13,7 @@ using System;
 
 #if NC
 
-using HostMgd.ApplicationServices;
+using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
 using Rtm = Teigha.Runtime;
@@ -92,7 +92,7 @@ namespace dRz.NC
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
                         $"\nили не найден {_addOnInfo.Product}*" +
-                        $".package"+
+                        $".package" +
                         $"\n\nВозможны ошибки в работе и при обновлении!");
                 }
 
@@ -129,7 +129,7 @@ namespace dRz.NC
                     msg = $"Exception: {msg}\n{ex.Message}\n{ex.StackTrace}";
 
 #if !TEST
-                    Document document = Application.DocumentManager.MdiActiveDocument;
+                    App.Document document = App.Application.DocumentManager.MdiActiveDocument;
                     if (document != null)
                     {
                         Editor editor = document.Editor;
@@ -138,7 +138,7 @@ namespace dRz.NC
                     }
                     else
                     {
-                        Application.ShowAlertDialog(msg);
+                        App.Application.ShowAlertDialog(msg);
                     }
 #else
                     Console.WriteLine(msg);
