@@ -96,11 +96,11 @@ namespace dRz.AddOnRuntime
 
             //инфо о системе, пока экземплярный
             //todo засунуть в статический контейнер
-            container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
+            container.RegisterSingleton<ISysInfo, SysInfo>();
 
             //инфо о хосте, каде, пока экземплярный
             //todo засунуть в статический контейнер
-            container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+            container.RegisterSingleton<ICadInfo, CadInfo>();
 
             // AddOnInfoRegistry регистрируем интерфейс
             //      создания IAddOnInfo (только в контейнере)
@@ -125,10 +125,10 @@ namespace dRz.AddOnRuntime
         /// <param name="container">The container.</param>
         private void RegisterServices(Container container)
         {
-            container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
+            container.RegisterSingleton<IWindowHandleProvider, CadWindowProvider>();//IntPtr Handle
 
             // серви сообщений ком строки
-            container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<ICommandLineMessageService, CommandLineMessageService>();
 
             //сервис мультикад сообщений
             //   внутри корявая маршрутизация:
@@ -137,19 +137,19 @@ namespace dRz.AddOnRuntime
             container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             //сервис Win сообщений
-            container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<IWindowMessageService, WindowMessageService>();
 
             //сервис маршрутизации сообщений,
             //  документ есть ->ком строка
             //  документа нет -> Win
             container.RegisterSingleton<MessageService>();
 
-            container.Register<IMessageService>(() => container.GetInstance<MessageService>());
+            container.RegisterSingleton<IMessageService>(() => container.GetInstance<MessageService>());
 
-            container.Register<IMessagePromptService>(() => container.GetInstance<MessageService>());
+            container.RegisterSingleton<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
             // сервисс документов
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
+            container.RegisterSingleton<IDocumentService, DocumentService>();
 
             // фабрика логера, одна на ProduktName
             //  при повторном создании с ттем же продуккт наме, будет использоваться эта же фабрика
