@@ -7,17 +7,17 @@ namespace dRz.NC.TestCommands.Message
 {
     public class ConsoleMessageCmd
     {
-        private static IMessageService _msg = AddOnContext.Msg;
+        private IMessageService _msg = AddOnContext.Msg;
 
 
         [CommandMethod(CommandPrefix.Value + "_console-message", CommandFlags.Session)]
-        public static void ConsoleMessageCommand()
+        public void ConsoleMessageCommand()
         {
-            _msg.InfoMessage("test Console message");
+            _msg.InfoMessage("InfoMessage");
 
-            _msg.InfoMessage("test Console message");
+            _msg.WarningMessage("WarningMessage");
 
-            _msg.WarningMessage("test Console message");
+            _msg.ErrorMessage("ErrorMessage");
         }
     }
 }

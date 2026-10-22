@@ -94,12 +94,10 @@ namespace dRz.AddOnRuntime
             //регистрируемая сборка
             container.RegisterInstance(addOnAssembly);
 
-            //инфо о системе, пока экземплярный
-            //todo засунуть в статический контейнер
+            //инфо о системе
             container.RegisterSingleton<ISysInfo, SysInfo>();
 
-            //инфо о хосте, каде, пока экземплярный
-            //todo засунуть в статический контейнер
+            //инфо о хосте
             container.RegisterSingleton<ICadInfo, CadInfo>();
 
             // AddOnInfoRegistry регистрируем интерфейс
@@ -117,8 +115,7 @@ namespace dRz.AddOnRuntime
             // регистрация только из контейнера
             container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
 
-            //old
-            //container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
+
         }
 
         /// <summary>Registers the services.</summary>
@@ -131,7 +128,7 @@ namespace dRz.AddOnRuntime
             container.RegisterSingleton<ICommandLineMessageService, CommandLineMessageService>();
 
             //сервис мультикад сообщений
-            //   внутри корявая маршрутизация:
+            //   внутри маршрутизация:
             //      если вызов без документа, то попытается отправить в мультикад окошко
             //          если неуспех выведет алерт кад
             container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
@@ -148,12 +145,12 @@ namespace dRz.AddOnRuntime
 
             container.RegisterSingleton<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
-            // сервисс документов
+            // сервис документов
             container.RegisterSingleton<IDocumentService, DocumentService>();
 
-            // фабрика логера, одна на ProduktName
-            //  при повторном создании с ттем же продуккт наме, будет использоваться эта же фабрика
-            //      если даже внутри одного аддоона, но в другой сборке будет создан контейнер и имя продуккта другое,
+            // фабрика логгера, одна на ProduktName
+            //  при повторном создании с тем же продукт наме, будет использоваться эта же фабрика
+            //      если даже внутри одного аддона, но в другой сборке будет создан контейнер и имя продукта другое,
             //      в этой сборке будет использоваться другая фабрика
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
 

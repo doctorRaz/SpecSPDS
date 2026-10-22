@@ -10,7 +10,7 @@ namespace dRz.NC.TestCommands.McNotifay
 
         private static IMcNotificatorMessageService _msgMcN = AddOnContext.MsgN;
 
-        static System.Exception ex = new System.Exception("Properties is null");
+        private static System.Exception ex = new System.Exception("Properties is null");
 
         [CommandMethod(CommandPrefix.Value + "_noti1", CommandFlags.Session)]
         public static void noti1()

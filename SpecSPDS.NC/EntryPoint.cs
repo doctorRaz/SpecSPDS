@@ -172,7 +172,9 @@ namespace dRz.NC
             catch (Exception ex)
             {
                 if (_isLoggerProvider)
+                {
                     _logger.Error(ex);
+                }
             }
         }
 

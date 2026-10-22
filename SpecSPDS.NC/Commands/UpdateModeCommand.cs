@@ -4,10 +4,10 @@ using dRz.Abstractions.Settings;
 using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.Src.Infrastructure;
-using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
+using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
 namespace dRz.NC.Commands
@@ -30,7 +30,7 @@ namespace dRz.NC.Commands
         [Rtm.CommandMethod(CommandPrefix.Value + "_UpdateMode", Rtm.CommandFlags.Session)]
         public void SetUpdateMode()
         {
-          App.  Document? document =App. Application.DocumentManager.MdiActiveDocument;
+            App.Document? document = App.Application.DocumentManager.MdiActiveDocument;
             if (document == null)
             {
                 return;

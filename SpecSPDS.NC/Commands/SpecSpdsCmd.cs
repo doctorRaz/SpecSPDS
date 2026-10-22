@@ -10,12 +10,12 @@ using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.NC.Services;
 using dRz.Src.Infrastructure;
-using App=HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Teigha.Runtime;
+using App = HostMgd.ApplicationServices;
 
 namespace dRz.NC.Commands
 {
@@ -45,7 +45,7 @@ namespace dRz.NC.Commands
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {
-            App. Document doc = App. Application.DocumentManager.MdiActiveDocument;
+            App.Document doc = App.Application.DocumentManager.MdiActiveDocument;
             if (doc == null)
             {
                 return;
@@ -182,5 +182,5 @@ namespace dRz.NC.Commands
         }
     }
 
-    
+
 }
