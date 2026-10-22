@@ -53,7 +53,7 @@ namespace dRz.Abstractions.Infrastructure
         /// <value>Полный путь к сборке.</value>
         string AssemblyPath { get; }
 
-        /// <summary>Возвращает версию загруженной в ХОСТ сборки.</summary>
+        /// <summary>Возвращает версию ЗАГРУЖЕННОЙ в ХОСТ сборки.</summary>
         /// <value>версия сборки.</value>
         Version RunningVersion { get; }
 
@@ -116,7 +116,7 @@ namespace dRz.Abstractions.Infrastructure
         /// <summary>
         /// Короткий код хоста для условной компиляции, логов и имен файлов
         /// </summary>
-        //string HostCode { get; }
+        string HostCode { get; }
 
         /// <summary>
         /// Все доступные ключи метаданных.
