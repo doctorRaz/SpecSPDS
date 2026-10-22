@@ -1,4 +1,4 @@
-﻿namespace dRz.Core.Settings
+﻿namespace dRz.Application.Settings
 {
     /// <summary>
     /// имена полей свойств маркера

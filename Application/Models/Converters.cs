@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 
-namespace dRz.Core.Extensions
+namespace dRz.Application.Models
 {
     public static class Converters
     {

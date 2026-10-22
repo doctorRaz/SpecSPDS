@@ -1,7 +1,7 @@
 ﻿#if DEBUG
 using drz.MulticadInterop.McParamManager;
 using dRz.Src.Infrastructure;
-using HostMgd.ApplicationServices;
+using App=HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,7 +11,7 @@ namespace dRz.NC.TestCommands.McParam
 {
     public class McParam
     {
-        Document doc => Application.DocumentManager.MdiActiveDocument;
+        App.Document doc =>App. Application.DocumentManager.MdiActiveDocument;
         Editor ed => doc.Editor;
 
         /// <summary>

@@ -1,6 +1,6 @@
-﻿using dRz.Core.Enums;
-using dRz.Core.Models;
-using dRz.Core.Settings;
+﻿using dRz.Application.Enums;
+using dRz.Application.Models;
+using dRz.Application.Settings;
 using Multicad;
 using Multicad.DatabaseServices;
 using Multicad.Symbols;

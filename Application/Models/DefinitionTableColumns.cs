@@ -1,4 +1,4 @@
-﻿namespace dRz.Core.Models
+﻿namespace dRz.Application.Models
 {
     public class DefinitionTableColumns
     {

@@ -1,4 +1,4 @@
-﻿using dRz.Core.Enums;
+﻿using dRz.Application.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace dRz.Core.Services
+namespace dRz.Application.Services
 {
     public class FetchingPatchFiles
     {
@@ -120,16 +120,16 @@ namespace dRz.Core.Services
                 {
                     return Directory.GetFiles(sPath,
                                                 sSerchPatern,
-                                                (WithSubfolders
+                                                WithSubfolders
                                                 ? SearchOption.AllDirectories
-                                                : SearchOption.TopDirectoryOnly)).ToList<string>();
+                                                : SearchOption.TopDirectoryOnly).ToList();
                 }
                 else
                 {
                     return new List<string>();
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
                 //todo ВСЕ диалоги переделать на интерфейс сообщений
 #if NC || AC
