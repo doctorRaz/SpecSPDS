@@ -134,7 +134,7 @@ namespace dRz.AddOnRuntime
             //   внутри корявая маршрутизация:
             //      если вызов без документа, то попытается отправить в мультикад окошко
             //          если неуспех выведет алерт кад
-            container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
+            container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             //сервис Win сообщений
             container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
