@@ -1,4 +1,5 @@
-﻿using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.NC;
@@ -10,14 +11,15 @@ using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
-    public class Program
+    public class FakeCAD
     {
         private readonly IDrzLogger? _logger;
         private readonly IMessageService? _msg;
         private readonly IAddonSettings? _settings;
         private readonly Stopwatch _sw;
 
-        public Program()
+        /// <summary>Initializes a new instance of the <see cref="FakeCAD"/> class.</summary>
+        public FakeCAD()
         {
             _sw = Stopwatch.StartNew();
 
@@ -27,7 +29,7 @@ namespace dRz.Test.Console.Updater
             {
                 entryPoint.Initialize();
 
-                _logger = AddOnContext.NLogFactory.GetLogger<Program>();
+                _logger = AddOnContext.NLogFactory.GetLogger<FakeCAD>();
 
                 _msg = AddOnContext.Msg;
 
@@ -56,12 +58,16 @@ namespace dRz.Test.Console.Updater
         //[STAThread]
         private static void Main(string[] args)
         {
-            Program program = new Program();
+            //AddOnRuntime.AddOnCompositionRoot root = ConteinerCtx.Run();
 
-            program.SelectUpdateMode();
-            program.SelectUpdateCheckInterval();
+            //IAddOnInfo addInf = AddOnContext.AddOnInfo;
 
-            _ = ConsoleReadKey(program._msg, program._sw);
+            FakeCAD fakeCad = new FakeCAD();
+
+            fakeCad.SelectUpdateMode();
+            fakeCad.SelectUpdateCheckInterval();
+
+            _ = ConsoleReadKey(fakeCad._msg, fakeCad._sw);
         }
 
         private static ConsoleKeyInfo ConsoleReadKey(IMessageService? msg, Stopwatch? sw = null)

@@ -15,7 +15,7 @@
 		<Description>Отладка в консоли</Description>
 		<!--metadata-->
 		<HostFamily>TEST</HostFamily>
-		<HostCode>_Console</HostCode>
+		<HostCode>Console</HostCode>
 
 	</PropertyGroup>
 	<PropertyGroup>
