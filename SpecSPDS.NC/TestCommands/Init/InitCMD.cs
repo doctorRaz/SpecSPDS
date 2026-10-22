@@ -9,7 +9,7 @@ namespace dRz.NC.TestCommands.Init
 
 #if DEBUG && NC
 
-        [Rtm.CommandMethod(CommandPrefix.Value + "инит", Rtm.CommandFlags.Session)]
+        [Rtm.CommandMethod(CommandPrefix.Value + "_инит", Rtm.CommandFlags.Session)]
         [Scm.Description("ручной инит загрузчика для SPEC")]
         public static void test()
         {
@@ -20,7 +20,7 @@ namespace dRz.NC.TestCommands.Init
             entryPoint.Initialize();
         }
 
-        [Rtm.CommandMethod("-" + CommandPrefix.Value + "SPEC-console-message-test", Rtm.CommandFlags.Session)]
+        [Rtm.CommandMethod("-" + CommandPrefix.Value + "_console-message-test", Rtm.CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
             AddOnContext.MsgCmd.ConsoleMessage("Console message");

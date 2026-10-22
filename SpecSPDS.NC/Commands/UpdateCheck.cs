@@ -12,7 +12,7 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Запускает ручную проверку обновлений
         /// </summary>
-        [CommandMethod(CommandPrefix.Value + "drz_UpdateCheck", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_UpdateCheck", CommandFlags.Session)]
         public static void UpdateCheckRun()
         {
             //команд метод точка входа в приложение, поэтому можно использовать сервисы напрямую

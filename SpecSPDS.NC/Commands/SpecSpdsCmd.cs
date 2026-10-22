@@ -43,7 +43,7 @@ namespace dRz.NC.Commands
 
         [CommandMethod(CommandPrefix.Value + "тсс")]
 #endif
-        [CommandMethod(CommandPrefix.Value + "drz_SpecSpds")]
+        [CommandMethod(CommandPrefix.Value + "")]
         [Description("Импорт свойств из стороннего файла в текущий документ")]
         public static void SpecSpds()
         {

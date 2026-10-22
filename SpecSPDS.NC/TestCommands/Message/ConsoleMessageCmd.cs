@@ -10,7 +10,7 @@ namespace dRz.NC.TestCommands.Message
         private static IMessageService _msg = AddOnContext.Msg;
 
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-console-message", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_console-message", CommandFlags.Session)]
         public static void ConsoleMessageCommand()
         {
             _msg.InfoMessage("test Console message");

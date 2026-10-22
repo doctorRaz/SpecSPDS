@@ -17,7 +17,7 @@ namespace dRz.NC.TestCommands.McParam
         /// <summary>
         /// Переключает базу данных Multicad.
         /// </summary>
-        [CommandMethod(CommandPrefix.Value + "SPEC-SetParam", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_SetParam", CommandFlags.Session)]
         [Description("Переключение базы данных Multicad")]
         public void ChangedbMod()
         {
@@ -36,7 +36,7 @@ namespace dRz.NC.TestCommands.McParam
         }
 
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-GetStringParam", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_GetStringParam", CommandFlags.Session)]
         public static void ParamMethods()
         {
             //тянем имя непечатного слоя из настроек МС
@@ -48,7 +48,7 @@ namespace dRz.NC.TestCommands.McParam
             AddOnContext.Msg.InfoMessage(newLayerNameRav);
         }
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-GetStringParam2", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_GetStringParam2", CommandFlags.Session)]
         public static void ParamMethods2()
         {
             //тянем имя непечатного слоя из настроек МС
@@ -62,7 +62,7 @@ namespace dRz.NC.TestCommands.McParam
             AddOnContext.Msg.InfoMessage(newLayerNameRav);
         }
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-GetStringParam3", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_GetStringParam3", CommandFlags.Session)]
         public static void ParamMethods3()
         {
 

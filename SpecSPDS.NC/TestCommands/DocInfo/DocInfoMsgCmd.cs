@@ -7,7 +7,7 @@ namespace dRz.NC.TestCommands.DocInfo
 {
     public class DocInfoMsgCmd
     {
-        [CommandMethod(CommandPrefix.Value + "SPEC-doc-info", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_doc-info", CommandFlags.Session)]
         public static void DocInfoMessageCommand()
         {
             AddOnContext.MsgW.InfoMessage(AddOnContext.DocService.FullPath);

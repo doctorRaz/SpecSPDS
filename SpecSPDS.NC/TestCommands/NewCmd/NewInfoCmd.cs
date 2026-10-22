@@ -14,7 +14,7 @@ namespace dRz.NC.TestCommands.NewCmd
         private static IWindowMessageService _msgGui = AddOnContext.MsgW;
 
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-console-New", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_console-New", CommandFlags.Session)]
         public static void ConsoleNewCmd()
         {
             _msg.InfoMessage($"{AddOnContext.CadInfo}");
@@ -25,7 +25,7 @@ namespace dRz.NC.TestCommands.NewCmd
 
         }
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-info-New", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_info-New", CommandFlags.Session)]
         public static void GuiNewCmd()
         {
             _msgGui.InfoMessage($"{AddOnContext.CadInfo}");
@@ -36,7 +36,7 @@ namespace dRz.NC.TestCommands.NewCmd
             _msgGui.ErrorMessage($"{AddOnContext.AddOnInfo.ToLongString()}", ex);
         }
 
-        [CommandMethod(CommandPrefix.Value + "SPEC-console-Long", CommandFlags.Session)]
+        [CommandMethod(CommandPrefix.Value + "_console-Long", CommandFlags.Session)]
         public static void ConsoleLongCmd()
         {
 
