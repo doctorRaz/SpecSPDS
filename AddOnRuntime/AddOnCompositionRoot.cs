@@ -96,9 +96,6 @@ namespace dRz.AddOnRuntime
             //регистрируемая сборка
             container.RegisterInstance(addOnAssembly);
 
-            //IAddOnInfo регистрация не нужна
-            //container.GetOrAdd<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
-
             //инфо о системе, пока экземплярный
             //todo засунуть в статический контейнер
             container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
@@ -117,11 +114,6 @@ namespace dRz.AddOnRuntime
             //доступ на запись только из контейнера,
             //чтение при получении в контейнере IAddOnInfoRegistry
             container.RegisterSingleton<IAddOnInfoRegistry, AddOnInfoRegistry>();
-
-            //old version
-            //container.RegisterSingleton<IAddOnInfo>(() =>
-            //                                    container.GetInstance<IAddOnInfoRegistry>()
-            //                                   .GetOrAdd(addOnAssembly));
 
             //регистрация-получение новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
             // регистрация только из контейнера
@@ -176,8 +168,8 @@ namespace dRz.AddOnRuntime
                     container.GetInstance<IMessageService>()));
 
             container.RegisterSingleton<SettingsManager>();
-            container.RegisterSingleton<IAddonSettings>(() =>
-                container.GetInstance<SettingsManager>().Load());
+
+            container.RegisterSingleton<IAddonSettings>(() => container.GetInstance<SettingsManager>().Load());
         }
 
         #endregion Private Methods

@@ -128,9 +128,7 @@ namespace dRz.LogBootstrap.Builder
         /// <summary>
         /// Creates the configuration.
         /// </summary>
-        /// <param name="filePrefix">The file prefix.</param>
-        /// <param name="appDataProductLogPath">The application data product log path.</param>
-        /// <param name="currentLevel">The current level.</param>
+        /// <param name="level">The current level.</param>
         /// <returns></returns>
         private LoggingConfiguration CreateConfiguration(LogLevel level)
         {
