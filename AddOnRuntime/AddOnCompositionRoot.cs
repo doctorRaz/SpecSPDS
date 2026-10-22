@@ -134,7 +134,9 @@ namespace dRz.AddOnRuntime
             container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             //сервис Win сообщений
-            container.RegisterSingleton<IWindowMessageService, WindowMessageService>();
+            container.RegisterSingleton<IWindowMessageService>(() => new WindowMessageService(
+                container.GetInstance<IAddOnInfo>().ProductTitlePrefix,
+                container.GetInstance<IWindowHandleProvider>()));
 
             //сервис маршрутизации сообщений,
             //  документ есть ->ком строка

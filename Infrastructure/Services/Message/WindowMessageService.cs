@@ -15,9 +15,9 @@ namespace dRz.Infrastructure.Services.Message
         private readonly string _productTitlePrefix;
         private readonly IntPtr _cadWindowHandle;
 
-        public WindowMessageService(IAddOnInfo addOnInfo, IWindowHandleProvider handleProvider)
+        public WindowMessageService(string productTitlePrefix, IWindowHandleProvider handleProvider)
         {
-            _productTitlePrefix = addOnInfo.ProductTitlePrefix;
+            _productTitlePrefix = productTitlePrefix;
             _cadWindowHandle = handleProvider.Handle;
         }
 

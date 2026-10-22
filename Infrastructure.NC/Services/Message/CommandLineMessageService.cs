@@ -1,5 +1,4 @@
-﻿using dRz.Abstractions.Infrastructure;
-using dRz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -13,13 +12,6 @@ namespace dRz.NC.Infrastructure.Services.Message
 {
     public class CommandLineMessageService : ICommandLineMessageService
     {
-        //private readonly IAddOnInfo _applicationInfo;
-
-        public CommandLineMessageService(IAddOnInfo applicationInfo)
-        {
-            //_applicationInfo = applicationInfo;
-        }
-
         public void ConsoleMessage(string message, string title = "", [CallerMemberName] string? caller = null) =>
             WriteMessage(string.Empty, message, caller, title);
 
