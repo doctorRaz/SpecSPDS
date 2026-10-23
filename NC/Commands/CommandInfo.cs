@@ -46,10 +46,13 @@ namespace dRz.NC.Commands
                     Assembly.GetExecutingAssembly(),
                     logger);
 
-                var duplicateGroups = report.DuplicateCommands.ToList();
+                var duplicateGroups = report.DuplicateCommands
+                    .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
                 var commandLines = new List<string>();
 
-                foreach (var command in report.RegisteredCommands)
+                foreach (var command in report.RegisteredCommands
+                    .OrderBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase))
                 {
                     string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
                     commandLines.Add($"{command.CommandName}{method}\t{command.Description}");
@@ -69,7 +72,9 @@ namespace dRz.NC.Commands
                 foreach (var group in duplicateGroups)
                 {
                     duplicateLines.Add($"Дублированный атрибут: {group.Key}");
-                    duplicateLines.AddRange(group.Select(entry => $"\t[{entry.MethodName}] {entry.Description}"));
+                    duplicateLines.AddRange(group
+                        .OrderBy(entry => entry.MethodName, StringComparer.OrdinalIgnoreCase)
+                        .Select(entry => $"\t[{entry.MethodName}] {entry.Description}"));
                 }
 
                 if (duplicateLines.Count > 0)
