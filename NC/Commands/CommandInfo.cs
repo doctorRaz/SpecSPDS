@@ -2,7 +2,9 @@
 using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using Rtm = Teigha.Runtime;
 
@@ -39,26 +41,40 @@ namespace dRz.NC.Commands
                 includeMethodInfo = true;
 #endif
 
-                // Анализируем сборку аддона. Каждому CommandMethodAttribute соответствует отдельная запись.
+                // Сбор объявлений отделён от формирования текстовых отчётов.
                 var report = new dRz.NC.Services.CmdInfo(
                     Assembly.GetExecutingAssembly(),
-                    includeMethodInfo,
                     logger);
 
-                if (!string.IsNullOrWhiteSpace(report.CommandText))
+                var duplicateGroups = report.DuplicateCommands.ToList();
+                var commandLines = new List<string>();
+
+                foreach (var command in report.RegisteredCommands)
                 {
-                    message.InfoMessage($"\n{report.CommandText}");
+                    string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
+                    commandLines.Add($"{command.CommandName}{method}\t{command.Description}");
+                }
+
+                if (commandLines.Count > 0)
+                {
+                    message.InfoMessage($"\n{string.Join(Environment.NewLine, commandLines)}");
                 }
                 else
                 {
                     message.InfoMessage("Нет зарегистрированных команд");
                 }
 
-                // Собственный поиск дубликатов сохраняется: в отчёте указаны методы,
-                // которые объявляют конфликтующее глобальное имя команды.
-                if (!string.IsNullOrEmpty(report.DuplicateText))
+                // Сохраняем собственную диагностику: выводим все методы, объявившие дубликат.
+                var duplicateLines = new List<string>();
+                foreach (var group in duplicateGroups)
                 {
-                    message.InfoMessage($"\n{report.DuplicateText}");
+                    duplicateLines.Add($"Дублированный атрибут: {group.Key}");
+                    duplicateLines.AddRange(group.Select(entry => $"\t[{entry.MethodName}] {entry.Description}"));
+                }
+
+                if (duplicateLines.Count > 0)
+                {
+                    message.InfoMessage($"\n{string.Join(Environment.NewLine, duplicateLines)}");
                 }
             }
             catch (Exception ex)
