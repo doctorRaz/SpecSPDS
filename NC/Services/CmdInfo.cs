@@ -1,208 +1,194 @@
-﻿//https://autolisp.ru/2024/10/29/nanocad-vyvod-komand-s-ix-opisaniem-cherez-net/
-//https://adn-cis.org/programmnoe-opredelenie-dublirovannyix-imen-.net-komand.html
-using System.Reflection;
+﻿// Сбор сведений об объявлениях команд CAD.
+using dRz.Abstractions.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
+using System.Linq;
+using System.Reflection;
 
 #if NC
-
-using Teigha.Runtime;
-
+using Rtm = Teigha.Runtime;
 #elif AC
-
 using Autodesk.AutoCAD.Runtime;
-
 #endif
 
 namespace dRz.NC.Services
 {
     /// <summary>
-    /// Информация о командах CAD
+    /// Собирает объявления команд CAD и предоставляет выборки для диагностических отчётов.
     /// </summary>
-    public class CmdInfo
+    public sealed class CmdInfo
     {
-        #region Other
+        private readonly Assembly _assembly;
+        private readonly IDrzLogger? _logger;
 
         /// <summary>
-        /// Gets or sets the map information.
+        /// Все найденные объявления команд. Для каждого CommandMethodAttribute создаётся отдельная запись.
         /// </summary>
-        /// <value>
-        /// The map information.
-        /// </value>
-        public Dictionary<string, List<CmdList>> mapInfo { get; set; }
+        public List<CommandEntry> Commands { get; } = new();
+
+        /// <summary>Объявления команд, глобальное имя которых встречается ровно один раз.</summary>
+        public IEnumerable<CommandEntry> RegisteredCommands =>
+            Commands
+                .GroupBy(command => command.CommandName)
+                .Where(group => group.Count() == 1)
+                .SelectMany(group => group);
 
         /// <summary>
-        /// Gets or sets the s command information.
+        /// Группы объявлений с повторяющимся глобальным именем команды.
+        /// Каждая группа содержит все методы, объявившие это имя.
         /// </summary>
-        /// <value>
-        /// The s command information.
-        /// </value>
-        public string sCmdInfo { get; set; } = "";
+        public IEnumerable<IGrouping<string, CommandEntry>> DuplicateCommands =>
+            Commands
+                .GroupBy(command => command.CommandName)
+                .Where(group => group.Count() > 1);
 
-        /// <summary>
-        /// Gets or sets the s duplicate information.
-        /// </summary>
-        /// <value>
-        /// The s duplicate information.
-        /// </value>
-        public string sDuplInfo { get; set; } = "";
-
-        /// <summary>
-        /// Список зарегистрированных команд
-        /// </summary>
-        public class CmdList
+        /// <summary>Описание одного объявления команды.</summary>
+        public sealed class CommandEntry
         {
-            /// <summary>
-            /// Имя метода
-            /// </summary>
-            internal string MethodAttr { get; set; }
+            /// <summary>Глобальное имя команды из CommandMethodAttribute.</summary>
+            public string CommandName { get; init; } = string.Empty;
 
-            /// <summary>
-            ///Описание метода
-            /// </summary>
-            internal string DescriptionAttr { get; set; }
+            /// <summary>Полное имя типа и имя объявившего команду метода.</summary>
+            public string MethodName { get; init; } = string.Empty;
 
-            /// <summary>
-            /// Имя класса
-            /// </summary>
-            internal string MethodInfo { get; set; }
+            /// <summary>Описание метода; пустая строка, если DescriptionAttribute отсутствует.</summary>
+            public string Description { get; init; } = string.Empty;
         }
 
-        /// <summary>Сборка содержащая текущий исполняемый код</summary>
-        private Assembly asm { get; set; }
-
-        /// <summary>
-        /// Вывод MethodInfo /[b method information].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [b method information]; otherwise, <c>false</c>.
-        /// </value>
-        private bool bMethodInfo { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CmdInfo"/> class.
-        /// </summary>
-        public CmdInfo(bool _bMethodInfo = false)
+        /// <summary>Создаёт сведения по сборке, содержащей этот класс.</summary>
+        public CmdInfo(IDrzLogger? logger = null)
+            : this(Assembly.GetExecutingAssembly(), logger)
         {
-            bMethodInfo = _bMethodInfo;
-            asm = Assembly.GetExecutingAssembly();
-            Reflection();
+        }
+
+        /// <summary>Собирает объявления команд из указанной сборки.</summary>
+        /// <param name="assembly">Сборка для анализа.</param>
+        /// <param name="logger">Логгер ошибок рефлексии.</param>
+        public CmdInfo(Assembly assembly, IDrzLogger? logger = null)
+        {
+            _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
+            _logger = logger;
+            CollectCommands();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsmInfo"/> class.
+        /// Собирает объявления команд. Ошибки отдельного типа или метода не прерывают весь анализ.
         /// </summary>
-        /// <param name="_asm">The asm.</param>
-        /// <param name="_bMethodInfo">if set to <c>true</c> [b method information].</param>
-        public CmdInfo(Assembly _asm, bool _bMethodInfo = false)
+        private void CollectCommands()
         {
-            bMethodInfo = _bMethodInfo;
-            asm = _asm;
-            Reflection();
-        }
+            Type[] types;
 
-        #endregion Other
-
-        /// <summary>
-        /// Reflections this instance.
-        /// </summary>
-        private void Reflection()
-
-        {
-            mapInfo = new Dictionary<string, List<CmdList>>();
-
-            Type[] expTypes = asm.GetTypes();
-
-            //собираем
-            foreach (Type type in expTypes)
+            try
             {
-                MethodInfo[] methods = type.GetMethods();
+                types = _assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                // Используем доступные типы, даже если часть типов сборки не загрузилась.
+                List<Type> availableTypes = new List<Type>(ex.Types.Length);
+                foreach (Type? type in ex.Types)
+                {
+                    if (type != null)
+                    {
+                        availableTypes.Add(type);
+                    }
+                }
 
-                //собираем методы
+                types = availableTypes.ToArray();
+                LogError(ex, $"Не все типы сборки '{_assembly.FullName}' удалось загрузить.");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Не удалось получить типы сборки '{_assembly.FullName}'.");
+                return;
+            }
+
+            foreach (Type type in types)
+            {
+                MethodInfo[] methods;
+                try
+                {
+                    methods = type.GetMethods();
+                }
+                catch (Exception ex)
+                {
+                    LogError(ex, $"Не удалось получить методы типа '{type.FullName}'.");
+                    continue;
+                }
+
                 foreach (MethodInfo method in methods)
                 {
-                    CmdList cinf = GetCmdInf(method);
-                    if (cinf == null)
-                    {
-                        continue;
-                    }
-
-                    if (!mapInfo.ContainsKey(cinf.MethodAttr))
-                    {
-                        List<CmdList> lCinfo = new List<CmdList>();
-                        mapInfo.Add(cinf.MethodAttr, lCinfo);
-                    }
-                    mapInfo[cinf.MethodAttr].Add(cinf);
-                }
-            }
-            string sMethod;
-
-            foreach (KeyValuePair<string, List<CmdList>> keyValuePair in mapInfo)
-            {
-                if (keyValuePair.Value.Count > 1)
-                {
-                    if (!string.IsNullOrEmpty(sDuplInfo))
-                    {
-                        sDuplInfo += "\n";//если дописываем, то перенос
-                    }
-
-                    sDuplInfo += "Дублированный атрибут: " + keyValuePair.Key;
-
-                    foreach (CmdList itemList in keyValuePair.Value)
-                    {
-                        sDuplInfo += "\n\t[" + itemList.MethodInfo + "] " + itemList.DescriptionAttr;
-                    }
-                }
-                else
-                {
-                    if (bMethodInfo)
-                    {
-                        sMethod = " [" + keyValuePair.Value[0].MethodInfo + "]";
-                    }
-                    else
-                    {
-                        sMethod = "";
-                    }
-
-                    if (!string.IsNullOrEmpty(sCmdInfo))
-                    {
-                        sCmdInfo += "\n";//если дописываем, то перенос
-                    }
-
-                    sCmdInfo += keyValuePair.Key + sMethod + "\t" + keyValuePair.Value[0].DescriptionAttr;
+                    CollectMethodCommands(method);
                 }
             }
         }
 
-        private CmdList GetCmdInf(MethodInfo method)
+        /// <summary>Добавляет отдельную запись для каждого CommandMethodAttribute метода.</summary>
+        private void CollectMethodCommands(MethodInfo method)
         {
-            object[] attributes = method.GetCustomAttributes(true);
-            CmdList res = new CmdList();
+            object[] attributes;
+            try
+            {
+                attributes = method.GetCustomAttributes(true);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Не удалось прочитать атрибуты метода '{GetMethodName(method)}'.");
+                return;
+            }
 
+            string description = string.Empty;
             foreach (object attribute in attributes)
             {
-                if (attribute is CommandMethodAttribute cmdAttr)
+                if (attribute is DescriptionAttribute descriptionAttribute)
                 {
-                    res.MethodAttr = cmdAttr.GlobalName;
-
-                    res.MethodInfo = method.Name;
-                }
-                else if (attribute is DescriptionAttribute descrAttr)
-                {
-                    if (descrAttr != null)
-                    {
-                        res.DescriptionAttr = descrAttr.Description;
-                    }
-                    else
-                    {
-                        res.DescriptionAttr = "";
-                    }
+                    description = descriptionAttribute.Description ?? string.Empty;
+                    break;
                 }
             }
-            //return res;
-            return res.MethodAttr == null ? null : res;
+
+            string methodName = GetMethodName(method);
+            foreach (object attribute in attributes)
+            {
+                if (attribute is not Rtm.CommandMethodAttribute commandAttribute)
+                {
+                    continue;
+                }
+
+                string commandName = commandAttribute.GlobalName;
+                if (string.IsNullOrWhiteSpace(commandName))
+                {
+                    LogError(new InvalidOperationException(
+                        $"CommandMethodAttribute без глобального имени у метода '{methodName}'."), null);
+                    continue;
+                }
+
+                Commands.Add(new CommandEntry
+                {
+                    CommandName = commandName,
+                    MethodName = methodName,
+                    Description = description
+                });
+            }
+        }
+
+        private static string GetMethodName(MethodInfo method)
+        {
+            return $"{method.DeclaringType?.FullName ?? "<unknown>"}.{method.Name}";
+        }
+
+        /// <summary>Записывает ошибку рефлексии, не позволяя сбою логгера прервать анализ.</summary>
+        private void LogError(Exception exception, string? message)
+        {
+            try
+            {
+                _logger?.Error(exception, message);
+            }
+            catch
+            {
+                // Диагностика не должна влиять на инициализацию аддона или вывод отчёта.
+            }
         }
     }
 }

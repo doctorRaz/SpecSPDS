@@ -1,48 +1,107 @@
-﻿using dRz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Logger;
+using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure;
-using dRz.NC.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Teigha.Runtime;
+using Rtm = Teigha.Runtime;
 
 namespace dRz.NC.Commands
 {
-    public class CommandInfo
+    /// <summary>
+    /// Команда вывода списка объявленных CAD-команд и отчёта о дубликатах.
+    /// </summary>
+    public sealed class CommandInfo
     {
-        private static IMessageService _msg = AddOnContext.Msg;
-
-        [CommandMethod(CommandPrefix.Value + "CommandInfo")]
-        [Description("Список зарегистрированных команд")]
+        [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
+        [Description("Список зарегистрированных команд с описанием")]
         public static void CmdInfo()
         {
-            
-            bool bMethod = false;//не выводить имена методов
+            IDrzLogger? logger = null;
+            IMessageService? message = null;
+
+            try
+            {
+                // Сервисы запрашиваются при выполнении команды, после инициализации AddOnContext.
+                logger = AddOnContext.NLogFactory.GetLogger(typeof(CommandInfo));
+                message = AddOnContext.Msg;
+
+                bool includeMethodInfo = false;
 #if DEBUG
-            bMethod = true;
+                includeMethodInfo = true;
 #endif
-            //выводим список команд с описаниями
-            CmdInfo CDI = new CmdInfo(Assembly.GetExecutingAssembly(), bMethod);//эта сборка вывод имен классов
 
-            string sVersion = AddOnContext.AddOnInfo.ToShortString();// AI.sVersionFull;
+                // Сбор объявлений отделён от формирования текстовых отчётов.
+                Services.CmdInfo report = new Services.CmdInfo(
+                    Assembly.GetExecutingAssembly(),
+                    logger);
 
-            if (!string.IsNullOrWhiteSpace(CDI.sCmdInfo))
-            {
-                _msg.InfoMessage($"\n{CDI.sCmdInfo}");
+                List<IGrouping<string, Services.CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
+                    .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                List<string> commandLines = new List<string>();
+
+                foreach (Services.CmdInfo.CommandEntry? command in report.RegisteredCommands
+                    .OrderBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase))
+                {
+                    string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
+                    commandLines.Add($"{command.CommandName}{method}\t{command.Description}");
+                }
+
+                string border = "------------------------------------------";
+
+                message.InfoMessage(border);
+
+                if (commandLines.Count > 0)
+                {
+                    //пробел в конце строки добавлен специально, вывод в консоль нанокад, почему то обрезает последний символ последней строки
+                    message.InfoMessage($"{string.Join(Environment.NewLine, commandLines)} ");
+                }
+                else
+                {
+                    message.InfoMessage("Нет зарегистрированных команд");
+                }
+                message.InfoMessage(border);
+
+                // Сохраняем собственную диагностику: выводим все методы, объявившие дубликат.
+                List<string> duplicateLines = new List<string>();
+                foreach (IGrouping<string, Services.CmdInfo.CommandEntry>? group in duplicateGroups)
+                {
+                    duplicateLines.Add($"Дублированный атрибут: {group.Key}");
+                    duplicateLines.AddRange(group
+                        .OrderBy(entry => entry.MethodName, StringComparer.OrdinalIgnoreCase)
+                        .Select(entry => $"\t[{entry.MethodName}] {entry.Description}"));
+                }
+
+                if (duplicateLines.Count > 0)
+                {
+                    message.InfoMessage($"{string.Join(Environment.NewLine, duplicateLines)}");
+
+                    message.InfoMessage(border);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _msg.InfoMessage("Нет зарегистрированных команд");
-            }
+                // Сбой диагностического отчёта не должен влиять на инициализацию аддона.
+                try
+                {
+                    logger?.Error(ex, "Не удалось сформировать отчёт о CAD-командах.");
+                }
+                catch
+                {
+                    // Сбой логгера не должен скрывать исходную ошибку.
+                }
 
-            //дубликаты команд
-            if (!string.IsNullOrEmpty(CDI.sDuplInfo))
-            {
-                _msg.InfoMessage($"\n{CDI.sDuplInfo}");
+                try
+                {
+                    message?.ErrorMessage("Не удалось сформировать отчёт о CAD-командах.", ex);
+                }
+                catch
+                {
+                    // Сбой уведомления также не должен распространяться в CAD-хост.
+                }
             }
         }
     }

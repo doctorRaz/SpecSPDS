@@ -108,7 +108,7 @@ namespace dRz.Infrastructure.Infrastructure
 
             _metadata = new AssemblyMetadata(_assembly);
 
-            RepositoryUrl = GetMetadata(AssemblyMetadataKeys.RepositoryUrl, $"https://github.com/doctorRaz/{Product}") ;
+            RepositoryUrl = GetMetadata(AssemblyMetadataKeys.RepositoryUrl, $"https://github.com/doctorRaz/{Product}");
 
             HostFamily = GetMetadata(AssemblyMetadataKeys.HostFamily, "");
 

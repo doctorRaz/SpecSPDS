@@ -1,4 +1,5 @@
-﻿using dRz.Abstractions.Services.Message;
+﻿#if DEBUG
+using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 
@@ -26,3 +27,4 @@ namespace dRz.NC.TestCommands.Message
         }
     }
 }
+#endif
