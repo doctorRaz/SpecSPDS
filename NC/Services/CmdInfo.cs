@@ -1,8 +1,9 @@
-﻿// Сбор сведений о командах CAD и формирование диагностического отчёта.
+﻿// Сбор сведений об объявлениях команд CAD.
 using dRz.Abstractions.Logger;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 #if NC
@@ -14,29 +15,35 @@ using Autodesk.AutoCAD.Runtime;
 namespace dRz.NC.Services
 {
     /// <summary>
-    /// Собирает сведения о командах CAD и формирует отчёт о дубликатах.
+    /// Собирает объявления команд CAD и предоставляет выборки для диагностических отчётов.
     /// </summary>
     public sealed class CmdInfo
     {
         private readonly Assembly _assembly;
-        private readonly bool _includeMethodInfo;
         private readonly IDrzLogger? _logger;
 
         /// <summary>
-        /// Объявления команд, сгруппированные по глобальному имени команды.
-        /// Для каждого CommandMethodAttribute создаётся отдельная запись.
+        /// Все найденные объявления команд. Для каждого CommandMethodAttribute создаётся отдельная запись.
         /// </summary>
-        public Dictionary<string, List<CommandEntry>> MapInfo { get; } = new();
+        public List<CommandEntry> Commands { get; } = new();
 
-        /// <summary>Текст списка команд без дубликатов.</summary>
-        public string CommandText { get; private set; } = string.Empty;
-
-        /// <summary>Текст отчёта о дубликатах команд.</summary>
-        public string DuplicateText { get; private set; } = string.Empty;
+        /// <summary>Объявления команд, глобальное имя которых встречается ровно один раз.</summary>
+        public IEnumerable<CommandEntry> RegisteredCommands =>
+            Commands
+                .GroupBy(command => command.CommandName)
+                .Where(group => group.Count() == 1)
+                .SelectMany(group => group);
 
         /// <summary>
-        /// Описание одного объявления команды.
+        /// Группы объявлений с повторяющимся глобальным именем команды.
+        /// Каждая группа содержит все методы, объявившие это имя.
         /// </summary>
+        public IEnumerable<IGrouping<string, CommandEntry>> DuplicateCommands =>
+            Commands
+                .GroupBy(command => command.CommandName)
+                .Where(group => group.Count() > 1);
+
+        /// <summary>Описание одного объявления команды.</summary>
         public sealed class CommandEntry
         {
             /// <summary>Глобальное имя команды из CommandMethodAttribute.</summary>
@@ -49,29 +56,20 @@ namespace dRz.NC.Services
             public string Description { get; init; } = string.Empty;
         }
 
-        /// <summary>
-        /// Создаёт отчёт по сборке, содержащей этот класс.
-        /// </summary>
-        /// <param name="includeMethodInfo">Включать ли имена методов в список команд.</param>
-        public CmdInfo(bool includeMethodInfo = false)
-            : this(Assembly.GetExecutingAssembly(), includeMethodInfo)
+        /// <summary>Создаёт сведения по сборке, содержащей этот класс.</summary>
+        public CmdInfo(IDrzLogger? logger = null)
+            : this(Assembly.GetExecutingAssembly(), logger)
         {
         }
 
-        /// <summary>
-        /// Создаёт отчёт по указанной сборке.
-        /// </summary>
+        /// <summary>Собирает объявления команд из указанной сборки.</summary>
         /// <param name="assembly">Сборка для анализа.</param>
-        /// <param name="includeMethodInfo">Включать ли имена методов в список команд.</param>
-        /// <param name="logger">Логгер для ошибок рефлексии.</param>
-        public CmdInfo(Assembly assembly, bool includeMethodInfo = false, IDrzLogger? logger = null)
+        /// <param name="logger">Логгер ошибок рефлексии.</param>
+        public CmdInfo(Assembly assembly, IDrzLogger? logger = null)
         {
             _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
-            _includeMethodInfo = includeMethodInfo;
             _logger = logger;
-
             CollectCommands();
-            BuildReport();
         }
 
         /// <summary>
@@ -108,11 +106,6 @@ namespace dRz.NC.Services
 
             foreach (Type type in types)
             {
-                if (type == null)
-                {
-                    continue;
-                }
-
                 MethodInfo[] methods;
                 try
                 {
@@ -131,9 +124,7 @@ namespace dRz.NC.Services
             }
         }
 
-        /// <summary>
-        /// Добавляет отдельную запись для каждого CommandMethodAttribute метода.
-        /// </summary>
+        /// <summary>Добавляет отдельную запись для каждого CommandMethodAttribute метода.</summary>
         private void CollectMethodCommands(MethodInfo method)
         {
             object[] attributes;
@@ -173,13 +164,7 @@ namespace dRz.NC.Services
                     continue;
                 }
 
-                if (!MapInfo.TryGetValue(commandName, out List<CommandEntry>? entries))
-                {
-                    entries = new List<CommandEntry>();
-                    MapInfo.Add(commandName, entries);
-                }
-
-                entries.Add(new CommandEntry
+                Commands.Add(new CommandEntry
                 {
                     CommandName = commandName,
                     MethodName = methodName,
@@ -188,40 +173,12 @@ namespace dRz.NC.Services
             }
         }
 
-        /// <summary>Формирует список команд и отдельный отчёт о дубликатах.</summary>
-        private void BuildReport()
-        {
-            var commandLines = new List<string>();
-            var duplicateLines = new List<string>();
-
-            foreach (KeyValuePair<string, List<CommandEntry>> pair in MapInfo)
-            {
-                if (pair.Value.Count > 1)
-                {
-                    duplicateLines.Add($"Дублированный атрибут: {pair.Key}");
-                    foreach (CommandEntry entry in pair.Value)
-                    {
-                        duplicateLines.Add($"\t[{entry.MethodName}] {entry.Description}");
-                    }
-
-                    continue;
-                }
-
-                CommandEntry command = pair.Value[0];
-                string method = _includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
-                commandLines.Add($"{pair.Key}{method}\t{command.Description}");
-            }
-
-            CommandText = string.Join(Environment.NewLine, commandLines);
-            DuplicateText = string.Join(Environment.NewLine, duplicateLines);
-        }
-
         private static string GetMethodName(MethodInfo method)
         {
             return $"{method.DeclaringType?.FullName ?? "<unknown>"}.{method.Name}";
         }
 
-        /// <summary>Записывает ошибку рефлексии, не позволяя сбою логгера сорвать формирование отчёта.</summary>
+        /// <summary>Записывает ошибку рефлексии, не позволяя сбою логгера прервать анализ.</summary>
         private void LogError(Exception exception, string? message)
         {
             try
