@@ -111,45 +111,7 @@ namespace dRz.NC
             catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
                                  // Если ошибка поднялась сюда, то вероятно, что аддон неработоспособен
             {
-                string msg = $"Приложение не загружено!!!";
-
-                if (_isLoggerProvider)// Используем логгер только после успешного получения сервиса.
-                {
-                    msg += $"\nОтправьте разработчику логфайлы";
-
-                    if (_isAddOnInfoProvider)
-                    {
-                        msg += $": {_addOnInfo.ProductDataDirectory}\\logs";
-                    }
-
-                    _logger.Fatal(ex, msg);
-                }
-                if (_isMessageProvider)
-                {
-                    _message.ErrorMessage(msg, ex);
-                }
-                else
-                {
-                    msg += $"\nСкопируйте и отправьте разработчику это сообщение";
-
-                    msg = $"Exception: {msg}\n{ex.Message}\n{ex.StackTrace}";
-
-#if !TEST
-                    App.Document document = App.Application.DocumentManager.MdiActiveDocument;
-                    if (document != null)
-                    {
-                        Editor editor = document.Editor;
-
-                        editor.WriteMessage(msg);
-                    }
-                    else
-                    {
-                        App.Application.ShowAlertDialog(msg);
-                    }
-#else
-                    Console.WriteLine(msg);
-#endif
-                }
+                HandleError(ex, "Приложение не загружено!!!", isFatal: true, notifyUser: true);
             }
         }
 
@@ -177,10 +139,8 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider)
-                {
-                    _logger.Error(ex);
-                }
+                // Ошибка запуска фоновой операции не должна прерывать инициализацию CAD-хоста.
+                HandleError(ex, "Не удалось запустить фоновое обновление.", isFatal: false, notifyUser: false);
             }
         }
 
@@ -245,13 +205,8 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                // Если возникла ошибка при инициализации сервисов, логируем её и выбрасываем исключение.
-                if (_isLoggerProvider)
-                {
-                    _logger.Fatal(ex);
-                }
-
-                // Выбрасываем исключение, чтобы сигнализировать о неудачной инициализации корня композиции.
+                // Логирование и уведомление выполняются в Initialize(), чтобы не записывать ошибку дважды.
+                // Сохраняем исходное исключение во внутренней цепочке для диагностики.
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
         }
@@ -282,11 +237,103 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider)
+                // Ошибка вспомогательного отчёта не должна прерывать инициализацию.
+                HandleError(ex, "Не удалось вывести сведения при инициализации.", isFatal: false, notifyUser: false);
+            }
+        }
+
+        /// <summary>
+        /// Централизованно записывает ошибку и при необходимости уведомляет пользователя.
+        /// Сбой логирования или уведомления не должен скрывать исходное исключение.
+        /// </summary>
+        /// <param name="ex">Исходное исключение.</param>
+        /// <param name="message">Контекст ошибки.</param>
+        /// <param name="isFatal">Признак фатальной ошибки инициализации.</param>
+        /// <param name="notifyUser">Нужно ли уведомлять пользователя.</param>
+        private void HandleError(Exception ex, string message, bool isFatal, bool notifyUser)
+        {
+            bool loggerAvailable = _isLoggerProvider && _logger != null;
+
+            // Ошибка логирования не должна мешать резервному уведомлению пользователя.
+            if (loggerAvailable)
+            {
+                try
                 {
-                    _logger.Error(ex, ex.Message);
+                    string logMessage = message;
+
+                    if (isFatal)
+                    {
+                        logMessage += "\\nОтправьте разработчику логфайлы";
+
+                        if (_isAddOnInfoProvider && _addOnInfo != null)
+                        {
+                            logMessage += $": {_addOnInfo.ProductDataDirectory}\\logs";
+                        }
+
+                        _logger.Fatal(ex, logMessage);
+                    }
+                    else
+                    {
+                        _logger.Error(ex, logMessage);
+                    }
+                }
+                catch
+                {
+                    // Не подменяем исходную ошибку сбоем логгера.
                 }
             }
+
+            if (!notifyUser)
+            {
+                return;
+            }
+
+            if (_isMessageProvider && _message != null)
+            {
+                try
+                {
+                    _message.ErrorMessage(message, ex);
+                    return;
+                }
+                catch
+                {
+                    // Если сервис сообщений недоступен, используем резервный вывод.
+                }
+            }
+
+            string fallbackMessage =
+                $"Exception: {message}\\nСкопируйте и отправьте разработчику это сообщение\\n{ex.Message}\\n{ex.StackTrace}";
+
+#if !TEST
+            try
+            {
+                App.Document document = App.Application.DocumentManager.MdiActiveDocument;
+
+                if (document != null)
+                {
+                    Editor editor = document.Editor;
+                    editor.WriteMessage(fallbackMessage);
+                }
+                else
+                {
+                    App.Application.ShowAlertDialog(fallbackMessage);
+                }
+            }
+            catch
+            {
+                // CAD API может быть недоступен в аварийном сценарии; пробуем показать диалог.
+                try
+                {
+                    App.Application.ShowAlertDialog(fallbackMessage);
+                }
+                catch
+                {
+                    Console.WriteLine(fallbackMessage);
+                }
+            }
+#else
+            Console.WriteLine(fallbackMessage);
+#endif
         }
 
         /// <summary>
