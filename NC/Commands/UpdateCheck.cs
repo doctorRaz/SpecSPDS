@@ -1,5 +1,6 @@
 ﻿using dRz.NC.Infrastructure;
 using dRz.Updater.Services;
+using System.ComponentModel;
 using Teigha.Runtime;
 
 namespace dRz.NC.Commands
@@ -13,6 +14,7 @@ namespace dRz.NC.Commands
         /// Запускает ручную проверку обновлений
         /// </summary>
         [CommandMethod(CommandPrefix.Value + "_UpdateCheck", CommandFlags.Session)]
+        [Description("Проверка обновлений")]
         public static void UpdateCheckRun()
         {
             //команд метод точка входа в приложение, поэтому можно использовать сервисы напрямую

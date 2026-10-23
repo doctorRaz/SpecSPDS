@@ -7,6 +7,7 @@ using dRz.NC.Infrastructure;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
@@ -28,6 +29,7 @@ namespace dRz.NC.Commands
         /// Команда: drz_UpdateMode.
         /// </summary>
         [Rtm.CommandMethod(CommandPrefix.Value + "_UpdateMode", Rtm.CommandFlags.Session)]
+        [Description("Настройка режима обновления")]
         public void SetUpdateMode()
         {
             App.Document? document = App.Application.DocumentManager.MdiActiveDocument;
