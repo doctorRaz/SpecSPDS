@@ -39,7 +39,7 @@ namespace dRz.NC.Commands
         /// </summary>
 #if DEBUG
 
-        [CommandMethod(CommandPrefix.Value + "тсс")]
+        [CommandMethod(CommandPrefix.Value + "_тсс")]
 #endif
         [CommandMethod(CommandPrefix.Value + "")]
         [Description("Спецификация по универсальным маркерам MultiCAD")]

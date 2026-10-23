@@ -269,13 +269,16 @@ namespace dRz.NC
 
                 _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
 
-#if !TEST
-                // Показываем сведения о зарегистрированных командах только при включённой настройке.
                 if (_isSettingsProvider && _settings.General.ShowCommandInfoOnStartup)
                 {
+#if !TEST
+                // Показываем сведения о зарегистрированных командах только при включённой настройке.
                     CommandInfo.CmdInfo();
-                }
+
+#else
+                    _message.InfoMessage("Cmd Info");
 #endif
+                }
             }
             catch (Exception ex)
             {
