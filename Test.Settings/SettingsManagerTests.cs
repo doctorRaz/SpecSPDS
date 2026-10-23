@@ -42,6 +42,7 @@ namespace dRz.Test.Settings
         {
             IAddonSettings settings = CreateManager().Load();
 
+            Assert.That(settings.General.ShowCommandInfoOnStartup, Is.True);
             Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
             Assert.That(settings.Updates.UpdateCheckIntervalDays, Is.EqualTo(7));
             Assert.That(File.Exists(_filePath), Is.True);
@@ -51,6 +52,7 @@ namespace dRz.Test.Settings
         public void SaveAndLoad_PreservesUpdateSettings()
         {
             IAddonSettings settings = CreateManager().Load();
+            settings.General.ShowCommandInfoOnStartup = false;
             settings.Updates.Mode = UpdateMode.CheckAndInstall;
             settings.Updates.UpdateCheckIntervalDays = 12;
             settings.Updates.LastCheck = new DateTime(2026, 10, 14, 12, 30, 0, DateTimeKind.Utc);
@@ -59,10 +61,23 @@ namespace dRz.Test.Settings
 
             IAddonSettings reloaded = CreateManager().Load();
 
+            Assert.That(reloaded.General.ShowCommandInfoOnStartup, Is.False);
             Assert.That(reloaded.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
             Assert.That(reloaded.Updates.UpdateCheckIntervalDays, Is.EqualTo(12));
             Assert.That(reloaded.Updates.LastCheck, Is.EqualTo(settings.Updates.LastCheck));
             Assert.That(reloaded.Updates.LastResult, Is.EqualTo(UpdateResult.Installed));
+        }
+
+
+        [Test]
+        public void Load_WhenGeneralSectionIsMissing_UsesGeneralDefaults()
+        {
+            Directory.CreateDirectory(_directory);
+            File.WriteAllText(_filePath, "{ \"Updates\": { \"Mode\": \"CheckAndNotify\" } }");
+
+            IAddonSettings settings = CreateManager().Load();
+
+            Assert.That(settings.General.ShowCommandInfoOnStartup, Is.True);
         }
 
         [Test]

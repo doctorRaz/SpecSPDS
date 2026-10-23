@@ -269,10 +269,16 @@ namespace dRz.NC
 
                 _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
 
+                if (_isSettingsProvider && _settings.General.ShowCommandInfoOnStartup)
+                {
 #if !TEST
-                //todo добавить в Settings флаг показывать или нет при запуске, получать флаг из настроек
-                CommandInfo.CmdInfo();
+                // Показываем сведения о зарегистрированных командах только при включённой настройке.
+                    CommandInfo.CmdInfo();
+
+#else
+                    _message.InfoMessage("Cmd Info");
 #endif
+                }
             }
             catch (Exception ex)
             {

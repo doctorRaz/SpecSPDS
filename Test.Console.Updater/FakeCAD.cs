@@ -63,6 +63,7 @@ namespace dRz.Test.Console.Updater
 
             FakeCAD fakeCad = new FakeCAD();
 
+            fakeCad.SelectShowCommandInfoOnStartup();
             fakeCad.SelectUpdateMode();
             fakeCad.SelectUpdateCheckInterval();
 
@@ -84,6 +85,58 @@ namespace dRz.Test.Console.Updater
             }
 
             return Sys.Console.ReadKey();
+        }
+
+
+        /// <summary>
+        /// Позволяет включить или отключить вывод сведений о командах при запуске аддона.
+        /// </summary>
+        private void SelectShowCommandInfoOnStartup()
+        {
+            while (true)
+            {
+                bool currentValue = _settings.General.ShowCommandInfoOnStartup;
+                _msg.InfoMessage($"Показывать сведения о командах при запуске: {(currentValue ? "Да" : "Нет")}");
+                _msg.InfoMessage("Выберите: 1 — Да, 0 — Нет.");
+                _msg.InfoMessage("Enter — оставить текущее значение.");
+
+                string? input = Sys.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return;
+                }
+
+                bool selected;
+                if (input.Trim() == "1")
+                {
+                    selected = true;
+                }
+                else if (input.Trim() == "0")
+                {
+                    selected = false;
+                }
+                else
+                {
+                    _msg.InfoMessage("Неверный выбор. Введите 0, 1 или Enter.");
+                    continue;
+                }
+
+                _settings.General.ShowCommandInfoOnStartup = selected;
+
+                try
+                {
+                    _settings.Save();
+                    _msg.InfoMessage($"Вывод сведений о командах при запуске {(selected ? "включён" : "отключён")}.");
+                }
+                catch (Exception ex)
+                {
+                    _settings.General.ShowCommandInfoOnStartup = currentValue;
+                    _logger?.Error(ex, "Не удалось сохранить настройку вывода сведений о командах.");
+                    _msg.ErrorMessage("Не удалось сохранить настройку. Оставлено прежнее значение.", ex);
+                }
+
+                return;
+            }
         }
 
         /// <summary>

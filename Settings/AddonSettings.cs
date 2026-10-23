@@ -8,9 +8,13 @@ namespace dRz.Settings
     {
         private JsonSettingsStore? _store;
 
+        /// <summary>Общие настройки аддона.</summary>
+        public GeneralSettings General { get; set; } = new GeneralSettings();
+
         /// <summary>Настройки обновления.</summary>
         public UpdateSettings Updates { get; set; } = new UpdateSettings();
 
+        IGeneralSettings IAddonSettings.General => General;
         IUpdateSettings IAddonSettings.Updates => Updates;
 
         /// <inheritdoc />
@@ -23,6 +27,7 @@ namespace dRz.Settings
         internal void AttachStore(JsonSettingsStore store)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
+            General ??= new GeneralSettings();
             Updates ??= new UpdateSettings();
         }
     }

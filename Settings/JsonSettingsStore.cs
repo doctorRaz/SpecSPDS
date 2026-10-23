@@ -53,6 +53,7 @@ namespace dRz.Settings
                 AddonSettings settings = JsonSerializer.Deserialize<AddonSettings>(json, SerializerOptions)
                     ?? throw new JsonException("Файл настроек содержит null вместо объекта настроек.");
 
+                settings.General ??= new GeneralSettings();
                 settings.Updates ??= new UpdateSettings();
                 return settings;
             }
