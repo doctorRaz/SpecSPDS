@@ -49,31 +49,22 @@ namespace dRz.NC
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
         private IAddonSettings _settings;// Настройки аддона, полученные из контейнера сервисов.
-        private bool _isSettingsProvider;// Настройки аддона успешно получены.
 
         private IDrzLogger _logger;// Логгер для записи сообщений в журнал.
-        private bool _isLoggerProvider;// Логгер успешно получен.
 
         private IDrzLoggerFactory _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
-        private bool _isLoggerFactoryProvider;// Фабрика логгеров успешно получена.
 
         private IMessageService _message;// Сервис пользовательских сообщений.
-        private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
 
         private IWindowMessageService _windowMessage;// Сервис оконных сообщений.
-        private bool _isWindowMessageProvider;// Сервис оконных сообщений получен.
 
         private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
-        private bool _isMessagePromptProvider;// Сервис пользовательских сообщений с запросом получен.
 
         private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
-        private bool _isAddOnInfoProvider; // Сведения о сборке аддона успешно получены.
 
         private ICadInfo _cadInfo;// Сведения о CAD-хосте.
-        private bool _isCadInfoProvider;// Сведения о CAD-хосте успешно получены.
 
         private ISysInfo _sysInfo;// Сведения о системе.
-        private bool _isSysInfoProvider;//  Сведения о системе успешно получены.
 
         /// <summary>
         /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
@@ -92,9 +83,9 @@ namespace dRz.NC
 
                 // Проверяем, что аддон загружен в родной каталог, и предупреждаем пользователя о возможных ошибках.
 
-                if (!_addOnInfo.IsProductDirectory && _isWindowMessageProvider)
+                if (_addOnInfo != null && !_addOnInfo.IsProductDirectory)
                 {
-                    _windowMessage.WarningMessage(
+                    _windowMessage?.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
                         $"\nили не найден {_addOnInfo.Product}*" +
@@ -169,39 +160,30 @@ namespace dRz.NC
 
                 // Получаем фабрику логгеров из контейнера сервисов.
                 _loggerFactory = AddOnContext.NLogFactory;
-                _isLoggerFactoryProvider = true;
 
                 // Получаем логгер для текущего класса из фабрики логгеров.
                 _logger = _loggerFactory.GetLogger(typeof(EntryPoint));
-                _isLoggerProvider = true;//логгер есть
 
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
-                _isMessageProvider = true;  //ссобщения есть
 
                 // Получаем сервис оконных сообщений из контейнера сервисов.
                 _windowMessage = AddOnContext.MsgW;
-                _isWindowMessageProvider = true;
 
                 // Получаем сервис сообщений с запросом из контейнера сервисов.
                 _messagePrompt = AddOnContext.MsgP;
-                _isMessagePromptProvider = true;
 
                 // Получаем настройки аддона из контейнера сервисов.
                 _settings = AddOnContext.AddonSettings;
-                _isSettingsProvider = true;
 
                 // Получаем сведения о сборке аддона из контейнера сервисов.
                 _addOnInfo = AddOnContext.AddOnInfo;
-                _isAddOnInfoProvider = true;
 
                 // Получаем сведения о CAD-хосте из контейнера сервисов.
                 _cadInfo = AddOnContext.CadInfo;
-                _isCadInfoProvider = true;
 
                 // Получаем сведения о системе из контейнера сервисов.
                 _sysInfo = AddOnContext.SysInfo;
-                _isSysInfoProvider = true;
             }
             catch (Exception ex)
             {
@@ -218,20 +200,20 @@ namespace dRz.NC
         {
             try
             {
-                _logger.Trace(_addOnInfo.ToLongString());
-                _logger.Trace(_cadInfo.ToLongString());
-                _logger.Trace(_sysInfo.ToLongString());
+                _logger?.Trace(_addOnInfo.ToLongString());
+                _logger?.Trace(_cadInfo.ToLongString());
+                _logger?.Trace(_sysInfo.ToLongString());
 
-                _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
+                _message?.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
 
-                if (_isSettingsProvider && _settings.General.ShowCommandInfoOnStartup)
+                if (_settings != null && _settings.General.ShowCommandInfoOnStartup)
                 {
 #if !TEST
-                // Показываем сведения о зарегистрированных командах только при включённой настройке.
+                    // Показываем сведения о зарегистрированных командах только при включённой настройке.
                     CommandInfo.CmdInfo();
 
 #else
-                    _message.InfoMessage("Cmd Info");
+                    _message?.InfoMessage("Cmd Info");
 #endif
                 }
             }
@@ -252,17 +234,14 @@ namespace dRz.NC
         /// <param name="notifyUser">Нужно ли уведомлять пользователя.</param>
         private void HandleError(Exception ex, string message, bool isFatal, bool notifyUser)
         {
-            bool loggerAvailable = _isLoggerProvider && _logger != null;
+            bool loggerAvailable = _logger != null;
             string errorMessage = message;
 
             if (isFatal && loggerAvailable)
             {
                 errorMessage += "\nОтправьте разработчику логфайлы";
 
-                if (_isAddOnInfoProvider && _addOnInfo != null)
-                {
-                    errorMessage += $": {_addOnInfo.ProductDataDirectory}\\logs";
-                }
+                errorMessage += $": {_addOnInfo?.ProductDataDirectory}\\logs";
             }
 
             // Ошибка логирования не должна мешать резервному уведомлению пользователя.
@@ -272,11 +251,11 @@ namespace dRz.NC
                 {
                     if (isFatal)
                     {
-                        _logger.Fatal(ex, errorMessage);
+                        _logger?.Fatal(ex, errorMessage);
                     }
                     else
                     {
-                        _logger.Error(ex, errorMessage);
+                        _logger?.Error(ex, errorMessage);
                     }
                 }
                 catch
@@ -289,11 +268,11 @@ namespace dRz.NC
                 return;
             }
 
-            if (_isMessageProvider && _message != null)
+            if (_message != null)
             {
                 try
                 {
-                    _message.ErrorMessage(errorMessage, ex);
+                    _message?.ErrorMessage(errorMessage, ex);
                     return;
                 }
                 catch
@@ -313,7 +292,7 @@ namespace dRz.NC
                 if (document != null)
                 {
                     Editor editor = document.Editor;
-                    editor.WriteMessage(fallbackMessage);
+                    editor?.WriteMessage(fallbackMessage);
                 }
                 else
                 {
@@ -342,10 +321,7 @@ namespace dRz.NC
         /// </summary>
         public void Terminate()
         {
-            if (_isLoggerProvider)
-            {
-                _logger.Trace("Terminate");
-            }
+            _logger?.Trace("Terminate");
 
             // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();
