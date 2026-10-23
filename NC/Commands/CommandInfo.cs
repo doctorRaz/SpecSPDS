@@ -1,11 +1,10 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure;
-using dRz.NC.Services;
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using Teigha.Runtime;
+using Rtm = Teigha.Runtime;
 
 namespace dRz.NC.Commands
 {
@@ -14,7 +13,15 @@ namespace dRz.NC.Commands
     /// </summary>
     public sealed class CommandInfo
     {
-        [CommandMethod(CommandPrefix.Value + "CommandInfo")]
+        [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
+        [Description("Список зарегистрированных команд Dubl")]
+        public static void CmdInfo2()
+        {
+            var message = AddOnContext.Msg;
+            message.InfoMessage("Duble");
+        }
+
+        [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
         [Description("Список зарегистрированных команд")]
         public static void CmdInfo()
         {

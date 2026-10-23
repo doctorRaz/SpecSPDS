@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Reflection;
 
 #if NC
-using Teigha.Runtime;
+using Rtm= Teigha.Runtime;
 #elif AC
 using Autodesk.AutoCAD.Runtime;
 #endif
@@ -160,7 +160,7 @@ namespace dRz.NC.Services
             string methodName = GetMethodName(method);
             foreach (object attribute in attributes)
             {
-                if (attribute is not CommandMethodAttribute commandAttribute)
+                if (attribute is not Rtm.CommandMethodAttribute commandAttribute)
                 {
                     continue;
                 }
