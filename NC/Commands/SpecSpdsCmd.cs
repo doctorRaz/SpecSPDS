@@ -42,7 +42,7 @@ namespace dRz.NC.Commands
         [CommandMethod(CommandPrefix.Value + "тсс")]
 #endif
         [CommandMethod(CommandPrefix.Value + "")]
-        [Description("Спецификация по универсальным маркерам")]
+        [Description("Спецификация по универсальным маркерам MultiCAD")]
         public static void SpecSpds()
         {
             App.Document doc = App.Application.DocumentManager.MdiActiveDocument;
