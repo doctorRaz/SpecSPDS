@@ -11,6 +11,11 @@ using dRz.Updater.Services;
 using System;
 using dRz.NC.Infrastructure;
 
+#if !TEST
+
+using dRz.NC.Commands;
+
+#endif
 
 #if NC
 
@@ -263,6 +268,11 @@ namespace dRz.NC
                 _logger.Trace(_sysInfo.ToLongString());
 
                 _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
+
+#if !TEST
+                //todo добавить в Settings флаг показывать или нет при запуске, получать флаг из настроек
+                CommandInfo.CmdInfo();
+#endif
             }
             catch (Exception ex)
             {
