@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using System.Text;
 
 #if NC
 using Teigha.Runtime;
@@ -89,7 +88,16 @@ namespace dRz.NC.Services
             catch (ReflectionTypeLoadException ex)
             {
                 // Используем доступные типы, даже если часть типов сборки не загрузилась.
-                types = Array.FindAll(ex.Types, type => type != null)!;
+                var availableTypes = new List<Type>(ex.Types.Length);
+                foreach (Type? type in ex.Types)
+                {
+                    if (type != null)
+                    {
+                        availableTypes.Add(type);
+                    }
+                }
+
+                types = availableTypes.ToArray();
                 LogError(ex, $"Не все типы сборки '{_assembly.FullName}' удалось загрузить.");
             }
             catch (Exception ex)
