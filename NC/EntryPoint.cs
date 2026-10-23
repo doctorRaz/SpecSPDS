@@ -253,28 +253,30 @@ namespace dRz.NC
         private void HandleError(Exception ex, string message, bool isFatal, bool notifyUser)
         {
             bool loggerAvailable = _isLoggerProvider && _logger != null;
+            string errorMessage = message;
+
+            if (isFatal && loggerAvailable)
+            {
+                errorMessage += "\nОтправьте разработчику логфайлы";
+
+                if (_isAddOnInfoProvider && _addOnInfo != null)
+                {
+                    errorMessage += $": {_addOnInfo.ProductDataDirectory}\\logs";
+                }
+            }
 
             // Ошибка логирования не должна мешать резервному уведомлению пользователя.
             if (loggerAvailable)
             {
                 try
                 {
-                    string logMessage = message;
-
                     if (isFatal)
                     {
-                        logMessage += "\nОтправьте разработчику логфайлы";
-
-                        if (_isAddOnInfoProvider && _addOnInfo != null)
-                        {
-                            logMessage += $": {_addOnInfo.ProductDataDirectory}\\logs";
-                        }
-
-                        _logger.Fatal(ex, logMessage);
+                        _logger.Fatal(ex, errorMessage);
                     }
                     else
                     {
-                        _logger.Error(ex, logMessage);
+                        _logger.Error(ex, errorMessage);
                     }
                 }
                 catch
@@ -282,7 +284,6 @@ namespace dRz.NC
                     // Не подменяем исходную ошибку сбоем логгера.
                 }
             }
-
             if (!notifyUser)
             {
                 return;
@@ -292,7 +293,7 @@ namespace dRz.NC
             {
                 try
                 {
-                    _message.ErrorMessage(message, ex);
+                    _message.ErrorMessage(errorMessage, ex);
                     return;
                 }
                 catch
