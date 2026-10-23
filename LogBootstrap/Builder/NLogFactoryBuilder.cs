@@ -55,7 +55,7 @@ namespace dRz.LogBootstrap.Builder
 #if DEBUG
             LogLevel loglevel = LogLevel.Trace;
 #else
-            var loglevel = LogLevel.Info;
+            LogLevel loglevel = LogLevel.Info;
 #endif
             LogLevel currentLevel = LogLevelReader.GetLevelFromFile(internalLogLevelPath, loglevel);
 

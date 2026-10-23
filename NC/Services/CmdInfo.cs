@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 
 #if NC
-using Rtm= Teigha.Runtime;
+using Rtm = Teigha.Runtime;
 #elif AC
 using Autodesk.AutoCAD.Runtime;
 #endif
@@ -86,7 +86,7 @@ namespace dRz.NC.Services
             catch (ReflectionTypeLoadException ex)
             {
                 // Используем доступные типы, даже если часть типов сборки не загрузилась.
-                var availableTypes = new List<Type>(ex.Types.Length);
+                List<Type> availableTypes = new List<Type>(ex.Types.Length);
                 foreach (Type? type in ex.Types)
                 {
                     if (type != null)

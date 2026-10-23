@@ -7,9 +7,9 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
+using dRz.NC.Infrastructure;
 using dRz.Updater.Services;
 using System;
-using dRz.NC.Infrastructure;
 
 #if !TEST
 
