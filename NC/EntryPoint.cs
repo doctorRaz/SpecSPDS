@@ -303,7 +303,7 @@ namespace dRz.NC
             }
 
             string fallbackMessage =
-                $"Exception: {message}\nСкопируйте и отправьте разработчику это сообщение\n{ex.Message}\n{ex.StackTrace}";
+                $"Exception: {errorMessage}\nСкопируйте и отправьте разработчику это сообщение\n{ex.Message}\n{ex.StackTrace}";
 
 #if !TEST
             try
