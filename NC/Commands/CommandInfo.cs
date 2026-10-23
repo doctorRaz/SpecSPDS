@@ -16,15 +16,7 @@ namespace dRz.NC.Commands
     public sealed class CommandInfo
     {
         [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
-        [Description("Список зарегистрированных команд Dubl")]
-        public static void CmdInfo2()
-        {
-            var message = AddOnContext.Msg;
-            message.InfoMessage("Duble");
-        }
-
-        [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
-        [Description("Список зарегистрированных команд")]
+        [Description("Список зарегистрированных команд с описанием")]
         public static void CmdInfo()
         {
             IDrzLogger? logger = null;
@@ -42,34 +34,40 @@ namespace dRz.NC.Commands
 #endif
 
                 // Сбор объявлений отделён от формирования текстовых отчётов.
-                var report = new dRz.NC.Services.CmdInfo(
+                Services.CmdInfo report = new Services.CmdInfo(
                     Assembly.GetExecutingAssembly(),
                     logger);
 
-                var duplicateGroups = report.DuplicateCommands
+                List<IGrouping<string, Services.CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
                     .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
                     .ToList();
-                var commandLines = new List<string>();
+                List<string> commandLines = new List<string>();
 
-                foreach (var command in report.RegisteredCommands
+                foreach (Services.CmdInfo.CommandEntry? command in report.RegisteredCommands
                     .OrderBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase))
                 {
                     string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
                     commandLines.Add($"{command.CommandName}{method}\t{command.Description}");
                 }
 
+                string border = "------------------------------------------";
+
+                message.InfoMessage(border);
+
                 if (commandLines.Count > 0)
                 {
-                    message.InfoMessage($"\n{string.Join(Environment.NewLine, commandLines)}");
+                    //пробел в конце строки добавлен специально, вывод в консоль нанокад, почему то обрезает последний символ последней строки
+                    message.InfoMessage($"{string.Join(Environment.NewLine, commandLines)} ");
                 }
                 else
                 {
                     message.InfoMessage("Нет зарегистрированных команд");
                 }
+                message.InfoMessage(border);
 
                 // Сохраняем собственную диагностику: выводим все методы, объявившие дубликат.
-                var duplicateLines = new List<string>();
-                foreach (var group in duplicateGroups)
+                List<string> duplicateLines = new List<string>();
+                foreach (IGrouping<string, Services.CmdInfo.CommandEntry>? group in duplicateGroups)
                 {
                     duplicateLines.Add($"Дублированный атрибут: {group.Key}");
                     duplicateLines.AddRange(group
@@ -79,7 +77,9 @@ namespace dRz.NC.Commands
 
                 if (duplicateLines.Count > 0)
                 {
-                    message.InfoMessage($"\n{string.Join(Environment.NewLine, duplicateLines)}");
+                    message.InfoMessage($"{string.Join(Environment.NewLine, duplicateLines)}");
+
+                    message.InfoMessage(border);
                 }
             }
             catch (Exception ex)
