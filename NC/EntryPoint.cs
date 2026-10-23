@@ -48,23 +48,23 @@ namespace dRz.NC
     {
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private IAddonSettings _settings;// Настройки аддона, полученные из контейнера сервисов.
+        private IAddonSettings? _settings;// Настройки аддона, полученные из контейнера сервисов.
 
-        private IDrzLogger _logger;// Логгер для записи сообщений в журнал.
+        private IDrzLogger? _logger;// Логгер для записи сообщений в журнал.
 
-        private IDrzLoggerFactory _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
+        private IDrzLoggerFactory? _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
 
-        private IMessageService _message;// Сервис пользовательских сообщений.
+        private IMessageService? _message;// Сервис пользовательских сообщений.
 
-        private IWindowMessageService _windowMessage;// Сервис оконных сообщений.
+        private IWindowMessageService? _windowMessage;// Сервис оконных сообщений.
 
-        private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
+        private IMessagePromptService? _messagePrompt;// Сервис пользовательских сообщений с запросом.
 
-        private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
+        private IAddOnInfo? _addOnInfo;// Сведения о сборке аддона.
 
-        private ICadInfo _cadInfo;// Сведения о CAD-хосте.
+        private ICadInfo? _cadInfo;// Сведения о CAD-хосте.
 
-        private ISysInfo _sysInfo;// Сведения о системе.
+        private ISysInfo? _sysInfo;// Сведения о системе.
 
         /// <summary>
         /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
@@ -118,15 +118,25 @@ namespace dRz.NC
         {
             try
             {
+                // Проверяем наличие обязательных зависимостей перед запуском фоновой операции.
+                IDrzLoggerFactory loggerFactory = _loggerFactory
+                    ?? throw new InvalidOperationException("Не инициализирована фабрика логгеров.");
+                IMessageService message = _message
+                    ?? throw new InvalidOperationException("Не инициализирован сервис сообщений.");
+                IMessagePromptService messagePrompt = _messagePrompt
+                    ?? throw new InvalidOperationException("Не инициализирован сервис сообщений с запросом.");
+                IAddonSettings settings = _settings
+                    ?? throw new InvalidOperationException("Не инициализированы настройки аддона.");
+                IAddOnInfo addOnInfo = _addOnInfo
+                    ?? throw new InvalidOperationException("Не получены сведения об аддоне.");
+
                 // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
-                UpdateAsync updateAsync = new UpdateAsync(_loggerFactory,
-                                                            _message,
-                                                            _messagePrompt);
+                UpdateAsync updateAsync = new UpdateAsync(loggerFactory, message, messagePrompt);
 
                 // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
                 _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic,
-                                                _settings,
-                                                _addOnInfo);
+                                                settings,
+                                                addOnInfo);
             }
             catch (Exception ex)
             {
@@ -200,11 +210,11 @@ namespace dRz.NC
         {
             try
             {
-                _logger?.Trace(_addOnInfo.ToLongString());
-                _logger?.Trace(_cadInfo.ToLongString());
-                _logger?.Trace(_sysInfo.ToLongString());
+                _logger?.Trace(_addOnInfo?.ToLongString());
+                _logger?.Trace(_cadInfo?.ToLongString());
+                _logger?.Trace(_sysInfo?.ToLongString());
 
-                _message?.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
+                _message?.InfoMessage($"Hello {_addOnInfo?.ToShortString()} for {_cadInfo}");
 
                 if (_settings != null && _settings.General.ShowCommandInfoOnStartup)
                 {
@@ -234,10 +244,9 @@ namespace dRz.NC
         /// <param name="notifyUser">Нужно ли уведомлять пользователя.</param>
         private void HandleError(Exception ex, string message, bool isFatal, bool notifyUser)
         {
-            bool loggerAvailable = _logger != null;
             string errorMessage = message;
 
-            if (isFatal && loggerAvailable)
+            if (isFatal && _logger != null)
             {
                 errorMessage += "\nОтправьте разработчику логфайлы";
 
@@ -245,17 +254,17 @@ namespace dRz.NC
             }
 
             // Ошибка логирования не должна мешать резервному уведомлению пользователя.
-            if (loggerAvailable)
+            if (_logger != null)
             {
                 try
                 {
                     if (isFatal)
                     {
-                        _logger?.Fatal(ex, errorMessage);
+                        _logger.Fatal(ex, errorMessage);
                     }
                     else
                     {
-                        _logger?.Error(ex, errorMessage);
+                        _logger.Error(ex, errorMessage);
                     }
                 }
                 catch
@@ -272,7 +281,7 @@ namespace dRz.NC
             {
                 try
                 {
-                    _message?.ErrorMessage(errorMessage, ex);
+                    _message.ErrorMessage(errorMessage, ex);
                     return;
                 }
                 catch
