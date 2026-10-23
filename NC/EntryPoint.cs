@@ -263,7 +263,7 @@ namespace dRz.NC
 
                     if (isFatal)
                     {
-                        logMessage += "\\nОтправьте разработчику логфайлы";
+                        logMessage += "\nОтправьте разработчику логфайлы";
 
                         if (_isAddOnInfoProvider && _addOnInfo != null)
                         {
@@ -302,7 +302,7 @@ namespace dRz.NC
             }
 
             string fallbackMessage =
-                $"Exception: {message}\\nСкопируйте и отправьте разработчику это сообщение\\n{ex.Message}\\n{ex.StackTrace}";
+                $"Exception: {message}\nСкопируйте и отправьте разработчику это сообщение\n{ex.Message}\n{ex.StackTrace}";
 
 #if !TEST
             try
