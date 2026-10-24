@@ -10,7 +10,7 @@
         /// уровень логирования интернал логера <br/>
         /// в первой строке текстового файла уровень Trace...Fatal
         /// </summary>
-        public const string DiagnosticMode = "diagnostic.level";
+        public const string DiagnosticMode = "diagnostic.mode";
 
         /// <summary>
         /// уровень логирования основного логера <br/>
