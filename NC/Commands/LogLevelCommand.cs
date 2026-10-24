@@ -96,7 +96,7 @@ namespace dRz.NC.Commands
             {
                 File.WriteAllText(path, level + Environment.NewLine);
                 AddOnContext.Msg.InfoMessage(
-                    $"Уровень логирования установлен: {level}. Для применения изменения перезапусти nanoCAD.");
+                    $"Уровень логирования установлен: {level}. Для применения изменения необходимо перезапустить nanoCAD.");
             }
             catch (Exception ex)
             {
@@ -112,7 +112,7 @@ namespace dRz.NC.Commands
                 {
                     File.Delete(path);
                     AddOnContext.Msg.InfoMessage(
-                        "Переопределение уровня логирования удалено. Для применения изменения перезапусти nanoCAD.");
+                        "Переопределение уровня логирования удалено. Для применения изменения необходимо перезапустить nanoCAD.");
                 }
                 else
                 {
