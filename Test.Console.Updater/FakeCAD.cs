@@ -200,25 +200,25 @@ namespace dRz.Test.Console.Updater
         }
 
         /// <summary>
-        /// Предлагает настроить уровень основного логгера через файл <c>log.level</c>.
+        /// Предлагает настроить уровень основного логгера через файл <c>logger.level</c>.
         /// </summary>
         /// <remarks>
         /// Файл содержит уровень логирования в первой строке. Изменение применяется после перезапуска приложения.
         /// </remarks>
         private void SelectLogLevel()
         {
-            SelectLogSetting("log.level", "уровня основного логгера");
+            SelectLogSetting("logger.level", "уровня основного логгера");
         }
 
         /// <summary>
-        /// Предлагает настроить уровень внутренней диагностики NLog через файл <c>diagnostic.mode</c>.
+        /// Предлагает настроить уровень внутренней диагностики NLog через файл <c>diagnostic.level</c>.
         /// </summary>
         /// <remarks>
         /// Файл содержит уровень диагностики в первой строке. Изменение применяется после перезапуска приложения.
         /// </remarks>
         private void SelectDiagnosticMode()
         {
-            SelectLogSetting("diagnostic.mode", "внутренней диагностики NLog");
+            SelectLogSetting("diagnostic.level", "внутренней диагностики NLog");
         }
 
         /// <summary>
