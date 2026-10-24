@@ -1,7 +1,7 @@
 using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
-using HostMgd.ApplicationServices;
+using App=HostMgd.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -58,7 +58,7 @@ namespace dRz.NC.Commands
         /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
         private static void ManageLevel(string fileName, string settingName)
         {
-            Document? document = Application.DocumentManager.MdiActiveDocument;
+          App.  Document? document =App. Application.DocumentManager.MdiActiveDocument;
             if (document == null)
             {
                 return;
@@ -107,7 +107,7 @@ namespace dRz.NC.Commands
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настраиваемой функции логирования.</param>
-        private static void SetLevel(Document document, string path, string fileName, string settingName)
+        private static void SetLevel(App.Document document, string path, string fileName, string settingName)
         {
             List<Keywords> levelKeywords = new List<Keywords>
             {
