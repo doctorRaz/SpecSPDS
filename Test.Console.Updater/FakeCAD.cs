@@ -72,6 +72,8 @@ namespace dRz.Test.Console.Updater
             fakeCad.SelectShowCommandInfoOnStartup();
             fakeCad.SelectUpdateMode();
             fakeCad.SelectUpdateCheckInterval();
+
+            // Проверяем управление файлами переопределения уровней логирования.
             fakeCad.SelectLogLevel();
             fakeCad.SelectDiagnosticMode();
 
@@ -198,16 +200,22 @@ namespace dRz.Test.Console.Updater
         }
 
         /// <summary>
-        /// Позволяет изменить уровень основного логгера через файл log.level.
+        /// Предлагает настроить уровень основного логгера через файл <c>log.level</c>.
         /// </summary>
+        /// <remarks>
+        /// Файл содержит уровень логирования в первой строке. Изменение применяется после перезапуска приложения.
+        /// </remarks>
         private void SelectLogLevel()
         {
             SelectLogSetting("log.level", "уровня основного логгера");
         }
 
         /// <summary>
-        /// Позволяет изменить уровень внутренней диагностики NLog через файл diagnostic.mode.
+        /// Предлагает настроить уровень внутренней диагностики NLog через файл <c>diagnostic.mode</c>.
         /// </summary>
+        /// <remarks>
+        /// Файл содержит уровень диагностики в первой строке. Изменение применяется после перезапуска приложения.
+        /// </remarks>
         private void SelectDiagnosticMode()
         {
             SelectLogSetting("diagnostic.mode", "внутренней диагностики NLog");
@@ -215,10 +223,15 @@ namespace dRz.Test.Console.Updater
 
         /// <summary>
         /// Позволяет установить уровень, удалить файл переопределения или посмотреть его содержимое.
-        /// Изменения применяются после перезапуска приложения.
         /// </summary>
+        /// <param name="fileName">Имя файла настройки, расположенного рядом с аддоном.</param>
+        /// <param name="settingName">Название настройки для сообщений пользователю.</param>
+        /// <remarks>
+        /// Изменение файла не влияет на уже созданную конфигурацию логирования; требуется перезапуск приложения.
+        /// </remarks>
         private void SelectLogSetting(string fileName, string settingName)
         {
+            // Используем каталог сборки аддона, а не текущий рабочий каталог процесса.
             string path = Path.Combine(_addonInfo.AssemblyDirectory, fileName);
 
             while (true)
@@ -257,8 +270,12 @@ namespace dRz.Test.Console.Updater
         /// <summary>
         /// Записывает выбранный уровень в первую строку файла настройки.
         /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настраиваемого уровня для сообщений пользователю.</param>
         private void SetLogSettingLevel(string path, string fileName, string settingName)
         {
+            // Список должен соответствовать уровням, поддерживаемым конфигурацией логирования.
             string[] levels = { "Trace", "Debug", "Info", "Warn", "Error", "Fatal", "Off" };
 
             while (true)
@@ -300,6 +317,9 @@ namespace dRz.Test.Console.Updater
         /// <summary>
         /// Удаляет файл переопределения уровня логирования.
         /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о возврате к программному значению.</param>
         private void DeleteLogSetting(string path, string fileName, string settingName)
         {
             try
@@ -326,6 +346,9 @@ namespace dRz.Test.Console.Updater
         /// <summary>
         /// Показывает наличие файла переопределения и значение его первой строки.
         /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
         private void ShowLogSetting(string path, string fileName, string settingName)
         {
             try
