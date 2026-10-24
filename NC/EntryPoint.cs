@@ -48,32 +48,23 @@ namespace dRz.NC
     {
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private IAddonSettings _settings;// Настройки аддона, полученные из контейнера сервисов.
-        private bool _isSettingsProvider;// Настройки аддона успешно получены.
+        private IAddonSettings _settings = null!;// Настройки аддона, полученные из контейнера сервисов.
 
-        private IDrzLogger _logger;// Логгер для записи сообщений в журнал.
-        private bool _isLoggerProvider;// Логгер успешно получен.
+        private IDrzLogger _logger = null!;// Логгер для записи сообщений в журнал.
 
-        private IDrzLoggerFactory _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
-        private bool _isLoggerFactoryProvider;// Фабрика логгеров успешно получена.
+        private IDrzLoggerFactory _loggerFactory = null!;// Фабрика логгеров для создания логгеров в других классах.
 
-        private IMessageService _message;// Сервис пользовательских сообщений.
-        private bool _isMessageProvider;// Сервис пользовательских сообщений получен.
+        private IMessageService _message = null!;// Сервис пользовательских сообщений.
 
-        private IWindowMessageService _windowMessage;// Сервис оконных сообщений.
-        private bool _isWindowMessageProvider;// Сервис оконных сообщений получен.
+        private IWindowMessageService _windowMessage = null!;// Сервис оконных сообщений.
 
-        private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
-        private bool _isMessagePromptProvider;// Сервис пользовательских сообщений с запросом получен.
+        private IMessagePromptService _messagePrompt = null!;// Сервис пользовательских сообщений с запросом.
 
-        private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
-        private bool _isAddOnInfoProvider; // Сведения о сборке аддона успешно получены.
+        private IAddOnInfo _addOnInfo = null!;// Сведения о сборке аддона.
 
-        private ICadInfo _cadInfo;// Сведения о CAD-хосте.
-        private bool _isCadInfoProvider;// Сведения о CAD-хосте успешно получены.
+        private ICadInfo _cadInfo = null!;// Сведения о CAD-хосте.
 
-        private ISysInfo _sysInfo;// Сведения о системе.
-        private bool _isSysInfoProvider;//  Сведения о системе успешно получены.
+        private ISysInfo _sysInfo = null!;// Сведения о системе.
 
         /// <summary>
         /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
@@ -92,7 +83,7 @@ namespace dRz.NC
 
                 // Проверяем, что аддон загружен в родной каталог, и предупреждаем пользователя о возможных ошибках.
 
-                if (!_addOnInfo.IsProductDirectory && _isWindowMessageProvider)
+                if (!_addOnInfo.IsProductDirectory)
                 {
                     _windowMessage.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
@@ -111,45 +102,7 @@ namespace dRz.NC
             catch (Exception ex) // Ошибка общей инициализации: сообщаем пользователю и записываем её в журнал, если сервисы доступны.
                                  // Если ошибка поднялась сюда, то вероятно, что аддон неработоспособен
             {
-                string msg = $"Приложение не загружено!!!";
-
-                if (_isLoggerProvider)// Используем логгер только после успешного получения сервиса.
-                {
-                    msg += $"\nОтправьте разработчику логфайлы";
-
-                    if (_isAddOnInfoProvider)
-                    {
-                        msg += $": {_addOnInfo.ProductDataDirectory}\\logs";
-                    }
-
-                    _logger.Fatal(ex, msg);
-                }
-                if (_isMessageProvider)
-                {
-                    _message.ErrorMessage(msg, ex);
-                }
-                else
-                {
-                    msg += $"\nСкопируйте и отправьте разработчику это сообщение";
-
-                    msg = $"Exception: {msg}\n{ex.Message}\n{ex.StackTrace}";
-
-#if !TEST
-                    App.Document document = App.Application.DocumentManager.MdiActiveDocument;
-                    if (document != null)
-                    {
-                        Editor editor = document.Editor;
-
-                        editor.WriteMessage(msg);
-                    }
-                    else
-                    {
-                        App.Application.ShowAlertDialog(msg);
-                    }
-#else
-                    Console.WriteLine(msg);
-#endif
-                }
+                HandleError(ex, "Приложение не загружено!!!", isFatal: true, notifyUser: true);
             }
         }
 
@@ -166,9 +119,7 @@ namespace dRz.NC
             try
             {
                 // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
-                UpdateAsync updateAsync = new UpdateAsync(_loggerFactory,
-                                                            _message,
-                                                            _messagePrompt);
+                UpdateAsync updateAsync = new UpdateAsync(_loggerFactory, _message, _messagePrompt);
 
                 // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
                 _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic,
@@ -177,10 +128,8 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider)
-                {
-                    _logger.Error(ex);
-                }
+                // Ошибка запуска фоновой операции не должна прерывать инициализацию CAD-хоста.
+                HandleError(ex, "Не удалось запустить фоновое обновление.", isFatal: false, notifyUser: false);
             }
         }
 
@@ -209,49 +158,35 @@ namespace dRz.NC
 
                 // Получаем фабрику логгеров из контейнера сервисов.
                 _loggerFactory = AddOnContext.NLogFactory;
-                _isLoggerFactoryProvider = true;
 
                 // Получаем логгер для текущего класса из фабрики логгеров.
                 _logger = _loggerFactory.GetLogger(typeof(EntryPoint));
-                _isLoggerProvider = true;//логгер есть
 
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
-                _isMessageProvider = true;  //ссобщения есть
 
                 // Получаем сервис оконных сообщений из контейнера сервисов.
                 _windowMessage = AddOnContext.MsgW;
-                _isWindowMessageProvider = true;
 
                 // Получаем сервис сообщений с запросом из контейнера сервисов.
                 _messagePrompt = AddOnContext.MsgP;
-                _isMessagePromptProvider = true;
 
                 // Получаем настройки аддона из контейнера сервисов.
                 _settings = AddOnContext.AddonSettings;
-                _isSettingsProvider = true;
 
                 // Получаем сведения о сборке аддона из контейнера сервисов.
                 _addOnInfo = AddOnContext.AddOnInfo;
-                _isAddOnInfoProvider = true;
 
                 // Получаем сведения о CAD-хосте из контейнера сервисов.
                 _cadInfo = AddOnContext.CadInfo;
-                _isCadInfoProvider = true;
 
                 // Получаем сведения о системе из контейнера сервисов.
                 _sysInfo = AddOnContext.SysInfo;
-                _isSysInfoProvider = true;
             }
             catch (Exception ex)
             {
-                // Если возникла ошибка при инициализации сервисов, логируем её и выбрасываем исключение.
-                if (_isLoggerProvider)
-                {
-                    _logger.Fatal(ex);
-                }
-
-                // Выбрасываем исключение, чтобы сигнализировать о неудачной инициализации корня композиции.
+                // Логирование и уведомление выполняются в Initialize(), чтобы не записывать ошибку дважды.
+                // Сохраняем исходное исключение во внутренней цепочке для диагностики.
                 throw new InvalidOperationException("AddOnCompositionRoot initialization failed", ex);
             }
         }
@@ -267,12 +202,12 @@ namespace dRz.NC
                 _logger.Trace(_cadInfo.ToLongString());
                 _logger.Trace(_sysInfo.ToLongString());
 
-                _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo.ToString()}");
+                _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo}");
 
-                if (_isSettingsProvider && _settings.General.ShowCommandInfoOnStartup)
+                if (_settings.General.ShowCommandInfoOnStartup)
                 {
 #if !TEST
-                // Показываем сведения о зарегистрированных командах только при включённой настройке.
+                    // Показываем сведения о зарегистрированных командах только при включённой настройке.
                     CommandInfo.CmdInfo();
 
 #else
@@ -282,11 +217,100 @@ namespace dRz.NC
             }
             catch (Exception ex)
             {
-                if (_isLoggerProvider)
+                // Ошибка вспомогательного отчёта не должна прерывать инициализацию.
+                HandleError(ex, "Не удалось вывести сведения при инициализации.", isFatal: false, notifyUser: false);
+            }
+        }
+
+        /// <summary>
+        /// Централизованно записывает ошибку и при необходимости уведомляет пользователя.
+        /// Сбой логирования или уведомления не должен скрывать исходное исключение.
+        /// </summary>
+        /// <param name="ex">Исходное исключение.</param>
+        /// <param name="message">Контекст ошибки.</param>
+        /// <param name="isFatal">Признак фатальной ошибки инициализации.</param>
+        /// <param name="notifyUser">Нужно ли уведомлять пользователя.</param>
+        private void HandleError(Exception ex, string message, bool isFatal, bool notifyUser)
+        {
+            string errorMessage = message;
+
+            if (isFatal && _logger != null)
+            {
+                errorMessage += "\nОтправьте разработчику логфайлы";
+
+                errorMessage += $": {_addOnInfo?.ProductDataDirectory}\\logs";
+            }
+
+            // Ошибка логирования не должна мешать резервному уведомлению пользователя.
+            if (_logger != null)
+            {
+                try
                 {
-                    _logger.Error(ex, ex.Message);
+                    if (isFatal)
+                    {
+                        _logger.Fatal(ex, errorMessage);
+                    }
+                    else
+                    {
+                        _logger.Error(ex, errorMessage);
+                    }
+                }
+                catch
+                {
+                    // Не подменяем исходную ошибку сбоем логгера.
                 }
             }
+            if (!notifyUser)
+            {
+                return;
+            }
+
+            if (_message != null)
+            {
+                try
+                {
+                    _message.ErrorMessage(errorMessage, ex);
+                    return;
+                }
+                catch
+                {
+                    // Если сервис сообщений недоступен, используем резервный вывод.
+                }
+            }
+
+            string fallbackMessage =
+                $"Exception: {errorMessage}\nСкопируйте и отправьте разработчику это сообщение\n{ex.Message}\n{ex.StackTrace}";
+
+#if !TEST
+            try
+            {
+                App.Document document = App.Application.DocumentManager.MdiActiveDocument;
+
+                if (document != null)
+                {
+                    Editor editor = document.Editor;
+                    editor?.WriteMessage(fallbackMessage);
+                }
+                else
+                {
+                    App.Application.ShowAlertDialog(fallbackMessage);
+                }
+            }
+            catch
+            {
+                // CAD API может быть недоступен в аварийном сценарии; пробуем показать диалог.
+                try
+                {
+                    App.Application.ShowAlertDialog(fallbackMessage);
+                }
+                catch
+                {
+                    Console.WriteLine(fallbackMessage);
+                }
+            }
+#else
+            Console.WriteLine(fallbackMessage);
+#endif
         }
 
         /// <summary>
@@ -294,10 +318,7 @@ namespace dRz.NC
         /// </summary>
         public void Terminate()
         {
-            if (_isLoggerProvider)
-            {
-                _logger.Trace("Terminate");
-            }
+            _logger?.Trace("Terminate");
 
             // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();

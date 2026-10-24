@@ -12,9 +12,9 @@ namespace dRz.Test.Console.Updater
 {
     public class FakeCAD
     {
-        private readonly IDrzLogger? _logger;
-        private readonly IMessageService? _msg;
-        private readonly IAddonSettings? _settings;
+        private readonly IDrzLogger _logger = null!;
+        private readonly IMessageService _msg = null!;
+        private readonly IAddonSettings _settings = null!;
         private readonly Stopwatch _sw;
 
         /// <summary>Initializes a new instance of the <see cref="FakeCAD"/> class.</summary>

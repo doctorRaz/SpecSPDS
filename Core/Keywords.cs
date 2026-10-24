@@ -169,9 +169,9 @@ namespace dRz.Core.Services
 
         private Enum? _answer;
 
-        private string _globalName;
-        private string _localName;
-        private string _displayName;
+        private string _globalName=null!;
+        private string _localName = null!;
+        private string _displayName = null!;
 
         private bool _isVisible;
         private bool _isEnabled;

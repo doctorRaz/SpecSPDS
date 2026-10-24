@@ -108,7 +108,7 @@ namespace drz.MulticadInterop.McNotificator
                 }
             }
 
-            return null;
+            return null!;
         }
     }
 }
