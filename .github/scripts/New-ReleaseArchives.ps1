@@ -58,15 +58,28 @@ if ([string]::IsNullOrWhiteSpace($sevenZipPath)) {
 
 Write-Host "Using 7-Zip: $sevenZipPath"
 
-# 7-Zip в режиме создания архива может обновить существующий файл, поэтому
-# старый защищённый архив удаляем явно. Для ZIP это не требуется: -Force уже
-# определяет поведение Compress-Archive при существующем файле.
+# 7-Zip при создании архива может обновить существующий файл, поэтому
+# перед упаковкой явно удаляем оба предыдущих архива.
+Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
 Remove-Item -LiteralPath $protectedArchivePath -Force -ErrorAction SilentlyContinue
 
 # Упаковываем содержимое staging, а не сам каталог, чтобы сохранить текущую
 # структуру ZIP и 7z без дополнительного уровня staging.
 $stagingContent = Join-Path $stagingDirectory '*'
-Compress-Archive -Path $stagingContent -DestinationPath $archivePath -Force
+
+# Обычный ZIP создаётся тем же 7-Zip с максимальным сжатием, но без пароля.
+$zipArguments = @(
+    'a',
+    '-tzip',
+    '-mx=9',
+    $archivePath,
+    $stagingContent
+)
+
+& $sevenZipPath @zipArguments
+if ($LASTEXITCODE -ne 0) {
+    throw "7-Zip failed to create ZIP with exit code $LASTEXITCODE."
+}
 
 if (-not (Test-Path -LiteralPath $archivePath -PathType Leaf)) {
     throw "Release archive was not created: $archivePath"
