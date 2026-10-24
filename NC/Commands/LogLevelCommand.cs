@@ -135,9 +135,8 @@ namespace dRz.NC.Commands
                     return;
                 }
 
-                string? level = File.ReadAllLines(path).Length > 0
-                    ? File.ReadAllLines(path)[0].Trim()
-                    : string.Empty;
+                string[] lines = File.ReadAllLines(path);
+                string level = lines.Length > 0 ? lines[0].Trim() : string.Empty;
 
                 AddOnContext.Msg.InfoMessage(
                     string.IsNullOrWhiteSpace(level)
