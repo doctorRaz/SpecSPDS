@@ -222,7 +222,7 @@ namespace dRz.Test.Console.Updater
         }
 
         /// <summary>
-        /// Позволяет установить уровень, удалить файл переопределения или посмотреть его содержимое.
+        /// Предлагает установить уровень, удалить файл переопределения или посмотреть его содержимое.
         /// </summary>
         /// <param name="fileName">Имя файла настройки, расположенного рядом с аддоном.</param>
         /// <param name="settingName">Название настройки для сообщений пользователю.</param>
@@ -280,7 +280,7 @@ namespace dRz.Test.Console.Updater
 
             while (true)
             {
-                _msg.InfoMessage($"Выбери уровень для {settingName}:");
+                _msg.InfoMessage($"Выберите уровень для {settingName}:");
                 _msg.InfoMessage("0 — Trace, 1 — Debug, 2 — Info, 3 — Warn, 4 — Error, 5 — Fatal, 6 — Off.");
                 _msg.InfoMessage("Enter — отменить.");
 
@@ -360,6 +360,7 @@ namespace dRz.Test.Console.Updater
                     return;
                 }
 
+                // Контракт файла использует только первую строку; остальные строки не учитываются.
                 string[] lines = File.ReadAllLines(path);
                 string level = lines.Length > 0 ? lines[0].Trim() : string.Empty;
 
