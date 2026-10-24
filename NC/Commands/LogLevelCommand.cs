@@ -14,17 +14,17 @@ namespace dRz.NC.Commands
     /// Предоставляет команды NanoCAD для управления уровнями логирования через файлы настройки.
     /// </summary>
     /// <remarks>
-    /// <c>log.level</c> задаёт уровень основного логгера, а <c>diagnostic.mode</c> — уровень
+    /// <c>logger.level</c> задаёт уровень основного логгера, а <c>diagnostic.level</c> — уровень
     /// внутренней диагностики NLog. Значение читается при инициализации логирования, поэтому
     /// после изменения или удаления файла требуется перезапустить nanoCAD.
     /// </remarks>
     public sealed class LogLevelCommand
     {
-        private const string LogLevelFileName = "log.level";
-        private const string DiagnosticModeFileName = "diagnostic.mode";
+        private const string LogLevelFileName = "logger.level";
+        private const string DiagnosticModeFileName = "diagnostic.level";
 
         /// <summary>
-        /// Запускает настройку уровня основного логгера через файл <c>log.level</c>.
+        /// Запускает настройку уровня основного логгера через файл <c>logger.level</c>.
         /// </summary>
         /// <remarks>
         /// Пользователь может установить поддерживаемый уровень, удалить переопределение
@@ -38,7 +38,7 @@ namespace dRz.NC.Commands
         }
 
         /// <summary>
-        /// Запускает настройку внутренней диагностики NLog через файл <c>diagnostic.mode</c>.
+        /// Запускает настройку внутренней диагностики NLog через файл <c>diagnostic.level</c>.
         /// </summary>
         /// <remarks>
         /// Пользователь может установить поддерживаемый уровень, удалить переопределение
