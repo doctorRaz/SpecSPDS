@@ -1,4 +1,5 @@
-﻿using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.NC;
@@ -15,6 +16,7 @@ namespace dRz.Test.Console.Updater
         private readonly IDrzLogger _logger = null!;
         private readonly IMessageService _msg = null!;
         private readonly IAddonSettings _settings = null!;
+        private readonly IAddOnInfo _addonInfo    = null!;
         private readonly Stopwatch _sw;
 
         /// <summary>Initializes a new instance of the <see cref="FakeCAD"/> class.</summary>
@@ -32,6 +34,9 @@ namespace dRz.Test.Console.Updater
 
                 _msg = AddOnContext.Msg;
 
+                _addonInfo = AddOnContext.AddOnInfo;
+
+                _msg.InfoMessage($"{nameof(_addonInfo.IsNotNetworkPath)}: {_addonInfo.IsNotNetworkPath.ToString()}");
                 _settings = AddOnContext.AddonSettings;
             }
             catch (Exception ex)
