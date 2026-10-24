@@ -118,19 +118,8 @@ namespace dRz.NC
         {
             try
             {
-                // Проверяем наличие обязательных зависимостей перед запуском фоновой операции.
-                IDrzLoggerFactory loggerFactory = _loggerFactory
-                    ?? throw new InvalidOperationException("Не инициализирована фабрика логгеров.");
-                IMessageService message = _message
-                    ?? throw new InvalidOperationException("Не инициализирован сервис сообщений.");
-                IMessagePromptService messagePrompt = _messagePrompt
-                    ?? throw new InvalidOperationException("Не инициализирован сервис сообщений с запросом.");
-                IAddonSettings settings = _settings
-                    ?? throw new InvalidOperationException("Не инициализированы настройки аддона.");
-                IAddOnInfo addOnInfo = _addOnInfo
-                    ?? throw new InvalidOperationException("Не получены сведения об аддоне.");
 
-                // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
+              // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
                 UpdateAsync updateAsync = new UpdateAsync(loggerFactory, message, messagePrompt);
 
                 // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
