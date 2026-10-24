@@ -83,7 +83,7 @@ namespace dRz.NC
 
                 // Проверяем, что аддон загружен в родной каталог, и предупреждаем пользователя о возможных ошибках.
 
-                if (_addOnInfo != null && !_addOnInfo.IsProductDirectory)
+                if (!_addOnInfo.IsProductDirectory)
                 {
                     _windowMessage.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
