@@ -48,23 +48,23 @@ namespace dRz.NC
     {
         private static bool _isAddOnCompositionRoot;//контейнер наполнен
 
-        private IAddonSettings? _settings;// Настройки аддона, полученные из контейнера сервисов.
+        private IAddonSettings _settings;// Настройки аддона, полученные из контейнера сервисов.
 
-        private IDrzLogger? _logger;// Логгер для записи сообщений в журнал.
+        private IDrzLogger _logger;// Логгер для записи сообщений в журнал.
 
-        private IDrzLoggerFactory? _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
+        private IDrzLoggerFactory _loggerFactory;// Фабрика логгеров для создания логгеров в других классах.
 
-        private IMessageService? _message;// Сервис пользовательских сообщений.
+        private IMessageService _message;// Сервис пользовательских сообщений.
 
-        private IWindowMessageService? _windowMessage;// Сервис оконных сообщений.
+        private IWindowMessageService _windowMessage;// Сервис оконных сообщений.
 
-        private IMessagePromptService? _messagePrompt;// Сервис пользовательских сообщений с запросом.
+        private IMessagePromptService _messagePrompt;// Сервис пользовательских сообщений с запросом.
 
-        private IAddOnInfo? _addOnInfo;// Сведения о сборке аддона.
+        private IAddOnInfo _addOnInfo;// Сведения о сборке аддона.
 
-        private ICadInfo? _cadInfo;// Сведения о CAD-хосте.
+        private ICadInfo _cadInfo;// Сведения о CAD-хосте.
 
-        private ISysInfo? _sysInfo;// Сведения о системе.
+        private ISysInfo _sysInfo;// Сведения о системе.
 
         /// <summary>
         /// Инициализирует аддон: регистрирует сервисы и настройки, запускает проверку обновлений
@@ -85,7 +85,7 @@ namespace dRz.NC
 
                 if (_addOnInfo != null && !_addOnInfo.IsProductDirectory)
                 {
-                    _windowMessage?.WarningMessage(
+                    _windowMessage.WarningMessage(
                         $"Приложение не в своем родном каталоге" +
                         $"\n{_addOnInfo.PackageDirectory}" +
                         $"\nили не найден {_addOnInfo.Product}*" +
@@ -120,12 +120,12 @@ namespace dRz.NC
             {
 
               // Создаём экземпляр класса UpdateAsync для выполнения обновления и очистки служебных файлов.
-                UpdateAsync updateAsync = new UpdateAsync(loggerFactory, message, messagePrompt);
+                UpdateAsync updateAsync = new UpdateAsync(_loggerFactory, _message, _messagePrompt);
 
                 // Запускаем асинхронное обновление и очистку служебных файлов в фоновом процессе.
                 _ = updateAsync.UpdateAsyncRun(UpdateLaunchMode.Automatic,
-                                                settings,
-                                                addOnInfo);
+                                                _settings,
+                                                _addOnInfo);
             }
             catch (Exception ex)
             {
@@ -199,11 +199,11 @@ namespace dRz.NC
         {
             try
             {
-                _logger?.Trace(_addOnInfo?.ToLongString());
-                _logger?.Trace(_cadInfo?.ToLongString());
-                _logger?.Trace(_sysInfo?.ToLongString());
+                _logger .Trace(_addOnInfo.ToLongString());
+                _logger.Trace(_cadInfo.ToLongString());
+                _logger.Trace(_sysInfo.ToLongString());
 
-                _message?.InfoMessage($"Hello {_addOnInfo?.ToShortString()} for {_cadInfo}");
+                _message.InfoMessage($"Hello {_addOnInfo.ToShortString()} for {_cadInfo}");
 
                 if (_settings != null && _settings.General.ShowCommandInfoOnStartup)
                 {
@@ -212,7 +212,7 @@ namespace dRz.NC
                     CommandInfo.CmdInfo();
 
 #else
-                    _message?.InfoMessage("Cmd Info");
+                    _message.InfoMessage("Cmd Info");
 #endif
                 }
             }
