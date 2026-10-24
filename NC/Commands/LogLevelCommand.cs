@@ -11,17 +11,25 @@ using Rtm = Teigha.Runtime;
 namespace dRz.NC.Commands
 {
     /// <summary>
-    /// Управление уровнями логирования через файлы log.level и diagnostic.mode.
+    /// Предоставляет команды NanoCAD для управления уровнями логирования через файлы настройки.
     /// </summary>
+    /// <remarks>
+    /// <c>log.level</c> задаёт уровень основного логгера, а <c>diagnostic.mode</c> — уровень
+    /// внутренней диагностики NLog. Значение читается при инициализации логирования, поэтому
+    /// после изменения или удаления файла требуется перезапустить nanoCAD.
+    /// </remarks>
     public sealed class LogLevelCommand
     {
         private const string LogLevelFileName = "log.level";
         private const string DiagnosticModeFileName = "diagnostic.mode";
 
         /// <summary>
-        /// Позволяет установить уровень основного логгера, удалить переопределение или посмотреть текущее значение.
-        /// Команда: drz_LogLevel.
+        /// Запускает настройку уровня основного логгера через файл <c>log.level</c>.
         /// </summary>
+        /// <remarks>
+        /// Пользователь может установить поддерживаемый уровень, удалить переопределение
+        /// или посмотреть содержимое первой строки файла.
+        /// </remarks>
         [Rtm.CommandMethod(CommandPrefix.Value + "_LogLevel", Rtm.CommandFlags.Session)]
         [Description("Настройка уровня логирования")]
         public void SetLogLevel()
@@ -30,9 +38,12 @@ namespace dRz.NC.Commands
         }
 
         /// <summary>
-        /// Позволяет установить уровень внутренней диагностики NLog, удалить переопределение или посмотреть текущее значение.
-        /// Команда: drz_DiagnosticMode.
+        /// Запускает настройку внутренней диагностики NLog через файл <c>diagnostic.mode</c>.
         /// </summary>
+        /// <remarks>
+        /// Пользователь может установить поддерживаемый уровень, удалить переопределение
+        /// или посмотреть содержимое первой строки файла.
+        /// </remarks>
         [Rtm.CommandMethod(CommandPrefix.Value + "_DiagnosticMode", Rtm.CommandFlags.Session)]
         [Description("Настройка внутренней диагностики логирования")]
         public void SetDiagnosticMode()
@@ -40,6 +51,11 @@ namespace dRz.NC.Commands
             ManageLevel(DiagnosticModeFileName, "внутренней диагностики логирования");
         }
 
+        /// <summary>
+        /// Предлагает действие для управления файлом переопределения уровня логирования.
+        /// </summary>
+        /// <param name="fileName">Имя файла настройки в каталоге сборки аддона.</param>
+        /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
         private static void ManageLevel(string fileName, string settingName)
         {
             Document? document = Application.DocumentManager.MdiActiveDocument;
@@ -84,6 +100,13 @@ namespace dRz.NC.Commands
             }
         }
 
+        /// <summary>
+        /// Предлагает уровень логирования и записывает выбранное значение в файл.
+        /// </summary>
+        /// <param name="document">Активный документ NanoCAD, используемый для ввода ключевого слова.</param>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщения пользователю.</param>
+        /// <param name="settingName">Название настраиваемой функции логирования.</param>
         private static void SetLevel(Document document, string path, string fileName, string settingName)
         {
             List<Keywords> levelKeywords = new List<Keywords>
@@ -122,6 +145,12 @@ namespace dRz.NC.Commands
             }
         }
 
+        /// <summary>
+        /// Удаляет файл переопределения, чтобы при следующем запуске использовалось программное значение.
+        /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщения пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
         private static void DeleteLevel(string path, string fileName, string settingName)
         {
             try
@@ -144,6 +173,12 @@ namespace dRz.NC.Commands
             }
         }
 
+        /// <summary>
+        /// Показывает наличие файла настройки и значение его первой строки.
+        /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщения пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
         private static void ShowStatus(string path, string fileName, string settingName)
         {
             try
@@ -169,6 +204,9 @@ namespace dRz.NC.Commands
             }
         }
 
+        /// <summary>
+        /// Действие пользователя с файлом переопределения уровня логирования.
+        /// </summary>
         private enum LogLevelAction
         {
             Set,
@@ -176,6 +214,9 @@ namespace dRz.NC.Commands
             Status
         }
 
+        /// <summary>
+        /// Поддерживаемые значения уровня логирования.
+        /// </summary>
         private enum LogLevelValue
         {
             Trace,
