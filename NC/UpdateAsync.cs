@@ -114,7 +114,7 @@ namespace dRz.NC
                     UpdateUrl = updateUrl,
                     PackageDirectory = addOnInfo.PackageDirectory,
                     IsPackage = addOnInfo.IsProductDirectory,
-                    IsNetworkPath = addOnInfo.IsNetworkPath(),
+                    IsNotNetworkPath = addOnInfo.IsNotNetworkPath,
                     LaunchMode = launchMode,
                 };
 

@@ -20,7 +20,10 @@ namespace dRz.Updater.Services
         /// <summary>Определяет структуру каталога продукта внутри архива.</summary>
         public bool IsPackage { get; init; }
 
-        /// <summary>Признак загрузки основной сборки аддона с сетевого расположения.</summary>
-        public bool IsNetworkPath { get; init; }
+        /// <summary>
+        /// Признак достоверно подтверждённого локального расположения основной сборки аддона.
+        /// При <see langword="false"/> обновление запрещено, поскольку путь сетевой или его тип не удалось определить.
+        /// </summary>
+        public bool IsNotNetworkPath { get; init; }
     }
 }

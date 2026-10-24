@@ -47,6 +47,9 @@ namespace dRz.Infrastructure.Infrastructure
             // 1. Базовые данные о путях (работа со строками — это быстро)
             AssemblyPath = _assembly.Location ?? string.Empty;
 
+            // Расположение сборки не меняется в течение жизни AddOnInfo — проверяем один раз.
+            IsNotNetworkPath = IsLocalPath(AssemblyPath);
+
             AssembleFullName = _assembly.FullName ?? string.Empty;
 
             AssemblyName assemblyName = _assembly.GetName();
@@ -120,23 +123,20 @@ namespace dRz.Infrastructure.Infrastructure
         }
 
         /// <summary>
-        /// Определяет, находится ли основная сборка аддона на сетевом ресурсе.
-        /// Проверяет UNC, тип диска и цели DOS-устройств, что позволяет распознать
-        /// в том числе SUBST-путь, ведущий к сетевому диску.
+        /// Проверяет, подтверждено ли локальное расположение основной сборки аддона.
+        /// Неопределённый результат считается неподтверждённым локальным расположением.
         /// </summary>
-        public bool IsNetworkPath()
+        private static bool IsLocalPath(string path)
         {
-            if (string.IsNullOrWhiteSpace(AssemblyPath))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 return false;
             }
 
-            string path = AssemblyPath;
-
             // UNC-путь является сетевым независимо от доступности ресурса.
             if (path.StartsWith(@"\\", StringComparison.Ordinal))
             {
-                return true;
+                return false;
             }
 
             try
@@ -152,19 +152,19 @@ namespace dRz.Infrastructure.Infrastructure
                 {
                     if (new DriveInfo(root).DriveType == DriveType.Network)
                     {
-                        return true;
+                        return false;
                     }
                 }
                 catch (IOException)
                 {
-                    // Продолжаем проверку по целям DOS-устройств.
+                    // Продолжаем проверку через QueryDosDevice.
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    // Продолжаем проверку по целям DOS-устройств.
+                    // Продолжаем проверку через QueryDosDevice.
                 }
 
-                return IsNetworkDevice(root.Substring(0, 2), 0);
+                return IsLocalDevice(root.Substring(0, 2), 0);
             }
             catch (ArgumentException)
             {
@@ -178,18 +178,37 @@ namespace dRz.Infrastructure.Infrastructure
             {
                 return false;
             }
+            catch (NotSupportedException)
+            {
+                return false;
+            }
         }
 
-        private static bool IsNetworkDevice(string drive, int depth)
+        private static bool IsLocalDevice(string drive, int depth)
         {
-            // Защита от циклических SUBST-ссылок.
+            // Не считаем расположение локальным, если цепочка SUBST слишком глубока.
             if (depth > 8)
             {
                 return false;
             }
 
             char[] target = new char[1024];
-            uint length = QueryDosDevice(drive, target, (uint)target.Length);
+            uint length;
+
+            try
+            {
+                length = QueryDosDevice(drive, target, (uint)target.Length);
+            }
+            catch (DllNotFoundException)
+            {
+                return false;
+            }
+            catch (EntryPointNotFoundException)
+            {
+                return false;
+            }
+
+            // Невозможность получить цель устройства означает неизвестное расположение.
             if (length == 0)
             {
                 return false;
@@ -201,10 +220,10 @@ namespace dRz.Infrastructure.Infrastructure
                 devicePath.StartsWith(@"\Device\LanmanRedirector", StringComparison.OrdinalIgnoreCase) ||
                 devicePath.StartsWith(@"\??\UNC\", StringComparison.OrdinalIgnoreCase))
             {
-                return true;
+                return false;
             }
 
-            // SUBST обычно указывает на другой DOS-путь, например \??\Z:\folder.
+            // SUBST может ссылаться на другой DOS-путь: проверяем всю цепочку.
             if (devicePath.StartsWith(@"\??\", StringComparison.OrdinalIgnoreCase))
             {
                 string substitutedPath = devicePath.Substring(4);
@@ -212,11 +231,15 @@ namespace dRz.Infrastructure.Infrastructure
                     char.IsLetter(substitutedPath[0]) &&
                     substitutedPath[1] == ':')
                 {
-                    return IsNetworkDevice(substitutedPath.Substring(0, 2), depth + 1);
+                    return IsLocalDevice(substitutedPath.Substring(0, 2), depth + 1);
                 }
+
+                // Неизвестный формат цели не подтверждает локальное расположение.
+                return false;
             }
 
-            return false;
+            // QueryDosDevice успешно вернул цель, не относящуюся к сетевым или SUBST-путям.
+            return true;
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -271,6 +294,11 @@ namespace dRz.Infrastructure.Infrastructure
         /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
         /// </value>
         public bool HasPackage => PackageFileName != null;
+
+        /// <summary>
+        /// Определяет, подтверждено ли локальное расположение основной сборки аддона.
+        /// </summary>
+        public bool IsNotNetworkPath { get; }
 
         /// <summary>
         /// Определяет, находится ли аддон в каталоге продукта.

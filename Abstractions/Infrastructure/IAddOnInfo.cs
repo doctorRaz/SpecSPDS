@@ -37,9 +37,14 @@ namespace dRz.Abstractions.Infrastructure
         /// </summary>
         bool IsProductDirectory { get; }
 
-        /// <summary>Определяет, расположен ли файл основной сборки аддона на сетевом ресурсе.</summary>
-        /// <returns><see langword="true"/>, если путь сборки сетевой; иначе <see langword="false"/>.</returns>
-        bool IsNetworkPath();
+        /// <summary>
+        /// Определяет, подтверждено ли локальное расположение основной сборки аддона.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/>, если расположение достоверно определено как локальное;
+        /// иначе <see langword="false"/>, если путь сетевой или тип расположения не удалось определить.
+        /// </value>
+        bool IsNotNetworkPath { get; }
 
         /// <summary> "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений </summary>
         /// <value>"Полное Имя" сборки.</value>
