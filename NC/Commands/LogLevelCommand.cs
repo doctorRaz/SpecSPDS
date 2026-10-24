@@ -11,18 +11,36 @@ using Rtm = Teigha.Runtime;
 namespace dRz.NC.Commands
 {
     /// <summary>
-    /// Управление уровнем логирования через файл log.level.
+    /// Управление уровнями логирования через файлы log.level и diagnostic.mode.
     /// </summary>
     public sealed class LogLevelCommand
     {
         private const string LogLevelFileName = "log.level";
+        private const string DiagnosticModeFileName = "diagnostic.mode";
 
         /// <summary>
-        /// Позволяет установить уровень логирования, удалить переопределение или посмотреть текущее значение.
+        /// Позволяет установить уровень основного логгера, удалить переопределение или посмотреть текущее значение.
+        /// Команда: drz_LogLevel.
         /// </summary>
         [Rtm.CommandMethod(CommandPrefix.Value + "_LogLevel", Rtm.CommandFlags.Session)]
         [Description("Настройка уровня логирования")]
         public void SetLogLevel()
+        {
+            ManageLevel(LogLevelFileName, "уровня логирования");
+        }
+
+        /// <summary>
+        /// Позволяет установить уровень внутренней диагностики NLog, удалить переопределение или посмотреть текущее значение.
+        /// Команда: drz_DiagnosticMode.
+        /// </summary>
+        [Rtm.CommandMethod(CommandPrefix.Value + "_DiagnosticMode", Rtm.CommandFlags.Session)]
+        [Description("Настройка внутренней диагностики логирования")]
+        public void SetDiagnosticMode()
+        {
+            ManageLevel(DiagnosticModeFileName, "внутренней диагностики логирования");
+        }
+
+        private static void ManageLevel(string fileName, string settingName)
         {
             Document? document = Application.DocumentManager.MdiActiveDocument;
             if (document == null)
@@ -40,7 +58,7 @@ namespace dRz.NC.Commands
             Enum? action = CadService.KeywordAnswer(
                 document,
                 actionKeywords,
-                "\nДействие с уровнем логирования: ",
+                $"\nДействие для {settingName}: ",
                 allowNone: true);
 
             if (action == null)
@@ -48,25 +66,25 @@ namespace dRz.NC.Commands
                 return;
             }
 
-            string path = Path.Combine(AddOnContext.AddOnInfo.AssemblyDirectory, LogLevelFileName);
+            string path = Path.Combine(AddOnContext.AddOnInfo.AssemblyDirectory, fileName);
 
             switch ((LogLevelAction)action)
             {
                 case LogLevelAction.Set:
-                    SetLevel(document, path);
+                    SetLevel(document, path, fileName, settingName);
                     break;
 
                 case LogLevelAction.Delete:
-                    DeleteLevel(path);
+                    DeleteLevel(path, fileName, settingName);
                     break;
 
                 case LogLevelAction.Status:
-                    ShowStatus(path);
+                    ShowStatus(path, fileName, settingName);
                     break;
             }
         }
 
-        private static void SetLevel(Document document, string path)
+        private static void SetLevel(Document document, string path, string fileName, string settingName)
         {
             List<Keywords> levelKeywords = new List<Keywords>
             {
@@ -82,7 +100,7 @@ namespace dRz.NC.Commands
             Enum? answer = CadService.KeywordAnswer(
                 document,
                 levelKeywords,
-                "\nНовый уровень логирования: ",
+                $"\nНовый уровень для {settingName}: ",
                 allowNone: true);
 
             if (answer == null)
@@ -96,15 +114,15 @@ namespace dRz.NC.Commands
             {
                 File.WriteAllText(path, level + Environment.NewLine);
                 AddOnContext.Msg.InfoMessage(
-                    $"Уровень логирования установлен: {level}. Для применения изменения необходимо перезапустить nanoCAD.");
+                    $"Для {settingName} установлен уровень {level} в файле {fileName}. Для применения изменения необходимо перезапустить nanoCAD.");
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage("Не удалось записать файл настройки уровня логирования.", ex);
+                AddOnContext.Msg.ErrorMessage($"Не удалось записать файл {fileName}.", ex);
             }
         }
 
-        private static void DeleteLevel(string path)
+        private static void DeleteLevel(string path, string fileName, string settingName)
         {
             try
             {
@@ -112,26 +130,28 @@ namespace dRz.NC.Commands
                 {
                     File.Delete(path);
                     AddOnContext.Msg.InfoMessage(
-                        "Переопределение уровня логирования удалено. Для применения изменения необходимо перезапустить nanoCAD.");
+                        $"Переопределение {settingName} удалено (файл {fileName}). Для применения изменения необходимо перезапустить nanoCAD.");
                 }
                 else
                 {
-                    AddOnContext.Msg.InfoMessage("Файл log.level отсутствует. Используется программный уровень логирования.");
+                    AddOnContext.Msg.InfoMessage(
+                        $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
                 }
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage("Не удалось удалить файл настройки уровня логирования.", ex);
+                AddOnContext.Msg.ErrorMessage($"Не удалось удалить файл {fileName}.", ex);
             }
         }
 
-        private static void ShowStatus(string path)
+        private static void ShowStatus(string path, string fileName, string settingName)
         {
             try
             {
                 if (!File.Exists(path))
                 {
-                    AddOnContext.Msg.InfoMessage("Файл log.level отсутствует. Используется программный уровень логирования.");
+                    AddOnContext.Msg.InfoMessage(
+                        $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
                     return;
                 }
 
@@ -140,12 +160,12 @@ namespace dRz.NC.Commands
 
                 AddOnContext.Msg.InfoMessage(
                     string.IsNullOrWhiteSpace(level)
-                        ? "Файл log.level существует, но первая строка пуста."
-                        : $"В файле log.level указан уровень: {level}.");
+                        ? $"Файл {fileName} существует, но первая строка пуста."
+                        : $"В файле {fileName} указан уровень: {level}.");
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage("Не удалось прочитать файл настройки уровня логирования.", ex);
+                AddOnContext.Msg.ErrorMessage($"Не удалось прочитать файл {fileName}.", ex);
             }
         }
 
