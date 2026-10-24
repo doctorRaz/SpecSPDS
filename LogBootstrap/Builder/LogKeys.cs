@@ -16,6 +16,6 @@
         /// уровень логирования основного логера <br/>
         /// в первой строке текстового файла уровень Trace...Fatal
         /// </summary>
-        public const string LogLevel = "logger.level";
+        public const string LogLevel = "log.level";
     }
 }
