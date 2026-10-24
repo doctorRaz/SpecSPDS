@@ -214,7 +214,7 @@ namespace dRz.Infrastructure.Infrastructure
                 return false;
             }
 
-            string devicePath = new string(target, 0, (int)length).Split('\\0')[0];
+            string devicePath = new string(target, 0, (int)length).Split('\0')[0];
 
             if (devicePath.StartsWith(@"\Device\Mup", StringComparison.OrdinalIgnoreCase) ||
                 devicePath.StartsWith(@"\Device\LanmanRedirector", StringComparison.OrdinalIgnoreCase) ||
