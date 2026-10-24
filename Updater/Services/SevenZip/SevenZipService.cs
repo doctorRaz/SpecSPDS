@@ -68,7 +68,7 @@ namespace dRz.Updater.Services.SevenZip
             // чтение зашифрованных заголовков (-mhe=on).
             using SharpSevenZipExtractor archive = new SharpSevenZipExtractor(
                 archivePath,
-                password);
+                password!);
 
             archive.ExtractArchive(destination);
         }

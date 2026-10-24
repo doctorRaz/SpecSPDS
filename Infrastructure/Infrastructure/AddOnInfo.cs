@@ -279,7 +279,7 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Gets the cad code.</summary>
         /// <value>The cad code.</value>
-        public string? HostCode { get; }
+        public string HostCode { get; }
 
         /// <summary>Gets the cad family.</summary>
         /// <value>The cad family.</value>
