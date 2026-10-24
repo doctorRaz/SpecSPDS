@@ -4,7 +4,7 @@
         {
             "name": "SpecSPDS.NC",
             "projects": [
-                "SpecSPDS.NC/NC.csproj"
+                "NC/NC.csproj"
             ]
         },
         {
