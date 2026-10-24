@@ -6,6 +6,7 @@ using dRz.NC;
 using dRz.NC.Infrastructure;
 using System;
 using System.Diagnostics;
+using System.IO;
 
 using Sys = System;
 
@@ -71,6 +72,10 @@ namespace dRz.Test.Console.Updater
             fakeCad.SelectShowCommandInfoOnStartup();
             fakeCad.SelectUpdateMode();
             fakeCad.SelectUpdateCheckInterval();
+
+            // Проверяем управление файлами переопределения уровней логирования.
+            fakeCad.SelectLogLevel();
+            fakeCad.SelectDiagnosticMode();
 
             _ = ConsoleReadKey(fakeCad._msg, fakeCad._sw);
         }
@@ -191,6 +196,183 @@ namespace dRz.Test.Console.Updater
                 }
 
                 return;
+            }
+        }
+
+        /// <summary>
+        /// Предлагает настроить уровень основного логгера через файл <c>logger.level</c>.
+        /// </summary>
+        /// <remarks>
+        /// Файл содержит уровень логирования в первой строке. Изменение применяется после перезапуска приложения.
+        /// </remarks>
+        private void SelectLogLevel()
+        {
+            SelectLogSetting("logger.level", "уровня основного логгера");
+        }
+
+        /// <summary>
+        /// Предлагает настроить уровень внутренней диагностики NLog через файл <c>diagnostic.level</c>.
+        /// </summary>
+        /// <remarks>
+        /// Файл содержит уровень диагностики в первой строке. Изменение применяется после перезапуска приложения.
+        /// </remarks>
+        private void SelectDiagnosticMode()
+        {
+            SelectLogSetting("diagnostic.level", "внутренней диагностики NLog");
+        }
+
+        /// <summary>
+        /// Предлагает установить уровень, удалить файл переопределения или посмотреть его содержимое.
+        /// </summary>
+        /// <param name="fileName">Имя файла настройки, расположенного рядом с аддоном.</param>
+        /// <param name="settingName">Название настройки для сообщений пользователю.</param>
+        /// <remarks>
+        /// Изменение файла не влияет на уже созданную конфигурацию логирования; требуется перезапуск приложения.
+        /// </remarks>
+        private void SelectLogSetting(string fileName, string settingName)
+        {
+            // Используем каталог сборки аддона, а не текущий рабочий каталог процесса.
+            string path = Path.Combine(_addonInfo.AssemblyDirectory, fileName);
+
+            while (true)
+            {
+                _msg.InfoMessage($"Настройка {settingName}. Файл: {fileName}");
+                _msg.InfoMessage("Выберите: 0 — установить уровень, 1 — удалить файл, 2 — показать состояние.");
+                _msg.InfoMessage("Enter — пропустить настройку.");
+
+                string? input = Sys.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return;
+                }
+
+                switch (input.Trim())
+                {
+                    case "0":
+                        SetLogSettingLevel(path, fileName, settingName);
+                        return;
+
+                    case "1":
+                        DeleteLogSetting(path, fileName, settingName);
+                        return;
+
+                    case "2":
+                        ShowLogSetting(path, fileName, settingName);
+                        return;
+
+                    default:
+                        _msg.InfoMessage("Неверный выбор. Введите 0, 1, 2 или Enter.");
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Записывает выбранный уровень в первую строку файла настройки.
+        /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настраиваемого уровня для сообщений пользователю.</param>
+        private void SetLogSettingLevel(string path, string fileName, string settingName)
+        {
+            // Список должен соответствовать уровням, поддерживаемым конфигурацией логирования.
+            string[] levels = { "Trace", "Debug", "Info", "Warn", "Error", "Fatal", "Off" };
+
+            while (true)
+            {
+                _msg.InfoMessage($"Выберите уровень для {settingName}:");
+                _msg.InfoMessage("0 — Trace, 1 — Debug, 2 — Info, 3 — Warn, 4 — Error, 5 — Fatal, 6 — Off.");
+                _msg.InfoMessage("Enter — отменить.");
+
+                string? input = Sys.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    return;
+                }
+
+                if (!int.TryParse(input.Trim(), out int index) || index < 0 || index >= levels.Length)
+                {
+                    _msg.InfoMessage("Неверный выбор. Введите число от 0 до 6 или Enter.");
+                    continue;
+                }
+
+                string level = levels[index];
+
+                try
+                {
+                    File.WriteAllText(path, level + Environment.NewLine);
+                    _msg.InfoMessage(
+                        $"Для {settingName} установлен уровень {level} в файле {fileName}. Для применения изменения необходимо перезапустить приложение.");
+                }
+                catch (Exception ex)
+                {
+                    _logger?.Error(ex, $"Не удалось записать файл {fileName}.");
+                    _msg.ErrorMessage($"Не удалось записать файл {fileName}.", ex);
+                }
+
+                return;
+            }
+        }
+
+        /// <summary>
+        /// Удаляет файл переопределения уровня логирования.
+        /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о возврате к программному значению.</param>
+        private void DeleteLogSetting(string path, string fileName, string settingName)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    _msg.InfoMessage(
+                        $"Переопределение {settingName} удалено (файл {fileName}). Для применения изменения необходимо перезапустить приложение.");
+                }
+                else
+                {
+                    _msg.InfoMessage(
+                        $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.Error(ex, $"Не удалось удалить файл {fileName}.");
+                _msg.ErrorMessage($"Не удалось удалить файл {fileName}.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Показывает наличие файла переопределения и значение его первой строки.
+        /// </summary>
+        /// <param name="path">Полный путь к файлу настройки.</param>
+        /// <param name="fileName">Имя файла для сообщений пользователю.</param>
+        /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
+        private void ShowLogSetting(string path, string fileName, string settingName)
+        {
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    _msg.InfoMessage(
+                        $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
+                    return;
+                }
+
+                // Контракт файла использует только первую строку; остальные строки не учитываются.
+                string[] lines = File.ReadAllLines(path);
+                string level = lines.Length > 0 ? lines[0].Trim() : string.Empty;
+
+                _msg.InfoMessage(
+                    string.IsNullOrWhiteSpace(level)
+                        ? $"Файл {fileName} существует, но первая строка пуста."
+                        : $"В файле {fileName} указан уровень: {level}.");
+            }
+            catch (Exception ex)
+            {
+                _logger?.Error(ex, $"Не удалось прочитать файл {fileName}.");
+                _msg.ErrorMessage($"Не удалось прочитать файл {fileName}.", ex);
             }
         }
 
