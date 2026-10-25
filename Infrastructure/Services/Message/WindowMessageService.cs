@@ -17,7 +17,6 @@ namespace dRz.Infrastructure.Services.Message
         /// <summary>Создаёт оконный сервис сообщений с привязкой диалогов к окну CAD-приложения.</summary>
         /// <param name="productTitlePrefix">Префикс заголовка окна, обычно содержащий название и версию продукта.</param>
         /// <param name="handleProvider">Поставщик дескриптора главного окна CAD-приложения.</param>
-        /// <exception cref="ArgumentNullException">Поставщик дескриптора равен <see langword="null"/>.</exception>
         public WindowMessageService(string productTitlePrefix, IWindowHandleProvider handleProvider)
         {
             _productTitlePrefix = productTitlePrefix;

@@ -17,7 +17,6 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Создаёт коллекцию метаданных из атрибутов указанной сборки.</summary>
         /// <param name="assembly">Сборка, атрибуты которой требуется прочитать.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> равен <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException">В сборке присутствуют повторяющиеся ключи метаданных без учёта регистра.</exception>
         public AssemblyMetadata(Assembly assembly)
         {
