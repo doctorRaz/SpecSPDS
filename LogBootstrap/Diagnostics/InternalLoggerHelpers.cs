@@ -11,10 +11,15 @@ namespace dRz.LogBootstrap.Diagnostics
     {
         // 10 MB
         /// <summary>
-        /// Internal logger → Output Window (DEBUG) <br/>
-        /// Internal logger → Output file.log<br/>
-        /// Internal logger → Output Console<br/>
+        /// Настраивает Internal Logger: вывод в Debug Output, Console и файл.
+        /// Инициализация выполняется один раз за процесс. При повторных вызовах
+        /// уровень меняется только в сторону большей детализации; запрос <see cref="LogLevel.Off"/>
+        /// и повышение порога логирования не применяются.
         /// </summary>
+        /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
+        /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
+        /// <param name="logName">Семейство продукта, используемое в имени файла внутреннего лога.</param>
+        /// <param name="logDir">Каталог внутренних логов; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
         public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string? logDir = null)
         {
             lock (_lock)
@@ -79,7 +84,7 @@ namespace dRz.LogBootstrap.Diagnostics
         internal static string LogDir => _logDir;
 
         /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
-        /// <value><c>true</c> if initialized; otherwise, <c>false</c>.</value>
+        /// <value><see langword="true"/> if initialized; otherwise, <see langword="false"/>.</value>
         internal static bool Initialized => _initialized;
 
         //private const string logName = "nlog-drzTools-internal";

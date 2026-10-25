@@ -1,20 +1,19 @@
 ﻿namespace dRz.LogBootstrap.Builder
 {
     /// <summary>
-    /// константы названий файлов <br/>
-    /// маркер-флаг изменения уровня логирования
+    /// Имена файлов, в первых строках которых задаются уровни логирования.
     /// </summary>
     internal static class LogKeys
     {
         /// <summary>
-        /// уровень логирования интернал логера <br/>
-        /// в первой строке текстового файла уровень Trace...Fatal
+        /// Имя файла настройки уровня Internal Logger.
+        /// Первая строка должна содержать уровень NLog, включая <c>Off</c>.
         /// </summary>
         public const string DiagnosticMode = "diagnostic.level";
 
         /// <summary>
-        /// уровень логирования основного логера <br/>
-        /// в первой строке текстового файла уровень Trace...Fatal
+        /// Имя файла настройки уровня основного логирования.
+        /// Первая строка должна содержать уровень NLog, включая <c>Off</c>.
         /// </summary>
         public const string LogLevel = "logger.level";
     }
