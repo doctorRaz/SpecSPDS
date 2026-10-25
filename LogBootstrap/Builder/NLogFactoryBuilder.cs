@@ -11,15 +11,15 @@ using System.IO;
 namespace dRz.LogBootstrap.Builder
 {
     /// <summary>
-    /// Создает NLog фабрику
+    /// Создаёт фабрику NLog с конфигурацией основного лога и Internal Logger.
     /// </summary>
     internal class NLogFactoryBuilder
     {
         /// <summary>Initializes a new instance of the <see cref="NLogFactoryBuilder"/> class.</summary>
-        /// <param name="assemblyDirectory">The assembly directory.</param>
-        /// <param name="productName">Name of the product.</param>
-        /// <param name="productFamily">Product family used in the log file name.</param>
-        /// <param name="logsDir">The logs dir.</param>
+        /// <param name="assemblyDirectory">Каталог сборки, в котором находятся файлы настройки уровней логирования.</param>
+        /// <param name="productName">Идентификатор продукта.</param>
+        /// <param name="productFamily">Семейство продукта, используемое в именах файлов логов.</param>
+        /// <param name="logsDir">Каталог для файлов основного и внутреннего логов.</param>
         internal NLogFactoryBuilder(
                                     string assemblyDirectory, //string assemblyDirectory = _addOnInfo.AssemblyDirectory;
                                     string productName, //string productName = _addOnInfo.Product;
@@ -33,8 +33,8 @@ namespace dRz.LogBootstrap.Builder
             _logsDir = logsDir;
         }
 
-        /// _logsDir;<summary>Builds this instance.</summary>
-        /// <returns></returns>
+        /// <summary>Builds this instance.</summary>
+        /// <returns>Созданная фабрика NLog с настроенной конфигурацией.</returns>
         internal LogFactory Build()
         {
             //путь к Diagnostic.Mode
@@ -78,9 +78,9 @@ namespace dRz.LogBootstrap.Builder
         private readonly string _logsDir;
 
         /// <summary>
-        /// XML layout
+        /// Creates the XML layout used for main log entries.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>XML layout with event attributes, message, and exception elements.</returns>
         private static XmlLayout CreateXmlLayout()
         {
             return new XmlLayout
@@ -108,10 +108,10 @@ namespace dRz.LogBootstrap.Builder
         }
 
         /// <summary>
-        /// Gets the effective minimum level.
+        /// Gets the effective minimum level enabled for the specified logger.
         /// </summary>
-        /// <param name="logger">The log.</param>
-        /// <returns></returns>
+        /// <param name="logger">Logger whose enabled levels are inspected.</param>
+        /// <returns>The first enabled level, or <see cref="LogLevel.Off"/> if none is enabled.</returns>
         private static LogLevel GetEffectiveMinLevel(Logger logger)
         {
             foreach (LogLevel level in LogLevel.AllLevels) // Trace → Fatal
@@ -126,10 +126,10 @@ namespace dRz.LogBootstrap.Builder
         }
 
         /// <summary>
-        /// Creates the configuration.
+        /// Creates the main logging configuration.
         /// </summary>
-        /// <param name="level">The current level.</param>
-        /// <returns></returns>
+        /// <param name="level">Minimum level accepted by the main log rule.</param>
+        /// <returns>The configured logging configuration.</returns>
         private LoggingConfiguration CreateConfiguration(LogLevel level)
         {
             LoggingConfiguration config = new();
@@ -169,13 +169,11 @@ namespace dRz.LogBootstrap.Builder
             return config;
         }
 
-        /// <summary>Loggings the factory information.</summary>
-        /// <param name="factory">The factory.</param>
-        /// <param name="productName">Name of the product.</param>
-        /// <param name="logName">Name of the log.</param>
-        /// <param name="logDir">The log dir.</param>
-        /// <param name="isFallback">if set to <c>true</c> [is fallback].</param>
-        /// <param name="configException">The configuration exception.</param>
+        /// <summary>
+        /// Writes information about the created factory to the log.
+        /// Failures while writing this diagnostic event are suppressed.
+        /// </summary>
+        /// <param name="factory">Factory whose effective configuration is reported.</param>
         private void LoggingFactoryInfo(LogFactory factory)
         {
             try
