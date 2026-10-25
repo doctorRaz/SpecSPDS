@@ -58,6 +58,34 @@ namespace dRz.NC
             {
                 IUpdateSettings updateSettings = settings.Updates;// Получаем настройки обновлений аддона
 
+                UpdateManager updateManager = new UpdateManager(
+                    _msg,
+                    _msgprt,
+                    _loggerFactory,
+                    updateSettings);
+
+                // Очистка выполняется только при автоматическом запуске и до проверки интервала.
+                // Файловые операции не блокируют синхронную инициализацию nanoCAD.
+                // Ошибка очистки не должна прерывать проверку обновлений.
+                if (launchMode == UpdateLaunchMode.Automatic)
+                {
+                    try
+                    {
+                        await Task.Run(() => updateManager.Cleanup(addOnInfo.PackageDirectory));
+                    }
+                    catch (Exception cleanupException)
+                    {
+                        try
+                        {
+                            _logger.Error(cleanupException, "Не удалось очистить резервные файлы перед автоматической проверкой обновлений.");
+                        }
+                        catch
+                        {
+                            // Ошибка логирования не должна препятствовать проверке обновлений.
+                        }
+                    }
+                }
+
                 int minDay = 1;
 
 #if DEBUG
@@ -101,12 +129,6 @@ namespace dRz.NC
                 updateUrl = $"http://127.0.0.1:8080/{addOnInfo.Product}/{addOnInfo.HostFamily}";
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
-
-                UpdateManager updateManager = new UpdateManager(
-                    _msg,
-                    _msgprt,
-                    _loggerFactory,
-                    updateSettings);
 
                 UpdateRequest request = new UpdateRequest
                 {
