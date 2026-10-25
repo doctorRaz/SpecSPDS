@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace dRz.LogBootstrap.Diagnostics
 {
+    /// <summary>
+    /// Вспомогательные методы для настройки и обслуживания внутреннего логгера NLog.
+    /// </summary>
     public static class InternalLoggerHelpers
     {
         // 10 MB
