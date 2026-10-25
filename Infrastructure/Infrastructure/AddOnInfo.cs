@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace dRz.Infrastructure.Infrastructure
 {
     /// <summary>
-    /// AddOnInfo
+    /// Предоставляет сведения о сборке аддона, её версии, метаданных и расположении.
     /// </summary>
     /// <seealso cref="dRz.Abstractions.Infrastructure.IAddOnInfo" />
     public class AddOnInfo : IAddOnInfo
@@ -36,10 +36,10 @@ namespace dRz.Infrastructure.Infrastructure
         private string? _productTitle;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AddOnInfo"/> class.
+        /// Создаёт объект со сведениями об указанной сборке аддона.
         /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <exception cref="System.ArgumentNullException">assembly</exception>
+        /// <param name="assembly">Сборка, сведения о которой требуется получить.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> равен <see langword="null"/>.</exception>
         public AddOnInfo(Assembly assembly)
         {
             _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
@@ -252,14 +252,14 @@ namespace dRz.Infrastructure.Infrastructure
         /// <value>Путь к данным приложения.</value>
         public string ProductDataDirectory { get; }
 
-        /// <summary>Gets the company.</summary>
-        /// <value>The company.</value>
+        /// <summary>Возвращает название компании — разработчика сборки.</summary>
+        /// <value>Название компании из <see cref="AssemblyCompanyAttribute"/> либо <c>dRz</c>, если атрибут отсутствует.</value>
         public string Company { get; }
 
         /// <summary>
         /// "Полное Имя" сборки, используется для показа в заголовках диалогов, окон, сообщений
         /// </summary>
-        /// <value>"Полное Имя" сборки.</value>
+        /// <value>Полное имя сборки, включающее сведения, предоставленные средой выполнения.</value>
         public string AssembleFullName { get; }
 
         /// <summary>Возвращает директорию сборки.</summary>
@@ -279,7 +279,7 @@ namespace dRz.Infrastructure.Infrastructure
         public string Copyright => _copyright ??= _assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright ?? "Unknown";
 
         /// <summary>Возвращает описание сборки.</summary>
-        /// <value>The description.</value>
+        /// <value>Описание из <see cref="AssemblyDescriptionAttribute"/> либо <c>Unknown</c>, если атрибут отсутствует.</value>
         public string Description => _description ??= _assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description ?? "Unknown";
 
         /// <summary>Возвращает имя файла сборки без расширения.</summary>
@@ -289,10 +289,8 @@ namespace dRz.Infrastructure.Infrastructure
         /// <summary>Возвращает AssemblyFileVersionAttribute.</summary>
         public string FileVersion => _fileVersion ??= _assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version ?? "Unknown";
 
-        /// <summary>Gets a value indicating whether this instance has package.</summary>
-        /// <value>
-        /// <c>true</c> if this instance has package; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary>Указывает, найден ли файл пакета с именем, начинающимся с имени продукта и точки.</summary>
+        /// <value><see langword="true"/>, если файл пакета найден; иначе <see langword="false"/>.</value>
         public bool HasPackage => PackageFileName != null;
 
         /// <summary>
@@ -305,12 +303,12 @@ namespace dRz.Infrastructure.Infrastructure
         /// </summary>
         public bool IsProductDirectory { get; }
 
-        /// <summary>Gets the cad code.</summary>
-        /// <value>The cad code.</value>
+        /// <summary>Возвращает код CAD-хоста из метаданных сборки.</summary>
+        /// <value>Значение метаданных <c>HostCode</c> либо пустая строка, если оно не задано.</value>
         public string HostCode { get; }
 
-        /// <summary>Gets the cad family.</summary>
-        /// <value>The cad family.</value>
+        /// <summary>Возвращает семейство CAD-хоста из метаданных сборки.</summary>
+        /// <value>Значение метаданных <c>HostFamily</c> либо пустая строка, если оно не задано.</value>
         public string HostFamily { get; }
 
         /// <summary>Возвращает AssemblyInformationalVersionAttribute.</summary>
@@ -340,61 +338,58 @@ namespace dRz.Infrastructure.Infrastructure
         /// <summary>Все доступные ключи метаданных.</summary>
         public IEnumerable<string> MetadataKeys => _metadata.Keys;
 
-        /// <summary>
-        /// Возвращает путь к корневому каталогу addon где находится его package
-        /// </summary>
-        /// <value>путь к корневому каталогу ад дона</value>
+        /// <summary>Возвращает каталог пакета, используемый как корень аддона.</summary>
+        /// <value>Каталог, содержащий файл пакета, если расположение подтверждено; иначе каталог сборки.</value>
         public string PackageDirectory { get; }
 
         /// <summary>Возвращает имя файла package.</summary>
         /// <value>Имя файла package.</value>
         public string? PackageFileName { get; }
 
-        /// <summary>Возвращает AssemblyProductAttribute.</summary>
+        /// <summary>Возвращает название продукта из <see cref="AssemblyProductAttribute"/> либо из имени файла сборки.</summary>
         public string Product { get; }
 
         /// <summary>
-        /// Возвращает ProductName+HostCode<br />
-        /// идентификатор приложения в контексте хоста <br />
-        /// например, для AutoCAD: "SpecSPDSa<br />
-        /// например, для nanoCAD: "SpecSPDSn<br />
-        /// не зависит от названия сборки, берется из метадаты<br />
+        /// Возвращает идентификатор продукта в контексте CAD-хоста.
         /// </summary>
+        /// <remarks>
+        /// Значение берётся из метаданных сборки; если метаданные не заданы, используется название продукта.
+        /// </remarks>
         public string ProductFamily { get; }
 
-        /// <summary>Возвращает AssemblyTitleAttribute.</summary>
+        /// <summary>Возвращает заголовок сборки из <see cref="AssemblyTitleAttribute"/> либо имя файла сборки.</summary>
         public string ProductTitle => _productTitle ??= _assembly.GetCustomAttribute<AssemblyTitleAttribute>()?.Title ?? FileName;
 
         /// <summary>Возвращает Product v.RunningVersion.</summary>
         public string ProductTitlePrefix { get; }
 
-        /// <summary>Gets the repository URL.</summary>
-        /// <value>The repository URL.</value>
+        /// <summary>Возвращает URL репозитория проекта.</summary>
+        /// <value>Значение метаданных <c>RepositoryUrl</c> либо URL репозитория GitHub, сформированный по имени продукта.</value>
         public string RepositoryUrl { get; }
 
         /// <summary>Возвращает версию загруженной сборки.</summary>
         /// <value>версия сборки.</value>
         public Version RunningVersion { get; }
 
-        /// <summary>Получить значение метаданных.</summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <summary>Получает значение метаданных сборки по ключу.</summary>
+        /// <param name="key">Ключ метаданных.</param>
+        /// <returns>Значение метаданных или <see langword="null"/>, если ключ отсутствует.</returns>
         public string? GetMetadata(string key)
         {
             return _metadata.Get(key);
         }
 
-        /// <summary>Получить значение метаданных с заданным значением по умолчанию.</summary>
-        /// <param name="key"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
+        /// <summary>Получает значение метаданных по ключу либо значение по умолчанию.</summary>
+        /// <param name="key">Ключ метаданных.</param>
+        /// <param name="defaultValue">Значение, возвращаемое, если ключ отсутствует.</param>
+        /// <returns>Найденное значение или <paramref name="defaultValue"/>.</returns>
         public string GetMetadata(string key, string defaultValue)
         {
             return _metadata.Get(key, defaultValue);
         }
 
-        /// <summary>Converts to longstring.</summary>
-        /// <returns>long string</returns>
+        /// <summary>Возвращает подробное текстовое представление сведений о сборке.</summary>
+        /// <returns>Многострочная строка с идентификаторами, версиями, путями и метаданными сборки.</returns>
         public string ToLongString()
         {
             return @$"{Product} v{RunningVersion}
@@ -415,24 +410,24 @@ namespace dRz.Infrastructure.Infrastructure
   ";
         }
 
-        /// <summary>Converts to shortstring.</summary>
-        /// <returns>short string</returns>
+        /// <summary>Возвращает краткое текстовое представление сведений о сборке.</summary>
+        /// <returns>Строка с заголовком продукта, версией и датой сборки.</returns>
         public string ToShortString()
         {
             return $"{ProductTitle} v{RunningVersion}({BuildDate:dd.MM.yyyy})";
         }
 
-        /// <summary>Converts to string.</summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
+        /// <summary>Возвращает основное текстовое представление сведений о сборке.</summary>
+        /// <returns>Строка с названием продукта, версией, именем файла и информационной версией.</returns>
         public override string ToString()
         {
             return $"{Product} v{RunningVersion}({BuildDate:dd.MM.yyyy}); assembly: {FileName}; [{InformationalVersion}]";
         }
 
-        /// <summary>Попытаться получить значение метаданных.</summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <summary>Пытается получить значение метаданных сборки по ключу.</summary>
+        /// <param name="key">Ключ метаданных.</param>
+        /// <param name="value">При успехе содержит найденное значение; иначе <see langword="null"/>.</param>
+        /// <returns><see langword="true"/>, если ключ найден; иначе <see langword="false"/>.</returns>
         public bool TryGetMetadata(string key, out string? value)
         {
             return _metadata.TryGet(key, out value);
