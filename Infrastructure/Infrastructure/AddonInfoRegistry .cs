@@ -44,7 +44,6 @@ namespace dRz.Infrastructure.Infrastructure
         /// <summary>Возвращает сведения о сборке из реестра или создаёт и регистрирует их.</summary>
         /// <param name="assembly">Сборка, для которой требуются сведения.</param>
         /// <returns>Зарегистрированные сведения о сборке.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> равен <see langword="null"/>.</exception>
         public IAddOnInfo GetOrAdd(Assembly assembly)
         {
             return _addons.GetOrAdd(assembly.Location, key => new AddOnInfo(assembly));
@@ -58,7 +57,6 @@ namespace dRz.Infrastructure.Infrastructure
         /// <summary>Возвращает сведения о сборке, содержащей указанный тип, или регистрирует их.</summary>
         /// <param name="type">Тип, определяющий сборку.</param>
         /// <returns>Зарегистрированные сведения о сборке.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="type"/> равен <see langword="null"/>.</exception>
         public IAddOnInfo GetOrAdd(Type type) => GetOrAdd(type.Assembly);
 
         /// <summary>Возвращает сведения обо всех сборках, зарегистрированных на текущий момент.</summary>
