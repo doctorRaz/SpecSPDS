@@ -9,6 +9,8 @@ using System.ComponentModel;
 using System.IO;
 using Rtm = Teigha.Runtime;
 using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
+using NLog.Common;
 
 namespace dRz.NC.Commands
 {
@@ -38,8 +40,10 @@ namespace dRz.NC.Commands
         {
             IMessageService message = AddOnContext.Msg;
             string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
+            IDrzLogger logger = AddOnContext.NLogFactory.GetLogger(typeof(LogLevelCommand));
+            string actualLevel = GetEffectiveLogLevel(logger);
 
-            ManageLevel(message, assemblyDirectory, LogLevelFileName, "уровня логирования");
+            ManageLevel(message, assemblyDirectory, LogLevelFileName, "уровня логирования", actualLevel);
         }
 
         /// <summary>
@@ -55,8 +59,14 @@ namespace dRz.NC.Commands
         {
             IMessageService message = AddOnContext.Msg;
             string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
+            string actualLevel = InternalLogger.LogLevel.ToString();
 
-            ManageLevel(message, assemblyDirectory, DiagnosticModeFileName, "внутренней диагностики логирования");
+            ManageLevel(
+                message,
+                assemblyDirectory,
+                DiagnosticModeFileName,
+                "внутренней диагностики логирования",
+                actualLevel);
         }
 
         /// <summary>
@@ -66,11 +76,13 @@ namespace dRz.NC.Commands
         /// <param name="assemblyDirectory">Каталог сборки аддона.</param>
         /// <param name="fileName">Имя файла настройки в каталоге сборки аддона.</param>
         /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
+        /// <param name="actualLevel">Фактический уровень, действующий в текущей конфигурации.</param>
         private static void ManageLevel(
             IMessageService message,
             string assemblyDirectory,
             string fileName,
-            string settingName)
+            string settingName,
+            string actualLevel)
         {
             App.Document? document = App.Application.DocumentManager.MdiActiveDocument;
             if (document == null)
@@ -109,7 +121,7 @@ namespace dRz.NC.Commands
                     break;
 
                 case LogLevelAction.Status:
-                    ShowStatus(message, path, fileName, settingName);
+                    ShowStatus(message, path, fileName, settingName, actualLevel);
                     break;
             }
         }
@@ -205,18 +217,20 @@ namespace dRz.NC.Commands
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
+        /// <param name="actualLevel">Фактический уровень, действующий в текущей конфигурации.</param>
         private static void ShowStatus(
             IMessageService message,
             string path,
             string fileName,
-            string settingName)
+            string settingName,
+            string actualLevel)
         {
             try
             {
                 if (!File.Exists(path))
                 {
                     message.InfoMessage(
-                        $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
+                        $"Файл {fileName} отсутствует. Фактический уровень {settingName}: {actualLevel}.");
                     return;
                 }
 
@@ -225,13 +239,31 @@ namespace dRz.NC.Commands
 
                 message.InfoMessage(
                     string.IsNullOrWhiteSpace(level)
-                        ? $"Файл {fileName} существует, но первая строка пуста."
-                        : $"В файле {fileName} указан уровень: {level}.");
+                        ? $"Файл {fileName} существует, но первая строка пуста. Фактический уровень {settingName}: {actualLevel}."
+                        : $"В файле {fileName} указан уровень: {level}. Фактический уровень {settingName}: {actualLevel}.");
             }
             catch (Exception ex)
             {
                 message.ErrorMessage($"Не удалось прочитать файл {fileName}.", ex);
             }
+        }
+
+
+        /// <summary>
+        /// Определяет минимальный фактически включённый уровень для логгера.
+        /// </summary>
+        /// <param name="logger">Логгер, для которого определяется уровень.</param>
+        /// <returns>Минимальный включённый уровень или <c>Off</c>, если логирование отключено.</returns>
+        private static string GetEffectiveLogLevel(IDrzLogger logger)
+        {
+            if (logger.IsTraceEnabled) return "Trace";
+            if (logger.IsDebugEnabled) return "Debug";
+            if (logger.IsInfoEnabled) return "Info";
+            if (logger.IsWarnEnabled) return "Warn";
+            if (logger.IsErrorEnabled) return "Error";
+            if (logger.IsFatalEnabled) return "Fatal";
+
+            return "Off";
         }
 
         /// <summary>
