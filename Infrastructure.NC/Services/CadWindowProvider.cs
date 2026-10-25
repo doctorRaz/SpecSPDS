@@ -11,7 +11,7 @@ using HostMgd.ApplicationServices;
 namespace dRz.NC.Infrastructure.Services
 {
     /// <summary>
-    /// Указатель на окно отвязан от Cad
+    /// Предоставляет дескриптор главного окна текущего процесса без зависимости от API CAD.
     /// </summary>
     /// <seealso cref="IWindowHandleProvider" />
     public class CadWindowProvider : IWindowHandleProvider
@@ -24,6 +24,13 @@ namespace dRz.NC.Infrastructure.Services
 
         #region Public Properties
 
+        /// <summary>
+        /// Возвращает дескриптор главного окна текущего процесса.
+        /// </summary>
+        /// <remarks>
+        /// Значение кэшируется; если дескриптор не задан или равен <see cref="IntPtr.Zero"/>,
+        /// выполняется повторное получение из текущего процесса.
+        /// </remarks>
         public IntPtr Handle
         {
             get
@@ -42,15 +49,21 @@ namespace dRz.NC.Infrastructure.Services
     }
 
     /// <summary>
-    /// Указатель на окно привязан к HostMgd <br/>
-    /// Не используется
+    /// Предоставляет дескриптор главного окна через API HostMgd.
     /// </summary>
+    /// <remarks>В текущем коде этот вариант помечен как неиспользуемый.</remarks>
     /// <seealso cref="IWindowHandleProvider" />
     public class CadWindowProvider_Cad : IWindowHandleProvider
     {
 #if !TEST
+        /// <summary>
+        /// Возвращает дескриптор главного окна CAD.
+        /// </summary>
         public IntPtr Handle => Application.MainWindow.Handle;
 #else
+        /// <summary>
+        /// Возвращает <see cref="IntPtr.Zero"/> в тестовой сборке.
+        /// </summary>
         public IntPtr Handle => IntPtr.Zero;
 #endif
     }
