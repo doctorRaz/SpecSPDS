@@ -62,6 +62,8 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Предлагает действие для управления файлом переопределения уровня логирования.
         /// </summary>
+        /// <param name="message">Сервис пользовательских сообщений.</param>
+        /// <param name="assemblyDirectory">Каталог сборки аддона.</param>
         /// <param name="fileName">Имя файла настройки в каталоге сборки аддона.</param>
         /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
         private static void ManageLevel(
@@ -115,6 +117,7 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Предлагает уровень логирования и записывает выбранное значение в файл.
         /// </summary>
+        /// <param name="message">Сервис пользовательских сообщений.</param>
         /// <param name="document">Активный документ NanoCAD, используемый для ввода ключевого слова.</param>
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
@@ -165,6 +168,7 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Удаляет файл переопределения, чтобы при следующем запуске использовалось программное значение.
         /// </summary>
+        /// <param name="message">Сервис пользовательских сообщений.</param>
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
@@ -197,6 +201,7 @@ namespace dRz.NC.Commands
         /// <summary>
         /// Показывает наличие файла настройки и значение его первой строки.
         /// </summary>
+        /// <param name="message">Сервис пользовательских сообщений.</param>
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
