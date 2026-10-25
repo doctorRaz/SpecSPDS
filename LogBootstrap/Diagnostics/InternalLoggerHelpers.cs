@@ -18,7 +18,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// </summary>
         /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
         /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
-        /// <param name="logName">Имя продукта, используемое в имени файла внутреннего лога.</param>
+        /// <param name="logName">Семейство продукта, используемое в имени файла внутреннего лога.</param>
         /// <param name="logDir">Каталог внутренних логов; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
         public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string? logDir = null)
         {
