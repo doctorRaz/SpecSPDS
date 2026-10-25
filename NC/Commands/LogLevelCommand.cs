@@ -1,3 +1,4 @@
+using dRz.Abstractions.Services.Message;
 using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
@@ -35,7 +36,10 @@ namespace dRz.NC.Commands
         [Description("Настройка уровня логирования")]
         public void SetLogLevel()
         {
-            ManageLevel(LogLevelFileName, "уровня логирования");
+            IMessageService message = AddOnContext.Msg;
+            string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
+
+            ManageLevel(message, assemblyDirectory, LogLevelFileName, "уровня логирования");
         }
 
         /// <summary>
@@ -49,7 +53,10 @@ namespace dRz.NC.Commands
         [Description("Настройка внутренней диагностики логирования")]
         public void SetDiagnosticMode()
         {
-            ManageLevel(DiagnosticModeFileName, "внутренней диагностики логирования");
+            IMessageService message = AddOnContext.Msg;
+            string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
+
+            ManageLevel(message, assemblyDirectory, DiagnosticModeFileName, "внутренней диагностики логирования");
         }
 
         /// <summary>
@@ -57,7 +64,11 @@ namespace dRz.NC.Commands
         /// </summary>
         /// <param name="fileName">Имя файла настройки в каталоге сборки аддона.</param>
         /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
-        private static void ManageLevel(string fileName, string settingName)
+        private static void ManageLevel(
+            IMessageService message,
+            string assemblyDirectory,
+            string fileName,
+            string settingName)
         {
             App.Document? document = App.Application.DocumentManager.MdiActiveDocument;
             if (document == null)
@@ -83,20 +94,20 @@ namespace dRz.NC.Commands
                 return;
             }
 
-            string path = Path.Combine(AddOnContext.AddOnInfo.AssemblyDirectory, fileName);
+            string path = Path.Combine(assemblyDirectory, fileName);
 
             switch ((LogLevelAction)action)
             {
                 case LogLevelAction.Apply:
-                    SetLevel(document, path, fileName, settingName);
+                    SetLevel(message, document, path, fileName, settingName);
                     break;
 
                 case LogLevelAction.Delete:
-                    DeleteLevel(path, fileName, settingName);
+                    DeleteLevel(message, path, fileName, settingName);
                     break;
 
                 case LogLevelAction.Status:
-                    ShowStatus(path, fileName, settingName);
+                    ShowStatus(message, path, fileName, settingName);
                     break;
             }
         }
@@ -108,7 +119,12 @@ namespace dRz.NC.Commands
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настраиваемой функции логирования.</param>
-        private static void SetLevel(App.Document document, string path, string fileName, string settingName)
+        private static void SetLevel(
+            IMessageService message,
+            App.Document document,
+            string path,
+            string fileName,
+            string settingName)
         {
             List<Keywords> levelKeywords = new List<Keywords>
             {
@@ -137,12 +153,12 @@ namespace dRz.NC.Commands
             try
             {
                 File.WriteAllText(path, level + Environment.NewLine);
-                AddOnContext.Msg.InfoMessage(
+                message.InfoMessage(
                     $"Для {settingName} установлен уровень {level} в файле {fileName}. Для применения изменения необходимо перезапустить nanoCAD.");
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage($"Не удалось записать файл {fileName}.", ex);
+                message.ErrorMessage($"Не удалось записать файл {fileName}.", ex);
             }
         }
 
@@ -152,25 +168,29 @@ namespace dRz.NC.Commands
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
-        private static void DeleteLevel(string path, string fileName, string settingName)
+        private static void DeleteLevel(
+            IMessageService message,
+            string path,
+            string fileName,
+            string settingName)
         {
             try
             {
                 if (File.Exists(path))
                 {
                     File.Delete(path);
-                    AddOnContext.Msg.InfoMessage(
+                    message.InfoMessage(
                         $"Переопределение {settingName} удалено (файл {fileName}). Для применения изменения необходимо перезапустить nanoCAD.");
                 }
                 else
                 {
-                    AddOnContext.Msg.InfoMessage(
+                    message.InfoMessage(
                         $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
                 }
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage($"Не удалось удалить файл {fileName}.", ex);
+                message.ErrorMessage($"Не удалось удалить файл {fileName}.", ex);
             }
         }
 
@@ -180,13 +200,17 @@ namespace dRz.NC.Commands
         /// <param name="path">Полный путь к файлу настройки.</param>
         /// <param name="fileName">Имя файла для сообщения пользователю.</param>
         /// <param name="settingName">Название настройки для сообщения о программном значении.</param>
-        private static void ShowStatus(string path, string fileName, string settingName)
+        private static void ShowStatus(
+            IMessageService message,
+            string path,
+            string fileName,
+            string settingName)
         {
             try
             {
                 if (!File.Exists(path))
                 {
-                    AddOnContext.Msg.InfoMessage(
+                    message.InfoMessage(
                         $"Файл {fileName} отсутствует. Используется программное значение {settingName}.");
                     return;
                 }
@@ -194,14 +218,14 @@ namespace dRz.NC.Commands
                 string[] lines = File.ReadAllLines(path);
                 string level = lines.Length > 0 ? lines[0].Trim() : string.Empty;
 
-                AddOnContext.Msg.InfoMessage(
+                message.InfoMessage(
                     string.IsNullOrWhiteSpace(level)
                         ? $"Файл {fileName} существует, но первая строка пуста."
                         : $"В файле {fileName} указан уровень: {level}.");
             }
             catch (Exception ex)
             {
-                AddOnContext.Msg.ErrorMessage($"Не удалось прочитать файл {fileName}.", ex);
+                message.ErrorMessage($"Не удалось прочитать файл {fileName}.", ex);
             }
         }
 
