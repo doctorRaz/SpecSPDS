@@ -7,6 +7,8 @@
 		<RootNamespace>$(Vendor).$(MSBuildProjectName)</RootNamespace>
 		<!-- Версия языка -->
 		<LangVersion>latest</LangVersion>
+		<!-- Отключить предупреждение об окончании поддержки целевого .NET -->
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<!-- Nullable Reference Types -->
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>false</ImplicitUsings>
