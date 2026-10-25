@@ -58,6 +58,34 @@ namespace dRz.NC
             {
                 IUpdateSettings updateSettings = settings.Updates;// Получаем настройки обновлений аддона
 
+                UpdateManager updateManager = new UpdateManager(
+                    _msg,
+                    _msgprt,
+                    _loggerFactory,
+                    updateSettings);
+
+                // Очистка выполняется только при автоматическом запуске и до проверки интервала.
+                // Файловые операции не блокируют синхронную инициализацию nanoCAD.
+                // Ошибка очистки не должна прерывать проверку обновлений.
+                if (launchMode == UpdateLaunchMode.Automatic)
+                {
+                    try
+                    {
+                        await Task.Run(() => updateManager.Cleanup(addOnInfo.PackageDirectory));
+                    }
+                    catch (Exception cleanupException)
+                    {
+                        try
+                        {
+                            _logger.Error(cleanupException, "Не удалось очистить резервные файлы перед автоматической проверкой обновлений.");
+                        }
+                        catch
+                        {
+                            // Ошибка логирования не должна препятствовать проверке обновлений.
+                        }
+                    }
+                }
+
                 int minDay = 1;
 
 #if DEBUG
@@ -102,12 +130,6 @@ namespace dRz.NC
 #endif
                 _logger.Trace($"updateUrl: {updateUrl}");
 
-                UpdateManager updateManager = new UpdateManager(
-                    _msg,
-                    _msgprt,
-                    _loggerFactory,
-                    updateSettings);
-
                 UpdateRequest request = new UpdateRequest
                 {
                     CurrentVersion = addOnInfo.InstalledVersion,
@@ -121,11 +143,8 @@ namespace dRz.NC
                 UpdateResult result = await updateManager.RunAsync(request);
 
                 // Обновляем LastCheck только если проверка/операция завершилась успешно.
-                // Ошибка, отмена и блокировка из-за сетевого расположения интервал не сбрасывают.
-                if (result is UpdateResult.Installed
-                    or UpdateResult.UpToDate
-                    or UpdateResult.Declined
-                    or UpdateResult.Disabled)
+                // Не обновляем LastCheck при ошибке или отмене.
+                if (result is not (UpdateResult.Failed or UpdateResult.Cancelled))
                 {
                     updateSettings.LastCheck = DateTime.UtcNow;
                 }

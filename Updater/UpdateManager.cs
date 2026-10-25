@@ -82,9 +82,6 @@ namespace dRz.Updater
                 ArgumentNullException.ThrowIfNull(request);
                 ValidateRequest(request);
 
-                // Удаляем резервные копии предыдущего запуска до создания новых.
-                await Task.Run(() => Cleanup(request.PackageDirectory));
-
                 // Без достоверно подтверждённого локального расположения обновление запрещено.
                 // Проверяем флаг до создания временных файлов и любых сетевых запросов.
                 if (!request.IsNotNetworkPath)

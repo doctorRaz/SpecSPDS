@@ -55,7 +55,7 @@ namespace dRz.Test.Console.Updater
             finally
             {
                 entryPoint.Terminate();
-                _logger?.Trace("Terminate");
+                _logger?.Trace($"{nameof(FakeCAD)}: Terminate");
             }
         }
 
