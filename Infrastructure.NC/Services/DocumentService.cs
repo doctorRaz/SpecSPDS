@@ -8,12 +8,23 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.NC.Infrastructure.Services
+namespace dRz.Infrastructure.NC.Services
 {
+    /// <summary>
+    /// Предоставляет информацию об активном документе nanoCAD.
+    /// </summary>
+    /// <remarks>
+    /// В тестовой сборке сведения о документе имитируются; состояние активности
+    /// задаётся через свойство <see cref="IsActive"/>.
+    /// </remarks>
     public class DocumentService : IDocumentService
     {
         #region Public Properties
 
+        /// <summary>
+        /// Возвращает имя файла активного документа вместе с расширением.
+        /// </summary>
+        /// <exception cref="NullReferenceException">Активный документ отсутствует.</exception>
         public string FileName
         {
             get
@@ -22,6 +33,10 @@ namespace dRz.NC.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Возвращает имя файла активного документа без расширения.
+        /// </summary>
+        /// <exception cref="NullReferenceException">Активный документ отсутствует.</exception>
         public string FileNameNoExtension
         {
             get
@@ -30,6 +45,10 @@ namespace dRz.NC.Infrastructure.Services
             }
         }
 
+        /// <summary>
+        /// Возвращает полный путь активного документа.
+        /// </summary>
+        /// <exception cref="NullReferenceException">Активный документ отсутствует.</exception>
         public string FullPath
         {
             get
@@ -49,6 +68,9 @@ namespace dRz.NC.Infrastructure.Services
 
 #if !TEST
 
+        /// <summary>
+        /// Возвращает признак наличия активного документа в nanoCAD.
+        /// </summary>
         public bool IsActive
         {
             get
@@ -63,9 +85,10 @@ namespace dRz.NC.Infrastructure.Services
         /// <summary>The is active</summary>
         private bool _isActive = true;
 
-        /// <summary>Активен ли документ
-        /// меняем руками  через свойства
+        /// <summary>
+        /// Возвращает или задаёт тестовый признак активности документа.
         /// </summary>
+        /// <remarks>Используется в тестовой сборке для имитации наличия активного документа.</remarks>
         public bool IsActive
         {
             get => _isActive;
