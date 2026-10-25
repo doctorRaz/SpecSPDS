@@ -5,7 +5,7 @@ using System.Reflection;
 namespace dRz.Infrastructure.Infrastructure
 {
     /// <summary>
-    Регистрация и получение сведений о сборках аддонов.
+    ///Регистрация и получение сведений о сборках аддонов.
     /// </summary>
     public static class AddOnInfoProvider
     {
