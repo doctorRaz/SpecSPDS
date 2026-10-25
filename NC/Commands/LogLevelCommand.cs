@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using Rtm = Teigha.Runtime;
+using dRz.Abstractions.Infrastructure;
 
 namespace dRz.NC.Commands
 {
@@ -66,7 +67,7 @@ namespace dRz.NC.Commands
 
             List<Keywords> actionKeywords = new List<Keywords>
             {
-                new Keywords(nameof(LogLevelAction.Set), LogLevelAction.Set),
+                new Keywords(nameof(LogLevelAction.Apply), LogLevelAction.Apply),
                 new Keywords(nameof(LogLevelAction.Delete), LogLevelAction.Delete),
                 new Keywords(nameof(LogLevelAction.Status), LogLevelAction.Status)
             };
@@ -86,7 +87,7 @@ namespace dRz.NC.Commands
 
             switch ((LogLevelAction)action)
             {
-                case LogLevelAction.Set:
+                case LogLevelAction.Apply:
                     SetLevel(document, path, fileName, settingName);
                     break;
 
@@ -210,7 +211,7 @@ namespace dRz.NC.Commands
         private enum LogLevelAction
         {
             [Description("Установить")]
-            Set,
+            Apply,
             [Description("уДалить")]
             Delete,
             [Description("Статус")]
