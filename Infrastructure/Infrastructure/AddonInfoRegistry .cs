@@ -27,31 +27,51 @@ namespace dRz.Infrastructure.Infrastructure
 
         #region Public Properties
 
+        /// <summary>Возвращает количество сборок, зарегистрированных в реестре.</summary>
         public int Count => _addons.Count;
 
         #endregion Public Properties
 
         #region Public Methods
 
+        /// <summary>Возвращает пути сборок, зарегистрированных в реестре.</summary>
+        /// <returns>Коллекция ключей реестра — полных путей к сборкам.</returns>
         public ICollection<string> GetKeys()
         {
             return _addons.Keys;
         }
 
+        /// <summary>Возвращает сведения о сборке из реестра или создаёт и регистрирует их.</summary>
+        /// <param name="assembly">Сборка, для которой требуются сведения.</param>
+        /// <returns>Зарегистрированные сведения о сборке.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="assembly"/> равен <see langword="null"/>.</exception>
         public IAddOnInfo GetOrAdd(Assembly assembly)
         {
             return _addons.GetOrAdd(assembly.Location, key => new AddOnInfo(assembly));
         }
 
+        /// <summary>Возвращает сведения о сборке, содержащей тип <typeparamref name="T"/>, или регистрирует их.</summary>
+        /// <typeparam name="T">Тип, определяющий сборку.</typeparam>
+        /// <returns>Зарегистрированные сведения о сборке.</returns>
         public IAddOnInfo GetOrAdd<T>() => GetOrAdd(typeof(T).Assembly);
 
+        /// <summary>Возвращает сведения о сборке, содержащей указанный тип, или регистрирует их.</summary>
+        /// <param name="type">Тип, определяющий сборку.</param>
+        /// <returns>Зарегистрированные сведения о сборке.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="type"/> равен <see langword="null"/>.</exception>
         public IAddOnInfo GetOrAdd(Type type) => GetOrAdd(type.Assembly);
 
+        /// <summary>Возвращает сведения обо всех сборках, зарегистрированных на текущий момент.</summary>
+        /// <returns>Снимок значений реестра.</returns>
         public IReadOnlyCollection<IAddOnInfo> GetValues()
         {
             return _addons.Values.ToArray();
         }
 
+        /// <summary>Пытается получить сведения о сборке из реестра без её регистрации.</summary>
+        /// <param name="assembly">Сборка для поиска.</param>
+        /// <param name="info">При успехе содержит сведения о сборке; иначе <see langword="null"/>.</param>
+        /// <returns><see langword="true"/>, если сборка найдена; иначе <see langword="false"/>.</returns>
         public bool TryGet(Assembly assembly, out IAddOnInfo? info)
         {
             return _addons.TryGetValue(
