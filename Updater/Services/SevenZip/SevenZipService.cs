@@ -11,6 +11,9 @@ namespace dRz.Updater.Services.SevenZip
     /// </summary>
     public sealed class SevenZipService
     {
+        /// <summary>
+        /// Инициализирует сервис для работы с архивами 7z.
+        /// </summary>
         public SevenZipService()
         {
             // Каталог сборки Updater, а не основного аддона.

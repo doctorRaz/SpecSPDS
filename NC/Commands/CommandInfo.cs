@@ -15,6 +15,10 @@ namespace dRz.NC.Commands
     /// </summary>
     public sealed class CommandInfo
     {
+
+        /// <summary>
+        /// Инициализирует новый экземпляр класса <see cref="CmdInfo"/>.
+        /// </summary>
         [Rtm.CommandMethod(CommandPrefix.Value + "_CommandInfo")]
         [Description("Список зарегистрированных команд с описанием")]
         public static void CmdInfo()

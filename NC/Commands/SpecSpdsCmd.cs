@@ -32,8 +32,6 @@ namespace dRz.NC.Commands
 
         private static IMessageService _msg = AddOnContext.Msg;
 
-        private static IAddonSettings? _settings;
-
         /// <summary>
         /// спека с маркеров
         /// </summary>
@@ -181,6 +179,4 @@ namespace dRz.NC.Commands
             propXml.SaveProps();//для отладки
         }
     }
-
-
 }
