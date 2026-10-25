@@ -143,11 +143,8 @@ namespace dRz.NC
                 UpdateResult result = await updateManager.RunAsync(request);
 
                 // Обновляем LastCheck только если проверка/операция завершилась успешно.
-                // Ошибка, отмена и блокировка из-за сетевого расположения интервал не сбрасывают.
-                if (result is UpdateResult.Installed
-                    or UpdateResult.UpToDate
-                    or UpdateResult.Declined
-                    or UpdateResult.Disabled)
+                // Не обновляем LastCheck при ошибке или отмене.
+                if (result is not (UpdateResult.Failed or UpdateResult.Cancelled))
                 {
                     updateSettings.LastCheck = DateTime.UtcNow;
                 }
