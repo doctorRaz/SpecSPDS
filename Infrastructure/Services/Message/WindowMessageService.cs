@@ -14,12 +14,20 @@ namespace dRz.Infrastructure.Services.Message
         private readonly string _productTitlePrefix;
         private readonly IntPtr _cadWindowHandle;
 
+        /// <summary>Создаёт оконный сервис сообщений с привязкой диалогов к окну CAD-приложения.</summary>
+        /// <param name="productTitlePrefix">Префикс заголовка окна, обычно содержащий название и версию продукта.</param>
+        /// <param name="handleProvider">Поставщик дескриптора главного окна CAD-приложения.</param>
+        /// <exception cref="ArgumentNullException">Поставщик дескриптора равен <see langword="null"/>.</exception>
         public WindowMessageService(string productTitlePrefix, IWindowHandleProvider handleProvider)
         {
             _productTitlePrefix = productTitlePrefix;
             _cadWindowHandle = handleProvider.Handle;
         }
 
+        /// <summary>Показывает оконное сообщение об исключении.</summary>
+        /// <param name="ex">Исключение, сведения о котором требуется показать.</param>
+        /// <param name="title">Дополнительный заголовок окна.</param>
+        /// <param name="caller">Имя вызывающего метода; в сборке Debug выводится перед текстом.</param>
         public void ErrorMessage(Exception ex, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
@@ -27,6 +35,11 @@ namespace dRz.Infrastructure.Services.Message
                 BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>Показывает оконное сообщение об ошибке, при необходимости дополняя его исключением.</summary>
+        /// <param name="message">Текст сообщения.</param>
+        /// <param name="ex">Необязательное исключение.</param>
+        /// <param name="title">Дополнительный заголовок окна.</param>
+        /// <param name="caller">Имя вызывающего метода; в сборке Debug выводится перед текстом.</param>
         public void ErrorMessage(string message, Exception? ex = null, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
@@ -35,6 +48,10 @@ namespace dRz.Infrastructure.Services.Message
                 BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        /// <summary>Показывает информационное окно.</summary>
+        /// <param name="message">Текст сообщения.</param>
+        /// <param name="title">Дополнительный заголовок окна.</param>
+        /// <param name="caller">Имя вызывающего метода; в сборке Debug выводится перед текстом.</param>
         public void InfoMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
@@ -42,6 +59,10 @@ namespace dRz.Infrastructure.Services.Message
                 BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        /// <summary>Показывает окно предупреждения.</summary>
+        /// <param name="message">Текст сообщения.</param>
+        /// <param name="title">Дополнительный заголовок окна.</param>
+        /// <param name="caller">Имя вызывающего метода; в сборке Debug выводится перед текстом.</param>
         public void WarningMessage(string message, string title = "", [CallerMemberName] string? caller = null)
         {
             ActivateCadWindow();
@@ -49,14 +70,29 @@ namespace dRz.Infrastructure.Services.Message
                 BuildTitle(title), MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
+        /// <summary>Показывает запрос с вариантами «Прервать», «Повторить» и «Пропустить».</summary>
+        /// <param name="message">Текст запроса.</param><param name="title">Дополнительный заголовок окна.</param><param name="caller">Имя вызывающего метода.</param>
+        /// <returns>Результат выбора пользователя.</returns>
         public MessageResult AskAbortRetryIgnore(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.AbortRetryIgnore, Forms.MessageBoxIcon.Warning);
 
+        /// <summary>Показывает запрос с вариантами «ОК» и «Отмена».</summary>
+        /// <param name="message">Текст запроса.</param><param name="title">Дополнительный заголовок окна.</param><param name="caller">Имя вызывающего метода.</param>
+        /// <returns>Результат выбора пользователя.</returns>
         public MessageResult AskOkCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.OKCancel, Forms.MessageBoxIcon.Question);
 
+        /// <summary>Показывает запрос с вариантами «Повторить» и «Отмена».</summary>
+        /// <param name="message">Текст запроса.</param><param name="title">Дополнительный заголовок окна.</param><param name="caller">Имя вызывающего метода.</param>
+        /// <returns>Результат выбора пользователя.</returns>
         public MessageResult AskRetryCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.RetryCancel, Forms.MessageBoxIcon.Question);
 
+        /// <summary>Показывает запрос с вариантами «Да» и «Нет».</summary>
+        /// <param name="message">Текст запроса.</param><param name="title">Дополнительный заголовок окна.</param><param name="caller">Имя вызывающего метода.</param>
+        /// <returns>Результат выбора пользователя.</returns>
         public MessageResult AskYesNo(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNo, Forms.MessageBoxIcon.Question);
 
+        /// <summary>Показывает запрос с вариантами «Да», «Нет» и «Отмена».</summary>
+        /// <param name="message">Текст запроса.</param><param name="title">Дополнительный заголовок окна.</param><param name="caller">Имя вызывающего метода.</param>
+        /// <returns>Результат выбора пользователя.</returns>
         public MessageResult AskYesNoCancel(string message, string title = "", [CallerMemberName] string? caller = null) => ShowPrompt(message, title, caller, Forms.MessageBoxButtons.YesNoCancel, Forms.MessageBoxIcon.Question);
 
         private MessageResult ShowPrompt(
