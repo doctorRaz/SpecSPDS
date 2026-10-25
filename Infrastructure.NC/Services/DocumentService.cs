@@ -8,7 +8,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.NC.Infrastructure.Services
+namespace dRz.Infrastructure.NC.Services
 {
     /// <summary>
     /// Предоставляет информацию об активном документе nanoCAD.
