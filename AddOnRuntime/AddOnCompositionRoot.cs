@@ -4,6 +4,7 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.Infrastructure.Infrastructure;
+using dRz.Infrastructure.NC.Services;
 using dRz.Infrastructure.Services.Message;
 using dRz.LogBootstrap;
 using dRz.NC.Infrastructure.Services;
@@ -14,8 +15,6 @@ using SimpleInjector.Lifestyles;
 using System;
 using System.IO;
 using System.Reflection;
-
-//using Container = SimpleInjector.Container;
 
 namespace dRz.AddOnRuntime
 {
@@ -96,16 +95,11 @@ namespace dRz.AddOnRuntime
             //регистрируемая сборка
             container.RegisterInstance(addOnAssembly);
 
-            //IAddOnInfo регистрация не нужна
-            //container.GetOrAdd<IAddOnInfo, AddOnInfo>(Lifestyle.Singleton);
+            //инфо о системе
+            container.RegisterSingleton<ISysInfo, SysInfo>();
 
-            //инфо о системе, пока экземплярный
-            //todo засунуть в статический контейнер
-            container.Register<ISysInfo, SysInfo>(Lifestyle.Singleton);
-
-            //инфо о хосте, каде, пока экземплярный
-            //todo засунуть в статический контейнер
-            container.Register<ICadInfo, CadInfo>(Lifestyle.Singleton);
+            //инфо о хосте
+            container.RegisterSingleton<ICadInfo, CadInfo>();
 
             // AddOnInfoRegistry регистрируем интерфейс
             //      создания IAddOnInfo (только в контейнере)
@@ -118,50 +112,48 @@ namespace dRz.AddOnRuntime
             //чтение при получении в контейнере IAddOnInfoRegistry
             container.RegisterSingleton<IAddOnInfoRegistry, AddOnInfoRegistry>();
 
-            //old version
-            //container.RegisterSingleton<IAddOnInfo>(() =>
-            //                                    container.GetInstance<IAddOnInfoRegistry>()
-            //                                   .GetOrAdd(addOnAssembly));
-
             //регистрация-получение новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
             // регистрация только из контейнера
             container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
 
-            //old
-            //container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoRegistry.Get(addOnAssembly));
+
         }
 
         /// <summary>Registers the services.</summary>
         /// <param name="container">The container.</param>
         private void RegisterServices(Container container)
         {
-            container.Register<IWindowHandleProvider, CadWindowProvider>(Lifestyle.Singleton);//IntPtr Handle
+            container.RegisterSingleton<IWindowHandleProvider, CadWindowProvider>();//IntPtr Handle
 
             // серви сообщений ком строки
-            container.Register<ICommandLineMessageService, CommandLineMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<ICommandLineMessageService, CommandLineMessageService>();
 
             //сервис мультикад сообщений
-            //   внутри корявая маршрутизация:
+            //   внутри маршрутизация:
             //      если вызов без документа, то попытается отправить в мультикад окошко
             //          если неуспех выведет алерт кад
-            container.Register<IMcNotificatorMessageService, McNotificatorMessageServise>();
+            container.RegisterSingleton<IMcNotificatorMessageService, McNotificatorMessageServise>();
 
             //сервис Win сообщений
-            container.Register<IWindowMessageService, WindowMessageService>(Lifestyle.Singleton);
+            container.RegisterSingleton<IWindowMessageService>(() => new WindowMessageService(
+                container.GetInstance<IAddOnInfo>().ProductTitlePrefix,
+                container.GetInstance<IWindowHandleProvider>()));
 
             //сервис маршрутизации сообщений,
             //  документ есть ->ком строка
             //  документа нет -> Win
             container.RegisterSingleton<MessageService>();
-            container.Register<IMessageService>(() => container.GetInstance<MessageService>());
-            container.Register<IMessagePromptService>(() => container.GetInstance<MessageService>());
 
-            // сервисс документов
-            container.Register<IDocumentService, DocumentService>(Lifestyle.Singleton);
+            container.RegisterSingleton<IMessageService>(() => container.GetInstance<MessageService>());
 
-            // фабрика логера, одна на ProduktName
-            //  при повторном создании с ттем же продуккт наме, будет использоваться эта же фабрика
-            //      если даже внутри одного аддоона, но в другой сборке будет создан контейнер и имя продуккта другое,
+            container.RegisterSingleton<IMessagePromptService>(() => container.GetInstance<MessageService>());
+
+            // сервис документов
+            container.RegisterSingleton<IDocumentService, DocumentService>();
+
+            // фабрика логгера, одна на ProduktName
+            //  при повторном создании с тем же продукт наме, будет использоваться эта же фабрика
+            //      если даже внутри одного аддона, но в другой сборке будет создан контейнер и имя продукта другое,
             //      в этой сборке будет использоваться другая фабрика
             container.RegisterSingleton<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()));
 
@@ -169,15 +161,27 @@ namespace dRz.AddOnRuntime
             //container.GetOrAdd<IDrzLoggerFactory>(() => NLogBootstrap.GetLoggerFactory(container.GetInstance<IAddOnInfo>()), Lifestyle.Transient);
 
             // Настройки принадлежат основному аддону и загружаются один раз.
+
             container.RegisterSingleton<JsonSettingsStore>(() =>
-                new JsonSettingsStore(
-                    Path.Combine(container.GetInstance<IAddOnInfo>().ProductDataDirectory, "settings.json"),
+            {
+                IAddOnInfo addonInfo = container.GetInstance<IAddOnInfo>();
+
+                string filePath = Path.Combine(
+                                                addonInfo.ProductDataDirectory,
+                                                "Settings",
+                                                addonInfo.HostFamily,
+                                                "GeneralSettings.json"
+                                               );
+
+                return new JsonSettingsStore(
+                    filePath,
                     container.GetInstance<IDrzLoggerFactory>(),
-                    container.GetInstance<IMessageService>()));
+                    container.GetInstance<IMessageService>());
+            });
 
             container.RegisterSingleton<SettingsManager>();
-            container.RegisterSingleton<IAddonSettings>(() =>
-                container.GetInstance<SettingsManager>().Load());
+
+            container.RegisterSingleton<IAddonSettings>(() => container.GetInstance<SettingsManager>().Load());
         }
 
         #endregion Private Methods

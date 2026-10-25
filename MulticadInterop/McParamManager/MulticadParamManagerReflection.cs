@@ -66,7 +66,7 @@ namespace drz.MulticadInterop.McParamManager
                 }
             }
 
-            return null;
+            return null!;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace drz.MulticadInterop.McParamManager
                 }
             }
 
-            return null;
+            return null!;
         }
     }
 }

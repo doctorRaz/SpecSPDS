@@ -23,7 +23,7 @@ AppSettings я б засунул именно в то, что работает �
 using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.Src.Infrastructure;
+using dRz.NC.Infrastructure;
 using dRz.Test.Console;
 using System;
 using System.Diagnostics;
@@ -80,7 +80,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto clone;
-                //******
+            //******
             transfer:
 
                 #region ContainerTransfer
@@ -100,7 +100,7 @@ namespace dRz.SpecSPDS.Test
 
                 ConsoleReadKey();
                 goto transfer;
-                //******
+            //******
             message:
 
                 #region TEST MESSAGE

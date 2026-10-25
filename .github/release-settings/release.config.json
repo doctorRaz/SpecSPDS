@@ -4,13 +4,7 @@
         {
             "name": "SpecSPDS.NC",
             "projects": [
-                "SpecSPDS.NC/NC.csproj"
-            ]
-        },
-        {
-            "name": "Debug",
-            "projects": [
-                "Test.Console.Updater/Test.Console.Updater.csproj"
+                "NC/NC.csproj"
             ]
         }
     ],

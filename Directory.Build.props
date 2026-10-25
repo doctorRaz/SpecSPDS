@@ -7,6 +7,8 @@
 		<RootNamespace>$(Vendor).$(MSBuildProjectName)</RootNamespace>
 		<!-- Версия языка -->
 		<LangVersion>latest</LangVersion>
+		<!-- Отключить предупреждение об окончании поддержки целевого .NET -->
+		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<!-- Nullable Reference Types -->
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>false</ImplicitUsings>
@@ -23,7 +25,7 @@
 	<!-- ================================================================= -->
 	<PropertyGroup>
 		<!-- Базовая версия продукта -->
-		<Version Condition="'$(Version)' == ''">0.5</Version>
+		<Version Condition="'$(Version)' == ''">1.4</Version>
 		<!--
 			Версия аналогична механизму AssemblyVersion=0.1.*
 			Build  = количество дней от 01.01.2000
@@ -53,7 +55,7 @@
 		<!-- Авторские права -->
 		<Copyright>©Разыграев Андрей $(StartYear)-$(CurrentYear)</Copyright>
 		<!-- Домашняя страница проекта -->
-		<RepositoryUrl>https://github.com/doctorRaz</RepositoryUrl>
+		<RepositoryUrl>https://github.com/doctorRaz/$(SolutionName)</RepositoryUrl>
 		<NeutralLanguage>ru-RU</NeutralLanguage>
 	</PropertyGroup>
 	<!-- ================================================================= -->

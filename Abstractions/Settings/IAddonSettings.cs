@@ -6,6 +6,11 @@ namespace dRz.Abstractions.Settings
     public interface IAddonSettings
     {
         /// <summary>
+        /// Общие настройки аддона.
+        /// </summary>
+        IGeneralSettings General { get; }
+
+        /// <summary>
         /// Настройки проверки и установки обновлений.
         /// </summary>
         IUpdateSettings Updates { get; }

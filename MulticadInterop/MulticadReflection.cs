@@ -36,7 +36,7 @@ namespace drz.MulticadInterop
                 }
             }
 
-            return null;
+            return null!;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace drz.MulticadInterop
                 }
             }
 
-            return null;
+            return null!;
         }
     }
 }
