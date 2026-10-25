@@ -6,12 +6,6 @@
             "projects": [
                 "NC/NC.csproj"
             ]
-        },
-        {
-            "name": "Debug",
-            "projects": [
-                "Test.Console.Updater/Test.Console.Updater.csproj"
-            ]
         }
     ],
     "modules": [
