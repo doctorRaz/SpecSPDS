@@ -271,11 +271,11 @@ namespace dRz.NC.Commands
         /// </summary>
         private enum LogLevelAction
         {
-            [Description("Установить")]
+            [Description("Задать")]
             Apply,
-            [Description("уДалить")]
+            [Description("Сбросить")]
             Delete,
-            [Description("Статус")]
+            [Description("Показать")]
             Status
         }
 
