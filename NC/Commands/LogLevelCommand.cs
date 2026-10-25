@@ -1,7 +1,7 @@
 using dRz.Core.Services;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
-using App=HostMgd.ApplicationServices;
+using App = HostMgd.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -58,7 +58,7 @@ namespace dRz.NC.Commands
         /// <param name="settingName">Название настройки, используемое в сообщениях пользователю.</param>
         private static void ManageLevel(string fileName, string settingName)
         {
-          App.  Document? document =App. Application.DocumentManager.MdiActiveDocument;
+            App.Document? document = App.Application.DocumentManager.MdiActiveDocument;
             if (document == null)
             {
                 return;
@@ -209,8 +209,11 @@ namespace dRz.NC.Commands
         /// </summary>
         private enum LogLevelAction
         {
+            [Description("Установить")]
             Set,
+            [Description("уДалить")]
             Delete,
+            [Description("Статус")]
             Status
         }
 
