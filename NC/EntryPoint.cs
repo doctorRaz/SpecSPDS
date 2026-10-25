@@ -318,7 +318,7 @@ namespace dRz.NC
         /// </summary>
         public void Terminate()
         {
-            _logger?.Trace("Terminate");
+            _logger?.Trace($"{nameof(EntryPoint)}: Terminate");
 
             // Сохранение настроек здесь не выполняется: состояние настроек управляется отдельным сервисом.
             //dsf.SaveDataSet();
