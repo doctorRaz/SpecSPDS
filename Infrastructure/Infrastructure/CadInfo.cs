@@ -8,12 +8,14 @@ using System.Text;
 namespace dRz.Infrastructure.Infrastructure;
 
 /// <summary>
-/// CadInfo
+/// Сведения о CAD-хосте, в процессе которого загружено приложение.
 /// </summary>
 public class CadInfo : ICadInfo
 {
     #region Public Constructors
 
+    /// <summary>Инициализирует сведения о текущем CAD-процессе.</summary>
+    /// <remarks>Если получить сведения о процессе не удаётся, используются значения по умолчанию и устанавливается <see cref="IsFallback"/>.</remarks>
     public CadInfo()
     {
         try
@@ -64,19 +66,32 @@ public class CadInfo : ICadInfo
     #region Public Properties
 
     // Значения по умолчанию
+    /// <summary>Возвращает название компании — разработчика CAD-приложения.</summary>
     public string CompanyName { get; } = string.Empty;
 
+    /// <summary>Возвращает сведения об авторских правах CAD-приложения.</summary>
     public string Copyright { get; } = string.Empty;
+    /// <summary>Возвращает полный путь к исполняемому файлу CAD-процесса.</summary>
     public string ExePath { get; } = string.Empty;
+    /// <summary>Возвращает описание исполняемого файла CAD-приложения.</summary>
     public string FileDescription { get; } = string.Empty;
+    /// <summary>Возвращает имя исполняемого файла CAD-приложения.</summary>
     public string FileName { get; } = string.Empty;
+    /// <summary>Возвращает версию файла CAD-приложения.</summary>
     public Version FileVersion { get; } = new(0, 0, 0, 0);
+    /// <summary>Возвращает разрядность текущего процесса в формате <c>X64</c> или <c>X32</c>.</summary>
     public string HostArchitecture { get; } = string.Empty;
+    /// <summary>Возвращает каталог установки CAD-приложения.</summary>
     public string InstallDirectory { get; } = string.Empty;
+    /// <summary>Указывает, является ли текущий процесс 64-разрядным.</summary>
     public bool Is64BitProcess { get; } = Environment.Is64BitProcess;
+    /// <summary>Указывает, что сведения о CAD-приложении не удалось полностью получить и остались значения по умолчанию.</summary>
     public bool IsFallback { get; private set; }
+    /// <summary>Возвращает исходное имя файла из версии исполняемого файла.</summary>
     public string OriginalFilename { get; } = string.Empty;
+    /// <summary>Возвращает название продукта CAD-приложения.</summary>
     public string ProductName { get; } = "Unknown CAD";
+    /// <summary>Возвращает версию продукта CAD-приложения.</summary>
     public Version ProductVersion { get; } = new(0, 0, 0, 0);
 
     #endregion Public Properties
@@ -102,16 +117,22 @@ public class CadInfo : ICadInfo
 
     #region Public Methods
 
+    /// <summary>Возвращает подробное текстовое представление сведений о CAD-приложении.</summary>
+    /// <returns>Строка с версиями, разрядностью и дополнительными сведениями о продукте.</returns>
     public string ToLongString()
     {
         return _longString;
     }
 
+    /// <summary>Возвращает краткое текстовое представление сведений о CAD-приложении.</summary>
+    /// <returns>Строка с названием, версиями продукта и разрядностью.</returns>
     public string ToShortString()
     {
         return _shortString;
     }
 
+    /// <summary>Возвращает основное текстовое представление сведений о CAD-приложении.</summary>
+    /// <returns>Строка с названием и версиями продукта и файла.</returns>
     public override string ToString()
     {
         return _defString;

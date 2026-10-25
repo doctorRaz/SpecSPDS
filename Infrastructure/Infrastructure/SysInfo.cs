@@ -7,6 +7,7 @@ using System.Management; // Не забудьте добавить ссылку
 
 namespace dRz.Infrastructure.Infrastructure
 {
+    /// <summary>Предоставляет сведения об операционной системе и аппаратном обеспечении компьютера.</summary>
     public class SysInfo : ISysInfo
     {
         #region Private Fields
@@ -28,6 +29,8 @@ namespace dRz.Infrastructure.Infrastructure
 
         #region Public Constructors
 
+        /// <summary>Инициализирует сведения об операционной системе, используя данные среды выполнения и реестра Windows.</summary>
+        /// <remarks>Если данные реестра недоступны, сохраняются базовые значения и <see cref="IsFallback"/> остаётся равным <see langword="true"/>.</remarks>
         public SysInfo()
         {
             // Устанавливаем базовые значения через Environment (служит дефолтом)
@@ -87,26 +90,38 @@ namespace dRz.Infrastructure.Infrastructure
 
         #region Public Properties
 
+        /// <summary>Возвращает разрядность операционной системы в формате <c>X64</c> или <c>X32</c>.</summary>
         public string Architecture { get; init; }
+        /// <summary>Возвращает идентификатор сборки Windows из реестра.</summary>
         public string BuildLab { get; init; } = "Unknown";
+        /// <summary>Возвращает отображаемую версию Windows.</summary>
         public string DisplayVersion { get; init; } = "Unknown";
+        /// <summary>Возвращает идентификатор редакции Windows.</summary>
         public string EditionId { get; init; } = "Unknown";
 
         //public string GpuInfo => _gpuInfo ??= GetGpuData();
+        /// <summary>Возвращает названия обнаруженных графических адаптеров или <c>Unknown</c>, если сведения недоступны.</summary>
         public string GpuInfo => _gpuInfo.Value;
 
+        /// <summary>Возвращает тип установки Windows, например клиентскую или серверную.</summary>
         public string InstallationType { get; init; } = "Unknown";
+        /// <summary>Указывает, что сведения из реестра не были получены и используются базовые значения.</summary>
         public bool IsFallback { get; init; }
+        /// <summary>Возвращает версию операционной системы, включая номер сборки и ревизию.</summary>
         public Version OsVersion { get; init; }
 
         //public string ProcessorName => _processorName ??= GetWmiValue("Win32_Processor", "Name");
+        /// <summary>Возвращает название процессора или <c>Unknown</c>, если сведения недоступны.</summary>
         public string ProcessorName => _processorName.Value;
 
+        /// <summary>Возвращает название операционной системы.</summary>
         public string ProductName { get; init; } = "Windows";
 
         //public string RamTotalGb => _ramTotal ??= GetRamTotal();
+        /// <summary>Возвращает общий объём оперативной памяти в гигабайтах в текстовом формате.</summary>
         public string RamTotalGb => _ramTotal.Value;
 
+        /// <summary>Возвращает версию операционной системы в строковом формате.</summary>
         public string VersionString => OsVersion.ToString();
 
         #endregion Public Properties
@@ -125,11 +140,17 @@ namespace dRz.Infrastructure.Infrastructure
 
         #region Public Methods
 
+        /// <summary>Возвращает подробное текстовое представление операционной системы и аппаратного обеспечения.</summary>
+        /// <returns>Строка с данными ОС, процессора, оперативной памяти и графических адаптеров.</returns>
         public string ToLongString() => $"{defStr}\n" +
                                          $"{longStr}";
 
+        /// <summary>Возвращает краткое текстовое представление операционной системы.</summary>
+        /// <returns>Строка с названием, версией и разрядностью ОС.</returns>
         public string ToShortString() => shortStr;
 
+        /// <summary>Возвращает основное текстовое представление операционной системы.</summary>
+        /// <returns>Строка с названием, версией и разрядностью ОС.</returns>
         public override string ToString() => defStr;
 
         #endregion Public Methods
