@@ -44,7 +44,7 @@ NLogBootstrap.GetLoggerFactory(IAddOnInfo addOnInfo)
 
 Уровень задаётся первой строкой файла `logger.level`, расположенного в `AssemblyDirectory`.
 
-Поддерживаются уровни NLog: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off`. Регистр не должен влиять на смысл значения, так как строка передаётся в `LogLevel.FromString`.
+Поддерживаются уровни NLog: `Trace`, `Debug`, `Info`, `Warn`, `Error`, `Fatal`, `Off`.
 
 Если файл отсутствует, первая строка пуста, значение некорректно или файл не удаётся прочитать, используется уровень по умолчанию:
 
