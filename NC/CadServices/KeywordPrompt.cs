@@ -8,7 +8,7 @@ namespace dRz.NC.CadServices
     /// <summary>
     /// Предоставляет выбор ключевого слова в командной строке CAD.
     /// </summary>
-    public class KeywordPrompt
+    public static class KeywordPrompt
     {
         /// <summary>
         /// Показывает список ключевых слов и возвращает связанное с выбранным словом значение.
@@ -42,7 +42,7 @@ namespace dRz.NC.CadServices
 
             foreach (KeywordOption keyword in optionsList)
             {
-                options.KeywordOption.Add(
+                options.Keywords.Add(
                     keyword.GlobalName,
                     keyword.LocalName,
                     keyword.DisplayName,
@@ -51,7 +51,7 @@ namespace dRz.NC.CadServices
 
                 if (keyword.IsDefault)
                 {
-                    options.KeywordOption.Default = keyword.GlobalName;
+                    options.Keywords.Default = keyword.GlobalName;
                 }
             }
 
