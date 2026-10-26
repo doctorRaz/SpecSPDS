@@ -1,15 +1,14 @@
+using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
-using App = HostMgd.ApplicationServices;
+using NLog.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
-using dRz.Abstractions.Infrastructure;
-using dRz.Abstractions.Logger;
-using NLog.Common;
 
 namespace dRz.NC.Commands.Common
 {
@@ -247,7 +246,6 @@ namespace dRz.NC.Commands.Common
             }
         }
 
-
         /// <summary>
         /// Определяет минимальный фактически включённый уровень для логгера.
         /// </summary>
@@ -272,8 +270,10 @@ namespace dRz.NC.Commands.Common
         {
             [Description("Задать")]
             Apply,
+
             [Description("Сбросить")]
             Delete,
+
             [Description("Показать")]
             Status
         }

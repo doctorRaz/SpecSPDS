@@ -68,7 +68,6 @@ namespace dRz.Test.Settings
             Assert.That(reloaded.Updates.LastResult, Is.EqualTo(UpdateResult.Installed));
         }
 
-
         [Test]
         public void Load_WhenGeneralSectionIsMissing_UsesGeneralDefaults()
         {

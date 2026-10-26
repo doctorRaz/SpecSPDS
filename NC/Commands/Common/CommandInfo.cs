@@ -1,6 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.CadServices;
+using dRz.NC.CadServices.Diagnostics;
 using dRz.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,6 @@ namespace dRz.NC.Commands.Common
     /// </summary>
     public sealed class CommandInfo
     {
-
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="CmdInfo"/>.
         /// </summary>

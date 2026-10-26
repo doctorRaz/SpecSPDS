@@ -2,7 +2,6 @@
 
 namespace dRz.NC.CadServices
 {
-
     public class Keywords
     {
         /// <summary>
@@ -168,7 +167,7 @@ namespace dRz.NC.CadServices
 
         private Enum? _answer;
 
-        private string _globalName=null!;
+        private string _globalName = null!;
         private string _localName = null!;
         private string _displayName = null!;
 
