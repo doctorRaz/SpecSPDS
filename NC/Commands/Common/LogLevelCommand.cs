@@ -88,14 +88,14 @@ namespace dRz.NC.Commands.Common
                 return;
             }
 
-            List<Keywords> actionKeywords = new List<Keywords>
+            List<KeywordOption> actionKeywords = new List<KeywordOption>
             {
-                new Keywords(nameof(LogLevelAction.Apply), LogLevelAction.Apply),
-                new Keywords(nameof(LogLevelAction.Delete), LogLevelAction.Delete),
-                new Keywords(nameof(LogLevelAction.Status), LogLevelAction.Status)
+                new KeywordOption(nameof(LogLevelAction.Apply), LogLevelAction.Apply),
+                new KeywordOption(nameof(LogLevelAction.Delete), LogLevelAction.Delete),
+                new KeywordOption(nameof(LogLevelAction.Status), LogLevelAction.Status)
             };
 
-            Enum? action = CadService.KeywordAnswer(
+            Enum? action = KeywordPrompt.GetAnswer(
                 document,
                 actionKeywords,
                 $"\nДействие для {settingName}: ",
@@ -139,18 +139,18 @@ namespace dRz.NC.Commands.Common
             string fileName,
             string settingName)
         {
-            List<Keywords> levelKeywords = new List<Keywords>
+            List<KeywordOption> levelKeywords = new List<KeywordOption>
             {
-                new Keywords(nameof(LogLevelValue.Trace), LogLevelValue.Trace),
-                new Keywords(nameof(LogLevelValue.Debug), LogLevelValue.Debug),
-                new Keywords(nameof(LogLevelValue.Info), LogLevelValue.Info),
-                new Keywords(nameof(LogLevelValue.Warn), LogLevelValue.Warn),
-                new Keywords(nameof(LogLevelValue.Error), LogLevelValue.Error),
-                new Keywords(nameof(LogLevelValue.Fatal), LogLevelValue.Fatal),
-                new Keywords(nameof(LogLevelValue.Off), LogLevelValue.Off)
+                new KeywordOption(nameof(LogLevelValue.Trace), LogLevelValue.Trace),
+                new KeywordOption(nameof(LogLevelValue.Debug), LogLevelValue.Debug),
+                new KeywordOption(nameof(LogLevelValue.Info), LogLevelValue.Info),
+                new KeywordOption(nameof(LogLevelValue.Warn), LogLevelValue.Warn),
+                new KeywordOption(nameof(LogLevelValue.Error), LogLevelValue.Error),
+                new KeywordOption(nameof(LogLevelValue.Fatal), LogLevelValue.Fatal),
+                new KeywordOption(nameof(LogLevelValue.Off), LogLevelValue.Off)
             };
 
-            Enum? answer = CadService.KeywordAnswer(
+            Enum? answer = KeywordPrompt.GetAnswer(
                 document,
                 levelKeywords,
                 $"\nНовый уровень для {settingName}: ",

@@ -43,14 +43,14 @@ namespace dRz.NC.Commands.Common
             UpdateMode previousMode = updateSettings.Mode;
             int previousInterval = updateSettings.UpdateCheckIntervalDays;
 
-            List<Keywords> modeKeywords = new List<Keywords>
+            List<KeywordOption> modeKeywords = new List<KeywordOption>
             {
-                new Keywords(nameof(UpdateMode.Disabled), UpdateMode.Disabled, previousMode == UpdateMode.Disabled),
-                new Keywords(nameof(UpdateMode.CheckAndNotify), UpdateMode.CheckAndNotify, previousMode == UpdateMode.CheckAndNotify),
-                new Keywords(nameof(UpdateMode.CheckAndInstall), UpdateMode.CheckAndInstall, previousMode == UpdateMode.CheckAndInstall)
+                new KeywordOption(nameof(UpdateMode.Disabled), UpdateMode.Disabled, previousMode == UpdateMode.Disabled),
+                new KeywordOption(nameof(UpdateMode.CheckAndNotify), UpdateMode.CheckAndNotify, previousMode == UpdateMode.CheckAndNotify),
+                new KeywordOption(nameof(UpdateMode.CheckAndInstall), UpdateMode.CheckAndInstall, previousMode == UpdateMode.CheckAndInstall)
             };
 
-            Enum? modeAnswer = CadService.KeywordAnswer(
+            Enum? modeAnswer = KeywordPrompt.GetAnswer(
                 document,
                 modeKeywords,
                 $"\nТекущий режим: {GetDescription(previousMode)}. Новый режим: ",
@@ -64,13 +64,13 @@ namespace dRz.NC.Commands.Common
             UpdateMode newMode = (UpdateMode)modeAnswer;
 
             // Период можно изменить независимо от режима, в том числе если режим оставлен прежним.
-            List<Keywords> intervalKeywords = new List<Keywords>
+            List<KeywordOption> intervalKeywords = new List<KeywordOption>
             {
-                new Keywords(nameof(AskYesNo.Yes), AskYesNo.Yes),
-                new Keywords(nameof(AskYesNo.No), AskYesNo.No, isDefault: true)
+                new KeywordOption(nameof(AskYesNo.Yes), AskYesNo.Yes),
+                new KeywordOption(nameof(AskYesNo.No), AskYesNo.No, isDefault: true)
             };
 
-            Enum? intervalAnswer = CadService.KeywordAnswer(
+            Enum? intervalAnswer = KeywordPrompt.GetAnswer(
                 document,
                 intervalKeywords,
                 $"\nТекущий период проверки: {previousInterval} дн. Изменить период? ",
