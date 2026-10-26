@@ -12,7 +12,7 @@ using Rtm = Teigha.Runtime;
 using Autodesk.AutoCAD.Runtime;
 #endif
 
-namespace dRz.NC.Services
+namespace dRz.NC.CadServices
 {
     /// <summary>
     /// Собирает объявления команд CAD и предоставляет выборки для диагностических отчётов.

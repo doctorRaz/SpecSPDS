@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -38,16 +39,16 @@ namespace dRz.NC.Commands.Common
 #endif
 
                 // Сбор объявлений отделён от формирования текстовых отчётов.
-                Services.CmdInfo report = new Services.CmdInfo(
+                CmdInfo report = new CmdInfo(
                     Assembly.GetExecutingAssembly(),
                     logger);
 
-                List<IGrouping<string, Services.CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
+                List<IGrouping<string, CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
                     .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
                     .ToList();
                 List<string> commandLines = new List<string>();
 
-                foreach (Services.CmdInfo.CommandEntry? command in report.RegisteredCommands
+                foreach (CmdInfo.CommandEntry? command in report.RegisteredCommands
                     .OrderBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase))
                 {
                     string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
@@ -71,7 +72,7 @@ namespace dRz.NC.Commands.Common
 
                 // Сохраняем собственную диагностику: выводим все методы, объявившие дубликат.
                 List<string> duplicateLines = new List<string>();
-                foreach (IGrouping<string, Services.CmdInfo.CommandEntry>? group in duplicateGroups)
+                foreach (IGrouping<string, CmdInfo.CommandEntry>? group in duplicateGroups)
                 {
                     duplicateLines.Add($"Дублированный атрибут: {group.Key}");
                     duplicateLines.AddRange(group
