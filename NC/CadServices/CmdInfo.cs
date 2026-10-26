@@ -30,7 +30,7 @@ namespace dRz.NC.CadServices
         /// <summary>Объявления команд, глобальное имя которых встречается ровно один раз.</summary>
         public IEnumerable<CommandEntry> RegisteredCommands =>
             Commands
-                .GroupBy(command => command.CommandName)
+                .GroupBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase)
                 .Where(group => group.Count() == 1)
                 .SelectMany(group => group);
 
@@ -40,7 +40,7 @@ namespace dRz.NC.CadServices
         /// </summary>
         public IEnumerable<IGrouping<string, CommandEntry>> DuplicateCommands =>
             Commands
-                .GroupBy(command => command.CommandName)
+                .GroupBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase)
                 .Where(group => group.Count() > 1);
 
         /// <summary>Описание одного объявления команды.</summary>
