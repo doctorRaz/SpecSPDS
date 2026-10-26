@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace dRz.Core.Extensions
+namespace dRz.NC.CadServices
 {
     public static class EnumExtensions
     {

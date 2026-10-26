@@ -1,7 +1,6 @@
-﻿using dRz.Core.Extensions;
-using System;
+﻿using System;
 
-namespace dRz.Core
+namespace dRz.NC.CadServices
 {
 
     public class Keywords
