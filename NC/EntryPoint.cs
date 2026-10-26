@@ -23,6 +23,7 @@ using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 
 using Rtm = Teigha.Runtime;
+using dRz.NC.Commands.Service;
 
 #elif AC
 

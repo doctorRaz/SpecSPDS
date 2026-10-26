@@ -11,7 +11,7 @@ using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands
+namespace dRz.NC.Commands.Service
 {
     /// <summary>
     /// Изменение режима и периода автоматического обновления через командную строку nanoCAD.

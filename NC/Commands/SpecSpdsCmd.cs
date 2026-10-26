@@ -1,6 +1,5 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.Abstractions.Settings;
 using dRz.Application.Enums;
 using dRz.Application.Models;
 using dRz.Application.Services;
@@ -8,6 +7,7 @@ using dRz.Application.Settings;
 using dRz.Core;
 using dRz.Core.Extensions;
 using dRz.NC.CadServices;
+using dRz.NC.Commands.Service;
 using dRz.NC.Infrastructure;
 using dRz.NC.Services;
 using HostMgd.EditorInput;
