@@ -9,7 +9,7 @@ using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Service
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// Изменение общих настроек аддона через командную строку nanoCAD.

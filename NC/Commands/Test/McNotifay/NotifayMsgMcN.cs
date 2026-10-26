@@ -3,7 +3,7 @@ using dRz.Abstractions.Services.Message;
 using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 
-namespace dRz.NC.TestCommands.McNotifay
+namespace dRz.NC.Commands.Test.McNotifay
 {
     public class NotifayMsgMcN
     {

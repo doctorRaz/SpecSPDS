@@ -21,9 +21,8 @@ using dRz.NC.Commands;
 
 using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
-
 using Rtm = Teigha.Runtime;
-using dRz.NC.Commands.Service;
+using dRz.NC.Commands.Common;
 
 #elif AC
 

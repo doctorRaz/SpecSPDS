@@ -7,7 +7,6 @@ using dRz.Application.Settings;
 using dRz.Core;
 using dRz.Core.Extensions;
 using dRz.NC.CadServices;
-using dRz.NC.Commands.Service;
 using dRz.NC.Infrastructure;
 using dRz.NC.Services;
 using HostMgd.EditorInput;
@@ -28,7 +27,7 @@ namespace dRz.NC.Commands
 
     public class SpecSpdsCmd
     {
-        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(SpecSpdsCmd));
 
         private static IMessageService _msg = AddOnContext.Msg;
 

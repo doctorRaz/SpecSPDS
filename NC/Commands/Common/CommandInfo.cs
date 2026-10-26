@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Service
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// Команда вывода списка объявленных CAD-команд и отчёта о дубликатах.

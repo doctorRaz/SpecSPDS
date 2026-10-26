@@ -2,7 +2,7 @@
 using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 
-namespace dRz.NC.TestCommands.Message
+namespace dRz.NC.Commands.Test.Message
 {
     public class GuiMessageCmd
     {

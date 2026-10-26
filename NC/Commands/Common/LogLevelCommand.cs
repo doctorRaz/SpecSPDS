@@ -12,7 +12,7 @@ using dRz.Abstractions.Logger;
 using NLog.Common;
 using dRz.Core;
 
-namespace dRz.NC.Commands.Service
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// Предоставляет команды NanoCAD для управления уровнями логирования через файлы настройки.

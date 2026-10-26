@@ -7,7 +7,7 @@ using System.Drawing;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.NC.TestCommands.McParam
+namespace dRz.NC.Commands.Test.McParam
 {
     public class McParam
     {
