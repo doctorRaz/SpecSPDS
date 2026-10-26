@@ -1,6 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.CadServices;
+using dRz.NC.CadServices.Diagnostics;
 using dRz.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
