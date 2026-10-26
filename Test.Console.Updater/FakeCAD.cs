@@ -17,7 +17,7 @@ namespace dRz.Test.Console.Updater
         private readonly IDrzLogger _logger = null!;
         private readonly IMessageService _msg = null!;
         private readonly IAddonSettings _settings = null!;
-        private readonly IAddOnInfo _addonInfo    = null!;
+        private readonly IAddOnInfo _addonInfo = null!;
         private readonly Stopwatch _sw;
 
         /// <summary>Initializes a new instance of the <see cref="FakeCAD"/> class.</summary>
@@ -96,7 +96,6 @@ namespace dRz.Test.Console.Updater
 
             return Sys.Console.ReadKey();
         }
-
 
         /// <summary>
         /// Позволяет включить или отключить вывод сведений о командах при запуске аддона.

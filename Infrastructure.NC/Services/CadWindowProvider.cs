@@ -56,15 +56,19 @@ namespace dRz.NC.Infrastructure.Services
     public class CadWindowProvider_Cad : IWindowHandleProvider
     {
 #if !TEST
+
         /// <summary>
         /// Возвращает дескриптор главного окна CAD.
         /// </summary>
         public IntPtr Handle => Application.MainWindow.Handle;
+
 #else
+
         /// <summary>
         /// Возвращает <see cref="IntPtr.Zero"/> в тестовой сборке.
         /// </summary>
         public IntPtr Handle => IntPtr.Zero;
+
 #endif
     }
 }

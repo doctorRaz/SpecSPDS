@@ -7,7 +7,9 @@ using System.Linq;
 using System.Reflection;
 
 #if NC
+
 using Rtm = Teigha.Runtime;
+
 #elif AC
 using Autodesk.AutoCAD.Runtime;
 #endif

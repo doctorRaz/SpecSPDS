@@ -16,7 +16,6 @@ namespace dRz.NC.Commands.Common
     /// </summary>
     public sealed class CommandInfo
     {
-
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="CmdInfo"/>.
         /// </summary>

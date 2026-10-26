@@ -92,10 +92,13 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Возвращает разрядность операционной системы в формате <c>X64</c> или <c>X32</c>.</summary>
         public string Architecture { get; init; }
+
         /// <summary>Возвращает идентификатор сборки Windows из реестра.</summary>
         public string BuildLab { get; init; } = "Unknown";
+
         /// <summary>Возвращает отображаемую версию Windows.</summary>
         public string DisplayVersion { get; init; } = "Unknown";
+
         /// <summary>Возвращает идентификатор редакции Windows.</summary>
         public string EditionId { get; init; } = "Unknown";
 
@@ -105,8 +108,10 @@ namespace dRz.Infrastructure.Infrastructure
 
         /// <summary>Возвращает тип установки Windows, например клиентскую или серверную.</summary>
         public string InstallationType { get; init; } = "Unknown";
+
         /// <summary>Указывает, что сведения из реестра не были получены и используются базовые значения.</summary>
         public bool IsFallback { get; init; }
+
         /// <summary>Возвращает версию операционной системы, включая номер сборки и ревизию.</summary>
         public Version OsVersion { get; init; }
 
