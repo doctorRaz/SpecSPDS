@@ -1,13 +1,11 @@
-﻿//using static dRz.Src.Infrastructure.AddOnContext;// на класс, чтобы не писать каждый раз длинный путь
-
-// -----------------
-using dRz.Abstractions.Infrastructure;
+﻿using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
 using dRz.NC.Infrastructure;
+using dRz.NC.Services.Updater;
 using dRz.Updater.Services;
 using System;
 
