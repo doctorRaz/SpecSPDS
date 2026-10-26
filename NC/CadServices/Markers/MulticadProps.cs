@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-//using CAD = HostMgd.ApplicationServices.Application;
+
 using Db = Teigha.DatabaseServices;
 
 namespace dRz.NC.CadServices.Markers;
