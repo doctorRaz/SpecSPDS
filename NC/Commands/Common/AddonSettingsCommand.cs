@@ -36,13 +36,13 @@ namespace dRz.NC.Commands.Common
             IGeneralSettings generalSettings = settings.General;
             bool previousValue = generalSettings.ShowCommandInfoOnStartup;
 
-            List<Keywords> keywords = new List<Keywords>
+            List<KeywordOption> keywords = new List<KeywordOption>
             {
-                new Keywords(nameof(AskYesNo.Yes), AskYesNo.Yes, previousValue),
-                new Keywords(nameof(AskYesNo.No), AskYesNo.No, !previousValue)
+                new KeywordOption(nameof(AskYesNo.Yes), AskYesNo.Yes, previousValue),
+                new KeywordOption(nameof(AskYesNo.No), AskYesNo.No, !previousValue)
             };
 
-            Enum? answer = CadService.KeywordAnswer(
+            Enum? answer = KeywordPrompt.GetAnswer(
                 document,
                 keywords,
                 $"\nВыводить сведения о командах при запуске? Текущее значение: {(previousValue ? "Да" : "Нет")}. ",
