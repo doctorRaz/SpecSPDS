@@ -91,7 +91,7 @@ namespace dRz.LogBootstrap.Diagnostics
         internal static bool Initialized => _initialized;
 
         //private const string logName = "nlog-drzTools-internal";
-        private const int MaxArchiveFiles = 5;
+        private const int MaxArchiveFiles = 10;
 
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
