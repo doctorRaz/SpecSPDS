@@ -1,38 +1,38 @@
-﻿using dRz.Abstractions.Services.Message;
+﻿using dRz.Abstractions.Services;
 using System;
 
 namespace dRz.Common.NC
 {
     /// <summary>
-    /// Предоставляет служебным командам общий сервис сообщений, переданный аддоном.
+    /// Предоставляет служебным командам доступ к сервисам, переданным аддоном.
     /// </summary>
     public static class CommonCommandContext
     {
-        private static IMessageService? _messageService;
+        private static IAddOnServices? _services;
 
         /// <summary>
-        /// Инициализирует контекст общим сервисом сообщений.
+        /// Инициализирует контекст сервисами аддона.
         /// </summary>
-        /// <param name="messageService">Сервис сообщений, полученный из контейнера аддона.</param>
-        /// <exception cref="ArgumentNullException">Сервис не задан.</exception>
-        /// <exception cref="InvalidOperationException">Контекст уже инициализирован другим экземпляром сервиса.</exception>
-        public static void Initialize(IMessageService messageService)
+        /// <param name="services">Сервисы, зарегистрированные в контейнере аддона.</param>
+        /// <exception cref="ArgumentNullException">Сервисы не заданы.</exception>
+        /// <exception cref="InvalidOperationException">Контекст уже инициализирован другим экземпляром сервисов.</exception>
+        public static void Initialize(IAddOnServices services)
         {
-            ArgumentNullException.ThrowIfNull(messageService);
+            ArgumentNullException.ThrowIfNull(services);
 
-            if (_messageService != null && !ReferenceEquals(_messageService, messageService))
+            if (_services != null && !ReferenceEquals(_services, services))
             {
-                throw new InvalidOperationException("Common.NC уже инициализирован другим сервисом сообщений.");
+                throw new InvalidOperationException("Common.NC уже инициализирован другими сервисами.");
             }
 
-            _messageService = messageService;
+            _services = services;
         }
 
         /// <summary>
-        /// Возвращает сервис сообщений после инициализации контекста.
+        /// Возвращает сервисы аддона после инициализации контекста.
         /// </summary>
         /// <exception cref="InvalidOperationException">Контекст ещё не инициализирован.</exception>
-        internal static IMessageService MessageService =>
-            _messageService ?? throw new InvalidOperationException("Common.NC не инициализирован.");
+        internal static IAddOnServices Services =>
+            _services ?? throw new InvalidOperationException("Common.NC не инициализирован.");
     }
 }
