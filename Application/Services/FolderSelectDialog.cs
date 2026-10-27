@@ -8,10 +8,12 @@ using System.Windows.Forms;
 
 namespace dRz.Application.Services
 {
+    /// <summary>Предоставляет диалог выбора папки на основе стандартного диалога выбора файла.</summary>
     public class FolderSelectDialog
     {
         private OpenFileDialog ofd = null;
 
+        /// <summary>Создаёт диалог выбора папки.</summary>
         public FolderSelectDialog()
         {
             ofd = new OpenFileDialog();
@@ -22,39 +24,49 @@ namespace dRz.Application.Services
             ofd.Multiselect = Multiselect;
         }
 
+        /// <summary>Начальный каталог диалога.</summary>
         public string InitialDirectory
         {
             get { return ofd.InitialDirectory; }
             set { ofd.InitialDirectory = value == null || value.Length == 0 ? Environment.CurrentDirectory : value; }
         }
 
+        /// <summary>Заголовок диалога.</summary>
         public string Title
         {
             get { return ofd.Title; }
             set { ofd.Title = value == null ? "Select a folder" : value; }
         }
 
+        /// <summary>Определяет, разрешён ли выбор нескольких папок.</summary>
         public bool Multiselect
         {
             get { return ofd.Multiselect; }
             set { ofd.Multiselect = value == false ? false : value; }
         }
 
+        /// <summary>Путь к выбранной папке.</summary>
         public string FileName
         {
             get { return ofd.FileName; }
         }
 
+        /// <summary>Пути к выбранным папкам.</summary>
         public string[] FileNames
         {
             get { return ofd.FileNames; }
         }
 
+        /// <summary>Показывает диалог выбора папки.</summary>
+        /// <returns><see langword="true"/>, если выбор подтверждён.</returns>
         public bool ShowDialog()
         {
             return ShowDialog(IntPtr.Zero);
         }
 
+        /// <summary>Показывает диалог выбора папки с указанным владельцем.</summary>
+        /// <param name="hWndOwner">Дескриптор окна-владельца.</param>
+        /// <returns><see langword="true"/>, если выбор подтверждён.</returns>
         public bool ShowDialog(IntPtr hWndOwner)
         {
             bool flag = false;
@@ -101,13 +113,17 @@ namespace dRz.Application.Services
             return flag;
         }
 
+        /// <summary>Обёртка дескриптора окна для интерфейса <see cref="IWin32Window"/>.</summary>
         public class WindowWrapper : IWin32Window
         {
+            /// <summary>Создаёт обёртку окна.</summary>
+            /// <param name="handle">Дескриптор окна.</param>
             public WindowWrapper(IntPtr handle)
             {
                 _hwnd = handle;
             }
 
+            /// <summary>Дескриптор окна.</summary>
             public IntPtr Handle
             {
                 get { return _hwnd; }
@@ -116,15 +132,21 @@ namespace dRz.Application.Services
             private IntPtr _hwnd;
         }
 
+        /// <summary>Выполняет вызовы членов типов через рефлексию.</summary>
         public class Reflector
         {
             private string m_ns;
             private Assembly m_asmb;
 
+            /// <summary>Создаёт рефлектор для указанного пространства имён и сборки.</summary>
+            /// <param name="ns">Пространство имён.</param>
             public Reflector(string ns)
                 : this(ns, ns)
             { }
 
+            /// <summary>Создаёт рефлектор для указанной сборки и пространства имён.</summary>
+            /// <param name="an">Начало имени сборки для поиска.</param>
+            /// <param name="ns">Пространство имён.</param>
             public Reflector(string an, string ns)
             {
                 m_ns = ns;
@@ -139,6 +161,9 @@ namespace dRz.Application.Services
                 }
             }
 
+            /// <summary>Находит тип по имени внутри заданного пространства имён.</summary>
+            /// <param name="typeName">Имя типа, включая вложенные типы.</param>
+            /// <returns>Найденный тип.</returns>
             public Type GetType(string typeName)
             {
                 Type type = null;
@@ -156,6 +181,10 @@ namespace dRz.Application.Services
                 return type;
             }
 
+            /// <summary>Создаёт экземпляр типа, перебирая доступные конструкторы.</summary>
+            /// <param name="name">Имя типа.</param>
+            /// <param name="parameters">Аргументы конструктора.</param>
+            /// <returns>Созданный объект или <see langword="null"/>, если создать его не удалось.</returns>
             public object New(string name, params object[] parameters)
             {
                 Type type = GetType(name);
@@ -172,38 +201,73 @@ namespace dRz.Application.Services
                 return null;
             }
 
+            /// <summary>Вызывает метод объекта по имени.</summary>
+            /// <param name="obj">Объект, на котором вызывается метод.</param>
+            /// <param name="func">Имя метода.</param>
+            /// <param name="parameters">Аргументы метода.</param>
+            /// <returns>Результат вызова метода.</returns>
             public object Call(object obj, string func, params object[] parameters)
             {
                 return Call2(obj, func, parameters);
             }
 
+            /// <summary>Вызывает метод объекта с массивом аргументов.</summary>
+            /// <param name="obj">Объект, на котором вызывается метод.</param>
+            /// <param name="func">Имя метода.</param>
+            /// <param name="parameters">Аргументы метода.</param>
+            /// <returns>Результат вызова метода.</returns>
             public object Call2(object obj, string func, object[] parameters)
             {
                 return CallAs2(obj.GetType(), obj, func, parameters);
             }
 
+            /// <summary>Вызывает метод, найденный в указанном типе.</summary>
+            /// <param name="type">Тип, в котором выполняется поиск метода.</param>
+            /// <param name="obj">Объект-владелец метода.</param>
+            /// <param name="func">Имя метода.</param>
+            /// <param name="parameters">Аргументы метода.</param>
+            /// <returns>Результат вызова метода.</returns>
             public object CallAs(Type type, object obj, string func, params object[] parameters)
             {
                 return CallAs2(type, obj, func, parameters);
             }
 
+            /// <summary>Вызывает метод указанного типа с массивом аргументов.</summary>
+            /// <param name="type">Тип, в котором выполняется поиск метода.</param>
+            /// <param name="obj">Объект-владелец метода.</param>
+            /// <param name="func">Имя метода.</param>
+            /// <param name="parameters">Аргументы метода.</param>
+            /// <returns>Результат вызова метода.</returns>
             public object CallAs2(Type type, object obj, string func, object[] parameters)
             {
                 MethodInfo methInfo = type.GetMethod(func, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 return methInfo.Invoke(obj, parameters);
             }
 
+            /// <summary>Получает значение свойства объекта.</summary>
+            /// <param name="obj">Объект, у которого читается свойство.</param>
+            /// <param name="prop">Имя свойства.</param>
+            /// <returns>Значение свойства.</returns>
             public object Get(object obj, string prop)
             {
                 return GetAs(obj.GetType(), obj, prop);
             }
 
+            /// <summary>Получает значение свойства, найденного в указанном типе.</summary>
+            /// <param name="type">Тип, в котором выполняется поиск свойства.</param>
+            /// <param name="obj">Объект-владелец свойства.</param>
+            /// <param name="prop">Имя свойства.</param>
+            /// <returns>Значение свойства.</returns>
             public object GetAs(Type type, object obj, string prop)
             {
                 PropertyInfo propInfo = type.GetProperty(prop, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 return propInfo.GetValue(obj, null);
             }
 
+            /// <summary>Получает значение поля перечисления по имени типа и поля.</summary>
+            /// <param name="typeName">Имя типа перечисления.</param>
+            /// <param name="name">Имя поля.</param>
+            /// <returns>Значение поля.</returns>
             public object GetEnum(string typeName, string name)
             {
                 Type type = GetType(typeName);
@@ -213,13 +277,18 @@ namespace dRz.Application.Services
         }
     }
 
+    /// <summary>Форма вспомогательного выбора папок.</summary>
     public partial class Form1 : Form
     {
+        /// <summary>Создаёт форму.</summary>
         public Form1()
         {
             //InitializeComponent();
         }
 
+        /// <summary>Открывает диалог выбора папок и возвращает выбранные пути.</summary>
+        /// <param name="multiselect">Разрешает выбор нескольких папок.</param>
+        /// <returns>Пути к выбранным папкам, разделённые запятыми, либо путь к одной папке.</returns>
         public static string OpenFileBrowserDialog(bool multiselect)
         {
             FolderSelectDialog fbd = new FolderSelectDialog();
