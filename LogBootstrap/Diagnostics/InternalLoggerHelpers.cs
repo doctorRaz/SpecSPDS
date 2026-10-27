@@ -37,7 +37,9 @@ namespace dRz.LogBootstrap.Diagnostics
                 {
                     // InternalLogger уже принадлежит первому аддону, включившему диагностику.
                     // Повторную настройку не применяем, но фиксируем попытку в текущем InternalLogger.
-                    InternalLogger.Info(
+                    // Пишем на текущем уровне, чтобы событие прошло фильтр даже при Warning/Error.
+                    InternalLogger.Log(
+                        InternalLogger.LogLevel,
                         $"{typeCaller} InternalLogger is already initialized. " +
                         $"RequestedLevel={requestedLevel}, CurrentLevel={InternalLogger.LogLevel}. " +
                         "Configuration remains unchanged.");
