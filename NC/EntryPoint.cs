@@ -4,6 +4,7 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
+using dRz.Common.NC;
 using dRz.NC.Infrastructure;
 using dRz.NC.Services.Updater;
 using dRz.Updater.Services;
@@ -162,6 +163,9 @@ namespace dRz.NC
 
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
+
+                // Передаём общий сервис сообщений служебным командам Common.NC.
+                CommonCommandContext.Initialize(_message);
 
                 // Получаем сервис оконных сообщений из контейнера сервисов.
                 _windowMessage = AddOnContext.MsgW;
