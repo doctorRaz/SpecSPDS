@@ -5,6 +5,9 @@
     /// </summary>
     public class DefinitionMarkerProps
     {
+        /// <summary>
+        /// Создаёт объект для хранения свойств маркера спецификации.
+        /// </summary>
         public DefinitionMarkerProps()
         { }
 
