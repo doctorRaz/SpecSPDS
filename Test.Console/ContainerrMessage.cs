@@ -5,6 +5,9 @@ using System;
 
 namespace dRz.SpecSPDS.Test
 {
+    /// <summary>
+    /// Демонстрирует отправку сообщений через консольный и оконный сервисы.
+    /// </summary>
     public class ContainerrMessage
     {
         private readonly IMessageService _msg;
