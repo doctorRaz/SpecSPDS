@@ -13,6 +13,9 @@ namespace drz.Lib_B
     /// <summary>
     /// Отдельная сборка о ней знает только А
     /// </summary>
+    /// <summary>
+    /// Демонстрирует использование сервисов контейнера из отдельной сборки.
+    /// </summary>
     public class ContainerTransferB
     {
         #region Private Fields
@@ -47,6 +50,10 @@ namespace drz.Lib_B
 
         #region Public Methods
 
+        /// <summary>
+        /// Запускает демонстрацию с переданными сервисами аддона.
+        /// </summary>
+        /// <param name="services">Сервисы аддона.</param>
         public static void Run(IAddOnServices services)
         {
             ContainerTransferB containerTransferB = new ContainerTransferB(services);
