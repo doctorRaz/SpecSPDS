@@ -22,7 +22,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
         /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
         /// <param name="logName">Семейство продукта, используемое в имени файла внутреннего лога.</param>
-        /// <param name="logDir">Каталог внутренних логов; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
+        /// <param name="logDir">Общий каталог внутренних логов компании; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
         public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string? logDir = null)
         {
             lock (_lock)
@@ -50,11 +50,12 @@ namespace dRz.LogBootstrap.Diagnostics
                 logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools", "logs");
 
                 _logDir = logDir;
+                Directory.CreateDirectory(LogDir);
 
-                string currentLogPath = GetInternalLogPath(logName);
+                string currentLogPath = GetInternalLogPath();
 
-                // Сначала удаляем 6-й и далее файлы.
-                RotateOldLogs(logName);
+                // Удаляем старые файлы внутренних логов, сохраняя последние.
+                RotateOldLogs();
 
                 // Если текущий файл больше 10 МБ, переименовываем его в архивный.
                 CheckCurrentFileSize(currentLogPath);
@@ -117,12 +118,11 @@ namespace dRz.LogBootstrap.Diagnostics
             catch { }
         }
 
-        private static string GetInternalLogPath(string logName) =>
+        private static string GetInternalLogPath() =>
                    Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{Guid.NewGuid():N}_internal.log");
 
-        /// <summary>Rotates the old logs.</summary>
-        /// <param name="logName">Name of the logs.</param>
-        private static void RotateOldLogs(string logName)
+        /// <summary>Удаляет старые файлы внутренних логов, оставляя не более заданного количества.</summary>
+        private static void RotateOldLogs()
         {
             try
             {
@@ -131,10 +131,10 @@ namespace dRz.LogBootstrap.Diagnostics
                     return;
                 }
 
-                // Получаем все internal-логи именно для этого приложения.
-                // Сортируем по дате создания (от новых к старым).
+                // Все аддоны одного процесса используют общий каталог внутренних логов.
+                // Сортируем файлы от новых к старым.
                 List<FileInfo> files = new DirectoryInfo(LogDir)
-                                         .GetFiles($"*_{logName}_internal.log")
+                                         .GetFiles("*_internal.log")
                                          .OrderByDescending(f => f.LastWriteTime)
                                          .ToList();
 
