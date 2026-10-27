@@ -19,18 +19,21 @@ namespace dRz.LogBootstrap.Builder
         /// <param name="assemblyDirectory">Каталог сборки, в котором находятся файлы настройки уровней логирования.</param>
         /// <param name="productName">Идентификатор продукта.</param>
         /// <param name="productFamily">Семейство продукта, используемое в именах файлов логов.</param>
-        /// <param name="logsDir">Каталог для файлов основного и внутреннего логов.</param>
+        /// <param name="logsDir">Каталог файлов основного лога.</param>
+        /// <param name="internalLogsDir">Общий каталог файлов InternalLogger для компании.</param>
         internal NLogFactoryBuilder(
                                     string assemblyDirectory, //string assemblyDirectory = _addOnInfo.AssemblyDirectory;
                                     string productName, //string productName = _addOnInfo.Product;
                                     string productFamily, // _addOnInfo.ProductFamily
-                                    string logsDir //string logsDir = Path.Combine(_addOnInfo.ProductDataDirectory, "logs");
+                                    string logsDir, //string logsDir = Path.Combine(_addOnInfo.ProductDataDirectory, "logs");
+                                    string internalLogsDir
                                     )
         {
             _assemblyDirectory = assemblyDirectory;
             _productName = productName;
             _productFamily = productFamily;
             _logsDir = logsDir;
+            _internalLogsDir = internalLogsDir;
         }
 
         /// <summary>Builds this instance.</summary>
@@ -44,7 +47,7 @@ namespace dRz.LogBootstrap.Builder
             LogLevel internalLogLevel = LogLevelReader.GetLevelFromFile(diagnosticModePath, LogLevel.Off);
 
             //настраиваем интернал логгер
-            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{_productName}]", internalLogLevel, _productFamily, _logsDir);
+            InternalLoggerHelpers.ConfigureInternalLogger($"{typeof(NLogFactoryBuilder)}[{_productName}]", internalLogLevel, _productFamily, _internalLogsDir);
 
             //путь к Log.Level
             string internalLogLevelPath = Path.Combine(_assemblyDirectory, LogKeys.LogLevel);
@@ -76,6 +79,7 @@ namespace dRz.LogBootstrap.Builder
         private readonly string _productName;
         private readonly string _productFamily;
         private readonly string _logsDir;
+        private readonly string _internalLogsDir;
 
         /// <summary>
         /// Creates the XML layout used for main log entries.
