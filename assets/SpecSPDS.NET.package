@@ -5,10 +5,10 @@
     <Components>
         <ComponentEntry
             AppName="SpecSPDS"
-            ModuleName="/SpecSPDS.NC/SpecSPDS.NC.dll"
+            ModuleName="SpecSPDS.NC/SpecSPDS.NC.dll"
             ModuleType="MGD"/>
         <ConfigEntry
-            FileName="//Resources/SpecSPDS_menu.cfg"
+            FileName="Resources/SpecSPDS_menu.cfg"
             FileType="CFG"/>
     </Components>
 </ApplicationPackage>
