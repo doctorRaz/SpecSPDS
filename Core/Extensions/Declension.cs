@@ -2,6 +2,9 @@
 
 namespace dRz.Core.Extensions
 {
+    /// <summary>
+    /// Предоставляет методы для выбора формы слова в зависимости от числа.
+    /// </summary>
     public static class Declension
     {
         /// <summary>
@@ -19,6 +22,12 @@ namespace dRz.Core.Extensions
             return titles[number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]];
         }
 
+        /// <summary>
+        /// Возвращает форму слова из списка в зависимости от заданного числа.
+        /// </summary>
+        /// <param name="titles">Формы слова в порядке: множественное число, родительный падеж, именительный падеж.</param>
+        /// <param name="number">Число, определяющее выбранную форму слова.</param>
+        /// <returns>Форма слова, соответствующая заданному числу.</returns>
         public static string Declens(this List<string> titles, int number)
         {
             //todo переделать на d:\@Developers\Programmers\!NET\!Archivist\Archivist\Localization\
