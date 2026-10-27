@@ -14,10 +14,10 @@ namespace dRz.LogBootstrap.Diagnostics
     {
         // 10 MB
         /// <summary>
-        /// Настраивает Internal Logger: вывод в Debug Output, Console и файл.
-        /// Инициализация выполняется один раз за процесс. При повторных вызовах
-        /// уровень меняется только в сторону большей детализации; запрос <see cref="LogLevel.Off"/>
-        /// и повышение порога логирования не применяются.
+        /// Однократно настраивает Internal Logger: вывод в Debug Output, Console и файл.
+        /// Запрос уровня <see cref="LogLevel.Off"/> не инициализирует логгер.
+        /// После инициализации повторные запросы с уровнем, отличным от <see cref="LogLevel.Off"/>,
+        /// записываются в Internal Logger как отклонённая повторная настройка; конфигурация не меняется.
         /// </summary>
         /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
         /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
@@ -27,58 +27,56 @@ namespace dRz.LogBootstrap.Diagnostics
         {
             lock (_lock)
             {
-                /* Получаем уровень из файла Diagnostic.Mode
-                    Если файла нет — Off (ничего не делаем).
-                        Если файл создан, но пустой — Trace (максимум инфы)
-                        иначе уровень из файла Diagnostic.Mode.
-                */
-
-                // 1. Первая инициализация — настраиваем инфраструктуру, уровень из DiagnosticMode даже если OFF
-                if (!_initialized)
+                // Уровень Off не должен фиксировать инициализацию: другой аддон ещё может включить диагностику.
+                if (requestedLevel == LogLevel.Off)
                 {
-                    logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools", "logs");
-
-                    _logDir = logDir;
-
-                    string currentLogPath = GetInternalLogPath(logName);
-
-                    // 1. Сначала удаляем 6-й и далее файлы
-                    RotateOldLogs(logName);
-
-                    // 2. Проверяем размер текущего. Если > 10МБ — переименовываем в архивный
-                    CheckCurrentFileSize(currentLogPath);
-
-                    //пишем в файл
-                    InternalLogger.LogFile = currentLogPath;
-
-                    // пишем в output debuger
-                    InternalLogger.LogWriter = new OutputDebugTextWriter();
-
-                    InternalLogger.LogToConsole = true;
-
-                    // Стартовый уровень — ставим как в DiagnosticMode
-                    InternalLogger.LogLevel = requestedLevel;
-
-                    //все исключения
-                    LogManager.ThrowExceptions = false;
-
-                    //ошибки конфига
-                    LogManager.ThrowConfigExceptions = true;
-
-                    InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
-
-                    _initialized = true;
-
-                    return; // уровень уже установлен, дальше ничего не меняем
+                    return;
                 }
 
-                // Runtime — понижение уровня для увеличения детализации
-                if (requestedLevel != LogLevel.Off && requestedLevel < InternalLogger.LogLevel)
+                if (_initialized)
                 {
-                    InternalLogger.LogLevel = requestedLevel;
+                    // InternalLogger уже принадлежит первому аддону, включившему диагностику.
+                    // Повторную настройку не применяем, но фиксируем попытку в текущем InternalLogger.
+                    InternalLogger.Info(
+                        $"{typeCaller} InternalLogger is already initialized. " +
+                        $"RequestedLevel={requestedLevel}, CurrentLevel={InternalLogger.LogLevel}. " +
+                        "Configuration remains unchanged.");
 
-                    InternalLogger.Info($"{typeCaller} InternalLogger Level changed {InternalLogger.LogLevel} → {requestedLevel}");
+                    return;
                 }
+
+                logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools", "logs");
+
+                _logDir = logDir;
+
+                string currentLogPath = GetInternalLogPath(logName);
+
+                // Сначала удаляем 6-й и далее файлы.
+                RotateOldLogs(logName);
+
+                // Если текущий файл больше 10 МБ, переименовываем его в архивный.
+                CheckCurrentFileSize(currentLogPath);
+
+                // Пишем в файл.
+                InternalLogger.LogFile = currentLogPath;
+
+                // Пишем в Debug Output.
+                InternalLogger.LogWriter = new OutputDebugTextWriter();
+
+                InternalLogger.LogToConsole = true;
+
+                // Устанавливаем уровень первого аддона, запросившего диагностику.
+                InternalLogger.LogLevel = requestedLevel;
+
+                // Все исключения.
+                LogManager.ThrowExceptions = false;
+
+                // Ошибки конфигурации.
+                LogManager.ThrowConfigExceptions = true;
+
+                InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
+
+                _initialized = true;
             }
         }
 
@@ -121,7 +119,7 @@ namespace dRz.LogBootstrap.Diagnostics
                    Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}_internal.log");
 
         /// <summary>Rotates the old logs.</summary>
-        /// <param name="logName">Name of the log.</param>
+        /// <param name="logName">Name of the logs.</param>
         private static void RotateOldLogs(string logName)
         {
             try
@@ -131,14 +129,14 @@ namespace dRz.LogBootstrap.Diagnostics
                     return;
                 }
 
-                // Получаем все internal-логи именно для этого приложения
-                // Сортируем по дате создания (от новых к старым)
+                // Получаем все internal-логи именно для этого приложения.
+                // Сортируем по дате создания (от новых к старым).
                 List<FileInfo> files = new DirectoryInfo(LogDir)
                                          .GetFiles($"*_{logName}_internal.log")
                                          .OrderByDescending(f => f.LastWriteTime)
                                          .ToList();
 
-                // Если файлов больше 5, удаляем лишние
+                // Если файлов больше 5, удаляем лишние.
                 foreach (FileInfo file in files.Skip(MaxArchiveFiles))
                 {
                     file.Delete();
