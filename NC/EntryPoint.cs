@@ -164,8 +164,8 @@ namespace dRz.NC
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
 
-                // Передаём общий сервис сообщений служебным командам Common.NC.
-                CommonCommandContext.Initialize(_message);
+                // Передаём служебным командам Common.NC доступ к сервисам аддона.
+                CommonCommandContext.Initialize(AddOnContext.Services);
 
                 // Получаем сервис оконных сообщений из контейнера сервисов.
                 _windowMessage = AddOnContext.MsgW;
