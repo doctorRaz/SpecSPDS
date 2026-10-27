@@ -51,6 +51,11 @@ public partial class MultiCadProps
         #endregion Logger
     }
 
+    /// <summary>
+    /// Получает свойства маркеров из указанных файлов чертежей.
+    /// </summary>
+    /// <param name="filenames">Список путей к файлам чертежей.</param>
+    /// <returns>Список свойств найденных маркеров.</returns>
     public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
     {
         log.Trace($"Total files: {filenames.Count}");
@@ -473,18 +478,23 @@ public partial class MultiCadProps
 
     #region Statistics
 
+    /// <summary>Количество маркеров, исключённых из результата из-за некорректных данных.</summary>
     public int CountIncorrectData => _countIncorrectData;//маркеры с отрицательной суммой, некорректными данными
     private int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
 
+    /// <summary>Количество маркеров, исключённых из результата из-за отсутствия флага включения в спецификацию.</summary>
     public int CountNotFlag => _countNotFlag;//маркеров без признака включения в спеку
     private int _countNotFlag = 0;//маркеров без признака включения в спеку
 
+    /// <summary>Количество маркеров, исключённых из результата из-за несоответствия имени.</summary>
     public int CountFalseName => _countFalseName;//маркеров с не тем именем
     private int _countFalseName = 0;//маркеров с не тем именем
 
+    /// <summary>Количество маркеров, добавленных в результат.</summary>
     public int CountAdded => _countAdded;//маркеров добавлено
     private int _countAdded = 0;//маркеров добавлено
 
+    /// <summary>Общее количество обработанных идентификаторов маркеров.</summary>
     public int CountTotal => _countTotal;//маркеров всего
     private int _countTotal = 0;//маркеров всего
 
@@ -522,6 +532,7 @@ public partial class MultiCadProps
 
     private string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
 
+    /// <summary>Список путей к файлам, которые не удалось обработать.</summary>
     public List<string> BadFilePatchs => _badFilePatchs;
     private List<string> _badFilePatchs = new List<string>();
 
