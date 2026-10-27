@@ -333,7 +333,7 @@ namespace dRz.Updater
         /// <summary>
         /// Предлагает открыть страницу опубликованного релиза и открывает её при подтверждении.
         /// </summary>
-        private void OpenReleaseIfRequested(string updateUrl, string tag)//todo вынести в инфраструктуру??
+        private void OpenReleaseIfRequested(string updateUrl, string tag)
         {
             string releaseUrl = BuildReleaseUrl(updateUrl, tag);
             MessageResult result = _promptService.AskYesNo(

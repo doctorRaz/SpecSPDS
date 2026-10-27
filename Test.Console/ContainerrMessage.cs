@@ -24,7 +24,7 @@ namespace dRz.SpecSPDS.Test
 
             _ex = new Exception("Test Exception");
 
-            //todo так делать нехорошо , но для отладки можно(((
+            //так делать нехорошо , но для отладки можно(((
             _documentService = (DocumentService)AddOnContext.DocService;
         }
 

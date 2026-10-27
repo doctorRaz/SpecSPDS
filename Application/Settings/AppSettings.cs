@@ -20,7 +20,7 @@ namespace dRz.Application.Settings
             if (!File.Exists(ConfigPath))
             {
                 _settings = new ApplicationSettings();
-                Save();//x лишннеее???
+                Save();//лишннеее???
                 return;
             }
 

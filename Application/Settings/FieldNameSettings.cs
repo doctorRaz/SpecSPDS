@@ -5,11 +5,10 @@
     /// </summary>
     public class FieldNameSettings
     {
+        /// <summary>Initializes a new instance of the <see cref="FieldNameSettings"/> class.</summary>
         public FieldNameSettings()
         {
         }
-
-        //todo добавиь комментарии к свойствам xml
 
         /// <summary>
         /// Имя маркера
