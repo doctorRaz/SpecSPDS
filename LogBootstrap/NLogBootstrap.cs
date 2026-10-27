@@ -28,7 +28,8 @@ namespace dRz.LogBootstrap
                         NLogFactoryBuilder builder = new(addOnInfo.AssemblyDirectory,
                                                         addOnInfo.Product,
                                                         addOnInfo.ProductFamily,
-                                                        Path.Combine(addOnInfo.ProductDataDirectory, "logs")
+                                                        Path.Combine(addOnInfo.ProductDataDirectory, "logs"),
+                                                        Path.Combine(addOnInfo.CompanyDataDirectory, "internallogs")
                                                         );
 
                         LogFactory logFactory = builder.Build();
