@@ -5,6 +5,9 @@ using System.Threading;
 
 namespace dRz.Application.Models
 {
+    /// <summary>
+    /// Предоставляет методы преобразования строк в числовые и логические значения.
+    /// </summary>
     public static class Converters
     {
         /// <summary>
@@ -30,6 +33,11 @@ namespace dRz.Application.Models
             return false;
         }
 
+        /// <summary>
+        /// Преобразует строку в число с плавающей точкой, учитывая распространённые разделители дробной части.
+        /// </summary>
+        /// <param name="s">Строка для преобразования.</param>
+        /// <returns>Преобразованное число или значение-заполнитель, если преобразование не удалось.</returns>
         public static double ToDouble(this string s)
         {
             //https://stackoverflow.com/questions/11399439/converting-string-to-double-in-c-sharp
