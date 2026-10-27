@@ -85,7 +85,9 @@ namespace dRz.Infrastructure.Infrastructure
 
             Company = assembly.GetCustomAttribute<AssemblyCompanyAttribute>()?.Company ?? "dRz";
 
-            ProductDataDirectory = Path.Combine(_appData, Company, Product);
+            CompanyDataDirectory = Path.Combine(_appData, Company);
+
+            ProductDataDirectory = Path.Combine(CompanyDataDirectory, Product);
 
             FileInfo? package = FindPackageFile(AssemblyDirectory, Product);
 
@@ -248,8 +250,12 @@ namespace dRz.Infrastructure.Infrastructure
             [Out] char[] lpTargetPath,
             uint ucchMax);
 
-        /// <summary>Возвращает путь к данным приложения.</summary>
-        /// <value>Путь к данным приложения.</value>
+        /// <summary>Возвращает каталог общих данных компании.</summary>
+        /// <value>Каталог для данных, общих для всех продуктов компании.</value>
+        public string CompanyDataDirectory { get; }
+
+        /// <summary>Возвращает каталог данных текущего продукта.</summary>
+        /// <value>Каталог для данных, относящихся к текущему продукту.</value>
         public string ProductDataDirectory { get; }
 
         /// <summary>Возвращает название компании — разработчика сборки.</summary>
