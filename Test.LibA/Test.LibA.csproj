@@ -6,7 +6,7 @@
 		<Product>Lib_A</Product>
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);TEST:A</DefineConstants>
+		<DefineConstants>$(DefineConstants);TEST;A</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />

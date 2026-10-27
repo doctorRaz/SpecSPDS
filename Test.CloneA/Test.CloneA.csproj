@@ -6,7 +6,7 @@
 		<Product>CloneA</Product>
 	</PropertyGroup>
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
+		<DefineConstants>$(DefineConstants);TEST;A</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
