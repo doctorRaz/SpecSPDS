@@ -43,7 +43,7 @@ namespace dRz.Test.Settings
             IAddonSettings settings = CreateManager().Load();
 
             Assert.That(settings.General.ShowCommandInfoOnStartup, Is.True);
-            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
+            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
             Assert.That(settings.Updates.UpdateCheckIntervalDays, Is.EqualTo(7));
             Assert.That(File.Exists(_filePath), Is.True);
         }
@@ -87,8 +87,8 @@ namespace dRz.Test.Settings
 
             IAddonSettings settings = CreateManager().Load();
 
-            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
-            Assert.That(File.ReadAllText(_filePath), Does.Contain("CheckAndNotify"));
+            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
+            Assert.That(File.ReadAllText(_filePath), Does.Contain("CheckAndInstall"));
             _logger.Verify(logger => logger.Error(It.IsAny<Exception>(), It.Is<string>(message => message.Contains("Будут использованы значения по умолчанию"))), Times.Once);
         }
 
