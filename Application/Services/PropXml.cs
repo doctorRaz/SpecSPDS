@@ -6,19 +6,31 @@ using System.Xml.Serialization;
 
 namespace dRz.Application.Services
 {
+    /// <summary>
+    /// Загружает и сохраняет свойства маркеров спецификации в XML-файле.
+    /// </summary>
     public class PropXml
     {
+        /// <summary>
+        /// Создаёт объект работы с XML-свойствами.
+        /// </summary>
         public PropXml()
         {
             //LoadProps();
         }
 
+        /// <summary>
+        /// Список свойств маркеров спецификации.
+        /// </summary>
         public List<DefinitionMarkerProps> Props
         {
             get => _props;
             set => _props = value ?? new List<DefinitionMarkerProps>();
         }
 
+        /// <summary>
+        /// Загружает свойства из XML-файла; при отсутствии файла или ошибке создаёт пустой список.
+        /// </summary>
         public void LoadProps()
 
         {
@@ -42,6 +54,9 @@ namespace dRz.Application.Services
             }
         }
 
+        /// <summary>
+        /// Сохраняет свойства маркеров в XML-файл.
+        /// </summary>
         public void SaveProps()
         {
             string folder = Path.GetDirectoryName(_xmlPath);
