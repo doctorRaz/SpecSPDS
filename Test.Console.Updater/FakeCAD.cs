@@ -12,6 +12,9 @@ using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
+    /// <summary>
+    /// Предоставляет консольный стенд для проверки сервисов и настроек обновления.
+    /// </summary>
     public class FakeCAD
     {
         private readonly IDrzLogger _logger = null!;
