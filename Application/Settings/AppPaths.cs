@@ -39,15 +39,19 @@ namespace dRz.Application.Settings
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 Product);
 
+        /// <summary>Каталог файлов конфигурации приложения.</summary>
         public static string ConfigDir =>
             Path.Combine(AppRoot, "config");
 
+        /// <summary>Каталог файлов журналов приложения.</summary>
         public static string LogDir =>
             Path.Combine(AppRoot, "logs");
 
+        /// <summary>Полный путь к файлу конфигурации приложения.</summary>
         public static string ConfigFile =>
             Path.Combine(ConfigDir, $"{Product}.config");
 
+        /// <summary>Создаёт каталоги конфигурации и журналов, если они отсутствуют.</summary>
         public static void Ensure()
         {
             Directory.CreateDirectory(ConfigDir);
