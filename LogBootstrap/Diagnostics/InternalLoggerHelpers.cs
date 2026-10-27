@@ -118,7 +118,7 @@ namespace dRz.LogBootstrap.Diagnostics
         }
 
         private static string GetInternalLogPath(string logName) =>
-                   Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}_internal.log");
+                   Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{Guid.NewGuid():N}_internal.log");
 
         /// <summary>Rotates the old logs.</summary>
         /// <param name="logName">Name of the logs.</param>
