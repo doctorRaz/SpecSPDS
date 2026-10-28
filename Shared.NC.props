@@ -16,8 +16,8 @@
 ///&lt;summary&gt; Содержит константы, генерируемые перед сборкой.&lt;/summary&gt;
 internal static class CommandPrefix 
 { 
-/// &lt;summary&gt; Суффикс команд, формируемый из имени решения. &lt;/summary&gt;
-public const string Value = &quot;$(CommandPrefixValue)&quot;%3B  
+	/// &lt;summary&gt; Суффикс команд, формируемый из имени решения. &lt;/summary&gt;
+	public const string Value = &quot;$(CommandPrefixValue)&quot;%3B  
 }"/>
 		<ItemGroup>
 			<Compile Include="$(CommandPrefixFile)"/>
