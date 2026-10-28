@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(SolutionDir)Directory.Build.props" Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
-	<Import Project="..\Shared.NC.props" Condition="Exists('..\Shared.NC.props')" />
+	<Import Project="$(SolutionDir)\Shared.NC.props" Condition="Exists('$(SolutionDir)\Shared.NC.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Description>Общие служебные команды nanoCAD</Description>
