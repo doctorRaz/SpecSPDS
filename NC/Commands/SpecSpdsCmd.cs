@@ -5,9 +5,9 @@ using dRz.Application.Models;
 using dRz.Application.Services;
 using dRz.Application.Settings;
 using dRz.Common.NC.CadServices;
-using dRz.Common.NC.CadServices.Markers;
 using dRz.Common.NC.Infrastructure;
 using dRz.Core.Extensions;
+using dRz.NC.CadServices.Markers;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.ComponentModel;
 using Teigha.Runtime;
 using App = HostMgd.ApplicationServices;
 
-namespace dRz.Common.NC.Commands
+namespace dRz.NC.Commands
 {
     /// <summary>
     /// получение маркеров.. выбором с пространства с документа с нескольких документов

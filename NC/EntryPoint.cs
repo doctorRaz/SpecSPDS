@@ -21,7 +21,6 @@ using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
 using dRz.Common.NC.Commands.Common;
-using dRz.Common.NC.Commands.Common;
 
 #elif AC
 
@@ -35,7 +34,7 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 #endif
 
-namespace dRz.Common.NC
+namespace dRz.NC
 {
     /// <summary>
     /// Точка входа аддона для инициализации и завершения работы в CAD-хосте.
