@@ -18,6 +18,7 @@ namespace dRz.LogBootstrap.Diagnostics
         /// Запрос уровня <see cref="LogLevel.Off"/> не инициализирует логгер.
         /// После инициализации повторные запросы с уровнем, отличным от <see cref="LogLevel.Off"/>,
         /// записываются в Internal Logger как отклонённая повторная настройка; конфигурация не меняется.
+        /// Инициализация определяется по текущему уровню Internal Logger, отдельный флаг не используется.
         /// </summary>
         /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
         /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
@@ -33,9 +34,9 @@ namespace dRz.LogBootstrap.Diagnostics
                     return;
                 }
 
-                if (_initialized)
+                // Уровень InternalLogger — единственный признак того, что логгер уже инициализирован.
+                if (InternalLogger.LogLevel != LogLevel.Off)
                 {
-                    // InternalLogger уже принадлежит первому аддону, включившему диагностику.
                     // Повторную настройку не применяем, но фиксируем попытку в текущем InternalLogger.
                     // Error проходит фильтр при текущих уровнях Trace, Debug, Info, Warn и Error.
                     InternalLogger.Log(
@@ -78,8 +79,6 @@ namespace dRz.LogBootstrap.Diagnostics
                 LogManager.ThrowConfigExceptions = true;
 
                 InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
-
-                _initialized = true;
             }
         }
 
@@ -87,16 +86,17 @@ namespace dRz.LogBootstrap.Diagnostics
         /// <value>The log dir.</value>
         internal static string LogDir => _logDir;
 
-        /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
-        /// <value><see langword="true"/> if initialized; otherwise, <see langword="false"/>.</value>
-        internal static bool Initialized => _initialized;
+        /// <summary>
+        /// Gets a value indicating whether Internal Logger is initialized.
+        /// </summary>
+        /// <value><see langword="true"/> if its level is not <see cref="LogLevel.Off"/>; otherwise, <see langword="false"/>.</value>
+        internal static bool Initialized => InternalLogger.LogLevel != LogLevel.Off;
 
         //private const string logName = "nlog-drzTools-internal";
         private const int MaxArchiveFiles = 10;
 
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
-        private static bool _initialized = false;
         private static string _logDir = string.Empty;
 
         /// <summary>
