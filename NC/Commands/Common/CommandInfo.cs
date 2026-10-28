@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
+using dRz.NC.CadServices.Diagnostics;
 using dRz.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,13 @@ using System.Linq;
 using System.Reflection;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// Команда вывода списка объявленных CAD-команд и отчёта о дубликатах.
     /// </summary>
     public sealed class CommandInfo
     {
-
         /// <summary>
         /// Инициализирует новый экземпляр класса <see cref="CmdInfo"/>.
         /// </summary>
@@ -38,16 +38,16 @@ namespace dRz.NC.Commands
 #endif
 
                 // Сбор объявлений отделён от формирования текстовых отчётов.
-                Services.CmdInfo report = new Services.CmdInfo(
+                CmdInfo report = new CmdInfo(
                     Assembly.GetExecutingAssembly(),
                     logger);
 
-                List<IGrouping<string, Services.CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
+                List<IGrouping<string, CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
                     .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
                     .ToList();
                 List<string> commandLines = new List<string>();
 
-                foreach (Services.CmdInfo.CommandEntry? command in report.RegisteredCommands
+                foreach (CmdInfo.CommandEntry? command in report.RegisteredCommands
                     .OrderBy(command => command.CommandName, StringComparer.OrdinalIgnoreCase))
                 {
                     string method = includeMethodInfo ? $" [{command.MethodName}]" : string.Empty;
@@ -71,7 +71,7 @@ namespace dRz.NC.Commands
 
                 // Сохраняем собственную диагностику: выводим все методы, объявившие дубликат.
                 List<string> duplicateLines = new List<string>();
-                foreach (IGrouping<string, Services.CmdInfo.CommandEntry>? group in duplicateGroups)
+                foreach (IGrouping<string, CmdInfo.CommandEntry>? group in duplicateGroups)
                 {
                     duplicateLines.Add($"Дублированный атрибут: {group.Key}");
                     duplicateLines.AddRange(group

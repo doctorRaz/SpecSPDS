@@ -1,11 +1,13 @@
 ﻿using dRz.Abstractions.Services.Message;
 using dRz.Infrastructure.NC.Services;
 using dRz.NC.Infrastructure;
-using dRz.NC.Infrastructure.Services;
 using System;
 
 namespace dRz.SpecSPDS.Test
 {
+    /// <summary>
+    /// Демонстрирует отправку сообщений через консольный и оконный сервисы.
+    /// </summary>
     public class ContainerrMessage
     {
         private readonly IMessageService _msg;
@@ -25,7 +27,7 @@ namespace dRz.SpecSPDS.Test
 
             _ex = new Exception("Test Exception");
 
-            //todo так делать нехорошо , но для отладки можно(((
+            //так делать нехорошо , но для отладки можно(((
             _documentService = (DocumentService)AddOnContext.DocService;
         }
 

@@ -1,9 +1,10 @@
 ﻿using dRz.NC.Infrastructure;
+using dRz.NC.Services.Updater;
 using dRz.Updater.Services;
 using System.ComponentModel;
 using Teigha.Runtime;
 
-namespace dRz.NC.Commands
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// ручной запуск проверки обновления

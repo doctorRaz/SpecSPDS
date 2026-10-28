@@ -9,12 +9,18 @@ using System.Reflection;
 
 namespace drz.Clone_B
 {
+    /// <summary>
+    /// Демонстрирует регистрацию и получение сервисов аддона через контейнер.
+    /// </summary>
     public class ConteinerCloneB
     {
         private static bool _isAddOnCompositionRoot;
         private readonly IDrzLogger? _logger;
         private readonly ICommandLineMessageService? _msgCmd;
 
+        /// <summary>
+        /// Инициализирует контейнер и регистрирует сервисы аддона.
+        /// </summary>
         public ConteinerCloneB()
         {
             try
@@ -50,6 +56,9 @@ namespace drz.Clone_B
             }
         }
 
+        /// <summary>
+        /// Запускает демонстрацию работы контейнера и реестра аддонов.
+        /// </summary>
         public static void Run()
         {
             ConteinerCloneB conteinerCloneB = new ConteinerCloneB();

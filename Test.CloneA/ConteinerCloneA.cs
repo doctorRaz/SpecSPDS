@@ -1,5 +1,4 @@
-﻿
-using drz.Clone_B;
+﻿using drz.Clone_B;
 using dRz.Abstractions.Infrastructure;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
@@ -11,6 +10,9 @@ using System.Reflection;
 
 namespace drz.Clone_A
 {
+    /// <summary>
+    /// Демонстрирует регистрацию и получение сервисов аддона через контейнер.
+    /// </summary>
     public class ConteinerCloneA
     {
         #region Private Fields
@@ -21,6 +23,9 @@ namespace drz.Clone_A
 
         #endregion Private Fields
 
+        /// <summary>
+        /// Инициализирует контейнер и регистрирует сервисы аддона.
+        /// </summary>
         public ConteinerCloneA()
         {
             try
@@ -56,6 +61,9 @@ namespace drz.Clone_A
             }
         }
 
+        /// <summary>
+        /// Выполняет демонстрацию работы контейнера и реестра аддонов.
+        /// </summary>
         public void ConteinerCloneA_Run()
         {
             string msg = $"{nameof(ConteinerCloneA)} Running";
@@ -111,6 +119,9 @@ namespace drz.Clone_A
             _msgCmd.InfoMessage(AddOnContext.AddOnInfo.ToString());
         }
 
+        /// <summary>
+        /// Создаёт экземпляр демонстрационного класса и запускает его.
+        /// </summary>
         public static void Run()
         {
             ConteinerCloneA conteinerCloneA = new ConteinerCloneA();

@@ -3,8 +3,11 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace dRz.Core.Extensions
+namespace dRz.NC.CadServices
 {
+    /// <summary>
+    /// Предоставляет методы расширения для значений перечислений.
+    /// </summary>
     public static class EnumExtensions
     {
         // Note that we never need to expire these cache items, so we just use ConcurrentDictionary rather than MemoryCache

@@ -8,7 +8,6 @@ namespace dRz.Settings
     {
         private readonly JsonSettingsStore _store;
 
-
         /// <summary>
         /// Инициализирует менеджер настроек с использованием JSON-хранилища.
         /// </summary>

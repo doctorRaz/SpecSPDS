@@ -1,4 +1,3 @@
-using dRz.Core;
 using HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using System;
@@ -7,21 +6,21 @@ using System.Collections.Generic;
 namespace dRz.NC.CadServices
 {
     /// <summary>
-    /// Методы для взаимодействия с командной строкой CAD.
+    /// Предоставляет выбор ключевого слова в командной строке CAD.
     /// </summary>
-    public class CadService
+    public static class KeywordPrompt
     {
         /// <summary>
         /// Показывает список ключевых слов и возвращает связанное с выбранным словом значение.
         /// </summary>
         /// <param name="doc">Документ, в котором выполняется команда.</param>
-        /// <param name="keywordsList">Список доступных ключевых слов.</param>
+        /// <param name="optionsList">Варианты выбора.</param>
         /// <param name="message">Текст запроса.</param>
         /// <param name="allowNone">Разрешает принять значение по умолчанию при нажатии Enter.</param>
         /// <returns>Значение выбранного ключевого слова или <see langword="null"/>, если ввод отменён или не распознан.</returns>
-        public static Enum? KeywordAnswer(
+        public static Enum? GetAnswer(
             Document doc,
-            IReadOnlyList<Keywords> keywordsList,
+            IReadOnlyList<KeywordOption> optionsList,
             string message,
             bool allowNone = false)
         {
@@ -30,9 +29,9 @@ namespace dRz.NC.CadServices
                 throw new ArgumentNullException(nameof(doc));
             }
 
-            if (keywordsList == null)
+            if (optionsList == null)
             {
-                throw new ArgumentNullException(nameof(keywordsList));
+                throw new ArgumentNullException(nameof(optionsList));
             }
 
             PromptKeywordOptions options = new PromptKeywordOptions(message)
@@ -41,7 +40,7 @@ namespace dRz.NC.CadServices
                 AppendKeywordsToMessage = true
             };
 
-            foreach (Keywords keyword in keywordsList)
+            foreach (KeywordOption keyword in optionsList)
             {
                 options.Keywords.Add(
                     keyword.GlobalName,
@@ -60,7 +59,7 @@ namespace dRz.NC.CadServices
 
             if (result.Status == PromptStatus.None && allowNone)
             {
-                foreach (Keywords keyword in keywordsList)
+                foreach (KeywordOption keyword in optionsList)
                 {
                     if (keyword.IsDefault)
                     {
@@ -76,7 +75,7 @@ namespace dRz.NC.CadServices
                 return null;
             }
 
-            foreach (Keywords keyword in keywordsList)
+            foreach (KeywordOption keyword in optionsList)
             {
                 if (string.Equals(
                     keyword.GlobalName,

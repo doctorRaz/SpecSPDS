@@ -2,7 +2,7 @@
 using dRz.NC.Infrastructure;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
-namespace dRz.NC.TestCommands.Init
+namespace dRz.NC.Commands.Test.Init
 {
     public class InitCMD
     {

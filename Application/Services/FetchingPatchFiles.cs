@@ -8,6 +8,9 @@ using System.Windows.Forms;
 
 namespace dRz.Application.Services
 {
+    /// <summary>
+    /// Предоставляет методы выбора файлов чертежей и получения файлов из каталогов.
+    /// </summary>
     public class FetchingPatchFiles
     {
         /// <summary>

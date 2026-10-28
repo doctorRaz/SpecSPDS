@@ -1,6 +1,5 @@
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.Core;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
 using System;
@@ -9,7 +8,7 @@ using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands
+namespace dRz.NC.Commands.Common
 {
     /// <summary>
     /// Изменение общих настроек аддона через командную строку nanoCAD.
@@ -37,13 +36,13 @@ namespace dRz.NC.Commands
             IGeneralSettings generalSettings = settings.General;
             bool previousValue = generalSettings.ShowCommandInfoOnStartup;
 
-            List<Keywords> keywords = new List<Keywords>
+            List<KeywordOption> keywords = new List<KeywordOption>
             {
-                new Keywords(nameof(AskYesNo.Yes), AskYesNo.Yes, previousValue),
-                new Keywords(nameof(AskYesNo.No), AskYesNo.No, !previousValue)
+                new KeywordOption(nameof(AskYesNo.Yes), AskYesNo.Yes, previousValue),
+                new KeywordOption(nameof(AskYesNo.No), AskYesNo.No, !previousValue)
             };
 
-            Enum? answer = CadService.KeywordAnswer(
+            Enum? answer = KeywordPrompt.GetAnswer(
                 document,
                 keywords,
                 $"\nВыводить сведения о командах при запуске? Текущее значение: {(previousValue ? "Да" : "Нет")}. ",

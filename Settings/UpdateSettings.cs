@@ -10,7 +10,7 @@ namespace dRz.Settings
     public sealed class UpdateSettings : IUpdateSettings
     {
         /// <inheritdoc />
-        public UpdateMode Mode { get; set; } = UpdateMode.CheckAndNotify;
+        public UpdateMode Mode { get; set; } = UpdateMode.CheckAndInstall;
 
         /// <inheritdoc />
         public int UpdateCheckIntervalDays { get; set; } = 7;

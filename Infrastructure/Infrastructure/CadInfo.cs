@@ -71,26 +71,37 @@ public class CadInfo : ICadInfo
 
     /// <summary>Возвращает сведения об авторских правах CAD-приложения.</summary>
     public string Copyright { get; } = string.Empty;
+
     /// <summary>Возвращает полный путь к исполняемому файлу CAD-процесса.</summary>
     public string ExePath { get; } = string.Empty;
+
     /// <summary>Возвращает описание исполняемого файла CAD-приложения.</summary>
     public string FileDescription { get; } = string.Empty;
+
     /// <summary>Возвращает имя исполняемого файла CAD-приложения.</summary>
     public string FileName { get; } = string.Empty;
+
     /// <summary>Возвращает версию файла CAD-приложения.</summary>
     public Version FileVersion { get; } = new(0, 0, 0, 0);
+
     /// <summary>Возвращает разрядность текущего процесса в формате <c>X64</c> или <c>X32</c>.</summary>
     public string HostArchitecture { get; } = string.Empty;
+
     /// <summary>Возвращает каталог установки CAD-приложения.</summary>
     public string InstallDirectory { get; } = string.Empty;
+
     /// <summary>Указывает, является ли текущий процесс 64-разрядным.</summary>
     public bool Is64BitProcess { get; } = Environment.Is64BitProcess;
+
     /// <summary>Указывает, что сведения о CAD-приложении не удалось полностью получить и остались значения по умолчанию.</summary>
     public bool IsFallback { get; private set; }
+
     /// <summary>Возвращает исходное имя файла из версии исполняемого файла.</summary>
     public string OriginalFilename { get; } = string.Empty;
+
     /// <summary>Возвращает название продукта CAD-приложения.</summary>
     public string ProductName { get; } = "Unknown CAD";
+
     /// <summary>Возвращает версию продукта CAD-приложения.</summary>
     public Version ProductVersion { get; } = new(0, 0, 0, 0);
 

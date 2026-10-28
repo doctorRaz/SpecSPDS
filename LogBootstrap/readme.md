@@ -89,10 +89,10 @@ YYYY-MM-DD_<ProductFamily>.log
 
 ## Файлы настройки
 
-| Файл | Назначение | Расположение |
-| --- | --- | --- |
-| `logger.level` | Уровень основного логирования | `AssemblyDirectory` |
-| `diagnostic.level` | Уровень Internal Logger | `AssemblyDirectory` |
+| Файл               | Назначение                    | Расположение        |
+| ------------------ | ----------------------------- | ------------------- |
+| `logger.level`     | Уровень основного логирования | `AssemblyDirectory` |
+| `diagnostic.level` | Уровень Internal Logger       | `AssemblyDirectory` |
 
 Оба файла читаются по первой строке. Дополнительные строки не используются. Внешний `nlog.config` для создания основной конфигурации не используется.
 

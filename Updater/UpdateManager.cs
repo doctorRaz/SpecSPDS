@@ -129,8 +129,11 @@ namespace dRz.Updater
                 {
                     if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
-                        _messageServices.InfoMessage(
-                            $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.", title: "Updater");
+                        string message = $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.";
+
+                        _logger.Trace(message);
+
+                        _messageServices.InfoMessage(message, title: "Updater");
                     }
 
                     return UpdateResult.UpToDate;
@@ -162,13 +165,19 @@ namespace dRz.Updater
                 // При CheckAndNotify запрос согласия уже является уведомлением.
                 if (update.Mandatory)
                 {
-                    _messageServices.InfoMessage(
-                        $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.", title: "Updater");
+                    string message = $"Обнаружено обязательное обновление {update.Product} до версии {update.Version.ToVersion()}. Оно будет установлено автоматически.";
+
+                    _logger.Trace(message);
+
+                    _messageServices.InfoMessage(message, title: "Updater");
                 }
                 else if (effectiveMode == UpdateMode.CheckAndInstall)
                 {
-                    _messageServices.InfoMessage(
-                        $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}", title: "Updater");
+                    string message = $"Будет выполнено обновление {update.Product} до версии {update.Version.ToVersion()}";
+
+                    _logger.Trace(message);
+
+                    _messageServices.InfoMessage(message, title: "Updater");
                 }
 
                 string assetFile = Path.Combine(
@@ -289,8 +298,11 @@ namespace dRz.Updater
                     return UpdateResult.Failed;
                 }
 
-                _messageServices.InfoMessage(
-                    $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.", title: "Updater");
+                string message2 = $"{update.Product} обновлён с версии {request.CurrentVersion} до версии {update.Version.ToVersion()}\nЧтобы изменения вступили в силу, необходима перезагрузка.";
+
+                _logger.Trace(message2);
+
+                _messageServices.InfoMessage(message2, title: "Updater");
 
                 return UpdateResult.Installed;
             }
@@ -333,7 +345,7 @@ namespace dRz.Updater
         /// <summary>
         /// Предлагает открыть страницу опубликованного релиза и открывает её при подтверждении.
         /// </summary>
-        private void OpenReleaseIfRequested(string updateUrl, string tag)//todo вынести в инфраструктуру??
+        private void OpenReleaseIfRequested(string updateUrl, string tag)
         {
             string releaseUrl = BuildReleaseUrl(updateUrl, tag);
             MessageResult result = _promptService.AskYesNo(

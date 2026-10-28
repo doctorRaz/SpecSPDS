@@ -115,8 +115,6 @@ namespace dRz.AddOnRuntime
             //регистрация-получение новых IAddOnInfo и получение сущ объекта по полному пути к файлу addOnAssembly
             // регистрация только из контейнера
             container.RegisterSingleton<IAddOnInfo>(() => AddOnInfoProvider.GetOrAdd(addOnAssembly));
-
-
         }
 
         /// <summary>Registers the services.</summary>

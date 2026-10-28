@@ -3,7 +3,7 @@ using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 //using static dRz.Src.Infrastructure.AddOnContext;
 
-namespace dRz.NC.TestCommands.DocInfo
+namespace dRz.NC.Commands.Test.DocInfo
 {
     public class DocInfoLineCmd
     {

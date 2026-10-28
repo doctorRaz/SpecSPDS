@@ -4,7 +4,7 @@ using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 
 
-namespace dRz.NC.TestCommands.NewCmd
+namespace dRz.NC.Commands.Test.NewCmd
 {
     public class NewInfoCmd
     {

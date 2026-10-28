@@ -8,6 +8,9 @@ using NUnit.Framework;
 
 namespace dRz.Test.Settings
 {
+    /// <summary>
+    /// Проверяет загрузку и сохранение настроек приложения.
+    /// </summary>
     [TestFixture]
     public sealed class SettingsManagerTests
     {
@@ -17,6 +20,9 @@ namespace dRz.Test.Settings
         private Mock<IDrzLoggerFactory> _loggerFactory = null!;
         private Mock<IMessageService> _messageService = null!;
 
+        /// <summary>
+        /// Подготавливает временный каталог и зависимости для теста.
+        /// </summary>
         [SetUp]
         public void SetUp()
         {
@@ -28,6 +34,9 @@ namespace dRz.Test.Settings
             _messageService = new Mock<IMessageService>();
         }
 
+        /// <summary>
+        /// Удаляет временные файлы, созданные тестом.
+        /// </summary>
         [TearDown]
         public void TearDown()
         {
@@ -37,17 +46,23 @@ namespace dRz.Test.Settings
             }
         }
 
+        /// <summary>
+        /// Проверяет создание и сохранение настроек по умолчанию, если файл отсутствует.
+        /// </summary>
         [Test]
         public void Load_WhenFileDoesNotExist_CreatesAndSavesDefaults()
         {
             IAddonSettings settings = CreateManager().Load();
 
             Assert.That(settings.General.ShowCommandInfoOnStartup, Is.True);
-            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
+            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
             Assert.That(settings.Updates.UpdateCheckIntervalDays, Is.EqualTo(7));
             Assert.That(File.Exists(_filePath), Is.True);
         }
 
+        /// <summary>
+        /// Проверяет сохранение и последующую загрузку настроек обновления.
+        /// </summary>
         [Test]
         public void SaveAndLoad_PreservesUpdateSettings()
         {
@@ -68,7 +83,9 @@ namespace dRz.Test.Settings
             Assert.That(reloaded.Updates.LastResult, Is.EqualTo(UpdateResult.Installed));
         }
 
-
+        /// <summary>
+        /// Проверяет применение значений по умолчанию при отсутствии секции общих настроек.
+        /// </summary>
         [Test]
         public void Load_WhenGeneralSectionIsMissing_UsesGeneralDefaults()
         {
@@ -80,6 +97,9 @@ namespace dRz.Test.Settings
             Assert.That(settings.General.ShowCommandInfoOnStartup, Is.True);
         }
 
+        /// <summary>
+        /// Проверяет обработку некорректного JSON и замену файла настройками по умолчанию.
+        /// </summary>
         [Test]
         public void Load_WhenJsonIsInvalid_LogsErrorAndReplacesFileWithDefaults()
         {
@@ -88,11 +108,14 @@ namespace dRz.Test.Settings
 
             IAddonSettings settings = CreateManager().Load();
 
-            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndNotify));
-            Assert.That(File.ReadAllText(_filePath), Does.Contain("CheckAndNotify"));
+            Assert.That(settings.Updates.Mode, Is.EqualTo(UpdateMode.CheckAndInstall));
+            Assert.That(File.ReadAllText(_filePath), Does.Contain("CheckAndInstall"));
             _logger.Verify(logger => logger.Error(It.IsAny<Exception>(), It.Is<string>(message => message.Contains("Будут использованы значения по умолчанию"))), Times.Once);
         }
 
+        /// <summary>
+        /// Проверяет журналирование, уведомление и исключение при невозможности сохранить настройки.
+        /// </summary>
         [Test]
         public void Save_WhenFilePathIsDirectory_LogsNotifiesAndThrows()
         {

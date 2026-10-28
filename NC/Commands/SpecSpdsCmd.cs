@@ -1,15 +1,13 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.Abstractions.Settings;
 using dRz.Application.Enums;
 using dRz.Application.Models;
 using dRz.Application.Services;
 using dRz.Application.Settings;
-using dRz.Core;
 using dRz.Core.Extensions;
 using dRz.NC.CadServices;
+using dRz.NC.CadServices.Markers;
 using dRz.NC.Infrastructure;
-using dRz.NC.Services;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
@@ -28,7 +26,7 @@ namespace dRz.NC.Commands
 
     public class SpecSpdsCmd
     {
-        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(UpdateModeCommand));
+        private static IDrzLogger _logger = AddOnContext.NLogFactory.GetLogger(typeof(SpecSpdsCmd));
 
         private static IMessageService _msg = AddOnContext.Msg;
 
@@ -67,17 +65,17 @@ namespace dRz.NC.Commands
             #region Выбор юзера
 
             //получаю маркеры
-            List<Keywords> keywordsList = new List<Keywords>
+            List<KeywordOption> keywordsList = new List<KeywordOption>
             {
-                new Keywords(nameof(Space.Files),Space.Files),
-                new Keywords(nameof(Space.Folder),Space.Folder),
-                new Keywords(nameof(Space.SubFolder),Space.SubFolder),
-                new Keywords(nameof(Space.All),Space.All),
-                new Keywords(nameof(Space.Document),Space.Document),
-                new Keywords(nameof(Space.Layout),Space.Layout,true),
-                new Keywords(nameof(Space.Select),Space.Select),
+                new KeywordOption(nameof(Space.Files),Space.Files),
+                new KeywordOption(nameof(Space.Folder),Space.Folder),
+                new KeywordOption(nameof(Space.SubFolder),Space.SubFolder),
+                new KeywordOption(nameof(Space.All),Space.All),
+                new KeywordOption(nameof(Space.Document),Space.Document),
+                new KeywordOption(nameof(Space.Layout),Space.Layout,true),
+                new KeywordOption(nameof(Space.Select),Space.Select),
             };
-            Enum? propMod = CadService.KeywordAnswer(doc, keywordsList, "Выбрать маркеры...");
+            Enum? propMod = KeywordPrompt.GetAnswer(doc, keywordsList, "Выбрать маркеры...");
 
             if (propMod == null)
             {

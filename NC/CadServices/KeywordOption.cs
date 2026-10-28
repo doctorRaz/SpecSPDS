@@ -1,13 +1,14 @@
-﻿using dRz.Core.Extensions;
-using System;
+﻿using System;
 
-namespace dRz.Core
+namespace dRz.NC.CadServices
 {
-
-    public class Keywords
+    /// <summary>
+    /// Описывает один вариант выбора в командной строке CAD.
+    /// </summary>
+    public class KeywordOption
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="KeywordOption"/> class.
         /// </summary>
         /// <param name="globalName">Name of the global.</param>
         /// <param name="localName">Name of the local.</param>
@@ -15,7 +16,7 @@ namespace dRz.Core
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(string globalName,
+        public KeywordOption(string globalName,
                         string localName,
                         Enum answer,
                         bool isDefault = false,
@@ -34,14 +35,14 @@ namespace dRz.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="KeywordOption"/> class.
         /// </summary>
         /// <param name="globalName">Name of the global.</param>
         /// <param name="answer">The answer.</param>
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(string globalName,
+        public KeywordOption(string globalName,
                         Enum answer,
                         bool isDefault = false,
                         bool isVisible = true,
@@ -60,13 +61,13 @@ namespace dRz.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keywords"/> class.
+        /// Initializes a new instance of the <see cref="KeywordOption"/> class.
         /// </summary>
         /// <param name="answer">The answer.</param>
         /// <param name="isDefault">if set to <c>true</c> [is default].</param>
         /// <param name="isVisible">if set to <c>true</c> [is visible].</param>
         /// <param name="isEnabled">if set to <c>true</c> [is enabled].</param>
-        public Keywords(Enum answer,
+        public KeywordOption(Enum answer,
                         bool isDefault = false,
                         bool isVisible = true,
                         bool isEnabled = true)
@@ -169,7 +170,7 @@ namespace dRz.Core
 
         private Enum? _answer;
 
-        private string _globalName=null!;
+        private string _globalName = null!;
         private string _localName = null!;
         private string _displayName = null!;
 

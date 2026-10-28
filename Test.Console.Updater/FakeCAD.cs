@@ -12,12 +12,15 @@ using Sys = System;
 
 namespace dRz.Test.Console.Updater
 {
+    /// <summary>
+    /// Предоставляет консольный стенд для проверки сервисов и настроек обновления.
+    /// </summary>
     public class FakeCAD
     {
         private readonly IDrzLogger _logger = null!;
         private readonly IMessageService _msg = null!;
         private readonly IAddonSettings _settings = null!;
-        private readonly IAddOnInfo _addonInfo    = null!;
+        private readonly IAddOnInfo _addonInfo = null!;
         private readonly Stopwatch _sw;
 
         /// <summary>Initializes a new instance of the <see cref="FakeCAD"/> class.</summary>
@@ -96,7 +99,6 @@ namespace dRz.Test.Console.Updater
 
             return Sys.Console.ReadKey();
         }
-
 
         /// <summary>
         /// Позволяет включить или отключить вывод сведений о командах при запуске аддона.

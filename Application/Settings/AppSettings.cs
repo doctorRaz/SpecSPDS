@@ -3,6 +3,9 @@ using System.Xml.Serialization;
 
 namespace dRz.Application.Settings
 {
+    /// <summary>
+    /// Загружает и сохраняет настройки приложения в XML-файле.
+    /// </summary>
     public sealed class AppSettings
     {
         private static readonly XmlSerializer _serializer =
@@ -10,17 +13,20 @@ namespace dRz.Application.Settings
 
         private ApplicationSettings _settings;
 
+        /// <summary>Текущие настройки приложения; при первом обращении создаются значения по умолчанию.</summary>
         public ApplicationSettings Settings =>
             _settings ??= new ApplicationSettings();
 
+        /// <summary>Полный путь к файлу настроек.</summary>
         public string ConfigPath => AppPaths.ConfigFile;
 
+        /// <summary>Загружает настройки из файла или создаёт и сохраняет настройки по умолчанию, если файл отсутствует.</summary>
         public void Load()
         {
             if (!File.Exists(ConfigPath))
             {
                 _settings = new ApplicationSettings();
-                Save();//x лишннеее???
+                Save();//лишннеее???
                 return;
             }
 
@@ -28,6 +34,7 @@ namespace dRz.Application.Settings
             _settings = (ApplicationSettings)_serializer.Deserialize(stream);
         }
 
+        /// <summary>Сохраняет текущие настройки в файл.</summary>
         public void Save()
         {
             Directory.CreateDirectory(Path.GetDirectoryName(ConfigPath)!);

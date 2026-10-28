@@ -10,10 +10,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-//using CAD = HostMgd.ApplicationServices.Application;
 using Db = Teigha.DatabaseServices;
 
-namespace dRz.NC.Services;
+namespace dRz.NC.CadServices.Markers;
 
 /// <summary>
 /// получаем универсальный маркер
@@ -52,6 +51,11 @@ public partial class MultiCadProps
         #endregion Logger
     }
 
+    /// <summary>
+    /// Получает свойства маркеров из указанных файлов чертежей.
+    /// </summary>
+    /// <param name="filenames">Список путей к файлам чертежей.</param>
+    /// <returns>Список свойств найденных маркеров.</returns>
     public List<DefinitionMarkerProps> GetPropsTG(List<string> filenames)
     {
         log.Trace($"Total files: {filenames.Count}");
@@ -201,77 +205,88 @@ public partial class MultiCadProps
         log.Trace($"Total files: {filenames.Count}");
 
         List<DefinitionMarkerProps> markerProps = new List<DefinitionMarkerProps>();
-
         List<McObjectId> mcObjectIds = new List<McObjectId>();
+        List<McDocument> openedDocuments = new List<McDocument>();
 
         ObjectFilter of = new ObjectFilter(/*true*/);// новый фильтр долльше чем его сбросить
 
         _countFilesTotal = filenames.Count;
 
-        //запомним рабочий документ на всякий
+        // Запоминаем рабочий документ, чтобы восстановить его даже при исключении.
         McDocument pOldWD = McDocument.WorkingDocument;
         int count = 0;
 
-        foreach (string filename in filenames)
+        try
         {
-            _stwID.Start();
-
-            count++;
-
-            log.Trace($"{count} OPEN {filename}");
-            //если открыт то не нулл
-            McDocument mcDocument = McDocumentsManager.GetDocument(filename);
-            if (mcDocument == null)
+            foreach (string filename in filenames)
             {
-                // открываем файл в скрытом режиме
-                mcDocument = McDocumentsManager.OpenDocument(filename, false, true);
-                if (mcDocument == null)  //проверка на нулл, если нулл то пропуск и записать в лог, что файл пропущен
+                _stwID.Start();
+                count++;
+                log.Trace($"{count} OPEN {filename}");
+
+                // Уже открытый документ используем, но не закрываем: он не принадлежит этому методу.
+                McDocument mcDocument = McDocumentsManager.GetDocument(filename);
+                if (mcDocument == null)
                 {
-                    _badFilePatchs.Add(filename);
-                    continue;
+                    // Запоминаем только документы, открытые этим методом.
+                    mcDocument = McDocumentsManager.OpenDocument(filename, false, true);
+                    if (mcDocument == null)
+                    {
+                        _badFilePatchs.Add(filename);
+                        _stwID.Stop();
+                        continue;
+                    }
+
+                    openedDocuments.Add(mcDocument);
+                }
+
+                _countFilesRead++;
+                of.Reset();
+                of.AddType(guid);
+                of.AddDoc(mcDocument);
+
+                mcObjectIds = of.GetObjects();
+
+                _stwID.Stop();
+                _stwProp.Start();
+                _countTotal += mcObjectIds.Count;
+
+                log.Trace($"\t\tprops");
+                ExtractNamedProps(mcObjectIds, ref markerProps);
+
+                _stwProp.Stop();
+                log.Trace($"\t\told props");
+                log.Trace($"{count} CLOSE {filename}");
+                log.Trace($"-----------");
+            }
+        }
+        finally
+        {
+            try
+            {
+                // Закрываем только документы, открытые в этом методе.
+                foreach (McDocument openedDocument in openedDocuments)
+                {
+                    try
+                    {
+                        openedDocument.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Trace($"Не удалось закрыть временный документ: {ex.Message}");
+                    }
                 }
             }
-
-            _countFilesRead++;
-
-            of.Reset();//сброс фильтра иначе в цикле добавляет документы
-            of.AddType(guid);
-            of.AddDoc(mcDocument);
-
-            //получаем с него ID
-            mcObjectIds = of.GetObjects();
-
-            _stwID.Stop();
-            _stwProp.Start();
-            _countTotal += mcObjectIds.Count;//всего получено
-
-            log.Trace($"\t\tprops");
-            //дергаем сбор свойств
-            ExtractNamedProps(mcObjectIds, ref markerProps);
-
-            _stwProp.Stop();
-            _stwID.Start();
-
-            log.Trace($"\t\told props");
-
-            //после обработки закрываем
-            if (mcDocument.IsHidden)
+            finally
             {
-                mcDocument.Close();//если не открывали не закрывать
+                // Восстанавливаем рабочий документ независимо от результата обработки и закрытия.
+                McDocument.WorkingDocument = pOldWD;
             }
-
-            log.Trace($"{count} CLOSE {filename}");
-            log.Trace($"-----------");
-
-            _stwID.Stop();
         }
 
         _elapsedProp = _stwProp.Elapsed.ToString();
         _elapsedID = _stwID.Elapsed.ToString();
-        _countAdded = markerProps.Count;//добавлено всего маркеров
-
-        //вернем рабочий документ мало ли
-        McDocument.WorkingDocument = pOldWD;
+        _countAdded = markerProps.Count;
 
         return markerProps;
     }
@@ -463,18 +478,23 @@ public partial class MultiCadProps
 
     #region Statistics
 
+    /// <summary>Количество маркеров, исключённых из результата из-за некорректных данных.</summary>
     public int CountIncorrectData => _countIncorrectData;//маркеры с отрицательной суммой, некорректными данными
     private int _countIncorrectData = 0;//маркеры с отрицательной суммой, некорректными данными
 
+    /// <summary>Количество маркеров, исключённых из результата из-за отсутствия флага включения в спецификацию.</summary>
     public int CountNotFlag => _countNotFlag;//маркеров без признака включения в спеку
     private int _countNotFlag = 0;//маркеров без признака включения в спеку
 
+    /// <summary>Количество маркеров, исключённых из результата из-за несоответствия имени.</summary>
     public int CountFalseName => _countFalseName;//маркеров с не тем именем
     private int _countFalseName = 0;//маркеров с не тем именем
 
+    /// <summary>Количество маркеров, добавленных в результат.</summary>
     public int CountAdded => _countAdded;//маркеров добавлено
     private int _countAdded = 0;//маркеров добавлено
 
+    /// <summary>Общее количество обработанных идентификаторов маркеров.</summary>
     public int CountTotal => _countTotal;//маркеров всего
     private int _countTotal = 0;//маркеров всего
 
@@ -512,6 +532,7 @@ public partial class MultiCadProps
 
     private string _elapsedProp = ""; //todo подумать как закрыть изменение из других классов
 
+    /// <summary>Список путей к файлам, которые не удалось обработать.</summary>
     public List<string> BadFilePatchs => _badFilePatchs;
     private List<string> _badFilePatchs = new List<string>();
 
