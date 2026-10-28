@@ -6,6 +6,7 @@ using dRz.Updater.Models;
 using dRz.Updater.Services;
 using dRz.Updater.Services.SevenZip;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -130,7 +131,10 @@ namespace dRz.Updater
                     if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
                         string message = $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.";
-
+                        if (request.CurrentVersion!=request.RunningVersion)
+                        {
+                            message += $" Чтобы изменения вступили в силу, необходима перезагрузка.";
+                        }
                         _logger.Trace(message);
 
                         _messageServices.InfoMessage(message, title: "Updater");

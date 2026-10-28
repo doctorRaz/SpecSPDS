@@ -133,6 +133,7 @@ namespace dRz.Common.NC.Services.Updater
                 UpdateRequest request = new UpdateRequest
                 {
                     CurrentVersion = addOnInfo.InstalledVersion,
+                    RunningVersion = addOnInfo.RunningVersion,
                     UpdateUrl = updateUrl,
                     PackageDirectory = addOnInfo.PackageDirectory,
                     IsPackage = addOnInfo.IsProductDirectory,
