@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="..\Shared.NC.props" Condition="Exists('..\Shared.NC.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<PlatformTarget>x64</PlatformTarget>
@@ -13,7 +14,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="MultiCAD.NET" Version="23.1.6324.4405" />
-		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
@@ -23,23 +23,4 @@
 		<ProjectReference Include="..\AddOnRuntime\AddOnRuntime.csproj" />
 		<ProjectReference Include="..\Common.NC\Common.NC.csproj" />
 	</ItemGroup>
-	<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
-	<Target Name="GenerateCommandPrefix" BeforeTargets="CoreCompile">
-		<PropertyGroup>
-			<CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</CommandPrefixFile>
-			<CommandPrefixValue>drz_$(SolutionName)</CommandPrefixValue>
-		</PropertyGroup>
-		<MakeDir Directories="$(IntermediateOutputPath)" />
-		<WriteLinesToFile File="$(CommandPrefixFile)" Overwrite="true" Lines=
-"
-///&lt;summary&gt; Содержит константы, генерируемые перед сборкой.&lt;/summary&gt;
-internal static class CommandPrefix 
-{ 
-/// &lt;summary&gt; Суффикс команд, формируемый из имени решения. &lt;/summary&gt;
-public const string Value = &quot;$(CommandPrefixValue)&quot;%3B  
-}" />
-		<ItemGroup>
-			<Compile Include="$(CommandPrefixFile)" />
-		</ItemGroup>
-	</Target>
 </Project>
