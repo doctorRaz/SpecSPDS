@@ -137,12 +137,35 @@ namespace dRz.Common.NC.Commands.Common
         /// <returns>Минимальный включённый уровень или <c>Off</c>, если логирование отключено.</returns>
         private static string GetEffectiveLogLevel(IDrzLogger logger)
         {
-            if (logger.IsTraceEnabled) return "Trace";
-            if (logger.IsDebugEnabled) return "Debug";
-            if (logger.IsInfoEnabled) return "Info";
-            if (logger.IsWarnEnabled) return "Warn";
-            if (logger.IsErrorEnabled) return "Error";
-            if (logger.IsFatalEnabled) return "Fatal";
+            if (logger.IsTraceEnabled)
+            {
+                return "Trace";
+            }
+
+            if (logger.IsDebugEnabled)
+            {
+                return "Debug";
+            }
+
+            if (logger.IsInfoEnabled)
+            {
+                return "Info";
+            }
+
+            if (logger.IsWarnEnabled)
+            {
+                return "Warn";
+            }
+
+            if (logger.IsErrorEnabled)
+            {
+                return "Error";
+            }
+
+            if (logger.IsFatalEnabled)
+            {
+                return "Fatal";
+            }
 
             return "Off";
         }
