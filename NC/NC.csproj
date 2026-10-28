@@ -18,7 +18,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />
-		<ProjectReference Include="..\Updater\Updater.csproj" />
 		<ProjectReference Include="..\MulticadInterop\MulticadInterop.csproj" />
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\AddOnRuntime\AddOnRuntime.csproj" />
@@ -31,10 +30,7 @@
 			<_CommandPrefixValue>drz_$(SolutionName)</_CommandPrefixValue>
 		</PropertyGroup>
 		<MakeDir Directories="$(IntermediateOutputPath)" />
-		<WriteLinesToFile
-			File="$(_CommandPrefixFile)"
-			Overwrite="true"
-			Lines="internal static class CommandPrefix { public const string Value = &quot;$(_CommandPrefixValue)&quot;%3B  }" />
+		<WriteLinesToFile File="$(_CommandPrefixFile)" Overwrite="true" Lines="internal static class CommandPrefix { public const string Value = &quot;$(_CommandPrefixValue)&quot;%3B  }" />
 		<ItemGroup>
 			<Compile Include="$(_CommandPrefixFile)" />
 		</ItemGroup>

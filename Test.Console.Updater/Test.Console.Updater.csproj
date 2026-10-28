@@ -39,7 +39,7 @@
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 		<Compile Include="..\NC\EntryPoint.cs" Link="EntryPoint.cs" />
-		<Compile Include="..\NC\Services\Updater\UpdateAsync.cs" Link="Services\Updater\UpdateAsync.cs" />
+		<Compile Include="..\Common.NC\Services\Updater\UpdateAsync.cs" Link="Services\Updater\UpdateAsync.cs" />
 		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
