@@ -23,7 +23,7 @@ AppSettings я б засунул именно в то, что работает �
 using drz.SpecSPDS.Test;
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using dRz.Test.Console;
 using System;
 using System.Diagnostics;

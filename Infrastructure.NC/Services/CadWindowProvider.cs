@@ -8,7 +8,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.NC.Infrastructure.Services
+namespace dRz.Common.NC.Infrastructure.Services
 {
     /// <summary>
     /// Предоставляет дескриптор главного окна текущего процесса без зависимости от API CAD.

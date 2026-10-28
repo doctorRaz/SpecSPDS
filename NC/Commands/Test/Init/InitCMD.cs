@@ -1,5 +1,6 @@
 ﻿#if DEBUG
-using dRz.NC.Infrastructure;
+using dRz.Common.NC;
+using dRz.Common.NC.Infrastructure;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
 namespace dRz.NC.Commands.Test.Init

@@ -3,7 +3,7 @@ using dRz.Abstractions.Services.Message;
 using System;
 using System.Runtime.CompilerServices;
 
-namespace dRz.NC.Infrastructure.Services.Message
+namespace dRz.Common.NC.Infrastructure.Services.Message
 {
     /// <summary>
     /// Адаптер уведомлений nanoCAD на основе McNotificator.

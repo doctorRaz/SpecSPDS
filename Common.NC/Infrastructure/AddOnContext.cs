@@ -5,7 +5,7 @@ using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using System;
 
-namespace dRz.NC.Infrastructure
+namespace dRz.Common.NC.Infrastructure
 {
     /// <summary>
     /// Предоставляет командам доступ к сервисам аддона без повторного вызова Services.Get&lt;T&gt;().

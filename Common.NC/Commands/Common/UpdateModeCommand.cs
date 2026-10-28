@@ -1,8 +1,8 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.NC.CadServices;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.CadServices;
+using dRz.Common.NC.Infrastructure;
 using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Common
+namespace dRz.Common.NC.Commands.Common
 {
     /// <summary>
     /// Изменение режима и периода автоматического обновления через командную строку nanoCAD.

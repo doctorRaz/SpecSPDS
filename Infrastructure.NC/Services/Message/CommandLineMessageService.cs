@@ -8,7 +8,7 @@ using HostMgd.ApplicationServices;
 
 #endif
 
-namespace dRz.NC.Infrastructure.Services.Message
+namespace dRz.Common.NC.Infrastructure.Services.Message
 {
     /// <summary>
     /// Выводит сообщения в командную строку nanoCAD с резервным отображением уведомления.

@@ -4,14 +4,14 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
-using dRz.NC.Infrastructure;
-using dRz.NC.Services.Updater;
+using dRz.Common.NC.Infrastructure;
+using dRz.Common.NC.Services.Updater;
 using dRz.Updater.Services;
 using System;
 
 #if !TEST
 
-using dRz.NC.Commands;
+using dRz.Common.NC.Commands;
 
 #endif
 
@@ -20,7 +20,8 @@ using dRz.NC.Commands;
 using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
-using dRz.NC.Commands.Common;
+using dRz.Common.NC.Commands.Common;
+using dRz.Common.NC.Commands.Common;
 
 #elif AC
 
@@ -34,7 +35,7 @@ using Rtm = Autodesk.AutoCAD.Runtime;
 
 #endif
 
-namespace dRz.NC
+namespace dRz.Common.NC
 {
     /// <summary>
     /// Точка входа аддона для инициализации и завершения работы в CAD-хосте.

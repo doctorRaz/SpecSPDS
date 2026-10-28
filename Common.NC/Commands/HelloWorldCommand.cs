@@ -1,10 +1,10 @@
-﻿using dRz.NC.Infrastructure;
+﻿using dRz.Common.NC.Infrastructure;
 using Teigha.Runtime;
 
 namespace dRz.Common.NC.Commands
 {
     /// <summary>
-    /// Проверочная служебная команда Common.NC.
+    /// Проверочная служебная команда Common.Common.NC.
     /// </summary>
     public sealed class HelloWorldCommand
     {
@@ -14,7 +14,7 @@ namespace dRz.Common.NC.Commands
         [CommandMethod("drz_SpecSPDS_HelloWorld", CommandFlags.Session)]
         public static void HelloWorld()
         {
-            AddOnContext.Msg.InfoMessage("Hello World from Common.NC");
+            AddOnContext.Msg.InfoMessage("Hello World from Common.Common.NC");
         }
     }
 }
