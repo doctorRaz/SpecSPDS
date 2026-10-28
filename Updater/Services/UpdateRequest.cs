@@ -5,10 +5,10 @@ namespace dRz.Updater.Services
     /// <summary>Входные параметры для проверки и установки обновления.</summary>
     public sealed class UpdateRequest
     {
-        /// <summary>Текущая установленная версия аддона. Assemble на диске</summary>
+        /// <summary>Версия сборки аддона на диске.</summary>
         public Version CurrentVersion { get; init; } = new Version();
 
-        /// <summary>/Загруженная в хост сборка. Assemble в памяти</summary>        
+        /// <summary>Версия сборки аддона, загруженной в хост (в памяти).</summary>
         public Version RunningVersion { get; init; } = new Version();
 
         /// <summary>URL источника файла update.json.</summary>
