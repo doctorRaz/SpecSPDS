@@ -4,7 +4,6 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
-using dRz.Common.NC;
 using dRz.NC.Infrastructure;
 using dRz.NC.Services.Updater;
 using dRz.Updater.Services;
@@ -150,7 +149,7 @@ namespace dRz.NC
                     AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
 
                     // Передаём зарегистрированные сервисы в общий контекст аддона.
-                    AddOnContext  /*AddOnCtx*/.Initialize(root.Get<IAddOnServices>());
+                    AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                     _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
                 }
@@ -163,9 +162,6 @@ namespace dRz.NC
 
                 // Получаем сервис сообщений из контейнера сервисов.
                 _message = AddOnContext.Msg;
-
-                // Передаём служебным командам Common.NC доступ к сервисам аддона.
-                CommonCommandContext.Initialize(AddOnContext.Services);
 
                 // Получаем сервис оконных сообщений из контейнера сервисов.
                 _windowMessage = AddOnContext.MsgW;
