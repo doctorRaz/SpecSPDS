@@ -18,11 +18,12 @@ namespace dRz.LogBootstrap.Diagnostics
         /// Запрос уровня <see cref="LogLevel.Off"/> не инициализирует логгер.
         /// После инициализации повторные запросы с уровнем, отличным от <see cref="LogLevel.Off"/>,
         /// записываются в Internal Logger как отклонённая повторная настройка; конфигурация не меняется.
+        /// Инициализация определяется по текущему уровню Internal Logger, отдельный флаг не используется.
         /// </summary>
         /// <param name="typeCaller">Имя вызывающего компонента для диагностических сообщений.</param>
         /// <param name="requestedLevel">Запрашиваемый уровень Internal Logger.</param>
         /// <param name="logName">Семейство продукта, используемое в имени файла внутреннего лога.</param>
-        /// <param name="logDir">Каталог внутренних логов; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
+        /// <param name="logDir">Общий каталог внутренних логов компании; если <see langword="null"/>, используется каталог <c>%TEMP%\dRzTools\logs</c>.</param>
         public static void ConfigureInternalLogger(string typeCaller, LogLevel requestedLevel, string logName, string? logDir = null)
         {
             lock (_lock)
@@ -33,9 +34,9 @@ namespace dRz.LogBootstrap.Diagnostics
                     return;
                 }
 
-                if (_initialized)
+                // Уровень InternalLogger — единственный признак того, что логгер уже инициализирован.
+                if (InternalLogger.LogLevel != LogLevel.Off)
                 {
-                    // InternalLogger уже принадлежит первому аддону, включившему диагностику.
                     // Повторную настройку не применяем, но фиксируем попытку в текущем InternalLogger.
                     // Error проходит фильтр при текущих уровнях Trace, Debug, Info, Warn и Error.
                     InternalLogger.Log(
@@ -50,11 +51,12 @@ namespace dRz.LogBootstrap.Diagnostics
                 logDir ??= Path.Combine(Path.GetTempPath(), "dRzTools", "logs");
 
                 _logDir = logDir;
+                Directory.CreateDirectory(LogDir);
 
-                string currentLogPath = GetInternalLogPath(logName);
+                string currentLogPath = GetInternalLogPath();
 
-                // Сначала удаляем 6-й и далее файлы.
-                RotateOldLogs(logName);
+                // Удаляем старые файлы внутренних логов, сохраняя последние.
+                RotateOldLogs();
 
                 // Если текущий файл больше 10 МБ, переименовываем его в архивный.
                 CheckCurrentFileSize(currentLogPath);
@@ -77,8 +79,6 @@ namespace dRz.LogBootstrap.Diagnostics
                 LogManager.ThrowConfigExceptions = true;
 
                 InternalLogger.Info($"{typeCaller} InternalLogger Initialized, Level={requestedLevel}");
-
-                _initialized = true;
             }
         }
 
@@ -86,16 +86,17 @@ namespace dRz.LogBootstrap.Diagnostics
         /// <value>The log dir.</value>
         internal static string LogDir => _logDir;
 
-        /// <summary>Gets a value indicating whether this <see cref="InternalLoggerHelpers"/> is initialized.</summary>
-        /// <value><see langword="true"/> if initialized; otherwise, <see langword="false"/>.</value>
-        internal static bool Initialized => _initialized;
+        /// <summary>
+        /// Gets a value indicating whether Internal Logger is initialized.
+        /// </summary>
+        /// <value><see langword="true"/> if its level is not <see cref="LogLevel.Off"/>; otherwise, <see langword="false"/>.</value>
+        internal static bool Initialized => InternalLogger.LogLevel != LogLevel.Off;
 
         //private const string logName = "nlog-drzTools-internal";
-        private const int MaxArchiveFiles = 5;
+        private const int MaxArchiveFiles = 10;
 
         private const int MaxFileSizeBytes = 10 * 1024 * 1024;
         private static readonly object _lock = new();
-        private static bool _initialized = false;
         private static string _logDir = string.Empty;
 
         /// <summary>
@@ -117,12 +118,11 @@ namespace dRz.LogBootstrap.Diagnostics
             catch { }
         }
 
-        private static string GetInternalLogPath(string logName) =>
-                   Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{logName}_internal.log");
+        private static string GetInternalLogPath() =>
+                   Path.Combine(LogDir, $"{DateTime.Now:yyyy-MM-dd}_{Guid.NewGuid():N}_internal.log");
 
-        /// <summary>Rotates the old logs.</summary>
-        /// <param name="logName">Name of the logs.</param>
-        private static void RotateOldLogs(string logName)
+        /// <summary>Удаляет старые файлы внутренних логов, оставляя не более заданного количества.</summary>
+        private static void RotateOldLogs()
         {
             try
             {
@@ -131,10 +131,10 @@ namespace dRz.LogBootstrap.Diagnostics
                     return;
                 }
 
-                // Получаем все internal-логи именно для этого приложения.
-                // Сортируем по дате создания (от новых к старым).
+                // Все аддоны одного процесса используют общий каталог внутренних логов.
+                // Сортируем файлы от новых к старым.
                 List<FileInfo> files = new DirectoryInfo(LogDir)
-                                         .GetFiles($"*_{logName}_internal.log")
+                                         .GetFiles("*_internal.log")
                                          .OrderByDescending(f => f.LastWriteTime)
                                          .ToList();
 
