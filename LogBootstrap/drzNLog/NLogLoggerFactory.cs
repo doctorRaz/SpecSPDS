@@ -1,5 +1,6 @@
 ﻿using dRz.Abstractions.Logger;
 using NLog;
+using NLog.Common;
 using System;
 
 //https://replit.com/@razygraev/Log-Service-interface
@@ -10,7 +11,7 @@ namespace dRz.LogBootstrap.drzNLog
     /// Log Factory
     /// </summary>
     /// <seealso cref="IDrzLoggerFactory" />
-    public sealed class NLogLoggerFactory : IDrzLoggerFactory
+    public sealed class NLogLoggerFactory : IDrzLoggerFactory, IInternalLogLevelProvider
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NLogLoggerFactory"/> class.
@@ -20,6 +21,11 @@ namespace dRz.LogBootstrap.drzNLog
         {
             _factory = factory;
         }
+
+        /// <summary>
+        /// Возвращает текущий уровень внутренней диагностики NLog.
+        /// </summary>
+        public string InternalLogLevel => InternalLogger.LogLevel.ToString();
 
         /// <summary>
         /// Gets the logger.

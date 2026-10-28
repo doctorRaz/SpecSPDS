@@ -1,6 +1,6 @@
 ﻿using dRz.Abstractions.Services.Message;
+using dRz.Common.NC.Infrastructure;
 using dRz.Infrastructure.NC.Services;
-using dRz.NC.Infrastructure;
 using System;
 
 namespace dRz.SpecSPDS.Test

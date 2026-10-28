@@ -1,14 +1,14 @@
 ﻿#if DEBUG
-using dRz.NC.Infrastructure;
+
+using dRz.Common.NC;
+using dRz.Common.NC.Infrastructure;
 using Rtm = Teigha.Runtime;
 using Scm = System.ComponentModel;
+
 namespace dRz.NC.Commands.Test.Init
 {
     public class InitCMD
     {
-
-#if DEBUG && NC
-
         [Rtm.CommandMethod(CommandPrefix.Value + "_инит", Rtm.CommandFlags.Session)]
         [Scm.Description("ручной инит загрузчика для SPEC")]
         public static void test()
@@ -25,9 +25,7 @@ namespace dRz.NC.Commands.Test.Init
         {
             AddOnContext.MsgCmd.ConsoleMessage("Console message");
         }
-
-#endif
-
     }
 }
+
 #endif

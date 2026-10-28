@@ -1,6 +1,6 @@
 ﻿#if DEBUG
 using dRz.Abstractions.Services.Message;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using Teigha.Runtime;
 
 namespace dRz.NC.Commands.Test.McNotifay

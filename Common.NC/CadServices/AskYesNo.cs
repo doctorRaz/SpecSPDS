@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace dRz.NC.CadServices
+namespace dRz.Common.NC.CadServices
 {
     /// <summary>
     /// Результат ответа пользователя на вопрос с вариантами «Да» и «Нет».

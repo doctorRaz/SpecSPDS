@@ -3,7 +3,7 @@ using HostMgd.EditorInput;
 using System;
 using System.Collections.Generic;
 
-namespace dRz.NC.CadServices
+namespace dRz.Common.NC.CadServices
 {
     /// <summary>
     /// Предоставляет выбор ключевого слова в командной строке CAD.

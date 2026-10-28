@@ -1,5 +1,5 @@
 ﻿#if DEBUG
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using Teigha.Runtime;
 
 namespace dRz.NC.Commands.Test.Message

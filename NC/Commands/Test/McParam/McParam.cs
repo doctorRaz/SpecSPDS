@@ -1,6 +1,6 @@
 ﻿#if DEBUG
 using drz.MulticadInterop.McParamManager;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using HostMgd.EditorInput;
 using System.ComponentModel;
 using System.Drawing;

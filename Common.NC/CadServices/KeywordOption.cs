@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace dRz.NC.CadServices
+namespace dRz.Common.NC.CadServices
 {
     /// <summary>
     /// Описывает один вариант выбора в командной строке CAD.
