@@ -1,4 +1,4 @@
-﻿using dRz.Abstractions.Services.Message;
+﻿using dRz.NC.Infrastructure;
 using Teigha.Runtime;
 
 namespace dRz.Common.NC.Commands
@@ -14,8 +14,7 @@ namespace dRz.Common.NC.Commands
         [CommandMethod("drz_SpecSPDS_HelloWorld", CommandFlags.Session)]
         public static void HelloWorld()
         {
-            CommonCommandContext.Services.Get<IMessageService>()
-                .InfoMessage("Hello World from Common.NC");
+            AddOnContext.Msg.InfoMessage("Hello World from Common.NC");
         }
     }
 }
