@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Description>Общие служебные команды nanoCAD</Description>
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="nanoCAD.Platform.NET" Version="23.1.6324.4405" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Updater\Updater.csproj" />
+	</ItemGroup>
+	<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
+	<Target Name="GenerateCommandPrefix" BeforeTargets="CoreCompile">
+		<PropertyGroup>
+			<CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</CommandPrefixFile>
+			<CommandPrefixValue>drz_$(SolutionName)</CommandPrefixValue>
+		</PropertyGroup>
+		<MakeDir Directories="$(IntermediateOutputPath)" />
+		<WriteLinesToFile File="$(CommandPrefixFile)" Overwrite="true" Lines=
+"
+///&lt;summary&gt; Содержит константы, генерируемые перед сборкой.&lt;/summary&gt;
+internal static class CommandPrefix 
+{ 
+/// &lt;summary&gt; Суффикс команд, формируемый из имени решения. &lt;/summary&gt;
+public const string Value = &quot;$(CommandPrefixValue)&quot;%3B  
+}" />
+		<ItemGroup>
+			<Compile Include="$(CommandPrefixFile)" />
+		</ItemGroup>
+	</Target>
+</Project>

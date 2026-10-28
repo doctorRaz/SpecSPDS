@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace dRz.NC.CadServices
+namespace dRz.Common.NC.CadServices
 {
     /// <summary>
     /// Предоставляет методы расширения для значений перечислений.

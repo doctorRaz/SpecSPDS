@@ -2,8 +2,8 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
+using dRz.Common.NC.Infrastructure;
 using dRz.NC;
-using dRz.NC.Infrastructure;
 using System;
 using System.Diagnostics;
 using System.IO;

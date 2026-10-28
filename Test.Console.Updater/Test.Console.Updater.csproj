@@ -24,7 +24,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
-		<ProjectReference Include="..\Updater\Updater.csproj" />
+		<ProjectReference Include="..\Test.Common.NC\Test.Common.NC.csproj" />
 	</ItemGroup>
 	<!--metadata assemble-->
 	<ItemGroup>
@@ -39,8 +39,8 @@
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 		<Compile Include="..\NC\EntryPoint.cs" Link="EntryPoint.cs" />
-		<Compile Include="..\NC\Services\Updater\UpdateAsync.cs" Link="Services\Updater\UpdateAsync.cs" />
-		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		
+		
 	</ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@ using dRz.Updater.Services;
 using System;
 using System.Threading.Tasks;
 
-namespace dRz.NC.Services.Updater
+namespace dRz.Common.NC.Services.Updater
 {
     /// <summary>
     /// Координирует проверку и установку обновлений аддона из контекста CAD-хоста.

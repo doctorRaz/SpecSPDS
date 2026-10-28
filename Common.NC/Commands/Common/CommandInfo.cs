@@ -1,7 +1,7 @@
 ﻿using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.CadServices.Diagnostics;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.CadServices.Diagnostics;
+using dRz.Common.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Common
+namespace dRz.Common.NC.Commands.Common
 {
     /// <summary>
     /// Команда вывода списка объявленных CAD-команд и отчёта о дубликатах.
