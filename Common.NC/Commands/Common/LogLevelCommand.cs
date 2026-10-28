@@ -2,7 +2,6 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
 using dRz.NC.CadServices;
 using dRz.NC.Infrastructure;
-using NLog.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -67,7 +66,7 @@ namespace dRz.NC.Commands.Common
         {
             IMessageService message = AddOnContext.Msg;
             string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
-            string actualLevel = InternalLogger.LogLevel.ToString();
+            string actualLevel = AddOnContext.NLogFactory.InternalLogLevel;
 
             ManageLevel(message,
                         assemblyDirectory,
