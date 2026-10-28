@@ -14,16 +14,23 @@
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Updater\Updater.csproj" />
 	</ItemGroup>
-		<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
+	<!-- Генерация префикса команд из имени проекта для CommandMethod. -->
 	<Target Name="GenerateCommandPrefix" BeforeTargets="CoreCompile">
 		<PropertyGroup>
-			<_CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</_CommandPrefixFile>
-			<_CommandPrefixValue>drz_$(SolutionName)</_CommandPrefixValue>
+			<CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</CommandPrefixFile>
+			<CommandPrefixValue>drz_$(SolutionName)</CommandPrefixValue>
 		</PropertyGroup>
 		<MakeDir Directories="$(IntermediateOutputPath)" />
-		<WriteLinesToFile File="$(_CommandPrefixFile)" Overwrite="true" Lines="internal static class CommandPrefix { public const string Value = &quot;$(_CommandPrefixValue)&quot;%3B  }" />
+		<WriteLinesToFile File="$(CommandPrefixFile)" Overwrite="true" Lines=
+"
+///&lt;summary&gt; Содержит константы, генерируемые перед сборкой.&lt;/summary&gt;
+internal static class CommandPrefix 
+{ 
+/// &lt;summary&gt; Суффикс команд, формируемый из имени решения. &lt;/summary&gt;
+public const string Value = &quot;$(CommandPrefixValue)&quot;%3B  
+}" />
 		<ItemGroup>
-			<Compile Include="$(_CommandPrefixFile)" />
+			<Compile Include="$(CommandPrefixFile)" />
 		</ItemGroup>
 	</Target>
 </Project>
