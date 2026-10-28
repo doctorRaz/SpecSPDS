@@ -3,7 +3,7 @@ using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.AddOnRuntime;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using System;
 using System.Reflection;
 

@@ -1,6 +1,6 @@
 ﻿using dRz.Abstractions.Services;
 using dRz.AddOnRuntime;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.Infrastructure;
 using System;
 
 namespace dRz.Test.Console.Updater

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)Directory.Build.props" Condition="'$(SpecSPDSDirectoryBuildImported)' != 'true' And Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="..\Shared.NC.props" Condition="Exists('..\Shared.NC.props')" />
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<Description>Общие служебные команды nanoCAD</Description>
+		<HostFamily>NC</HostFamily>
+		<HostCode>n</HostCode>
+		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\Updater\Updater.csproj" />
+	</ItemGroup>
+
+</Project>

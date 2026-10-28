@@ -1,14 +1,14 @@
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
-using dRz.NC.CadServices;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.CadServices;
+using dRz.Common.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Common
+namespace dRz.Common.NC.Commands.Common
 {
     /// <summary>
     /// Изменение общих настроек аддона через командную строку nanoCAD.

@@ -14,14 +14,14 @@ using Rtm = Teigha.Runtime;
 using Autodesk.AutoCAD.Runtime;
 #endif
 
-namespace dRz.NC.CadServices.Diagnostics
+namespace dRz.Common.NC.CadServices.Diagnostics
 {
     /// <summary>
     /// Собирает объявления команд CAD и предоставляет выборки для диагностических отчётов.
     /// </summary>
     public sealed class CmdInfo
     {
-        private readonly Assembly _assembly;
+        private readonly IReadOnlyCollection<Assembly> _assemblies;
         private readonly IDrzLogger? _logger;
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace dRz.NC.CadServices.Diagnostics
 
         /// <summary>Создаёт сведения по сборке, содержащей этот класс.</summary>
         public CmdInfo(IDrzLogger? logger = null)
-            : this(Assembly.GetExecutingAssembly(), logger)
+            : this(new[] { Assembly.GetExecutingAssembly() }, logger)
         {
         }
 
@@ -68,22 +68,49 @@ namespace dRz.NC.CadServices.Diagnostics
         /// <param name="assembly">Сборка для анализа.</param>
         /// <param name="logger">Логгер ошибок рефлексии.</param>
         public CmdInfo(Assembly assembly, IDrzLogger? logger = null)
+            : this(new[] { assembly ?? throw new ArgumentNullException(nameof(assembly)) }, logger)
         {
-            _assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
+        }
+
+        /// <summary>Собирает объявления команд из набора сборок.</summary>
+        /// <param name="assemblies">Сборки для анализа.</param>
+        /// <param name="logger">Логгер ошибок рефлексии.</param>
+        public CmdInfo(IEnumerable<Assembly> assemblies, IDrzLogger? logger = null)
+        {
+            ArgumentNullException.ThrowIfNull(assemblies);
+
+            _assemblies = assemblies
+                .Select(assembly => assembly ?? throw new ArgumentException(
+                    "Набор сборок не должен содержать null.", nameof(assemblies)))
+                .Distinct()
+                .ToArray();
             _logger = logger;
+
             CollectCommands();
         }
 
         /// <summary>
-        /// Собирает объявления команд. Ошибки отдельного типа или метода не прерывают весь анализ.
+        /// Собирает объявления команд из всех переданных сборок.
+        /// Ошибки отдельной сборки, типа или метода не прерывают весь анализ.
         /// </summary>
         private void CollectCommands()
+        {
+            foreach (Assembly assembly in _assemblies)
+            {
+                CollectCommands(assembly);
+            }
+        }
+
+        /// <summary>
+        /// Собирает объявления команд одной сборки.
+        /// </summary>
+        private void CollectCommands(Assembly assembly)
         {
             Type[] types;
 
             try
             {
-                types = _assembly.GetTypes();
+                types = assembly.GetTypes();
             }
             catch (ReflectionTypeLoadException ex)
             {
@@ -98,11 +125,11 @@ namespace dRz.NC.CadServices.Diagnostics
                 }
 
                 types = availableTypes.ToArray();
-                LogError(ex, $"Не все типы сборки '{_assembly.FullName}' удалось загрузить.");
+                LogError(ex, $"Не все типы сборки '{assembly.FullName}' удалось загрузить.");
             }
             catch (Exception ex)
             {
-                LogError(ex, $"Не удалось получить типы сборки '{_assembly.FullName}'.");
+                LogError(ex, $"Не удалось получить типы сборки '{assembly.FullName}'.");
                 return;
             }
 

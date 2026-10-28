@@ -5,7 +5,7 @@ namespace dRz.Abstractions.Logger
     /// <summary>
     /// Фабрика логгеров.
     /// </summary>
-    public interface IDrzLoggerFactory
+    public interface IDrzLoggerFactory : IInternalLogLevelProvider
     {
         #region Public Methods
 

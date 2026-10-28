@@ -1,8 +1,7 @@
 using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.CadServices;
-using dRz.NC.Infrastructure;
-using NLog.Common;
+using dRz.Common.NC.CadServices;
+using dRz.Common.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +9,7 @@ using System.IO;
 using App = HostMgd.ApplicationServices;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Common
+namespace dRz.Common.NC.Commands.Common
 {
     /// <summary>
     /// Предоставляет команды NanoCAD для управления уровнями логирования через файлы настройки.
@@ -67,7 +66,7 @@ namespace dRz.NC.Commands.Common
         {
             IMessageService message = AddOnContext.Msg;
             string assemblyDirectory = AddOnContext.AddOnInfo.AssemblyDirectory;
-            string actualLevel = InternalLogger.LogLevel.ToString();
+            string actualLevel = AddOnContext.NLogFactory.InternalLogLevel;
 
             ManageLevel(message,
                         assemblyDirectory,
@@ -138,12 +137,35 @@ namespace dRz.NC.Commands.Common
         /// <returns>Минимальный включённый уровень или <c>Off</c>, если логирование отключено.</returns>
         private static string GetEffectiveLogLevel(IDrzLogger logger)
         {
-            if (logger.IsTraceEnabled) return "Trace";
-            if (logger.IsDebugEnabled) return "Debug";
-            if (logger.IsInfoEnabled) return "Info";
-            if (logger.IsWarnEnabled) return "Warn";
-            if (logger.IsErrorEnabled) return "Error";
-            if (logger.IsFatalEnabled) return "Fatal";
+            if (logger.IsTraceEnabled)
+            {
+                return "Trace";
+            }
+
+            if (logger.IsDebugEnabled)
+            {
+                return "Debug";
+            }
+
+            if (logger.IsInfoEnabled)
+            {
+                return "Info";
+            }
+
+            if (logger.IsWarnEnabled)
+            {
+                return "Warn";
+            }
+
+            if (logger.IsErrorEnabled)
+            {
+                return "Error";
+            }
+
+            if (logger.IsFatalEnabled)
+            {
+                return "Fatal";
+            }
 
             return "Off";
         }

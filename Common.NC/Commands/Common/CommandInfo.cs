@@ -1,7 +1,8 @@
-﻿using dRz.Abstractions.Logger;
+﻿using dRz.Abstractions.Infrastructure;
+using dRz.Abstractions.Logger;
 using dRz.Abstractions.Services.Message;
-using dRz.NC.CadServices.Diagnostics;
-using dRz.NC.Infrastructure;
+using dRz.Common.NC.CadServices.Diagnostics;
+using dRz.Common.NC.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Rtm = Teigha.Runtime;
 
-namespace dRz.NC.Commands.Common
+namespace dRz.Common.NC.Commands.Common
 {
     /// <summary>
     /// Команда вывода списка объявленных CAD-команд и отчёта о дубликатах.
@@ -37,10 +38,15 @@ namespace dRz.NC.Commands.Common
                 includeMethodInfo = true;
 #endif
 
+                // Выбираем только уже загруженные сборки с метаданными текущего продукта.
+                // Каталог размещения сборки не влияет на её принадлежность продукту.
+                string productFamily = AddOnContext.AddOnInfo.ProductFamily;
+                Assembly[] productAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(assembly => IsProductAssembly(assembly, productFamily))
+                    .ToArray();
+
                 // Сбор объявлений отделён от формирования текстовых отчётов.
-                CmdInfo report = new CmdInfo(
-                    Assembly.GetExecutingAssembly(),
-                    logger);
+                CmdInfo report = new CmdInfo(productAssemblies, logger);
 
                 List<IGrouping<string, CmdInfo.CommandEntry>> duplicateGroups = report.DuplicateCommands
                     .OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
@@ -106,6 +112,31 @@ namespace dRz.NC.Commands.Common
                 {
                     // Сбой уведомления также не должен распространяться в CAD-хост.
                 }
+            }
+        }
+
+        /// <summary>
+        /// Проверяет принадлежность сборки текущему продукту по метаданным ProductFamily.
+        /// Сборки без такого метаданного или с другим значением исключаются.
+        /// </summary>
+        private static bool IsProductAssembly(Assembly assembly, string productFamily)
+        {
+            if (string.IsNullOrWhiteSpace(productFamily))
+            {
+                return false;
+            }
+
+            try
+            {
+                return assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+                    .Any(metadata =>
+                        string.Equals(metadata.Key, AssemblyMetadataKeys.ProductFamily, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(metadata.Value, productFamily, StringComparison.OrdinalIgnoreCase));
+            }
+            catch
+            {
+                // Если метаданные сборки прочитать не удалось, её принадлежность продукту не подтверждена.
+                return false;
             }
         }
     }

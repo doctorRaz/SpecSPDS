@@ -4,14 +4,14 @@ using dRz.Abstractions.Services;
 using dRz.Abstractions.Services.Message;
 using dRz.Abstractions.Settings;
 using dRz.AddOnRuntime;
-using dRz.NC.Infrastructure;
-using dRz.NC.Services.Updater;
+using dRz.Common.NC.Infrastructure;
+using dRz.Common.NC.Services.Updater;
 using dRz.Updater.Services;
 using System;
 
 #if !TEST
 
-using dRz.NC.Commands;
+using dRz.Common.NC.Commands;
 
 #endif
 
@@ -20,7 +20,7 @@ using dRz.NC.Commands;
 using App = HostMgd.ApplicationServices;
 using HostMgd.EditorInput;
 using Rtm = Teigha.Runtime;
-using dRz.NC.Commands.Common;
+using dRz.Common.NC.Commands.Common;
 
 #elif AC
 
@@ -149,7 +149,7 @@ namespace dRz.NC
                     AddOnCompositionRoot root = new AddOnCompositionRoot(typeof(EntryPoint).Assembly);
 
                     // Передаём зарегистрированные сервисы в общий контекст аддона.
-                    AddOnContext  /*AddOnCtx*/.Initialize(root.Get<IAddOnServices>());
+                    AddOnContext.Initialize(root.Get<IAddOnServices>());
 
                     _isAddOnCompositionRoot = true;// Корень композиции успешно инициализирован.
                 }

@@ -8,10 +8,12 @@ namespace dRz.Abstractions.Infrastructure
     {
         #region Public Properties
 
-        /// <summary>Возвращает путь к настройкм аддона <br/>
-        /// Логично коль общий путь зависит от компании и названия продукта<br/>
-        /// хранить его в метаданных сборки </summary>
-        /// <value>The product data directory.</value>
+        /// <summary>Возвращает каталог общих данных компании.</summary>
+        /// <value>Каталог для данных, общих для всех продуктов компании.</value>
+        string CompanyDataDirectory { get; }
+
+        /// <summary>Возвращает каталог данных текущего продукта.</summary>
+        /// <value>Каталог для данных, относящихся к текущему продукту.</value>
         string ProductDataDirectory { get; }
 
         /// <summary>Gets the company.</summary>
