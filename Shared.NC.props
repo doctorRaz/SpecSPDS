@@ -8,7 +8,8 @@
 	<Target Name="GenerateCommandPrefix" BeforeTargets="CoreCompile">
 		<PropertyGroup>
 			<CommandPrefixFile>$(IntermediateOutputPath)CommandPrefix.g.cs</CommandPrefixFile>
-			<CommandPrefixValue>drz_$(SolutionName)</CommandPrefixValue>
+			<CommandPrefixValue Condition="'$(SolutionName)' == 'drzTools'">$(SolutionName)</CommandPrefixValue>
+			<CommandPrefixValue Condition="'$(SolutionName)' != 'drzTools'">drz_$(SolutionName)</CommandPrefixValue>
 		</PropertyGroup>
 		<MakeDir Directories="$(IntermediateOutputPath)"/>
 		<WriteLinesToFile File="$(CommandPrefixFile)" Overwrite="true" Lines="
