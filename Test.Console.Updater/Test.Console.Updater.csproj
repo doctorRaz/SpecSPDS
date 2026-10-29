@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
+		<Import Project="$(SolutionDir)Solution.Build.props"
+	        Condition="Exists('$(SolutionDir)Solution.Build.props')" />
+<PropertyGroup>
 				<TargetFramework>net6.0-windows</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<PlatformTarget>x64</PlatformTarget>
