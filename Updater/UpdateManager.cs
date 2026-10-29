@@ -127,17 +127,19 @@ namespace dRz.Updater
 
                 if (updateKind is null)
                 {
+                    string message = $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.";
+
                     if (request.LaunchMode == UpdateLaunchMode.Manual)
                     {
-                        string message = $"Для {update.Product} обновлений нет. Установлена актуальная версия {request.CurrentVersion}.";
-                        if (request.CurrentVersion!=request.RunningVersion)
+                        if (request.CurrentVersion != request.RunningVersion)
                         {
                             message += $" Чтобы изменения вступили в силу, необходима перезагрузка.";
                         }
-                        _logger.Trace(message);
 
                         _messageServices.InfoMessage(message, title: "Updater");
                     }
+
+                    _logger.Trace(message);
 
                     return UpdateResult.UpToDate;
                 }

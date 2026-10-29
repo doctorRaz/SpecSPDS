@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
+		<Import Project="..\Solution.Build.props"
+	        Condition="Exists('..\Solution.Build.props')" />
+<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Description>Сервис nanoCAD</Description>
 		<UseWPF>true</UseWPF>
