@@ -96,7 +96,13 @@ jobs:
           }
           $versionProject = [string]@($publishGroups[0].projects)[0]
 
-          $baseVersion = (dotnet msbuild "$versionProject" -getProperty:Version).Trim()
+          # При прямом вызове .csproj явно задаём каталог checkout для импорта Solution.Build.props.
+          # Directory.Build.props продолжает загружаться автоматически по правилам MSBuild.
+          $solutionDir = $env:GITHUB_WORKSPACE.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
+          $baseVersion = (dotnet msbuild "$versionProject" "-property:SolutionDir=$solutionDir" -getProperty:Version).Trim()
+          if ($LASTEXITCODE -ne 0) {
+              throw "MSBuild failed to evaluate Version for project: $versionProject"
+          }
           if ([string]::IsNullOrWhiteSpace($baseVersion)) {
               throw "Version is empty in project: $versionProject"
           }
