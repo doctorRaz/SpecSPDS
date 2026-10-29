@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
+			Condition="Exists('..\Solution.Build.props') And '$(SolutionName)' == 'SpecSPDS'" />
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Description>Абстракции, интерфейсы</Description>
