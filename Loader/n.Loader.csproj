@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="Shared.props" Condition="Exists('Shared.props')" />
-	<Import Project="$(SolutionDir)Directory.Build.props" Condition="Exists('$(SolutionDir)Directory.Build.props')" />
+	<Import Project="$(SolutionDir)Solution.Build.props"
+	        Condition="Exists('$(SolutionDir)Solution.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<AssemblyName>$(SolutionName)$(MSBuildProjectName)</AssemblyName>

@@ -1,6 +1,5 @@
 ﻿<Project>
 	<PropertyGroup>
-		<SpecSPDSDirectoryBuildImported>true</SpecSPDSDirectoryBuildImported>
 		<!-- Короткий идентификатор разработчика -->
 		<Vendor>dRz</Vendor>
 		<!--RootNamespace default-->
@@ -70,26 +69,18 @@
 			VendorEmail
 		-->
 		<!-- Контактная информация -->
-		<AssemblyMetadata Include="ContactEmail"
-		                  Value="razygraev@gmail.com"/>
-		<AssemblyMetadata Include="SupportEmail"
-		                  Value="doctorRaz@gmail.com"/>
-		<AssemblyMetadata Include="VendorEmail"
-		                  Value="doctorRaz@yandex.ru"/>
+		<AssemblyMetadata Include="ContactEmail" Value="razygraev@gmail.com"/>
+		<AssemblyMetadata Include="SupportEmail" Value="doctorRaz@gmail.com"/>
+		<AssemblyMetadata Include="VendorEmail" Value="doctorRaz@yandex.ru"/>
 		<!--домашняя страница-->
-		<AssemblyMetadata Include="HomePage"
-		                  Value="https://doctorraz.blogspot.com"/>
+		<AssemblyMetadata Include="HomePage" Value="https://doctorraz.blogspot.com"/>
 		<!-- Семейство Host -->
-		<AssemblyMetadata Include="HostFamily"
-		                  Value="$(HostFamily)"/>
+		<AssemblyMetadata Include="HostFamily" Value="$(HostFamily)"/>
 		<!-- Код Host -->
-		<AssemblyMetadata Include="HostCode"
-		                  Value="$(HostCode)"/>
+		<AssemblyMetadata Include="HostCode" Value="$(HostCode)"/>
 		<!--Product может быть красивым названием, а ProductFamily удобно использовать программно.-->
-		<AssemblyMetadata Include="ProductFamily"
-		                  Value="$(SolutionName)$(HostCode)"/>
-		<AssemblyMetadata Include="Vendor"
-		                  Value="$(Vendor)"/>
+		<AssemblyMetadata Include="ProductFamily" Value="$(SolutionName)$(HostCode)"/>
+		<AssemblyMetadata Include="Vendor" Value="$(Vendor)"/>
 	</ItemGroup>
 	<!-- ================================================================= -->
 	<!-- Дополнительные настройки Release                                  -->
