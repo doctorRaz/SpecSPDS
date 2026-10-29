@@ -1,6 +1,5 @@
 ﻿<Project>
 	<PropertyGroup>
-		<SpecSPDSDirectoryBuildImported>true</SpecSPDSDirectoryBuildImported>
 		<!-- Короткий идентификатор разработчика -->
 		<Vendor>dRz</Vendor>
 		<!--RootNamespace default-->
