@@ -49,12 +49,14 @@ jobs:
           $product = [System.IO.Path]::GetFileNameWithoutExtension([string]$config.solution)
           if ([string]::IsNullOrWhiteSpace($product)) { throw "Could not determine product name from solution: $($config.solution)" }
 
-          # Используем MSBuild, а не разбираем XML .csproj напрямую.
-          # Так учитываются Directory.Build.props, свойства проекта и их
-          # переопределения в вычисленной конфигурации проекта.
-          $baseVersion = (dotnet msbuild "$projectFile" -getProperty:Version).Trim()
+          # При прямом вызове .csproj MSBuild не обязан задавать SolutionDir.
+          # Передаём каталог checkout явно, чтобы импорт Solution.Build.props
+          # сработал; Directory.Build.props продолжает загружаться автоматически.
+          $solutionDir = $env:GITHUB_WORKSPACE.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
+          $baseVersion = (dotnet msbuild "$projectFile" "-property:SolutionDir=$solutionDir" -getProperty:Version).Trim()
+          if ($LASTEXITCODE -ne 0) { throw "MSBuild failed to evaluate Version for project: $projectPath" }
           if ([string]::IsNullOrWhiteSpace($baseVersion)) { throw "Effective Version was not found for first project: $projectPath" }
-          if ($baseVersion -notmatch '^([0-9]+).([0-9]+)$') { throw "Effective project Version must contain only Major.Minor: '$baseVersion'" }
+          if ($baseVersion -notmatch '^([0-9]+)\.([0-9]+)$') { throw "Effective project Version must contain only Major.Minor: '$baseVersion'" }
           $major = [int]$Matches[1]
           $minor = [int]$Matches[2]
           "project=$projectPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
