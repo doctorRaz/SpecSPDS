@@ -1,13 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
+	<Import Project="..\Solution.Build.props" Condition="Exists('..\Solution.Build.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Description>Настройка логирования nLog, фабрики логгирования</Description>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="drzNLog" Version="6.1.0-drz" />
-		<!--<PackageReference Include="NLog" Version="6.1.3" />-->
+	  <PackageReference Include="drzNLog" Version="6.1.0-drz" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />

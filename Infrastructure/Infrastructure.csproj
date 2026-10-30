@@ -12,7 +12,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Reference Include="System.Management">
-			<HintPath>..\Nuget\System.Management\4.700\System.Management.dll</HintPath>
+			<HintPath>$(MSBuildThisFileDirectory)..\Nuget\System.Management\4.700\System.Management.dll</HintPath>
 			<Private>True</Private>
 		</Reference>
 	</ItemGroup>
