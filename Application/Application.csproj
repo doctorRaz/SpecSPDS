@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
+	<Import Project="..\Solution.Build.props" Condition="Exists('..\Solution.Build.props')" />
 
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
@@ -19,7 +18,6 @@
 		<PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<!--<ProjectReference Include="..\Core\Core.csproj" />-->
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
 	</ItemGroup>
 </Project>
