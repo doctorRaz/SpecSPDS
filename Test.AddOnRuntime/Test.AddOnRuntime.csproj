@@ -7,14 +7,14 @@
 		<Description>точка создания контейнера</Description>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\AddOnRuntime\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\CommonLib\AddOnRuntime\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\Settings\Settings.csproj" />
-		<ProjectReference Include="..\LogBootstrap\LogBootstrap.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Settings\Settings.csproj" />
+		<ProjectReference Include="..\CommonLib\LogBootstrap\LogBootstrap.csproj" />
 		<ProjectReference Include="..\Test.CadServices\Test.CadServices.csproj" />
-		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+		<ProjectReference Include="..\CommonLib\Infrastructure\Infrastructure.csproj">
 			<PrivateAssets>all</PrivateAssets>
 		</ProjectReference>
 	</ItemGroup>

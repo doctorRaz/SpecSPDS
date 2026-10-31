@@ -11,10 +11,7 @@
 		<DefineConstants>$(DefineConstants);TEST;A</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Test.LibB\Test.LibB.csproj" />
 	</ItemGroup>
 </Project>

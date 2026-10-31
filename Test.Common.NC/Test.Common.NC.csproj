@@ -10,11 +10,11 @@
 		<DefineConstants>$(DefineConstants);TEST</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\Common.NC\Infrastructure\**\*.cs" Link="Infrastructure\%(RecursiveDir)%(Filename)%(Extension)" />
-		<Compile Include="..\Common.NC\Services\**\*.cs" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\CommonLib\Common.NC\Infrastructure\**\*.cs" Link="Infrastructure\%(RecursiveDir)%(Filename)%(Extension)" />
+		<Compile Include="..\CommonLib\Common.NC\Services\**\*.cs" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\Updater\Updater.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Updater\Updater.csproj" />
 	</ItemGroup>
 </Project>
