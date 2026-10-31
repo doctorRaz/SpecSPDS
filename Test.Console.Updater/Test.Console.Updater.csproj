@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-		<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
-<PropertyGroup>
-				<TargetFramework>net6.0-windows</TargetFramework>
+	<Import Project="..\Solution.Build.props"
+		Condition="Exists('..\Solution.Build.props')" />
+	<PropertyGroup>
+		<TargetFramework>net6.0-windows</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<PlatformTarget>x64</PlatformTarget>
-			<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<UseWPF>true</UseWPF>
 		<!-- значение по умолчанию мин версии-->
 		<MinVersion Condition="'$(MinVersion)' == ''">20</MinVersion>
@@ -24,7 +24,7 @@
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\Test.Common.NC\Test.Common.NC.csproj" />
 	</ItemGroup>
@@ -41,8 +41,8 @@
 	<ItemGroup>
 		<Compile Include="$(IntermediateOutputPath)GeneratedCompile.cs" Visible="false" />
 		<Compile Include="..\NC\EntryPoint.cs" Link="EntryPoint.cs" />
-		
-		
+
+
 	</ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-		<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
-<PropertyGroup>
+	<Import Project="..\Solution.Build.props"
+		Condition="Exists('..\Solution.Build.props')" />
+	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Description>1 чистилка bak и копий</Description>
 		<Product>CloneA</Product>
@@ -11,10 +11,7 @@
 		<DefineConstants>$(DefineConstants);TEST;A</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Include="..\NC\Infrastructure\**\*.cs" Link="\%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\Test.CloneB\Test.CloneB.csproj" />
 	</ItemGroup>

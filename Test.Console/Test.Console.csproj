@@ -24,12 +24,12 @@
 		<DefineConstants>$(DefineConstants);$(HostFamily)</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
+		<ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
 		<ProjectReference Include="..\Test.AddOnRuntime\Test.AddOnRuntime.csproj" />
 		<ProjectReference Include="..\Test.CloneA\Test.CloneA.csproj" />
 		<ProjectReference Include="..\Test.CloneB\Test.CloneB.csproj" />
 		<ProjectReference Include="..\Test.LibA\Test.LibA.csproj" />
-		<ProjectReference Include="..\Updater\Updater.csproj" />
+		<ProjectReference Include="..\CommonLib\Updater\Updater.csproj" />
 	</ItemGroup>
 	<!--metadata assemble-->
 	<ItemGroup>

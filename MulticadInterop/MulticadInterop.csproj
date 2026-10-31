@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-		<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
-<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<RootNamespace>drz.MulticadInterop</RootNamespace>
-		<Description>Reflection-based access to Multicad API without compile-time dependency.</Description>
-	</PropertyGroup>
-</Project>
