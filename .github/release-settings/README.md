@@ -291,36 +291,86 @@ Release workflow:
 
 Mega Release не является module этого контракта и не должен подключаться через `modules`.
 
-## Пример текущей конфигурации
+## Полный пример конфигурации
 
-Ниже приведён фактически используемый сейчас `.github/release-settings/release.config.json` из ветки `develop`:
+Ниже приведён иллюстративный пример, показывающий возможности `release.config.json`. Это не конфигурация конкретного проекта. В примере используются все основные разделы: несколько групп публикации, дополнительные проекты (`subProjects`), внешние модули (`modules`), публикация в текущий и внешний репозитории.
 
 ```json
 {
-    "solution": "SpecSPDS.sln",
+    "solution": "Product.sln",
     "publish": [
         {
-            "name": "SpecSPDS.NC",
+            "name": "Product.NC",
             "projects": [
-                "NC/NC.csproj"
+                "NC/Product.NC.csproj",
+                "NC21/Product.NC21.csproj"
+            ]
+        },
+        {
+            "name": "Product.AC",
+            "projects": [
+                "AC/Product.AC.csproj"
             ]
         }
     ],
-    "modules": [],
-    "subProjects": [],
+    "subProjects": [
+        {
+            "name": "Additional.NC",
+            "projects": [
+                "SubProjects/Additional.NC/Additional.NC.csproj",
+                "SubProjects/Additional.NC21/Additional.NC21.csproj"
+            ]
+        },
+        {
+            "name": "Additional.AC",
+            "projects": [
+                "SubProjects/Additional.AC/Additional.AC.csproj"
+            ]
+        }
+    ],
+    "modules": [
+        {
+            "repository": "organization/SharedModules",
+            "projects": [
+                "Modules/ModuleA",
+                {
+                    "path": "Modules/ModuleB",
+                    "notUnique": true
+                },
+                {
+                    "path": "Documentation",
+                    "notUnique": true
+                }
+            ]
+        },
+        {
+            "repository": "organization/AnotherModule",
+            "projects": [
+                {
+                    "path": "Documentation",
+                    "notUnique": true
+                }
+            ]
+        }
+    ],
     "publicHere": true,
-    "remote": []
+    "remote": [
+        "organization/ProductDistribution"
+    ]
 }
 ```
 
-В этой конфигурации:
+Назначение разделов примера:
 
-- основная solution — `SpecSPDS.sln`;
-- группа `SpecSPDS.NC` публикует проект `NC/NC.csproj`;
-- дополнительные группы `subProjects` не заданы;
-- внешние `modules` не подключаются;
-- GitHub Release создаётся в текущем репозитории (`publicHere: true`);
-- публикация в другие репозитории не настроена (`remote` пуст).
+- `solution` задаёт основное решение, из которого определяется продукт и выполняется основная сборка.
+- `publish` содержит две группы основных проектов. Результаты проектов каждой группы объединяются в соответствующем каталоге staging.
+- `subProjects` содержит дополнительные группы проектов. Они могут находиться в git submodules и публикуются в отдельные каталоги staging.
+- `modules` подключает опубликованные артефакты двух внешних репозиториев. Для каждого модуля перечислены каталоги, которые нужно извлечь из его ZIP.
+- `notUnique: true` разрешает объединить содержимое каталогов с одинаковым конечным именем. В примере документация из двух модулей попадёт в общий каталог; совпадающие относительные пути файлов приведут к ошибке.
+- `publicHere: true` включает создание GitHub Release в текущем репозитории.
+- `remote` задаёт дополнительный репозиторий, в который публикуется тот же набор готовых release-файлов.
+
+Имена решений, проектов, групп и репозиториев в примере условные. При использовании примера их необходимо заменить значениями конкретного проекта. Неиспользуемые разделы можно оставить пустыми массивами или убрать, если это допускает схема конфигурации.
 
 ## Ключи и токены GitHub Actions
 
