@@ -15,7 +15,7 @@
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-        <ProjectReference Include="..\Settings\Settings.csproj" />
+        <ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
+        <ProjectReference Include="..\CommonLib\Settings\Settings.csproj" />
     </ItemGroup>
 </Project>

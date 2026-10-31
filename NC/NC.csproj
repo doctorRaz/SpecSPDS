@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="..\Solution.Build.props"
-	        Condition="Exists('..\Solution.Build.props')" />
+	<Import Project="..\Solution.Build.props" Condition="Exists('..\Solution.Build.props')" />
 	<Import Project="..\Shared.NC.props" Condition="Exists('..\Shared.NC.props')" />
 	<PropertyGroup>
 		<TargetFramework>net6.0-windows</TargetFramework>
@@ -18,11 +17,11 @@
 		<PackageReference Include="MultiCAD.NET" Version="23.1.6324.4405" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Abstractions\Abstractions.csproj" />
-		<ProjectReference Include="..\Core\Core.csproj" />
-		<ProjectReference Include="..\MulticadInterop\MulticadInterop.csproj" />
-		<ProjectReference Include="..\Application\Application.csproj" />
-		<ProjectReference Include="..\AddOnRuntime\AddOnRuntime.csproj" />
-		<ProjectReference Include="..\Common.NC\Common.NC.csproj" />
+	  <ProjectReference Include="..\Application\Application.csproj" />
+	  <ProjectReference Include="..\CommonLib\Abstractions\Abstractions.csproj" />
+	  <ProjectReference Include="..\CommonLib\AddOnRuntime\AddOnRuntime.csproj" />
+	  <ProjectReference Include="..\CommonLib\Common.NC\Common.NC.csproj" />
+	  <ProjectReference Include="..\CommonLib\MulticadInterop\MulticadInterop.csproj" />
+	  <ProjectReference Include="..\Core\Core.csproj" />
 	</ItemGroup>
 </Project>

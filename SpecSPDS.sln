@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AddOnRuntime", "CommonLib\A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assemblies", "Assemblies", "{CC3B1C57-DFAC-4370-9274-E6218C28054C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "CommonLib\Updater\Updater.csproj", "{1FE26D4F-B1DD-4019-B993-BC376E6BCBB2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.AddOnRuntime", "Test.AddOnRuntime\Test.AddOnRuntime.csproj", "{B5B734A2-5273-49C8-8074-9238F078CFA6}"
 EndProject
@@ -43,11 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.CloneB", "Test.CloneB\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.Raw", "Test.Raw\NC.Raw.csproj", "{FF8AF0DF-CD64-4380-9493-4996AE058CD3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticadInterop", "MulticadInterop\MulticadInterop.csproj", "{7BD9B2EC-744D-45AF-92FC-E60B8B1704A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MulticadInterop", "CommonLib\MulticadInterop\MulticadInterop.csproj", "{7BD9B2EC-744D-45AF-92FC-E60B8B1704A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Console.Updater", "Test.Console.Updater\Test.Console.Updater.csproj", "{1A6A154A-2E82-46FD-81F9-F4922FE339EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings", "Settings\Settings.csproj", "{B2F4E001-2D10-4C42-A7D8-0E1A6E5B8F91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Settings", "CommonLib\Settings\Settings.csproj", "{B2F4E001-2D10-4C42-A7D8-0E1A6E5B8F91}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Settings", "Test.Settings\Test.Settings.csproj", "{C3E5F102-3E21-4D53-B8E9-1F2B7F6C902A}"
 EndProject
